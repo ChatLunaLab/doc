@@ -54,5 +54,3 @@ koishi-plugin-chathub 是一个由 [LangChain](https://github.com/hwchase17/lang
 当你成功的安装了 Koishi 并且成功的接入了聊天平台后，你可以开始安装此插件了。
 
 打开 Koishi 的控制台，在插件市场里搜索 `@dingyi222666/chathub`，然后安装列表上的第一个插件。
-
-![插件市场](/images/plugin_market_1.png)
