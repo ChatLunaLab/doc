@@ -1,0 +1,17 @@
+{
+    "name": "koishi-chathub-doc",
+    "version": "1.0.0",
+    "description": "chathub 插件的官方文档",
+    "main": "index.js",
+    "repository": "https://github.com/dingyi222666/koishi-chathub-doc",
+    "author": "dingyi222666 <dingyi222666@foxmail.com>",
+    "license": "MIT",
+    "devDependencies": {
+        "vitepress": "^1.0.0-beta.1"
+    },
+    "scripts": {
+        "docs:dev": "vitepress dev docs",
+        "docs:build": "vitepress build docs",
+        "docs:serve": "vitepress serve docs"
+    }
+}
