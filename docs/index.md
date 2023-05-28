@@ -6,7 +6,7 @@ editLink: true
 
 hero:
   name: Koishi ChatHub
-  text: 部署教程和开发指南
+  text: 使用教程 & 开发者指南
   tagline: 多平台模型接入，可扩展，多种输出格式，由 LangChain 驱动开发的语言模型聊天服务的 Koishi 插件
   actions:
     - theme: brand
