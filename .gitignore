@@ -9,5 +9,4 @@ public/
 .env.build
 .vercel
 package-lock.json
-yarn.lock
 docs/.vitepress/cache
