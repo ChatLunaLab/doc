@@ -21,7 +21,7 @@ koishi-plugin-chathub 是一个由 [LangChain](https://github.com/hwchase17/lang
 
     后两种模式可让模型调用外部提供的某些工具，使得模型能获取到外部信息
 
-- 内容安全过滤，基于 Koishi 的 [censor 服务](`https://censor.koishi.chat/`), 防止模型返回不良内容
+- 内容安全过滤，基于 Koishi 的 [censor 服务](https://censor.koishi.chat/), 防止模型返回不良内容
 
 ## 部署
 
