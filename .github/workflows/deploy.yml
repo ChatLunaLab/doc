@@ -27,4 +27,5 @@ jobs:
         with:
           github_token: ${{ secrets.gh_token }}
           publish_dir: docs/.vitepress/dist
+          destination_dir: chathub
           # cname: example.com # if wanna deploy to custom domain
