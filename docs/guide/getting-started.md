@@ -8,7 +8,7 @@ koishi-plugin-chathub 是一个由 [LangChain](https://github.com/hwchase17/lang
 
 项目底层和 LLM 交互基于 [LangChain](https://github.com/hwchase17/langchainjs)，因此第三方 Koishi 插件开发者也可以调用此项目提供的 [LangChain Model](https://js.langchain.com/docs/modules/models/chat/) 和 LLM 进行交互。
 
-如果你是第三方插件开发者，你可以查看 [开发指南](./guide/getting-started) 了解如何使用此项目提供的 API。
+如果你是第三方插件开发者，你可以查看 [开发指南](https://js.langchain.com/docs/modules/models/chat/) 了解如何使用此项目提供的 API。
 
 ## 项目特性
 
