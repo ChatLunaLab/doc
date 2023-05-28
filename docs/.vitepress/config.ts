@@ -5,7 +5,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
     lang: 'zh-CN',
     title: 'Koishi ChatHub',
-    base: "/chathub",
+    //base: "/chathub",
     description: 'Koishi ChatHub文档',
 
     lastUpdated: true,
