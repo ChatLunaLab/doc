@@ -23,7 +23,7 @@ features:
   - icon: 🌻
     title: 多平台模型接入
     details: 我们支持 OpenAI (API), Bing Chat 等平台接入，后续还会继续接入更多平台。
-  - icon: 🫧
+  - icon: 🔩
     title: 高扩展性
     details: 中间件系统，多平台模型接入与调用API，易于第三方开发者扩展。
----    
+---

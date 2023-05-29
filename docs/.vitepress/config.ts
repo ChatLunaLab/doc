@@ -11,7 +11,11 @@ export default defineConfig({
     lastUpdated: true,
     cleanUrls: true,
     head: [['meta', { name: 'theme-color', content: '#47A69E' }]],
+
     themeConfig: {
+        outline: {
+            label: '本页目录'
+        },
         nav: nav(),
         sidebar: {
             '/guide/': sidebarGuide(),
@@ -38,12 +42,12 @@ export default defineConfig({
 function sidebarGuide() {
     return [
         {
-            text: '指南',
+            text: '指印',
             collapsed: false,
             items: [
                 { text: '快速上手', link: '/guide/getting-started' },
                 { text: "常用指令", link: '/guide/useful-commands' },
-                { text: "配置项", link: '/guide/configuration' },
+                { text: "常用配置项", link: '/guide/configuration' },
             ]
         },
         {
