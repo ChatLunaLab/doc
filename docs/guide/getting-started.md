@@ -1,4 +1,4 @@
-## koishi-plugin-chathub 文档
+## 你好！欢迎使用 koishi-plugin-chathub
 
 koishi-plugin-chathub 是一个由 [LangChain](https://github.com/hwchase17/langchainjs) 驱动开发，运行在 koishi 上的语言模型聊天服务插件。
 
@@ -8,14 +8,14 @@ koishi-plugin-chathub 是一个由 [LangChain](https://github.com/hwchase17/lang
 
 项目底层和 LLM 交互基于 [LangChain](https://github.com/hwchase17/langchainjs)，因此第三方 Koishi 插件开发者也可以调用此项目提供的 [LangChain Model](https://js.langchain.com/docs/modules/models/chat/) 和 LLM 进行交互。
 
-如果你是第三方插件开发者，你可以查看 [开发指南](https://js.langchain.com/docs/modules/models/chat/) 了解如何使用此项目提供的 API。
+如果你是第三方插件开发者，你可以查看 [开发指南](development/start) 了解如何使用此项目提供的 API。
 
 ## 项目特性
 
 - 高扩展性，基于 LangChain 和 Koishi，我们提供了一套扩展API，让第三方插件开发者可以轻松的扩展或调用此项目的服务。例如 调用模型，对接新模型等
 - 支持预设系统，可设置对话的预设，调教模型。
 - 黑名单系统，全局冷却时间和模型并发请求限制，以及按小时的模型的调用额度限制，轻松管理模型的调用限额等。
-- 支持 语音/文字/图片/图文混合 回复，也支持解析返回的markdown，实现比较自然的分割成多条消息来发送
+- 支持 语音/文字/图片/图文混合 回复，也支持解析返回的Markdown，实现比较自然的分割成多条消息来发送
 - 上下文对话，长期记忆的支持 （需要适配器支持）
 - 三种聊天模式: `chat`,`browsing`,`plugin`
 
@@ -54,3 +54,5 @@ koishi-plugin-chathub 是一个由 [LangChain](https://github.com/hwchase17/lang
 当你成功的安装了 Koishi 并且成功的接入了聊天平台后，你可以开始安装此插件了。
 
 打开 Koishi 的控制台，在插件市场里搜索 `@dingyi222666/chathub`，然后安装列表上的第一个插件。
+
+![插件市场](/images/plugin_market_1.png)

@@ -3,10 +3,10 @@ Thumbs.db
 db.json
 *.log
 node_modules/
-public/
 .deploy*/
 .env
 .env.build
 .vercel
 package-lock.json
 docs/.vitepress/cache
+docs/.vitepress/dist

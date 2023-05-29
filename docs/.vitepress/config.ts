@@ -7,7 +7,7 @@ export default defineConfig({
     title: 'Koishi ChatHub',
     //base: "/chathub",
     description: 'Koishi ChatHub文档',
-
+    ignoreDeadLinks: true,
     lastUpdated: true,
     cleanUrls: true,
     head: [['meta', { name: 'theme-color', content: '#47A69E' }]],
