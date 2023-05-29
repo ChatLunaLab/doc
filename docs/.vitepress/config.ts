@@ -42,7 +42,7 @@ export default defineConfig({
 function sidebarGuide() {
     return [
         {
-            text: '指印',
+            text: '指南',
             collapsed: false,
             items: [
                 { text: '快速上手', link: '/guide/getting-started' },
