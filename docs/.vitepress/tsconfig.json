@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "rootDir": ".",
+      "jsx": "preserve",
+      "resolveJsonModule": true,
+      "esModuleInterop": true,
+      "types": [
+        "vite/client",
+      ],
+    },
+    "include": [
+      "**/*",
+    ],
+  }

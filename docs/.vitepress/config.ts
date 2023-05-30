@@ -5,7 +5,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
     lang: 'zh-CN',
     title: 'Koishi ChatHub',
-   // base: "",
+    // base: "",
     description: 'Koishi ChatHub文档',
     ignoreDeadLinks: true,
     lastUpdated: true,
@@ -14,8 +14,10 @@ export default defineConfig({
 
     themeConfig: {
         outline: {
-            label: '本页目录'
+            label: '本页目录',
+            level: [2, 3],
         },
+
         nav: nav(),
         sidebar: {
             '/guide/': sidebarGuide(),
@@ -30,9 +32,11 @@ export default defineConfig({
         ],
         footer: {
             message: '在 GPL-3.0 许可下发布',
-            copyright: 'Copyright © 2023 ChatHub 开发项目组'
+            copyright: 'Copyright © 2023 dingyi'
         },
     },
+
+
 
 })
 

@@ -21,7 +21,7 @@ koishi chathub 是一个由 [LangChain](https://github.com/hwchase17/langchainjs
 
     后两种模式可让模型调用外部提供的某些工具，使得模型能获取到外部信息
 
-- 内容安全过滤，基于 Koishi 的 [censor 服务](https://censor.koishi.chat/), 防止模型返回不良内容
+- 内容安全过滤，基于 Koishi 的 [censor](https://censor.koishi.chat/) 服务, 防止模型返回不良内容
 
 ## 部署
 
@@ -45,7 +45,7 @@ koishi chathub 是一个由 [LangChain](https://github.com/hwchase17/langchainjs
 
 安装好 Koishi 后，你还不能直接开始安装此插件，你需要接入真实聊天平台才能在真实环境下和插件聊天。点击 [这里](https://koishi.chat/zh-CN/manual/console/adapter.html) 查看如何接入聊天平台。
 
-当然你可以选择暂时不接入，这样你仍然可以在[沙盒](https://koishi.chat/zh-CN/manual/console/sandbox.html)里使用此插件。
+当然你可以选择暂时不接入，这样你仍然可以在 [沙盒](https://koishi.chat/zh-CN/manual/console/sandbox.html) 里使用此插件。
 
 （这只是测试环境，我们推荐你在配置好任何插件后先在沙盒环境里测试插件是否正常运行）
 
@@ -57,7 +57,7 @@ koishi chathub 是一个由 [LangChain](https://github.com/hwchase17/langchainjs
 
 接下来就是安装此插件的前置插件。
 
-#### （必须） 提供了 database 服务的插件
+#### (必须) 提供了 database 服务的插件
 
 database 服务是此插件的必须服务依赖，它提供了对数据库的相关操作。
 
@@ -75,7 +75,7 @@ database 服务是此插件的必须服务依赖，它提供了对数据库的�
 在大部分的安装 Koishi 方式中，安装 Koishi 后很可能会内置`database-sqlite`插件，如果你不需要配置其他数据库的话，你可以跳过这一步。
 :::
 
-#### （必须）安装提供了 cache 服务的插件
+#### (必须) 安装提供了 cache 服务的插件
 
 cache 服务是此插件的必须服务依赖，它提供了对缓存键值对的相关操作。
 
@@ -101,9 +101,9 @@ puppetter 插件是此插件的可选服务依赖，它提供了 puppeteer 的�
 
 打开 Koishi 控制台，前往插件市场搜索 `impl:puppeteer`，然后安装puppeteer 插件。
 
-安装完成后你需要配置此插件，具体的插件配置项可以查看[这里](https://puppeteer.koishi.chat/)，我们不在这里赘述。
+安装完成后你需要配置此插件，具体的插件配置项可以查看 [这里](https://puppeteer.koishi.chat/)，我们不在这里赘述。
 
-#### （可选）安装提供了 censor 服务的插件
+#### (可选) 安装提供了 censor 服务的插件
 
 censor 服务是此插件的可选服务依赖，它提供了内容安全过滤的服务。
 
@@ -111,7 +111,7 @@ censor 服务是此插件的可选服务依赖，它提供了内容安全过滤�
 
 打开 Koishi 控制台，前往插件市场搜索`category:censor`，然后安装你偏好的内容安全过滤平台支持插件。
 
-安装完成后你需要配置相关插件才能使用，具体的插件配置项可以查看[这里](https://censor.koishi.chat/)，我们不在这里赘述。
+安装完成后你需要配置相关插件才能使用，具体的插件配置项可以查看 [这里](https://censor.koishi.chat/)，我们不在这里赘述。
 
 ::: tip
 需要注意的是，有的插件虽然也提供 censor 服务， 但是它只对图像做审核，不会对文本内容做审核！因此你需要确保你安装的插件支持对文本内容的审核。
@@ -130,7 +130,7 @@ vits 服务是此插件的可选服务依赖，它提供了文本转语音的相
 安装后你可能还需要配置相关插件才能使用，具体怎么使用可以查看插件的配置项的描述，或插件主页。（当然你也可以直接联系插件的作者问）
 
 :::tip
-我们推荐安装`open-vits`插件，这是可开箱即用的提供了 vits 服务的插件，插件由[ initialencounter ](https://github.com/initialencounter)编写，并且后端是由[ t4wefan ](https://github.com/t4wefan)免费提供的公益 vits 后端，感谢他们的插件和后端提供能让 vits 服务的使用没有门槛！
+我们推荐安装`open-vits`插件，这是可开箱即用的提供了 vits 服务的插件，插件由 [initialencounter](https://github.com/initialencounter) 编写，并且后端是由 [t4wefan](https://github.com/t4wefan) 免费提供的公益 vits 后端，感谢他们的插件和后端提供能让 vits 服务的使用没有门槛！
 :::
 
 ### 安装 `chathub` 主插件
