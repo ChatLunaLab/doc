@@ -8,7 +8,7 @@ Koishi ChatHub 是一个由 [LangChain](https://github.com/hwchase17/langchainjs
 
 项目底层和 LLM 交互基于 [LangChain](https://github.com/hwchase17/langchainjs)，因此第三方 Koishi 插件开发者也可以调用此项目提供的 [LangChain Model](https://js.langchain.com/docs/modules/models/chat/) 和 LLM 进行交互。
 
-如果你是第三方插件开发者，你可以查看 [开发指南](development/start) 了解如何使用此项目提供的 API。
+如果你是第三方插件开发者，你可以查看 [开发指南](/development/introduction) 了解如何使用此项目提供的 API。
 
 ## 项目特性
 
@@ -23,15 +23,15 @@ Koishi ChatHub 是一个由 [LangChain](https://github.com/hwchase17/langchainjs
 
 - 内容安全过滤，基于 Koishi 的 [censor](https://censor.koishi.chat/) 服务, 防止模型返回不良内容
 
-## 接下来
+## 下一步
 
-想快速上手？请查看 [快速上手](/guide/getting-started) 教程。
+- 想要立即使用此插件，请阅读 [快速开始](/guide/getting-started) 以开始使用此插件。
 
-想知道什么命令或想知道某个命令如何使用？请查看 [命令列表](/guide/commands)。
+- 想了解可用的命令或想了解某个命令如何使用，请查看 [命令列表](/guide/commands)。
 
-想知道如何配置某个模型平台？请查看 [配置模型平台](/guide/configure-model-platform)。
+- 想了解如何配置某个模型平台，请查看 [配置模型平台](/guide/configure-model-platform)。
 
-是第三方插件开发者？请查看 [开发指南](/development/start) 了解如何使用此项目提供的 API。
+- 是第三方插件开发者，想了解怎么接入或使用 ChatHub 提供的相关 API，请查看 [开发指南](/development/introduction) 了解如何使用此项目提供的 API。
 
-需要帮助我们完善或翻译文档？我们的文档在 Github 开源，你可以 fork 后提交 PR 来帮助我们完善或翻译文档。
+- 需要帮助我们完善或翻译文档？我们的文档在 Github 开源，你可以 fork 后提交 PR 来帮助我们完善或翻译文档。
 [项目地址](https://github.com/dingyi222666/koishi-chathub-doc)
