@@ -5,11 +5,11 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
     lang: 'zh-CN',
     title: 'Koishi ChatHub',
-    base: "/",
+   // base: "",
     description: 'Koishi ChatHub文档',
     ignoreDeadLinks: true,
     lastUpdated: true,
-    cleanUrls: true,
+    cleanUrls: false,
     head: [['meta', { name: 'theme-color', content: '#47A69E' }]],
 
     themeConfig: {
@@ -33,8 +33,8 @@ export default defineConfig({
             copyright: 'Copyright © 2023 ChatHub 开发项目组'
         },
     },
-}
-)
+
+})
 
 
 
