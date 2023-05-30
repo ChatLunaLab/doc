@@ -16,11 +16,11 @@
 
 首先你需要安装 Koishi，你可以参考 [Koishi 官方文档](https://koishi.chat/zh-CN/manual/starter/) 来安装 Koishi。
 
-当你成功的安装了 koishi 后，并且成功的运行了 Koishi，你可以继续下一步。
+当你成功的安装并运行了 Koishi，就可以继续下一步了。
 
 ### 配置 Koishi
 
-安装好 Koishi 后，你还不能直接开始安装此插件，你需要接入真实聊天平台才能在真实环境下和插件聊天。点击 [这里](https://koishi.chat/zh-CN/manual/console/adapter.html) 查看如何接入聊天平台。
+安装好 Koishi 后，你还不能直接开始安装此插件，你需要接入真实聊天平台才能在这些聊天平台下使用此插件。点击 [这里](https://koishi.chat/zh-CN/manual/console/adapter.html) 查看如何接入聊天平台。
 
 你可以选择暂时不接入，这样你仍然可以在 [沙盒](https://koishi.chat/zh-CN/manual/console/sandbox.html) 里使用此插件。
 
