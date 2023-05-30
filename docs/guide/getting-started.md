@@ -1,31 +1,8 @@
-## 你好！欢迎使用 koishi chathub
+# 快速上手
 
-koishi chathub 是一个由 [LangChain](https://github.com/hwchase17/langchainjs) 驱动开发，运行在 koishi 上的语言模型聊天服务插件。
-
-它能对接到目前热门的语言模型或者平台，如 OpenAI （API），New Bing，ChatGLM 等，让用户能和这些模型进行聊天。不仅如此我们还设计了一套扩展API，也能让其他的 Koishi 插件开发者能够扩展或调用此项目的服务，如对接新模型，调用新模型等。
-
-由于项目是编写为 Koishi 的插件，因此基于 Koishi 丰富的 API 和生态，我们可直接接入到多种平台，如 QQ，Telegram，Discord 等。
-
-项目底层和 LLM 交互基于 [LangChain](https://github.com/hwchase17/langchainjs)，因此第三方 Koishi 插件开发者也可以调用此项目提供的 [LangChain Model](https://js.langchain.com/docs/modules/models/chat/) 和 LLM 进行交互。
-
-如果你是第三方插件开发者，你可以查看 [开发指南](development/start) 了解如何使用此项目提供的 API。
-
-## 项目特性
-
-- 高扩展性，基于 LangChain 和 Koishi，我们提供了一套扩展API，让第三方插件开发者可以轻松的扩展或调用此项目的服务。例如 调用模型，对接新模型等
-- 支持预设系统，可设置对话的预设，调教模型。
-- 黑名单系统，全局冷却时间和模型并发请求限制，以及按小时的模型的调用额度限制，轻松管理模型的调用限额等。
-- 支持 语音/文字/图片/图文混合 回复，也支持解析返回的Markdown，实现比较自然的分割成多条消息来发送
-- 上下文对话，长期记忆的支持 （需要适配器支持）
-- 三种聊天模式: `chat`,`browsing`,`plugin`
-
-    后两种模式可让模型调用外部提供的某些工具，使得模型能获取到外部信息
-
-- 内容安全过滤，基于 Koishi 的 [censor](https://censor.koishi.chat/) 服务, 防止模型返回不良内容
+接下来就让我们快速上手 Koishi ChatHub 吧！
 
 ## 部署
-
-接下来我们将会介绍如何快速部署此插件。
 
 ### 安装 Koishi
 
@@ -137,4 +114,22 @@ vits 服务是此插件的可选服务依赖，它提供了文本转语音的相
 
 在安装和配置了这么多前置插件后，终于可以开始安装 chathub 的主插件了！
 
-但请注意，安装完成后还需要安装其他插件哦。
+但请注意，安装完成后插件本体并不能直接使用哦。前面有提到 chathub 的扩展性，这种扩展性也体现在插件本身的设计上。chathub 插件本体没有任何模型/平台的接入。所有的接入都是通过其他的 Koishi 插件，调用主插件的扩展 API 来实现的。
+
+打开 Koishi 控制台，前往插件市场搜索`@dingyi222666/chathub`，然后安装 chathub 主插件。
+
+![搜索后的结果](/images/plugin_market_1.png)
+
+安装完成后就可以了！当然我们还需要配置插件，在下面的配置章节会详细介绍。
+
+### 安装一个模型/平台适配器插件
+
+前面讲到了 chathub 插件本身没有任何模型/平台的接入，所有的接入都是通过其他的 Koishi 插件，调用主插件的扩展 API 来实现的。
+
+因此接下来我们就要安装一个模型/平台适配器插件了。
+
+打开 Koishi 控制台，前往插件市场搜索`@dingyi222666/chathub` + 空格 + `adapter` + 空格，然后安装你偏好的模型/平台适配器插件。
+
+![搜索后的结果](/images/plugin_market_6.png)
+
+安装了相关的适配器插件后，你还需要配置插件，在接下来的教程里我们只会简单介绍怎么配置`OpenAI`的适配器插件。具体的配置教程可以在文档的 [配置模型平台](/guide/configure-model-platform) 章节查看。

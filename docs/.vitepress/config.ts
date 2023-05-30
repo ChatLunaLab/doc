@@ -49,6 +49,7 @@ function sidebarGuide() {
             text: '指南',
             collapsed: false,
             items: [
+                { text: '介绍', link: '/guide/introduction' },
                 { text: '快速上手', link: '/guide/getting-started' },
                 { text: "常用指令", link: '/guide/useful-commands' },
                 { text: "常用配置项", link: '/guide/configuration' },
@@ -62,7 +63,7 @@ function sidebarGuide() {
                     text: "配置模型平台",
                     collapsed: true,
                     items: [
-                        { text: 'OpenAI (API)', link: '/guide/connect-model/openai' },
+                        { text: 'OpenAI (API)', link: '/guide/configure-model-platform/openai' },
                     ]
                 },
                 {
