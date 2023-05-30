@@ -7,9 +7,10 @@
 ### 基础用法
 
 输入 `chathub.chat` + 内容就可以开始和模型聊天了。
+
 你也可以使用中文的`聊天`命令来代替`chathub.chat`命令。
 
-例如
+例如:
 
 ``` text
 chathub.chat 你好
@@ -24,9 +25,7 @@ chathub.chat 你好
 
 ### 指定模型平台
 
-使用 `-m` 或 `--model` 参数来指定模型平台。
-
-例如
+使用 `-m` 或 `--model` 参数来指定模型平台。例如：
 
 ``` text
 chathub.chat -m openai/gpt3.5-turbo 你好
@@ -34,24 +33,19 @@ chathub.chat -m openai/gpt3.5-turbo 你好
 
 ### 设置聊天模式
 
-使用 `-c` 或 `--chat-mode` 参数来指定聊天模式。
-
-关于聊天模式，你可以查看 [聊天模式](/guide/useful-configurations/#聊天模式) 章节来了解。
-
-例如
+使用 `-c` 或 `--chat-mode` 参数来指定聊天模式。例如:
 
 ``` text
 chathub.chat -c browsing 搜一下蔡徐坤和鸡你太美有什么关系？
 ```
+关于聊天模式，你可以查看 [聊天模式](/guide/useful-configurations/#聊天模式) 章节来了解。
 
 ### 语音聊天
 
 这里的语音聊天指的是让插件发送的消息为语音消息，也就是把模型生成的文本文字转语音后发送。
 
 使用 `chathub.voice` + 内容就可以开始和模型语音聊天了。
-你也可以使用中文的`语音聊天`命令来代替`chathub.voice`命令。
-
-例如
+你也可以使用中文的`语音聊天`命令来代替`chathub.voice`命令。例如:
 
 ``` text
 chathub.voice 你好
