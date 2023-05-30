@@ -34,6 +34,7 @@ export default defineConfig({
             message: '在 GPL-3.0 许可下发布',
             copyright: 'Copyright © 2023 dingyi'
         },
+        docFooter: { prev: '上一篇', next: '下一篇' }
     },
 
 
@@ -52,7 +53,8 @@ function sidebarGuide() {
                 { text: '介绍', link: '/guide/introduction' },
                 { text: '快速上手', link: '/guide/getting-started' },
                 { text: "常用指令", link: '/guide/useful-commands' },
-                { text: "常用配置项", link: '/guide/configuration' },
+                { text: "配置项", link: '/guide/useful-configurations' },
+
             ]
         },
         {

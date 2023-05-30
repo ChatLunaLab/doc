@@ -15,7 +15,7 @@ Koishi ChatHub 是一个由 [LangChain](https://github.com/hwchase17/langchainjs
 - 高扩展性，基于 LangChain 和 Koishi，我们提供了一套扩展 API，让第三方插件开发者可以轻松的扩展或调用此项目的服务。例如 调用模型，对接新模型等
 - 支持预设系统，可设置对话的预设，调教模型。
 - 黑名单系统，全局冷却时间和模型并发请求限制，以及按小时的模型的调用额度限制，轻松管理模型的调用限额等。
-- 支持 语音/文字/图片/图文混合 回复，也支持解析返回的Markdown，实现比较自然的分割成多条消息来发送
+- 支持 语音/文字/图片/图文混合 回复，也支持解析返回的 markdown，实现比较自然的分割成多条消息来发送
 - 上下文对话，长期记忆的支持 （需要适配器支持）
 - 三种聊天模式: `chat`,`browsing`,`plugin`
 
@@ -27,6 +27,11 @@ Koishi ChatHub 是一个由 [LangChain](https://github.com/hwchase17/langchainjs
 
 想快速上手？请查看 [快速上手](/guide/getting-started) 教程。
 
+想知道什么命令或想知道某个命令如何使用？请查看 [命令列表](/guide/commands)。
+
+想知道如何配置某个模型平台？请查看 [配置模型平台](/guide/configure-model-platform)。
+
 是第三方插件开发者？请查看 [开发指南](/development/start) 了解如何使用此项目提供的 API。
 
-想知道什么命令或想知道某个命令如何使用？请查看 [命令列表](/guide/commands)。
+需要帮助我们完善或翻译文档？我们的文档在 Github 开源，你可以 fork 后提交 PR 来帮助我们完善或翻译文档。
+[项目地址](https://github.com/dingyi222666/koishi-chathub-doc)
