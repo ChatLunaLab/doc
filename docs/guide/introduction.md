@@ -2,7 +2,7 @@
 
 Koishi ChatHub 是一个由 [LangChain](https://github.com/hwchase17/langchainjs) 驱动开发，运行在 koishi 上的语言模型聊天服务插件。
 
-它能对接到目前热门的语言模型或者平台，如 OpenAI （API），New Bing，ChatGLM 等，让用户能和这些模型进行聊天。不仅如此我们还设计了一套扩展API，也能让其他的 Koishi 插件开发者能够扩展或调用此项目的服务，如对接新模型，调用新模型等。
+它能对接到目前热门的语言模型或者平台，如 OpenAI （API），New Bing，ChatGLM 等，让用户能和这些模型进行聊天。不仅如此我们还设计了一套扩展 API，也能让其他的 Koishi 插件开发者能够扩展或调用此项目的服务，如对接新模型，调用新模型等。
 
 由于项目是编写为 Koishi 的插件，因此基于 Koishi 丰富的 API 和生态，我们可直接接入到多种平台，如 QQ，Telegram，Discord 等。
 

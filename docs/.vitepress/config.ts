@@ -85,7 +85,6 @@ function sidebarGuide() {
                 { text: '快速开始', link: '/guide/getting-started' },
                 { text: "指令列表", link: '/guide/useful-commands' },
                 { text: "配置项", link: '/guide/useful-configurations' },
-
             ]
         },
         {

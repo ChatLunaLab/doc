@@ -301,7 +301,7 @@ OpenAI 的 API Key。你需要填写你的 OpenAI 的 API Key。否则插件将�
 
 我们使用`chathub.setmodel`(或`设置模型`)命令来设置默认模型。
 
-首先需要向 bot 执行一次`chathub.listmodel`(或`模型列表`)命令，来查看当前已经安装的模型平台插件。
+首先需要使用`chathub.listmodel`(或`模型列表`)命令，来查看当前已经安装的模型平台插件。
 
 例如：
 ![执行了模型列表命令的结果](/images/model_list_1.png)
