@@ -27,7 +27,7 @@ Koishi ChatHub 是一个由 [LangChain](https://github.com/hwchase17/langchainjs
 
 - 想要立即使用此插件，请阅读 [快速开始](/guide/getting-started) 以开始使用此插件。
 
-- 想了解可用的命令或想了解某个命令如何使用，请查看 [命令列表](/guide/commands)。
+- 想了解可用的命令或想了解某个命令如何使用，请查看 [命令列表](/guide/useful-commands)。
 
 - 想了解如何配置某个模型平台，请查看 [配置模型平台](/guide/configure-model-platform)。
 

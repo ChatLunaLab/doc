@@ -1,6 +1,7 @@
 // @ts-ignore
 import { createRequire } from 'module'
 import { defineConfig } from 'vitepress'
+import { DefaultTheme } from 'vitepress/types/default-theme'
 
 export default defineConfig({
     lang: 'zh-CN',
@@ -21,6 +22,7 @@ export default defineConfig({
         nav: nav(),
         sidebar: {
             '/guide/': sidebarGuide(),
+            '/development/': sidebarDevelopment(),
         },
         editLink: {
             pattern: 'https://github.com/dingyi222666/koishi-chathub-doc/edit/main/docs/:path',
@@ -65,10 +67,10 @@ export default defineConfig({
     },
     locales: {
         root: {
-          label: 'Chinese',
-          lang: 'zh'
+            label: 'Chinese',
+            lang: 'zh'
         },
-      }
+    }
 
 })
 
@@ -120,6 +122,112 @@ function sidebarGuide() {
             text: 'FAQ',
             collapsed: false,
             items: []
+        }
+    ]
+}
+
+function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
+    return [
+        {
+            text: '总览',
+            link: '/development/introduction'
+        },
+        {
+            text: '开发起步',
+            collapsed: false,
+            items: [
+                {
+                    text: "为 ChatHub 开发插件",
+                    link: '/development/getting-started'
+                },
+                {
+                    text: "调用 ChatHub API",
+                    link: '/development/call-chathub-api'
+                }
+            ]
+        },
+        {
+            text: '接入核心服务',
+            collapsed: false,
+            items: [
+                {
+                    text: "语言模型",
+                    collapsed: true,
+                    link: '/development/connect-to-core-services/language-model'
+                },
+                {
+                    text: "嵌入模型",
+                    collapsed: true,
+                    link: '/development/connect-to-core-services/embedding-model'
+                },
+                {
+                    text: "向量数据库",
+                    collapsed: true,
+                    link: '/development/connect-to-core-services/vector-database'
+                },
+                {
+                    text: '中间件',
+                    collapsed: false,
+                    link: '/development/connect-to-core-services/middleware'
+                },
+            ]
+        },
+       
+        {
+            text: '调用核心服务',
+            collapsed: false,
+            items: [
+                {
+                    text: "语言模型",
+                    collapsed: true,
+                    link: '/development/call-core-services/language-model'
+                },
+                {
+                    text: "嵌入模型",
+                    collapsed: true,
+                    link: '/development/call-core-services/embedding-model'
+                },
+                {
+                    text: "向量数据库",
+                    collapsed: true,
+                    link: '/development/call-core-services/vector-database'
+                },
+            ]
+        },
+        {
+            text: 'API 参考',
+            collapsed: false,
+            items: [
+                {
+                    text: "ChatHub 服务 （ChatHub Service）",
+                    collapsed: true,
+                    link: '/development/api-reference/chathub-service'
+                },
+                {
+                    text: "ChatHub 中间件聊天链（ChatChain）",
+                    collapsed: true,
+                    link: '/development/api-reference/chathub-chat-chain'
+                },
+                {
+                    text: "ChatHub 大语言模型核心 （LLM Core）",
+                    collapsed: true,
+                    items: [
+                        { text: '人格预设 (Preset Template)', link: '/development/api-reference/llm-core/preset-template' },
+                        { text: '模型工厂 (Factory)', link: '/development/api-reference/llm-core/factory' },
+                        { text: '模型提供者 (Provider)', link: '/development/api-reference/llm-core/provider' },
+                        { text: '模型 (Model)', link: '/development/api-reference/llm-core/model' },
+                        { text: '模型聊天接口 (Model Chat Interface)', link: '/development/api-reference/llm-core/model-chat-interface' },
+                    ]
+                },
+                {
+                    text: "ChatHub 辅助工具 （ChatHub Utils）",
+                    collapsed: true,
+                    items: [
+                        { text: '日志 (logger)', link: '/development/api-reference/chathub-utils/logger' },
+                        { text: '请求工具 (request)', link: '/development/api-reference/chathub-utils/request' },
+                    ]
+                }
+            ]
         }
     ]
 }
