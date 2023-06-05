@@ -152,44 +152,37 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
             items: [
                 {
                     text: "语言模型",
-                    collapsed: true,
                     link: '/development/connect-to-core-services/language-model'
                 },
                 {
                     text: "嵌入模型",
-                    collapsed: true,
                     link: '/development/connect-to-core-services/embedding-model'
                 },
                 {
                     text: "向量数据库",
-                    collapsed: true,
                     link: '/development/connect-to-core-services/vector-database'
                 },
                 {
                     text: '中间件',
-                    collapsed: false,
                     link: '/development/connect-to-core-services/middleware'
                 },
             ]
         },
-       
+
         {
             text: '调用核心服务',
             collapsed: false,
             items: [
                 {
                     text: "语言模型",
-                    collapsed: true,
                     link: '/development/call-core-services/language-model'
                 },
                 {
                     text: "嵌入模型",
-                    collapsed: true,
                     link: '/development/call-core-services/embedding-model'
                 },
                 {
                     text: "向量数据库",
-                    collapsed: true,
                     link: '/development/call-core-services/vector-database'
                 },
             ]
@@ -200,12 +193,10 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
             items: [
                 {
                     text: "ChatHub 服务 （ChatHub Service）",
-                    collapsed: true,
                     link: '/development/api-reference/chathub-service'
                 },
                 {
                     text: "ChatHub 中间件聊天链（ChatChain）",
-                    collapsed: true,
                     link: '/development/api-reference/chathub-chat-chain'
                 },
                 {
