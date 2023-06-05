@@ -38,6 +38,7 @@ chathub.chat -m openai/gpt3.5-turbo 你好
 ``` text
 chathub.chat -c browsing 搜一下蔡徐坤和鸡你太美有什么关系？
 ```
+
 关于聊天模式，你可以查看 [聊天模式](/guide/useful-configurations/#聊天模式) 章节来了解。
 
 ### 语音聊天

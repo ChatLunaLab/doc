@@ -81,7 +81,6 @@ function sidebarGuide() {
     return [
         {
             text: '指南',
-            collapsed: false,
             items: [
                 { text: '介绍', link: '/guide/introduction' },
                 { text: '快速开始', link: '/guide/getting-started' },
@@ -91,7 +90,6 @@ function sidebarGuide() {
         },
         {
             text: '进阶',
-            collapsed: false,
             items: [
                 {
                     text: "配置模型平台",
@@ -120,7 +118,7 @@ function sidebarGuide() {
         },
         {
             text: 'FAQ',
-            collapsed: false,
+
             items: []
         }
     ]
@@ -134,7 +132,6 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
         },
         {
             text: '开发起步',
-            collapsed: false,
             items: [
                 {
                     text: "为 ChatHub 开发插件",
@@ -148,7 +145,6 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
         },
         {
             text: '接入核心服务',
-            collapsed: false,
             items: [
                 {
                     text: "语言模型",
@@ -171,7 +167,6 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
 
         {
             text: '调用核心服务',
-            collapsed: false,
             items: [
                 {
                     text: "语言模型",
@@ -189,7 +184,6 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
         },
         {
             text: 'API 参考',
-            collapsed: false,
             items: [
                 {
                     text: "ChatHub 服务 （ChatHub Service）",
