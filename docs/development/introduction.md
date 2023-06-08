@@ -12,9 +12,9 @@ ChatHub 本身并没有太复杂的架构和 API 设计，你可以选择性来�
 
 ## 预备知识
 
-ChatHub 是一个 Koishi 插件，因此你需要对 Koishi 和 Koishi 插件开发有一定了解。因此我们假定假定你已经拥有了一定的 Koishi 插件开发基础。如果你还不是很了解的话，可以查看 [Koishi 插件开发指南](https://koishi.chat/zh-CN/guide)。
+ChatHub 是一个 Koishi 插件，因此你需要对 Koishi 和 Koishi 插件开发有一定了解。因此我们假定你已经有了 Koishi 插件开发基础。如果你还不是很了解，可以阅读 [Koishi 插件开发指南](https://koishi.chat/zh-CN/guide)。
 
-我们在和 LLM 等相关的模型交互时，基于 LangChain。因此你还需要对 LangChain 有一定的了解。如果你还不是很了解的话，可以查看 [LangChain 文档](https://js.langchain.com/docs/)。
+我们在和 LLM 等相关的模型交互时，基于 LangChain。因此你还需要对 LangChain 有一定了解。如果你还不是很了解，可以阅读 [LangChain 文档](https://js.langchain.com/docs/)。
 
 ## 让我们开始吧！ 🎉
 
