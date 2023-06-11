@@ -203,7 +203,7 @@ vits 服务是此插件的可选服务依赖，它提供了文本转语音的相
 
 #### outputMode
 
-- 类型: 'raw' | 'voice' | 'text' | 'image' | 'mixed'
+- 类型: 'raw' | 'voice' | 'text' | 'image' | 'mixed-image' | 'mixed-voice'
 - 默认值: 'text'
 
 消息的输出格式。
@@ -225,9 +225,12 @@ vits 服务是此插件的可选服务依赖，它提供了文本转语音的相
 
     图片模式，将会使用 [marked](https://marked.js.org/) 来渲染模型生成的 arkdown 格式的文本为 html，使用 [puppeteer](https://puppeteer.koishi.chat/) 服务来将渲染成图片，然后输出。
     图片生成后我们同时也会将原始文本上传到 [Mozilla's Community Pastebin](https://pastebin.mozilla.org/)，并将上传后得到的链接以二维码的形式附加到图片上，方便用户查看原始文本）
-- 'mixed' (即为配置项的混合模式)
+- 'mixed-image' (即为配置项的混合文本+图像模式)
 
-    混合模式，将会使用 [marked](https://marked.js.org/) 来解析模型生成的 markdown 格式的文本，将解析后的文本分割成多条消息块，决定每个消息块是否需要渲染成图片（否则渲染成文本），然后输出。
+    混合模式，将会使用 [marked](https://marked.js.org/) 来解析模型生成的 markdown 格式的文本，然后将解析后文本分割成多条消息块，判断每个消息块是否含有部分 markdown 文本来确定是否需要渲染成图片（否则渲染成文本），然后输出。
+- 'mixed-voice' (即为配置项的混合文本+语音模式)
+
+    混合模型，将会使用 [koishi-plugin-markdown](https://markdown.koishi.chat/) 来解析模型生成的文本，然后在叠加 vits 服务来将模型生成的文本转为语音的结果，最后一起输出
 
 基础配置完成后，你就可以启用主插件了。
 

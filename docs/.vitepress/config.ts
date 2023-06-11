@@ -7,7 +7,7 @@ export default defineConfig({
     lang: 'zh-CN',
     title: 'Koishi ChatHub',
     // base: "",
-    description: 'Koishi ChatHub文档',
+    description: 'Koishi ChatHub 相关文档',
     ignoreDeadLinks: true,
     lastUpdated: true,
     cleanUrls: false,
@@ -33,7 +33,7 @@ export default defineConfig({
             { icon: 'github', link: 'https://github.com/dingyi222666/koishi-plugin-chathub' },
         ],
         footer: {
-            message: '在 GPL-3.0 许可下发布',
+            message: '在 AGPL-3.0 许可下发布',
             copyright: 'Copyright © 2023 dingyi'
         },
         lastUpdatedText: '上次更新时间',
@@ -92,20 +92,20 @@ function sidebarGuide() {
             text: '进阶',
             items: [
                 {
-                    text: "配置模型平台",
+                    text: "模型平台",
                     collapsed: true,
                     items: [
                         { text: 'OpenAI (API)', link: '/guide/configure-model-platform/openai' },
                     ]
                 },
                 {
-                    text: "配置嵌入模型",
+                    text: "嵌入模型",
                     collapsed: true,
                     items: [
                     ]
                 },
                 {
-                    text: "配置向量数据库",
+                    text: "向量数据库",
                     collapsed: true,
                     items: [
                     ]
