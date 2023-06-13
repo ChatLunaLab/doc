@@ -91,6 +91,7 @@ function sidebarGuide() {
         {
             text: '进阶',
             items: [
+
                 {
                     text: "模型平台",
                     collapsed: true,
@@ -111,8 +112,16 @@ function sidebarGuide() {
                     ]
                 },
                 {
+                    text: "会话，白名单，并发限制与聊天限额",
+                    link: '/guide/session-whitelist-concurrency-limit'
+                },
+                {
                     text: "预设系统",
                     link: '/guide/preset-system',
+                },
+                {
+                    text: "聊天模式与输出格式",
+                    link: '/guide/chat-mode-and-output-mode',
                 }
             ]
         },

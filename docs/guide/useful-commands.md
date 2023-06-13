@@ -56,12 +56,43 @@ chathub.voice 你好
 
 ## 预设
 
+关于预设系统的详细解释请查看 [预设系统](/guide/preset-system) 章节。
+此处只列出预设系统相关的指令。
+
 ### 列出预设列表
 
 输入 `chathub.listpresets` 就可以列出目前插件已经加载的全部预设。
+你也可以使用`预设列表`命令来代替`chathub.listpresets`命令。例如：
+
+``` text
+chathub.listpresets
+```
+
+### 切换预设
+
+输入 `chathub.setpreset` + 预设名就可以切换预设了。
+你也可以使用`切换预设`命令来代替`chathub.setpreset`命令。例如：
+
+``` text
+chathub.setpreset chatgpt
+```
+
+:::tip
+如果使用的是无参数的切换预设指令调用，那么不仅会对当前的默认会话进行切换预设，也会同时设置到默认的预设。这会同步影响新创建的会话。
+:::
 
 ## 模型
 
 ### 列出模型列表
 
 ### 设置默认模型
+
+## 会话 <Badge type="warning" text="暂未在当前版本实现" />
+
+### 列出全部会话
+
+### 列出群内全部会话
+
+### 列出某个用户的会话
+
+### 删除会话
