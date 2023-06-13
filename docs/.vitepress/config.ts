@@ -115,13 +115,18 @@ function sidebarGuide() {
                     text: "会话，白名单，并发限制与聊天限额",
                     link: '/guide/session-whitelist-concurrency-limit'
                 },
+
+                {
+                    text: "聊天模式与输出格式",
+                    link: '/guide/chat-mode-and-output-mode',
+                },
                 {
                     text: "预设系统",
                     link: '/guide/preset-system',
                 },
                 {
-                    text: "聊天模式与输出格式",
-                    link: '/guide/chat-mode-and-output-mode',
+                    text: "网络搜索支持",
+                    link: '/guide/web-search-support'
                 }
             ]
         },
@@ -201,6 +206,10 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                 {
                     text: "ChatHub 中间件聊天链（ChatChain）",
                     link: '/development/api-reference/chathub-chat-chain'
+                },
+                {
+                    text: "ChatHub (ChatHub Plugin)",
+                    link: '/development/api-reference/chathub-plugin'
                 },
                 {
                     text: "ChatHub 大语言模型核心 （LLM Core）",
