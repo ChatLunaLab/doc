@@ -298,15 +298,15 @@ OpenAI 的 API Key。你需要填写你的 OpenAI 的 API Key。否则插件将�
 
 但在`1.x`版本中，我们将此配置项移除了，因为我们认为这种设计并不合理。这会导致每个插件都要设置在自己插件里的默认模型。
 
-我们使用`chathub.setmodel`(或`设置模型`)命令来设置默认模型。
+我们使用`chathub.setmodel`(或`切换模型`)命令来设置默认模型。
 
 首先需要使用`chathub.listmodel`(或`模型列表`)命令，来查看当前已经安装的模型平台插件。
 
 例如：
 ![执行了模型列表命令的结果](/images/model_list_1.png)
 
-使用`chathub.setmodel`(或`设置模型`)命令来设置默认模型：
-![执行了设置模型命令的结果](/images/set_model_1.png)
+使用`chathub.setmodel`(或`切换模型`)命令来设置默认模型：
+![执行了切换模型命令的结果](/images/set_model_1.png)
 
 ## 聊天
 

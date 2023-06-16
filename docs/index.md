@@ -27,3 +27,13 @@ features:
     title: 高扩展性
     details: 中间件系统，多平台模型接入与调用 API ，易于第三方开发者扩展。
 ---
+
+<script setup>
+import { onMounted } from 'vue'
+import { fetchReleaseTag } from './.vitepress/utils/fetchReleaseTag.js'
+
+onMounted(() => {
+  fetchReleaseTag()
+})
+
+</script>
