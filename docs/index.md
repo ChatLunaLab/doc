@@ -14,7 +14,7 @@ hero:
       link: /guide/introduction
     - theme: alt
       text: 在 GitHub 上查看
-      link: https://github.com/dingyi222666/koishi-plugin-chathub
+      link: https://github.com/ChatHubLab/chathub
 
 features:
   - icon: 🛠️

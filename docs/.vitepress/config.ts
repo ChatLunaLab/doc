@@ -25,16 +25,16 @@ export default defineConfig({
             '/development/': sidebarDevelopment(),
         },
         editLink: {
-            pattern: 'https://github.com/dingyi222666/koishi-chathub-doc/edit/main/docs/:path',
+            pattern: 'https://github.com/ChatHubLab/doc/edit/main/docs/:path',
             text: '在 GitHub 上编辑此页'
         },
 
         socialLinks: [
-            { icon: 'github', link: 'https://github.com/dingyi222666/koishi-plugin-chathub' },
+            { icon: 'github', link: 'https://github.com/ChatHubLab/chathub' },
         ],
         footer: {
             message: '在 AGPL-3.0 许可下发布',
-            copyright: 'Copyright © 2023 dingyi'
+            copyright: 'Copyright © 2023 ChatHub Lab'
         },
         lastUpdatedText: '上次更新时间',
         returnToTopLabel: '返回顶部',

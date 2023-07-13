@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "chathub 插件的官方文档",
     "main": "index.js",
-    "repository": "https://github.com/dingyi222666/koishi-chathub-doc",
+    "repository": "https://github.com/ChatHubLab/doc",
     "author": "dingyi222666 <dingyi222666@foxmail.com>",
     "license": "MIT",
     "devDependencies": {

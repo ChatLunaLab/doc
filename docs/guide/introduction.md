@@ -34,4 +34,4 @@ Koishi ChatHub 是一个由 [LangChain](https://github.com/hwchase17/langchainjs
 - 是第三方插件开发者，想了解怎么接入或使用 ChatHub 提供的相关 API，请查看 [开发指南](/development/introduction) 了解如何使用此项目提供的 API。
 
 - 需要帮助我们完善或翻译文档？我们的文档在 Github 开源，你可以 fork 后提交 PR 来帮助我们完善或翻译文档。
-[项目地址](https://github.com/dingyi222666/koishi-chathub-doc)
+[项目地址](https://github.com/ChatHubLab/doc)
