@@ -1,25 +1,17 @@
 {
-  "name": "vitepress-project",
-  "version": "1.0.0",
-  "description": "chathub 插件的官方文档",
-  "main": "index.js",
-  "repository": "https://github.com/ChatHubLab/doc",
-  "author": "dingyi222666 <dingyi222666@foxmail.com>",
-  "license": "MIT",
-  "scripts": {
-    "dev": "vitepress dev docs",
-    "build": "vitepress build docs",
-    "serve": "vitepress serve docs"
-  },
-  "devDependencies": {
-    "vue": "3.2.44",
-    "vitepress": "1.0.0-alpha.28"
-  },
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "@algolia/client-search"
-      ]
+    "name": "koishi-chathub-doc",
+    "version": "1.0.0",
+    "description": "chathub 插件的官方文档",
+    "main": "index.js",
+    "repository": "https://github.com/ChatHubLab/doc",
+    "author": "dingyi222666 <dingyi222666@foxmail.com>",
+    "license": "MIT",
+    "devDependencies": {
+        "vitepress": "^1.0.0-beta.2"
+    },
+    "scripts": {
+        "dev": "vitepress dev docs",
+        "build": "vitepress build docs",
+        "serve": "vitepress serve docs"
     }
-  }
 }
