@@ -1,16 +1,16 @@
 # Koishi-ChatHub-Doc
 
-Koishi-ChatHub-Doc是一个开源的文档项目，它为Koishi-ChatHub插件服务提供使用教程和开发指南，帮助使用者或开发者更好地理解和使用Koishi-ChatHub插件服务。
+Koishi-ChatHub-Doc是一个开源的文档项目，为Koishi-ChatHub插件服务提供使用教程和开发指南，方便使用者或开发者更好地理解和使用Koishi-ChatHub插件服务。
 
 ## 特性
 
-- 详细的使用教程：该项目提供了详细的使用教程，覆盖了Koishi-ChatHub服务的各种功能和用法，方便使用者快速上手。
-- 完善的开发指南：该项目提供了完善的开发指南，包括如何扩展Koishi-ChatHub服务，如何开发新的聊天模型等等，方便开发者进行二次开发和定制化开发。
-- 开放的讨论区：该项目提供了开放的讨论区，使用者和开发者可以在其中交流问题和分享经验，以促进项目的发展和完善。
+- 详细的使用教程：提供了全面的使用教程，涵盖了Koishi-ChatHub服务的各种功能和用法，方便使用者快速上手。
+- 完善的开发指南：提供了完善的开发指南，包括如何扩展Koishi-ChatHub服务、如何开发新的聊天模型等等，方便开发者进行二次开发和定制化开发。
+- 开放的讨论区：提供了开放的讨论区，使用者和开发者可以在其中交流问题和分享经验，促进项目的发展和完善。
 
 ## 使用方法
 
-文档可以在 [官方文档](https://chathub.dingyi222666.top/) 查看，也可以在本地进行查看和编辑。以下是在本地运行该项目的步骤：
+文档可以在[官方文档 ↗](https://chathub.dingyi222666.top/)查看，也可以在本地进行查看和编辑。以下是在本地运行该项目的步骤：
 
 1. 克隆该项目：
 
@@ -22,13 +22,13 @@ git clone https://github.com/ChatHubLab/doc.git
 
 ```bash
 cd doc
-yarn install
+yarn install # 或者 npm install
 ```
 
 3. 启动项目：
 
 ```bash
-yarn dev
+yarn dev # 或者 npm run dev
 ```
 
 4. 在浏览器中访问以下地址：
@@ -68,8 +68,8 @@ git commit -m "my feature"
 git push origin my-feature
 ```
 
-6. 在 Koishi-ChatHub-Doc GitHub 主页的 [Branches](https://github.com/ChatHubLab/doc/branches) 创建 New Pull Request，并等待管理员审核和合并。
+6. 在Koishi-ChatHub-Doc GitHub主页的[Branches ↗](https://github.com/ChatHubLab/doc/branches)创建New Pull Request，并等待管理员审核和合并。
 
 ## 许可证
 
-该项目基于MIT许可证开源。任何使用者和开发者都可以自由使用、修改和分发该项目的代码和文档，但需要遵守MIT许可证的相关规定。
+该项目基于MIT许可证开源。任何使用者和开发者都可以自由地使用、修改和分发该项目的代码和文档，但需要遵守MIT许可证的相关规定。
