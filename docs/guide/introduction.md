@@ -1,4 +1,4 @@
-# Koishi ChatHub 插件介绍
+# 插件介绍
 
 Koishi ChatHub 是一款由 [LangChain](https://github.com/hwchase17/langchainjs) 驱动开发的语言模型聊天服务插件，运行在 Koishi 上。
 

@@ -25,7 +25,7 @@ features:
     details: 支持 OpenAI (API)、Bing Chat 等平台接入，并将继续接入更多平台。
   - icon: 🔩
     title: 高扩展性
-    details: 拥有中间件系统、多平台模型接入与调用 API 等特性，方便第三方开发者进行扩展。
+    details: 拥有中间件系统、多平台模型接入与调用 API 等特性，便于第三方开发者进行扩展。
 ---
 
 <script setup>
