@@ -12,7 +12,7 @@
 
 例如:
 
-``` text
+``` txt
 chathub.chat 你好
 ```
 
@@ -27,7 +27,7 @@ chathub.chat 你好
 
 使用 `-m` 或 `--model` 参数来指定模型平台。例如：
 
-``` text
+``` txt
 chathub.chat -m openai/gpt3.5-turbo 你好
 ```
 
@@ -35,7 +35,7 @@ chathub.chat -m openai/gpt3.5-turbo 你好
 
 使用 `-c` 或 `--chat-mode` 参数来指定聊天模式。例如:
 
-``` text
+``` txt
 chathub.chat -c browsing 搜一下蔡徐坤和鸡你太美有什么关系？
 ```
 
@@ -48,7 +48,7 @@ chathub.chat -c browsing 搜一下蔡徐坤和鸡你太美有什么关系？
 使用 `chathub.voice` + 内容就可以开始和模型语音聊天了。
 你也可以使用`语音聊天`命令来代替`chathub.voice`命令。例如:
 
-``` text
+``` txt
 chathub.voice 你好
 ```
 
@@ -64,7 +64,7 @@ chathub.voice 你好
 输入 `chathub.listpresets` 就可以列出目前插件已经加载的全部预设。
 你也可以使用`预设列表`命令来代替`chathub.listpresets`命令。例如：
 
-``` text
+``` txt
 chathub.listpresets
 ```
 
@@ -73,7 +73,7 @@ chathub.listpresets
 输入 `chathub.setpreset` + 预设名就可以切换预设了。
 你也可以使用`切换预设`命令来代替`chathub.setpreset`命令。例如：
 
-``` text
+``` txt
 chathub.setpreset chatgpt
 ```
 

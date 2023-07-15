@@ -7,7 +7,7 @@
     "author": "dingyi222666 <dingyi222666@foxmail.com>",
     "license": "MIT",
     "devDependencies": {
-        "vitepress": "^1.0.0-beta.2"
+        "vitepress": "^1.0.0-beta.5"
     },
     "scripts": {
         "dev": "vitepress dev docs",
