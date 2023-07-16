@@ -66,13 +66,13 @@ ChatHub 还需要一个提供 `cache` 服务的插件来存储某些临时配置
 
 进入主插件配置页面，以下是一些重要的配置项，其他配置项会在后续的章节了解到：
 
-- `isProxy`：是否使用代理，对国内用户**强烈推荐**开启。
+- [`isProxy`](/guide/useful-configurations.html#代理设置)：是否使用代理，对国内用户**强烈推荐**开启。
 
-- `proxyAddress`：代理地址，格式为 `http://host:port`。
+- [`proxyAddress`](/guide/useful-configurations.html#代理设置)：代理地址，格式为 `http://host:port`。
 
-- `msgCooldown`：全局冷却时间，避免请求过于频繁。
+- [`msgCooldown`](/guide/useful-configurations.html#回复选项)：全局冷却时间，避免请求过于频繁。
 
-- `outputMode`：回复的输出格式，支持语音、文本、图片等。
+- [`outputMode`](/guide/useful-configurations.html#回复选项)：回复的输出格式，支持语音、文本、图片等。
 
 ## 配置模型平台
 
