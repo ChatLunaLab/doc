@@ -98,6 +98,13 @@ function sidebarGuide() {
                     items: [
                         { text: '介绍', link: '/guide/configure-model-platform/introduction' },
                         { text: 'OpenAI (API)', link: '/guide/configure-model-platform/openai' },
+                        { text: 'New Bing', link: '/guide/configure-model-platform/bing-chat' },
+                        { text: 'Claude 2', link: '/guide/configure-model-platform/cluade-2' },
+                        { text: 'Poe', link: '/guide/configure-model-platform/poe' },
+                        { text: 'Bard', link: '/guide/configure-model-platform/bard' },
+                        { text: 'Lmsys', link: '/guide/configure-model-platform/lmsys' },
+                        { text: 'Chat GLM', link: '/guide/configure-model-platform/chat-glm' },
+                        { text: 'Copilot Hub（等待维护）', link: '/guide/configure-model-platform/copilot-hub' },
                     ]
                 },
                 {
@@ -105,6 +112,8 @@ function sidebarGuide() {
                     collapsed: true,
                     items: [
                         { text: '介绍', link: '/guide/configure-embedding-model/introduction' },
+                        { text: 'OpenAI Embeddings', link: '/guide/configure-embedding-model/openai-embeddings' },
+                        { text: 'Hugging Face Embeddings', link: '/guide/configure-embedding-model/hugging-face-embeddings' },
                     ]
                 },
                 {
@@ -112,6 +121,8 @@ function sidebarGuide() {
                     collapsed: true,
                     items: [
                         { text: '介绍', link: '/guide/configure-vector-database/introduction' },
+                        { text: 'Faiss', link: '/guide/configure-vector-database/faiss' },
+                        { text: 'Pinecone', link: '/guide/configure-vector-database/pinecone' },
                     ]
                 },
                 {
@@ -134,15 +145,38 @@ function sidebarGuide() {
                     link: '/guide/chat-mode-and-output-mode',
                 },
                 {
-                    text: "模型插件系统",
+                    text: "模型插件",
                     link: '/guide/model-plugin-system',
+                    items: [
+                        { text: '介绍', link: '/guide/model-plugin-system/introduction' },
+                        {
+                            text: '联网浏览搜索',
+                            link: '/guide/model-plugin-system/web-search'
+                        },
+                        {
+                            text : '网络请求',
+                            link: '/guide/model-plugin-system/request-web'
+                        },
+                        {
+                            text: '文件读写',
+                            link: '/guide/model-plugin-system/file-io'
+                        }
+                    ]
                 }
             ]
         },
         {
             text: 'FAQ',
-
-            items: []
+            items: [
+                {
+                    text: '代理常见问题',
+                    link: '/guide/faq/proxy'
+                },
+                {
+                    text: '模型常见问题',
+                    link: '/guide/faq/model'
+                }
+            ]
         }
     ]
 }
