@@ -85,7 +85,7 @@ function sidebarGuide() {
                 { text: '插件介绍', link: '/guide/introduction' },
                 { text: '快速上手', link: '/guide/getting-started' },
                 { text: "指令列表", link: '/guide/useful-commands' },
-                { text: "配置模型平台", link: '/guide/useful-configurations' },
+                { text: "配置项", link: '/guide/useful-configurations' },
             ]
         },
         {
