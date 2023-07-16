@@ -1,11 +1,11 @@
-# Koishi-ChatHub-Doc
+# koishi-chathub-doc
 
-Koishi-ChatHub-Doc 是一个开源的文档项目，为 Koishi-ChatHub 插件服务提供使用教程和开发指南，方便使用者或开发者更好地理解和使用 Koishi-ChatHub 插件服务。
+本项目是一个开源的文档项目，为 ChatHub 插件提供使用教程和开发指南，方便使用者或开发者更好地理解和使用 ChatHub 。
 
 ## 特性
 
-- 详细的使用教程：提供了全面的使用教程，涵盖了 Koishi-ChatHub 服务的各种功能和用法，方便使用者快速上手。
-- 完善的开发指南：提供了完善的开发指南，包括如何扩展 Koishi-ChatHub 服务、如何开发新的聊天模型等等，方便开发者进行二次开发和定制化开发。
+- 详细的使用教程：提供了全面的使用教程，涵盖了 Koishi ChatHub 服务的各种功能和用法，方便使用者快速上手。
+- 完善的开发指南：提供了完善的开发指南，包括如何扩展 Koishi ChatHub 服务、如何开发新的聊天模型等等，方便开发者进行二次开发和定制化开发。
 - 开放的讨论区：提供了开放的讨论区，使用者和开发者可以在其中交流问题和分享经验，促进项目的发展和完善。
 
 ## 使用方法
@@ -43,33 +43,33 @@ http://localhost:5173/
 
 1. 克隆该项目：
 
-```bash
-git clone https://github.com/ChatHubLab/doc.git
-```
+    ```bash
+    git clone https://github.com/ChatHubLab/doc.git
+    ```
 
 2. 创建新的分支：
 
-```bash
-git checkout -b my-feature
-```
+    ```bash
+    git checkout -b my-feature
+    ```
 
 3. 完成相关代码和文档的修改和编写。
 
 4. 提交代码到本地仓库：
 
-```bash
-git add .
-git commit -m "my feature"
-```
+    ```bash
+    git add .
+    git commit -m "my feature"
+    ```
 
 5. 推送分支到GitHub：
 
-```bash
-git push origin my-feature
-```
+    ```bash
+    git push origin my-feature
+    ```
 
-6. 在 Koishi-ChatHub-Doc GitHub 主页的[Branches ↗](https://github.com/ChatHubLab/doc/branches)创建 New Pull Request，并等待管理员审核和合并。
+6. 在 项目 GitHub 主页的[Branches ↗](https://github.com/ChatHubLab/doc/branches) 创建 New Pull Request，并等待管理员审核和合并。
 
 ## 许可证
 
-该项目基于 MIT 许可证开源。任何使用者和开发者都可以自由地使用、修改和分发该项目的代码和文档，但需要遵守 MIT 许可证的相关规定。
+该项目基于 Apache-2.0 许可证开源。任何使用者和开发者都可以自由地使用、修改和分发该文档项目，但需要遵守 Apache-2.0 许可证的相关规定。
