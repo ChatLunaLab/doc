@@ -1,29 +1,45 @@
 # 介绍
 
-单独使用嵌入模型插件对ChatHub本体并没有意义，但是通过与向量数据库并用能实现基于文本语义相似性的对话处理。目前，ChatHub通过嵌入模型插件和[向量数据库](../configure-vector-database/introduction.md)插件为用户提供长期记忆功能。
+嵌入模型(Embeddings) 可以将文本转换为向量，从而实现文本的语义表示。
 
-## 使用
+ChatHub 使用嵌入模型来将用户的输入，模型的输出等数据转换为向量。
 
-若你想在ChatHub上使用向量数据库。
-
-### 安装相应插件
-
-在koishi的插件市场搜索并安装`@dingyi222666/chathub-embeddings-service`。
-
-### 启用插件
-
-根据你要使用的嵌入模型进行简单配置后即可启用插件。
-
-#### 目前支持的嵌入模型
-
-- [openai-embeddings](openai-embeddings)
-
-- [hugging-face-embeddings](hugging-face-embeddings)
-
-启用插件后可在ChatHub本体[配置项](../useful-configurations)中选择[默认使用的嵌入模型](../useful-configurations#模型选项)。
-
-也可以使用指令设置默认嵌入模型，详见[嵌入模型和向量数据库管理](../useful-commands.md#嵌入模型和向量数据库管理)。
+目前，ChatHub 通过 嵌入模型 和 [向量数据库](../configure-vector-database/introduction.md) 为用户提供 [长期记忆]()功能。
 
 ::: tip
-单独使用`嵌入模型`插件并不会为`ChatHub`带来任何变化，我们建议你同时安装并启用[向量数据库](../configure-vector-database/introduction.md)插件以体验全部功能。
+在未来，我们可能还会基于嵌入模型和长期记忆库，实现基于资料的 QA 问答。
 :::
+
+嵌入模型的服务由多个插件提供，这其中某些模型适配器已经提供了相关服务，如 [OpenAI](./openai-embeddings.md)。
+
+因此，你可以直接使用这些插件来使用嵌入模型服务而无需安装嵌入模型服务插件。
+
+如果你不想使用模型适配器自带的嵌入模型服务，你也可以使用 ChatHub 提供的嵌入模型服务插件。
+
+这里面提供了一些嵌入模型的适配器，你可以根据自己的需求选择合适的模型。
+
+下面我们将介绍如何安装嵌入模型服务插件。
+
+## 安装
+
+前往 Koishi 的插件市场，搜索 `chathub-embeddings-service`，并安装。
+
+此插件还需要配置后才能使用，你可以在左侧的导航栏中选择你感兴趣的嵌入模型平台，然后按照其介绍进行配置。
+
+## 支持的模型
+
+我们目前支持以下提供了嵌入模型的平台：
+
+- [OpenAI](openai-embeddings)
+
+- [Hugging Face](hugging-face-embeddings)
+
+你可以点击上面的链接查看如何配置相应的嵌入模型。
+
+## 使用嵌入模型
+
+当你接入一个嵌入模型后，你需要将它设置为默认的嵌入模型。
+
+你可以在本体的配置项中 [选择](../useful-configurations#模型选项) 默认使用的嵌入模型。
+
+也可使用指令设置默认嵌入模型，详见 [嵌入模型和向量数据库管理](../useful-commands.md#嵌入模型和向量数据库管理)。

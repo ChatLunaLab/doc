@@ -97,7 +97,7 @@ function sidebarGuide() {
                     collapsed: true,
                     items: [
                         { text: '介绍', link: '/guide/configure-model-platform/introduction' },
-                        { text: 'OpenAI (API)', link: '/guide/configure-model-platform/openai' },
+                        { text: 'OpenAI', link: '/guide/configure-model-platform/openai' },
                         { text: 'New Bing', link: '/guide/configure-model-platform/bing-chat' },
                         { text: 'Claude 2', link: '/guide/configure-model-platform/cluade-2' },
                         { text: 'Poe', link: '/guide/configure-model-platform/poe' },
@@ -136,13 +136,23 @@ function sidebarGuide() {
                     ]
                 },
                 {
-                    text: "会话，白名单，并发限制与聊天限额",
-                    link: '/guide/session-whitelist-concurrency-limit'
+                    text: "会话相关",
+                    collapsed: true,
+                    items: [
+                        { text: "会话", link: '/guide/session-related/session' },
+                        { text: "白名单", link: '/guide/session-related/whitelist' },
+                        { text: "适配器并发限制", link: '/guide/session-related/concurrency-limit' },
+                        { text: "聊天限额", link: '/guide/session-related/chat-limit' },
+                    ]
                 },
-
                 {
-                    text: "聊天模式与输出格式",
-                    link: '/guide/chat-mode-and-output-mode',
+                    text: "聊天链",
+                    collapsed: true,
+                    items: [
+                        { text: '介绍', link: '/guide/chat-chain/introduction' },
+                        { text: '聊天模式', link: '/guide/chat-chain/chat-mode' },
+                        { text: '输出格式', link: '/guide/chat-chain/output-mode' },
+                    ]
                 },
                 {
                     text: "模型插件",
