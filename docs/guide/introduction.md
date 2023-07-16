@@ -20,4 +20,4 @@
 - 指令列表：请参考 [指令列表](/guide/useful-commands) 来了解可用指令或某个指令的用法。
 - 配置模型平台：请参考 [配置模型平台](/guide/configure-model-platform) 来了解如何配置某个语言模型平台。
 - 开发指南：如果您是第三方插件开发者，请参考 [开发指南](/development/introduction) 来了解如何接入或使用 ChatHub 提供的相关 API。
-- 帮助和贡献：如果您想要帮助我们完善或翻译文档，请在 Github 上 fork 后提交 PR。[项目地址](https://github.com/ChatHubLab/doc)
+- 帮助和贡献：如果您想要帮助我们完善或翻译文档，请在 Github 上 Fork 文档项目后提交 PR。[项目地址](https://github.com/ChatHubLab/doc)
