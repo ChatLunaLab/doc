@@ -82,11 +82,11 @@ ChatHub 还需要一个提供 `cache` 服务的插件来存储某些临时配置
 
 - `apiEndpoint`：OpenAI API 的基础地址，可配置反向代理地址。
 
-配置好后启用相关插件即可。可以使用 [`chathub.listmodel`](http://localhost:5173/guide/useful-commands.html#chathub-listmodel) 查看已启用的平台。
+配置好后启用相关插件即可。可以使用 [`chathub.listmodel`](/guide/useful-commands.html#chathub-listmodel) 查看已启用的平台。
 
 ## 设置默认模型
 
-使用 [`chathub.setmodel`](http://localhost:5173/guide/useful-commands.html#chathub-setmodel) 命令设置默认聊天模型。
+使用 [`chathub.setmodel`](/guide/useful-commands.html#chathub-setmodel) 命令设置默认聊天模型。
 
 ## 开始聊天
 
