@@ -1,12 +1,12 @@
 # 插件介绍
 
-[ChatHub](https://github.com/ChatHubLab/chathub) 是一款基于 [LangChain](https://github.com/hwchase17/langchainjs) 的语言模型聊天服务插件，可以运行在 [Koishi](https://koishi.chat/zh-CN/) 框架上。
+[ChatHub](https://github.com/ChatHubLab/chathub) 是一款基于 [LangChain](https://github.com/hwchase17/langchainjs) 的语言模型聊天服务插件，运行在 [Koishi](https://koishi.chat/zh-CN/) 上。
 
-它可以对接目前流行的语言模型或平台，如 OpenAI（API）、New Bing、ChatGLM 等，让用户与这些模型进行有趣的聊天互动。项目底层和语言模型交互基于 LangChain，第三方 Koishi 插件开发者也可以使用此项目提供的 [LangChain Model](https://js.langchain.com/docs/modules/models/chat/) 和语言模型进行交互。
+它可以对接目前流行的语言模型或平台，如 OpenAI（API）、New Bing、ChatGLM 等，让用户与这些模型进行聊天互动。项目底层和语言模型交互的模块基于 LangChain，第三方 Koishi 插件开发者也可以使用此项目提供的 [LangChain Model](https://js.langchain.com/docs/modules/models/chat/) 和语言模型进行交互。
 
 ## 特性
 
-- 高扩展性：利用 LangChain 和 Koishi 提供的扩展 API，第三方插件开发者可以轻松地扩展或调用此项目的服务，如添加新的语言模型、自定义模型参数等。
+- 高扩展性：利用 LangChain 和 Koishi 提供的扩展 API，第三方插件开发者可以轻松地扩展或调用此项目的服务，如添加新的语言模型、调用语言模型等。
 - 预设系统：支持设置会话预设，调整模型的行为和风格。
 - 黑名单系统：支持全局冷却时间和模型并发请求限制，以及按小时的模型调用额度限制，方便管理模型的调用限额等。
 - 多媒体回复：支持语音/文字/图片/图文混合回复，也支持解析生成的 markdown，实现自然地分割成多条消息来发送。
