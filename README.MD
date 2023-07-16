@@ -1,11 +1,11 @@
 # Koishi-ChatHub-Doc
 
-Koishi-ChatHub-Doc是一个开源的文档项目，为Koishi-ChatHub插件服务提供使用教程和开发指南，方便使用者或开发者更好地理解和使用Koishi-ChatHub插件服务。
+Koishi-ChatHub-Doc 是一个开源的文档项目，为 Koishi-ChatHub 插件服务提供使用教程和开发指南，方便使用者或开发者更好地理解和使用 Koishi-ChatHub 插件服务。
 
 ## 特性
 
-- 详细的使用教程：提供了全面的使用教程，涵盖了Koishi-ChatHub服务的各种功能和用法，方便使用者快速上手。
-- 完善的开发指南：提供了完善的开发指南，包括如何扩展Koishi-ChatHub服务、如何开发新的聊天模型等等，方便开发者进行二次开发和定制化开发。
+- 详细的使用教程：提供了全面的使用教程，涵盖了 Koishi-ChatHub 服务的各种功能和用法，方便使用者快速上手。
+- 完善的开发指南：提供了完善的开发指南，包括如何扩展 Koishi-ChatHub 服务、如何开发新的聊天模型等等，方便开发者进行二次开发和定制化开发。
 - 开放的讨论区：提供了开放的讨论区，使用者和开发者可以在其中交流问题和分享经验，促进项目的发展和完善。
 
 ## 使用方法
@@ -68,8 +68,8 @@ git commit -m "my feature"
 git push origin my-feature
 ```
 
-6. 在Koishi-ChatHub-Doc GitHub主页的[Branches ↗](https://github.com/ChatHubLab/doc/branches)创建New Pull Request，并等待管理员审核和合并。
+6. 在 Koishi-ChatHub-Doc GitHub 主页的[Branches ↗](https://github.com/ChatHubLab/doc/branches)创建 New Pull Request，并等待管理员审核和合并。
 
 ## 许可证
 
-该项目基于MIT许可证开源。任何使用者和开发者都可以自由地使用、修改和分发该项目的代码和文档，但需要遵守MIT许可证的相关规定。
+该项目基于 MIT 许可证开源。任何使用者和开发者都可以自由地使用、修改和分发该项目的代码和文档，但需要遵守 MIT 许可证的相关规定。
