@@ -140,8 +140,9 @@ function sidebarGuide() {
                     collapsed: true,
                     items: [
                         { text: "会话", link: '/guide/session-related/session' },
-                        { text: "白名单", link: '/guide/session-related/whitelist' },
-                        { text: "适配器并发限制", link: '/guide/session-related/concurrency-limit' },
+                        { text: "黑名单", link: '/guide/session-related/blacklist' },
+                        { text: "长期记忆", link: '/guide/session-related/long-term-memory' },
+                        { text: "并发限制", link: '/guide/session-related/concurrency-limit' },
                         { text: "聊天限额", link: '/guide/session-related/chat-limit' },
                     ]
                 },
@@ -164,7 +165,7 @@ function sidebarGuide() {
                             link: '/guide/model-plugin-system/web-search'
                         },
                         {
-                            text : '网络请求',
+                            text: '网络请求',
                             link: '/guide/model-plugin-system/request-web'
                         },
                         {

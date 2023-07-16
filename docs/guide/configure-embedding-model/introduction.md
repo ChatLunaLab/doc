@@ -4,7 +4,7 @@
 
 ChatHub 使用嵌入模型来将用户的输入，模型的输出等数据转换为向量。
 
-目前，ChatHub 通过 嵌入模型 和 [向量数据库](../configure-vector-database/introduction.md) 为用户提供 [长期记忆]()功能。
+目前，ChatHub 通过 嵌入模型 和 [向量数据库](../configure-vector-database/introduction.md) 为用户提供 [长期记忆](guide/session-related/long-term-memory) 功能。
 
 ::: tip
 在未来，我们可能还会基于嵌入模型和长期记忆库，实现基于资料的 QA 问答。
