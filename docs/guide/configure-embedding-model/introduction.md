@@ -18,7 +18,7 @@
 
 - [openai-embeddings](openai-embeddings)
 
-- [hugging-face-embeddings](openai-embeddings)
+- [hugging-face-embeddings](hugging-face-embeddings)
 
 启用插件后可在ChatHub本体[配置项](../useful-configurations)中选择[默认使用的嵌入模型](../useful-configurations#模型选项)。
 
