@@ -33,7 +33,7 @@ export default defineConfig({
             { icon: 'github', link: 'https://github.com/ChatHubLab/chathub' },
         ],
         footer: {
-            message: '在 AGPL-3.0 许可下发布',
+            message: '文档在 Apache 2.0 许可下发布',
             copyright: 'Copyright © 2023 ChatHub Lab'
         },
         lastUpdatedText: '上次更新时间',
