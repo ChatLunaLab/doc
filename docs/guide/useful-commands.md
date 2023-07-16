@@ -1,231 +1,222 @@
 # 指令列表
 
-本章节介绍了 `chathub` 模块提供的所有命令，以及它们的用法和参数。这些命令可以在聊天中使用，以控制聊天链的行为和配置。
+本章节介绍了 ChatHub 提供的所有命令，以及它们的用法和参数。
 
-## chathub
+这些命令可以在聊天中使用，控制和配置 ChatHub 的各种功能。
 
-```sh 
-chathub 
-```
+你可以查看右侧的目录，快速找到你想要了解或使用的的命令。
 
-该命令用于查看所有子命令，需要至少 1 级权限。该命令有以下子命令，可以用来控制不同的聊天功能和配置。
+## 交互式对话
 
-::: tip 用户权限
-基于 Koishi 内部默认的 [权限系统](https://koishi.chat/zh-CN/manual/usage/permission.html#%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90)，它为每个用户赋予了一个权限等级。
-:::
+交互式对话是用户和 ChatHub 交互的主要方式，用户可以通过输入文本来和 ChatHub 进行对话，ChatHub 会根据用户的输入和当前的聊天模式与模型，让模型生成回复，并发送给用户。
 
-### 交互式对话
-
-- [`chathub.chat`](/guide/useful-commands.html#chathub-chat): 开始和模型进行对话
-- [`chathub.voice`](/guide/useful-commands.html#chathub-voice): 和模型进行对话并输出为语音
-
-### 会话管理
-
-- [`chathub.queryconverstion`](/guide/useful-commands.html#chathub-queryconverstion): 查询会话列表
-- [`chathub.deleteconverstaion`](/guide/useful-commands.html#chathub-deleteconverstaion): 删除会话
-- [`chathub.deleteallconverstaion`](/guide/useful-commands.html#chathub-deleteallconverstaion): 删除和你相关的所有会话
-- [`chathub.reset`](/guide/useful-commands.html#chathub-reset): 重置会话记录
-
-### 模型管理
-
-- [`chathub.listmodel`](/guide/useful-commands.html#chathub-listmodel): 列出所有目前支持的模型
-- [`chathub.setmodel`](/guide/useful-commands.html#chathub-setmodel): 设置当前默认使用的模型
-
-### 嵌入模型和向量存储管理
-
-- [`chathub.listembeddings`](/guide/useful-commands.html#chathub-listembeddings): 列出所有目前支持的嵌入模型
-- [`chathub.setembeddings`](/guide/useful-commands.html#chathub-setembeddings): 设置默认使用的嵌入模型
-- [`chathub.listvectorStore`](/guide/useful-commands.html#chathub-listvectorstore): 列出所有目前支持的向量数据库
-- [`chathub.setvectorstore`](/guide/useful-commands.html#chathub-setvectorstore): 设置默认使用的向量数据库
-
-### 预设管理
-
-- [`chathub.listpreset`](/guide/useful-commands.html#chathub-listpreset): 列出所有目前支持的预设
-- [`chathub.setpreset`](/guide/useful-commands.html#chathub-setpreset): 设置当前使用的预设
-- [`chathub.resetpreset`](/guide/useful-commands.html#chathub-resetpreset): 重置为默认使用的预设 (chatgpt 预设)
-- [`chathub.addpreset`](/guide/useful-commands.html#chathub-addpreset): 添加一个预设
-- [`chathub.deletepreset`](/guide/useful-commands.html#chathub-deletepreset): 删除一个预设
-
-### 数据管理
-
-- [`chathub.wipe`](/guide/useful-commands.html#chathub-wipe): 清空 chathub 的所有使用数据
-- [`chathub.listchatmode`](/guide/useful-commands.html#chathub-listchatmode): 列出目前支持的聊天模式
-
-## chathub 子命令
-
-### 交互式对话
-
-#### chathub.chat
+### 和模型对话
 
 ```sh
 chathub.chat <message:text>
 ```
 
-该子命令用于发送文本消息给模型，并接收模型的回复，需要至少 1 级权限。执行后会根据当前的聊天模式和模型，生成一条回复消息，并显示在聊天界面上。
+和模型进行对话。
 
-该子命令有一个必选参数 `<message:text>`，表示要发送给模型的文本内容。如果文本内容为空或无效，会返回一个错误信息。
+执行后会根据用户的输入和当前的聊天模式与模型，让模型生成回复，并发送给用户。如
 
-该子命令还有以下可选参数:
+```sh
+chathub.chat 你是？
+```
+
+参数 `message`，表示要发送给模型的文本内容。如果文本内容为空或无效，会返回一个错误信息。
+
+还有以下可选参数应用于此命令：
 
 | 参数                    | 说明                                           | 权限 |
 |-----------------------|----------------------------------------------|----|
-| -c \<chatMode:string> | 选择聊天模式，可以是 `Balanced`、`Creative` 或 `Precise` | 1  |
-| -m \<model:string>    | 选择聊天模型，可以是 `chatgpt`、`chatgpt2` 或 `chatgpt3` | 1  |
+| -c \<chatMode:string> | 聊天模式，如 `chat`,`plugin`,`browsing` | 1  |
+| -m \<model:string>    | 使用的模型，如 `openai/gpt-3.5-turbo`,`claude2/claude2`| 1  |
 
-该子命令还有一个别名 `聊天`，可以用来替代 `chathub.chat`。
+你也可以使用别名 `聊天` 命令来替代 `chathub.chat`。
 
-#### chathub.voice
+### 语音聊天
 
 ```sh
 chathub.voice [model:string] <message:text>
 ```
 
-该子命令用于发送文本消息给模型，并接收模型的回复，并将回复转换为语音，需要至少 1
-级权限。执行后会根据当前的聊天模式和模型，生成一条回复消息，并调用语音服务将其转换为语音文件，并播放在聊天界面上。
+和模型进行对话并输出为语音。
+
+执行后会根据用户的输入和当前的聊天模式与模型，让模型生成回复，并调用语音服务将其转换为语音文件，发送给用户。如：
+
+```sh
+chathub.voice 芝士雪豹
+```
 
 该子命令有两个参数:
 
-- `[model:string]`:表示要切换到的模型名称。如果不指定，则保持当前模型不变。如果指定了该参数，则必须在其后加上一个空格，然后再输入文本内容。
-- `<message:text>`:表示要发送给模型的文本内容。如果没有指定 model 参数，则使用 message 参数作为消息内容。如果文本内容为空或无效，会返回一个错误信息。
+参数 `message`，表示要发送给模型的文本内容。如果文本内容为空或无效，会返回一个错误信息。
+参数 `model`，表示要切换到的模型名称。如果不使用该参数，则使用设置的默认模型。
 
-该子命令还有以下可选参数:
+还有以下可选参数应用于此命令：
 
-| 参数                     | 说明                         | 权限 |
+| 参数                    | 说明                         | 权限 |
 |------------------------|----------------------------|----|
-| -c \<chatMode:string>  | 选择聊天模式（目前还不可用）             | 1  |
-| -s \<speakerId:number> | 语音服务的目标人物的ID，可以是 0、1、2 或 3 | 1  |
+| -c \<chatMode:string>  | 选择聊天模式，同上  | 1  |
+| -s \<speakerId:number> | 语音服务的目标人物的ID，如 114 | 1  |
 
-该子命令还有一个别名 `转语音聊天`，可以用来替代 `chathub.voice`。
+你也可以使用别名 `语音聊天` 命令来替代 `chathub.voice`。
 
-### 会话管理
+## 会话管理
 
-#### chathub.queryconverstion
+会话管理是 ChatHub 的一个重要功能，它可以删除某个会话，重置会话聊天记录等。
+
+### 查询会话
 
 ```sh
 chathub.queryconverstion [model:string]
 ```
 
-该子命令用于查询会话列表，需要至少 1 级权限。执行后会返回一个列表，显示所有与当前用户相关的会话及其信息。
+查询会话列表。
 
-该子命令有一个可选参数 `[model:string]`，表示要查询的模型名称。如果不指定，则查询所有模型的会话。
+执行后会显示所有与执行此命令的用户相关的会话及其信息。如：
 
-该子命令还有以下可选参数:
+```sh
+chathub.queryconverstion
+```
+
+参数 `model`，表示要查询的模型名称。如果不指定，则查询所有模型的会话。
+
+还有以下可选参数应用于此命令：
 
 | 参数                    | 说明                                           | 权限 |
 |-----------------------|----------------------------------------------|----|
-| -m \<model:string>    | 选择模型，可以是 `chatgpt`、`chatgpt2` 或 `chatgpt3`   | 1  |
-| -c \<chatMode:string> | 选择聊天模式，可以是 `Balanced`、`Creative` 或 `Precise` | 1  |
+| -m \<model:string>    | 目标模型，如 `openai/gpt-3.5-turbo`,`claude2/claude2`  | 1  |
+| -c \<chatMode:string> | 目标聊天模式，如 `chat`,`plugin`,`browsing` | 1  |
 
-该子命令还有一个别名 `会话列表`，可以用来替代 `chathub.queryconverstion`。
+你也可以使用别名 `会话列表` 命令用来替代 `chathub.queryconverstion`。
 
-#### chathub.deleteconverstaion
+### 删除会话
 
 ```sh
-chathub.deleteconverstaion <id:string>
+chathub.deleteconverstaion [id:string]
 ```
 
-该子命令用于删除会话，需要至少 1 级权限。执行后会根据指定的会话 ID，从数据库中删除对应的会话记录，并重置聊天状态。
+删除会话。
 
-该子命令有一个必选参数 `<id:string>`，表示要删除的会话 ID。如果不存在该 ID 的会话，会返回一个错误信息。
+执行后会根据指定的会话 ID，从数据库中删除对应的会话记录。如：
 
-该子命令没有可选参数。
+```sh
+chathub.deleteconverstaion 3C404694-9F5C-1C6D-9F0F-9D6CA125D51E
+```
 
-该子命令还有一个别名 `删除会话`，可以用来替代 `chathub.deleteconverstaion`。
+参数 id 表示要删除的会话 ID。这是一个必须参数。
 
-#### chathub.deleteallconverstaion
+目前的会话 ID 使用 uuid v4 生成，因此会话 ID 的格式为 uuid v4 的格式，如 `3C404694-9F5C-1C6D-9F0F-9D6CA125D51E`。
+
+你也可以使用 `删除会话` 命令来替代 `chathub.deleteconverstaion`。
+
+### 删除所有会话
+
+用于删除和执行此命令用户相关的所有会话，需要至少 3 级权限。执行后会从数据库中删除所有与当前用户相关的会话记录。如：
 
 ```sh
 chathub.deleteallconverstaion
 ```
 
-该子命令用于删除和你相关的所有会话，需要至少 3 级权限。执行后会从数据库中删除所有与当前用户相关的会话记录，并重置聊天状态。
+你也可以使用别名 `删除所有会话` 命令来替代 `chathub.deleteallconverstaion`。
 
-该子命令没有参数。
-
-该子命令还有一个别名 `删除所有会话`，可以用来替代 `chathub.deleteallconverstaion`。
-
-#### chathub.reset
+### 重置会话
 
 ```sh
 chathub.reset [model:string]
 ```
 
-该子命令用于重置会话记录（注意不会清除长期记忆），需要至少 1 级权限。执行后会清空当前会话的聊天历史，并重新初始化聊天链的状态。
+用于重置当前使用会话记录。如：
 
-该子命令有一个可选参数 `[model:string]`，表示要重置为的模型名称。如果不指定，则保持当前模型不变。
+```sh
+chathub.reset
+```
 
-该子命令还有以下可选参数:
+::: tip
+此命令不会重置长期记忆。
+:::
+
+参数 `model`，表示要重置的会话的模型名称。如果不使用，则保持当前默认的模型。
+
+还有以下可选参数，这些参数用于约束所重置的会话的范围：
 
 | 参数                    | 说明                                           | 权限 |
 |-----------------------|----------------------------------------------|----|
-| -c \<chatMode:string> | 选择聊天模式，可以是 `Balanced`、`Creative` 或 `Precise` | 1  |
+| -c \<chatMode:string> | 目标聊天模式，如 `chat`,`plugin`,`browsing`  | 1  |
 
-该子命令还有一个别名 `重置会话`，可以用来替代 `chathub.reset`。
+你也可以使用别名 `重置会话` 命令来替代 `chathub.reset`。
 
-### 模型管理
+## 模型管理
 
-#### chathub.listmodel
+模型管理是 ChatHub 的一个重要功能，它可以列出所有支持的模型，切换当前使用的模型等。
+
+### 模型列表
 
 ```sh
 chathub.listmodel
 ```
 
-该子命令用于列出所有目前支持的模型，需要至少 1
-级权限。模型是聊天链的核心组件，负责生成聊天内容。目前支持的模型有 `chatgpt`、`chatgpt2` 和 `chatgpt3`。
+用于列出所有目前支持的模型。执行后会返回一个列表，显示所有可用的模型。如：
 
-该子命令没有参数，执行后会返回一个列表，显示所有可用的模型及其简介。
+```sh
+chathub.listmodel
+```
+
+关于模型，详见[模型平台](/guide/configure-model-platform/introduction)
 
 该子命令还有一个别名 `模型列表`，可以用来替代 `chathub.listmodel`。
 
-#### chathub.setmodel
+### 设置模型
 
 ```sh
 chathub.setmodel <model>
 ```
 
-该子命令用于设置当前群聊/私聊默认使用的模型，需要至少 1 级权限。执行后会根据指定的模型名称，修改聊天链的配置，并重置聊天状态。
+该子命令用于设置当前群聊/私聊默认使用的模型，需要至少 1 级权限。执行后会根据指定的模型名称，修改默认模型配置。
 
-该子命令有一个必选参数 `<model>`，表示要切换到的模型名称。如果不存在该名称的模型，会返回一个错误信息。
+该子命令有一个必选参数 `<model>`，表示要切换到的模型名称。如果不存在该名称的模型，会返回错误信息。
 
 该子命令还有以下可选参数:
 
 | 参数 | 说明                                     | 权限 |
 |----|----------------------------------------|----|
-| -g | 也设置为全局会话默认的模型？如果指定了该参数，则所有新建的会话都会使用该模型 | 1  |
+| -g | 也设置为全局默认的模型。如果指定了该参数，则所有新建的会话都会使用该模型 | 1  |
 
 该子命令还有一个别名 `切换模型`，可以用来替代 `chathub.setmodel`。
 
-### 嵌入模型和向量存储管理
+## 嵌入模型和向量数据库管理
 
-#### chathub.listembeddings
+### 列出嵌入模型
 
 ```sh
 chathub.listembeddings
 ```
 
-该子命令用于列出所有目前支持的嵌入模型，需要至少 1
-级权限。嵌入模型是一种将文本转换为向量的方法，可以用来计算文本之间的相似度或语义关系。目前支持的嵌入模型有 `bert`、`word2vec`
-和 `fasttext`。
+该子命令用于列出所有目前支持的嵌入模型，需要至少 1 级权限。
+
+有关嵌入模型的详细信息，请参见[嵌入模型](/guide/configure-embedding-model/introduction)
 
 该子命令没有参数，执行后会返回一个列表，显示所有可用的嵌入模型及其简介。
 
 该子命令还有一个别名 `嵌入模型列表`，可以用来替代 `chathub.listembeddings`。
 
-#### chathub.listvectorStore
+### 列出向量数据库
 
 ```sh
 chathub.listvectorStore
 ```
 
-该子命令用于列出所有目前支持的向量数据库，需要至少 1
-级权限。向量数据库是一种存储和查询向量的工具，可以用来快速检索与给定向量最相似的向量。目前支持的向量数据库有 `faiss`、`annoy`
-和 `nmslib`。
+该子命令用于列出所有目前支持的向量数据库，需要至少 1级权限。
+
+有关向量数据库的详细信息，请参见[向量数据库](/guide/configure-vector-store/introduction)
 
 该子命令没有参数，执行后会返回一个列表，显示所有可用的向量数据库及其简介。
 
 该子命令还有一个别名 `向量数据库列表`，可以用来替代 `chathub.listvectorStore`。
 
-#### chathub.setembeddings
+### 设置默认嵌入模型
 
 ```sh
 chathub.setembeddings <embeddings:string>
@@ -235,11 +226,9 @@ chathub.setembeddings <embeddings:string>
 
 该子命令有一个必选参数 `<embeddings:string>`，表示要切换到的嵌入模型名称。如果不存在该名称的嵌入模型，会返回一个错误信息。
 
-该子命令没有可选参数。
-
 该子命令还有一个别名 `设置嵌入模型`，可以用来替代 `chathub.setembeddings`。
 
-#### chathub.setvectorstore
+### 设置默认向量数据库
 
 ```sh
 chathub.setvectorstore <vectorStore:string>
@@ -249,13 +238,11 @@ chathub.setvectorstore <vectorStore:string>
 
 该子命令有一个必选参数 `<vectorStore:string>`，表示要切换到的向量数据库名称。如果不存在该名称的向量数据库，会返回一个错误信息。
 
-该子命令没有可选参数。
-
 该子命令还有一个别名 `设置向量数据库`，可以用来替代 `chathub.setvectorstore`。
 
-### 预设管理
+## 预设管理
 
-#### chathub.listpreset
+### 预设列表
 
 ```sh
 chathub.listpreset
@@ -267,7 +254,7 @@ chathub.listpreset
 
 该子命令还有一个别名 `预设列表`，可以用来替代 `chathub.listpreset`。
 
-#### chathub.setpreset
+### 设置预设
 
 ```sh
 chathub.setpreset <preset:string>
@@ -287,7 +274,7 @@ chathub.setpreset <preset:string>
 
 该子命令还有一个别名 `切换预设`，可以用来替代 `chathub.setpreset`。
 
-#### chathub.resetpreset
+### 重置预设
 
 ```sh
 chathub.resetpreset [model:string]
@@ -305,7 +292,7 @@ chathub.resetpreset [model:string]
 
 该子命令还有一个别名 `重置预设`，可以用来替代 `chathub.resetpreset`。
 
-#### chathub.addpreset
+### 添加预设
 
 ```sh
 chathub.addpreset <preset:string>
@@ -319,7 +306,7 @@ chathub.addpreset <preset:string>
 
 该子命令还有一个别名 `添加预设`，可以用来替代 `chathub.addpreset`。
 
-#### chathub.deletepreset
+### 删除预设
 
 ```sh
 chathub.deletepreset <preset:string>
@@ -333,33 +320,32 @@ chathub.deletepreset <preset:string>
 
 该子命令还有一个别名 `删除预设`，可以用来替代 `chathub.deletepreset`。
 
-### 数据管理
+## 数据管理
 
-#### chathub.wipe
+### 双清
 
 ```sh
 chathub.wipe
 ```
 
-该子命令用于清空 chathub 的所有使用数据，需要至少 3 级权限。执行后会删除数据库中的所有会话记录、预设配置、长期记忆等数据，并重置聊天状态。
-
-该子命令没有参数。
+该子命令用于清空 chathub 的所有使用数据，需要至少 3 级权限。执行后会删除数据库中的所有会话记录、预设配置、向量数据库等数据，并重置聊天状态。
 
 该子命令还有一个别名 `双清 chathub`，可以用来替代 `chathub.wipe`。
 
-#### chathub.listchatmode
+### 列出聊天模式
 
 ```sh
 chathub.listchatmode
 ```
 
-该子命令用于列出目前支持的聊天模式，需要至少 1
-级权限。聊天模式是一种控制聊天链行为的方式，可以影响聊天内容的风格和质量。目前支持的聊天模式有:
+该子命令用于列出目前支持的聊天模式，需要至少 1 级权限。
 
-- `Balanced`:平衡模式，适合大多数场景，既不太创造性也不太精确。
-- `Creative`:创造性模式，适合寻求新奇和惊喜的场景，更加灵活和有趣，但可能不太准确。
-- `Precise`:精确模式，适合寻求准确和专业的场景，更加严谨和合理，但可能不太有趣。
+有关 ChatHub 的聊天模式，详见[聊天模式](/guide/chat-mode-and-output-mode)
 
 该子命令没有参数，执行后会返回一个列表，显示所有可用的聊天模式及其简介。
 
 该子命令还有一个别名 `聊天模式列表`，可以用来替代 `chathub.listchatmode`。
+
+## 参考
+
+- [权限系统](https://koishi.chat/zh-CN/manual/usage/permission.html#%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90)

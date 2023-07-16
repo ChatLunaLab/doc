@@ -3,7 +3,7 @@
 ## 如何阅读本指南
 
 ::: tip
-本篇指南旨在向有 koishi 插件开发经验的开发者介绍如何编写 ChatHub 插件或如何使用 ChatHub 提供的 API。如果你只想使用 ChatHub 插件，请前往 [快速开始](/guide/getting-started)。
+本篇指南旨在向有 koishi 插件开发经验的开发者介绍如何编写 ChatHub 插件或如何使用 ChatHub 提供的 API。如果你只想使用 ChatHub 插件，请前往 [快速上手](/guide/getting-started)。
 :::
 
 ChatHub 本身并没有太复杂的架构和 API 设计，你可以选择性来观看你感兴趣的章节，并在后续使用中随时回来了解更多细节。

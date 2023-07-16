@@ -96,6 +96,7 @@ function sidebarGuide() {
                     text: "模型平台",
                     collapsed: true,
                     items: [
+                        { text: '介绍', link: '/guide/configure-model-platform/introduction' },
                         { text: 'OpenAI (API)', link: '/guide/configure-model-platform/openai' },
                     ]
                 },
@@ -103,12 +104,24 @@ function sidebarGuide() {
                     text: "嵌入模型",
                     collapsed: true,
                     items: [
+                        { text: '介绍', link: '/guide/configure-embedding-model/introduction' },
                     ]
                 },
                 {
                     text: "向量数据库",
                     collapsed: true,
                     items: [
+                        { text: '介绍', link: '/guide/configure-vector-database/introduction' },
+                    ]
+                },
+                {
+                    text: "预设系统",
+                    link: '/guide/preset-system',
+                    items: [
+                        { text: '介绍', link: '/guide/preset-system/introduction' },
+                        { text: '使用预设', link: '/guide/preset-system/switch-preset' },
+                        { text: '编写预设', link: '/guide/preset-system/write-preset' },
+                        { text: '分享预设', link: '/guide/preset-system/share-preset' },
                     ]
                 },
                 {
@@ -121,12 +134,8 @@ function sidebarGuide() {
                     link: '/guide/chat-mode-and-output-mode',
                 },
                 {
-                    text: "预设系统",
-                    link: '/guide/preset-system',
-                },
-                {
-                    text: "网络搜索支持",
-                    link: '/guide/web-search-support'
+                    text: "模型插件系统",
+                    link: '/guide/model-plugin-system',
                 }
             ]
         },

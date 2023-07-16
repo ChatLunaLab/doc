@@ -10,7 +10,7 @@
 
 然后按照 [Koishi 官方文档](https://koishi.chat/zh-CN/) 安装 Koishi。
 
-## 配置机器人接入
+## 配置聊天平台
 
 安装 Koishi 后，您需要让机器人接入实际的聊天平台，或使用[沙盒环境测试](https://koishi.chat/zh-CN/manual/console/sandbox.html)。
 
@@ -18,9 +18,9 @@
 
 如果您选择接入实际的聊天平台，请参考：
 
-- [查看如何接入 QQ](https://forum.koishi.xyz/t/topic/2502/1) 
+- [查看如何接入 QQ](https://forum.koishi.xyz/t/topic/2502/1)
 
-- [查看如何接入其他聊天平台](https://koishi.chat/zh-CN/manual/console/adapter.html) 
+- [查看如何接入其他聊天平台](https://koishi.chat/zh-CN/manual/console/adapter.html)
 
 ## 安装前置依赖插件
 
