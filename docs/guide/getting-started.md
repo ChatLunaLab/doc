@@ -90,7 +90,7 @@ ChatHub 还需要一个提供 `cache` 服务的插件来存储某些临时配置
 
 ## 开始聊天
 
-最后使用 [`chathub.chat`](http://localhost:5173/guide/useful-commands.html#chathub-chat) 命令开始和设置好的 AI 模型聊天。
+最后使用 [`chathub.chat`](/guide/useful-commands.html#chathub-chat) 命令开始和设置好的 AI 模型聊天。
 
 通过以上步骤，您已经配置好了 ChatHub，并且可以和 AI 模型聊天了。
 
