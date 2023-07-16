@@ -73,3 +73,9 @@ http://localhost:5173/
 ## 许可证
 
 该项目基于 Apache-2.0 许可证开源。任何使用者和开发者都可以自由地使用、修改和分发该文档项目，但需要遵守 Apache-2.0 许可证的相关规定。
+
+## 贡献者名单  
+
+<a href="https://github.com/ChatHubLab/docs/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ChatHubLab/docs" />
+</a>
