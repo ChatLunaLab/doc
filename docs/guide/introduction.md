@@ -16,7 +16,7 @@
 
 ## 下一步
 
-- 快速开始：请参考 [快速开始](/guide/getting-started) 来安装和使用此插件。
+- 快速上手：请参考 [快速上手](/guide/getting-started) 来安装和使用此插件。
 - 指令列表：请参考 [指令列表](/guide/useful-commands) 来了解可用指令或某个指令的用法。
 - 配置模型平台：请参考 [配置模型平台](/guide/configure-model-platform) 来了解如何配置某个语言模型平台。
 - 开发指南：如果您是第三方插件开发者，请参考 [开发指南](/development/introduction) 来了解如何接入或使用 ChatHub 提供的相关 API。
