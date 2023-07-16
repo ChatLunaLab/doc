@@ -12,9 +12,9 @@
 
 ## 配置聊天平台
 
-安装 Koishi 后，你需要让机器人接入实际的聊天平台，或使用[沙盒环境测试](https://koishi.chat/zh-CN/manual/console/sandbox.html)。
+安装 Koishi 后，你需要让机器人接入实际的聊天平台，或使用 [沙盒环境测试](https://koishi.chat/zh-CN/manual/console/sandbox.html)。
 
-如果你选择使用沙盒环境测试，可以直接进行[下一步](/guide/getting-started.html#安装前置依赖插件)。
+如果你选择使用沙盒环境测试，可以直接进行 [下一步](/guide/getting-started.html#安装前置依赖插件)。
 
 如果你选择接入实际的聊天平台，请参考：
 

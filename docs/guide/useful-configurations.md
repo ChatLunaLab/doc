@@ -1,6 +1,10 @@
 # 配置项
 
-本章节介绍了 chathub 插件的配置项，包括它们的含义、类型、默认值和可选值。配置项可以在 Koishi 控制台的插件配置中设置，也可以在资源管理器的 [YAML](https://en.wikipedia.org/wiki/YAML) 配置文件中使用 `chathub` 字段进行设置，例如：
+本章节介绍了 ChatHub 插件的配置项，包括它们的含义、类型、默认值和可选值。
+
+有关配置项，可查看 [配置插件](https://koishi.chat/zh-CN/manual/console/market.html#%E9%85%8D%E7%BD%AE%E6%8F%92%E4%BB%B6)
+
+配置项可以在 Koishi 控制台的插件配置中设置，也可以在资源管理器的 [YAML](https://en.wikipedia.org/wiki/YAML) 配置文件中使用 `chathub` 字段进行设置，例如：
 
 ```yaml
 # Koishi.yml
@@ -23,7 +27,7 @@ plugins:
 
 ## bot 配置
 
-这一部分的配置项主要涉及到 bot 的基本信息和行为。
+这一部分的配置项主要涉及到 bot 配置的基本信息和新闻。
 
 | 配置项 | 类型 | 默认值 | 含义 |
 | --- | --- | --- | --- |
@@ -32,7 +36,7 @@ plugins:
 
 ## 回复选项
 
-这一部分的配置项主要涉及到 bot 的回复方式和效果。
+这一部分的配置项主要涉及到插件的回复方式和效果。
 
 | 配置项 | 类型 | 默认值 | 含义 |
 | --- | --- | --- | --- |
@@ -53,19 +57,19 @@ plugins:
 
 这一部分的配置项主要涉及到 bot 的对话模式和历史。
 
-| 配置项  	| 类型  	| 默认值  	| 含义  	|
-|---	|---	|---	|---	|
-| chatMode  	| `'chat' \| 'qa' \| 'mixed'`  	| `'chat'`  	| 默认的聊天模式，具体含义如下： <ul><li>`chat`: 聊天模式（只使用聊天模型回复）</li><li>`qa`: 问答模式（只使用问答模型回复）</li><li>`mixed`: 混合模式（根据消息内容自动选择聊天或问答模型回复）</li></ul>  	|
-| longMemory  	| `boolean`  	| `false`  	| 是否开启长期记忆（需要提供向量数据库和 Embeddings 服务的支持）  	|
-| conversationIsolationGroup  	| `string[]`  	| `[]`  	| 对话隔离群组，开启后群组内对话将隔离到个人级别（填入群组在 Koishi 里的 ID）  	|
-| blackList  	| `boolean` \| `any` (隐藏)  	| `false`  	| 黑名单列表 (请只对需要拉黑的用户或群开启，其他（如默认）请不要打开，否则会导致全部聊天都会被拉黑无法回复)  	|
-| blockText  	| `string`  	| `'哎呀(ｷ｀ﾟДﾟ´)!!，你怎么被拉入黑名单了呢？要不你去问问我的主人吧。'`  	| 黑名单回复内容  	|
-| censor  	| `boolean`  	| `false`  	| 是否开启文本审核服务（需要安装 censor 服务)  	|
-| historyMode  	| `'default' \| 'summary'`  	| `'default'`  	| 聊天历史模式，具体含义如下： <ul><li>`default`: 保存最近几轮的对话</li><li>`summary`: 保存对话的摘要</li></ul> |
+| 配置项   | 类型   | 默认值   | 含义   |
+|--- |--- |--- |--- |
+| chatMode   |  `chat | plugin | browsing`| 默认的聊天模式，具体含义如下： <ul><li>`chat`: 聊天模式（只使用聊天模型回复）</li><li>`plugin`: 插件模式 （基于 LangChain）</li><li>`browsing`: 增强的聊天模式，模型支持联网搜索 </li></ul>   |
+| longMemory   | `boolean`   | `false`   | 是否开启长期记忆（需要提供向量数据库和 Embeddings 服务的支持）   |
+| conversationIsolationGroup   | `string[]`   | `[]`   | 对话隔离群组，开启后群组内对话将隔离到个人级别（填入群组在 Koishi 里的 ID）   |
+| blackList   | `boolean` \| `any` (隐藏)   | `false`   | 黑名单列表 (请只对需要拉黑的用户或群开启，其他（如默认）请不要打开，否则会导致全部聊天都会被拉黑无法回复)   |
+| blockText   | `string`   | `'哎呀(ｷ｀ﾟДﾟ´)!!，你怎么被拉入黑名单了呢？要不你去问问我的主人吧。'`   | 黑名单回复内容   |
+| censor   | `boolean`   | `false`   | 是否开启文本审核服务（需要安装 censor 服务)   |
+| historyMode   | `'default' \| 'summary'`   | `'default'`   | 聊天历史模式，具体含义如下： <ul><li>`default`: 保存最近几轮的对话</li><li>`summary`: 保存对话的摘要</li></ul> |
 
 ## 模型选项
 
-这一部分的配置项主要涉及到 bot 使用的嵌入模型和向量数据库。
+这一部分的配置项主要涉及到插件使用的嵌入模型和向量数据库（即为 [嵌入模型和向量数据库管理](/guide/useful-commands#嵌入模型和向量数据库管理) 命令的可视化管理）。
 
 | 配置项 | 类型 | 默认值 | 含义 |
 | --- | --- | --- | --- |
@@ -74,7 +78,7 @@ plugins:
 
 ## 杂项
 
-这一部分的配置项主要涉及到 bot 的一些其他设置。
+这一部分的配置项主要涉及到插件些其他设置。
 
 | 配置项 | 类型 | 默认值 | 含义 |
 | --- | --- | --- | --- |
@@ -83,7 +87,7 @@ plugins:
 
 ## 代理设置
 
-如果你需要使用代理，你可以在这一部分进行设置。
+如果需要使用代理，可在这一部分进行设置。
 
 ::: tip
 请注意，这一部分的配置项只有在 `isProxy` 设置为 `true` 时才会生效。

@@ -76,14 +76,14 @@ chathub.listchatmode
 你也可以使用别名 `聊天模式列表` 命令来替代 `chathub.listchatmode`。
 
 ::: tip
-有关 ChatHub 的聊天模式，详见[聊天模式](/guide/chat-mode-and-output-mode)
+有关 ChatHub 的聊天模式，详见 [聊天模式](/guide/chat-mode-and-output-mode)
 :::
 
 ## 会话管理
 
 会话管理是 ChatHub 的功能之一，它可以删除某个会话，重置会话聊天记录等。
 
-有关 ChatHub 的会话，详见[会话，白名单，并发限制与聊天限额](/guide/session-whitelist-concurrency-limit)
+有关 ChatHub 的会话，详见 [会话，白名单，并发限制与聊天限额](/guide/session-whitelist-concurrency-limit)
 
 ### 查询会话
 
@@ -176,7 +176,7 @@ chathub.reset
 
 模型管理是 ChatHub 的功能之一，它可以列出所有支持的模型，切换当前使用的模型等。
 
-有关模型，详见[模型平台](/guide/configure-model-platform/introduction)
+有关模型，详见 [模型平台](/guide/configure-model-platform/introduction)
 
 ### 模型列表
 
@@ -218,7 +218,7 @@ chathub.setmodel openai/gpt-3.5-turbo
 
 嵌入模型和向量数据库是 ChatHub 的功能之一，它可以列出所有支持的嵌入模型和向量数据库，切换当前使用的嵌入模型和向量数据库等。
 
-有关嵌入模型和向量数据库，详见[嵌入模型](/guide/configure-embedding-model/introduction)和[向量数据库](/guide/configure-vector-store/introduction)
+有关嵌入模型和向量数据库，详见 [嵌入模型](/guide/configure-embedding-model/introduction) 和 [向量数据库](/guide/configure-vector-store/introduction)
 
 ### 列出嵌入模型
 
@@ -284,7 +284,7 @@ chathub.setvectorstore faiss
 
 预设用于设置模型的初始对话，模型的对话风格等。
 
-有关预设，详见[预设系统](/guide/preset-system/introduction)
+有关预设，详见 [预设系统](/guide/preset-system/introduction)
 
 ### 预设列表
 
@@ -374,21 +374,26 @@ chathub.deletepreset 丁真
 
 该子命令有一个必选参数 `<preset:string>`，表示要删除的预设名称。如果不存在该名称的预设，会返回一个错误信息。
 
-该子命令没有可选参数。
-
-该子命令还有一个别名 `删除预设`，来替代 `chathub.deletepreset`。
+你也可以使用别名 `删除预设`，来替代 `chathub.deletepreset`。
 
 ## 数据管理
 
 ### 双清
 
+清空 chathub 的所有使用数据。如：
+
 ```sh
 chathub.wipe
 ```
 
-该子命令用于清空 chathub 的所有使用数据，需要至少 3 级权限。执行后会删除数据库中的所有会话记录、预设配置、向量数据库等数据，并重置聊天状态。
+执行后会删除数据库中的所有会话记录、预设配置、向量数据库等数据，并重重启插件。
 
-该子命令还有一个别名 `双清 chathub`，来替代 `chathub.wipe`。
+你也可以使用别名 `双清 chathub`，来替代 `chathub.wipe`。
+
+:::warning
+此命令需要执行者拥有 3 级的 [用户权限](https://koishi.chat/zh-CN/manual/usage/permission.html#%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90)。
+:::
+
 ## 参考
 
 - [权限系统](https://koishi.chat/zh-CN/manual/usage/permission.html#%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90)
