@@ -127,7 +127,7 @@ function sidebarGuide() {
                 },
                 {
                     text: "预设系统",
-                    link: '/guide/preset-system',
+                    collapsed: true,
                     items: [
                         { text: '介绍', link: '/guide/preset-system/introduction' },
                         { text: '使用预设', link: '/guide/preset-system/switch-preset' },
@@ -146,7 +146,7 @@ function sidebarGuide() {
                 },
                 {
                     text: "模型插件",
-                    link: '/guide/model-plugin-system',
+                    collapsed: true,
                     items: [
                         { text: '介绍', link: '/guide/model-plugin-system/introduction' },
                         {
