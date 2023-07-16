@@ -76,6 +76,6 @@ http://localhost:5173/
 
 ## 贡献者名单  
 
-<a href="https://github.com/ChatHubLab/docs/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ChatHubLab/docs" />
+<a href="https://github.com/ChatHubLab/doc/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ChatHubLab/doc" />
 </a>
