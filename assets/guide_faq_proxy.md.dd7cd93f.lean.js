@@ -1,1 +1,0 @@
-import{_ as e,o as t,c as a}from"./chunks/framework.d3b95951.js";const _=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"guide/faq/proxy.md","filePath":"guide/faq/proxy.md","lastUpdated":1689537731000}'),r={name:"guide/faq/proxy.md"};function o(s,p,c,d,n,i){return t(),a("div")}const m=e(r,[["render",o]]);export{_ as __pageData,m as default};
