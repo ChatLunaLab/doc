@@ -31,7 +31,16 @@
 
 ## 配置项 {#配置项}
 
-介绍 BingChatAdapter 的配置项，以及如何使用它们来定制你的聊天体验。
+介绍 `BingChatAdapter` 的配置项，以及如何使用它们来定制你的聊天体验。
+
+### 全局设置
+
+| 配置项 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| chatConcurrentMaxSize | `number` | 否 | `1` | 设置当前适配器适配的模型的最大并发聊天数 |
+| chatTimeLimit | `number` 或 `Computed<Awaitable<number>>` | 否 | `20` | 设置每小时的调用限额（次数） |
+| timeout | `number` | 否 | `200000` | 设置请求超时时间（毫秒） |
+| maxRetries | `number` | 否 | `3` | 设置模型请求失败后的最大重试次数 |
 
 ### 请求设置
 
@@ -56,7 +65,7 @@
 
 总结：
 
-本章节介绍了如何使用 koishi-plugin-chathub-newbing-adapter 插件来实现与 New Bing 的聊天互动。本章节包括了以下内容：
+本章节介绍了如何使用 `koishi-plugin-chathub-newbing-adapter` 插件来实现与 New Bing 的聊天互动。本章节包括了以下内容：
 
 - 如何安装和配置本插件
 - 如何解决一些常见问题
