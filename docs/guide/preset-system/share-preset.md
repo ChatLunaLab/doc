@@ -4,7 +4,7 @@
 
 如果你有预设想要分享，你可以按照以下步骤操作：
 
-1. Fork 此项目到你自己的 GitHub 账号下。
+1. Fork [awesome-chathub-presets](https://github.com/ChatHubLab/awesome-chathub-presets) 项目到你自己的 GitHub 账号下。
 2. 把你编写好的预设文件放入 presets 文件夹中，并且确保文件名不重复。
 3. 提交一个 Pull Request 到本项目，并且在描述中简要介绍你的预设。
 4. 等待我们审核并合并你的 Pull Request。
