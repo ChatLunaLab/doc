@@ -43,7 +43,7 @@ ChatHub 还需要一个提供 `cache` 服务的插件来存储某些临时配置
 
 ## 配置主插件
 
-进入主插件配置页面，以下是一些重要的配置项，其他配置项可在[配置项](/guide/useful-configurations)了解到：
+进入主插件配置页面，以下是一些重要的配置项，其他配置项可在 [配置项](/guide/useful-configurations) 了解到：
 
 - [`isProxy`](/guide/useful-configurations#代理设置)：是否使用代理，对国内用户**强烈推荐**开启。
 - [`proxyAddress`](/guide/useful-configurations#代理设置)：代理地址，格式为 `http://host:port`。
