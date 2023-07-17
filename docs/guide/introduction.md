@@ -2,7 +2,7 @@
 
 [ChatHub](https://github.com/ChatHubLab/chathub) 是一款基于 [LangChain](https://github.com/hwchase17/langchainjs) 的语言模型聊天服务插件，运行在 [Koishi](https://koishi.chat/zh-CN/) 上。
 
-它可以对接目前流行的语言模型或平台，如 OpenAI（API）、New Bing、ChatGLM 等，让用户与这些模型进行聊天互动。项目底层和语言模型交互的模块基于 LangChain，第三方 Koishi 插件开发者也可以使用此项目提供的 [LangChain Model](https://js.langchain.com/docs/modules/models/chat/) 和语言模型进行交互。
+它可以让用户与目前流行的语言模型或平台进行聊天互动，如 OpenAI（API）、New Bing、ChatGLM 等。项目底层和语言模型交互的模块基于 LangChain，第三方 Koishi 插件开发者也可以使用此项目提供的 [LangChain Model](https://js.langchain.com/docs/modules/models/chat/) 和语言模型进行交互。
 
 ## 特性
 
@@ -10,7 +10,7 @@
 - 预设系统：支持设置会话预设，调整模型的行为和风格。
 - 黑名单系统：支持全局冷却时间和模型并发请求限制，以及按小时的模型调用额度限制，方便管理模型的调用限额等。
 - 多媒体回复：支持语音/文字/图片/图文混合回复，也支持解析生成的 markdown，实现自然地分割成多条消息来发送。
-- 上下文对话：支持长期记忆功能（需要适配器支持）。
+- 上下文对话：支持长期记忆功能（需要适配器支持），让模型能够记住用户的信息和偏好。
 - 三种聊天模式：`chat`、`browsing`、`plugin`，后两种模式可以让模型调用外部提供的某些工具，使得模型能够获取到外部信息。
 - 内容安全过滤：基于 Koishi 的 [censor](https://censor.koishi.chat/) 服务，防止模型返回不良内容。
 
