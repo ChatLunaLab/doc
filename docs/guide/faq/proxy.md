@@ -29,7 +29,8 @@
 
 如果你经常需要科学上网，或者对速度、安全性、功能等要求较高，可以考虑以下一些付费科学上网工具：
 
-- [稳连云](https://xn--9kqq77hqun.com/#/dashboard)：一个性价比高的机场（机场是指提供多个节点供用户选择的VPN服务），支持多种协议和平台，价格低至1元/100GB。
+- [稳连云](https://xn--9kqq77hqun.com/#/dashboard)：一个稳连的机场（机场是指提供多个节点供用户选择的VPN服务），支持多种协议和平台，价格低至1元/100GB。
+- [性价比机场](https://xn--6nq44r2uh9rhj7f.com/#/dashboard)：一个性价比的机场，支持多种协议和平台，价格低至1元/100GB。
 - [顶级机场](https://xn--mes358a9urctx.com/#/dashboard)：一个顶级的机场，支持多种协议和平台，价格低至1元/100GB。
 - [赔钱机场](https://xn--mes358aby2apfg.com/#/dashboard)：一个赔钱的机场，支持多种协议和平台，价格低至1元/100GB。
 - [三分机场](https://xn--ehq00hgtfdmt.xyz/#/dashboard)：一个三分的机场，支持多种协议和平台，价格低至1元/100GB。
