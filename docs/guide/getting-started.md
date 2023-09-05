@@ -1,6 +1,6 @@
 # 快速上手
 
-在本章节中，我们将指导你如何安装和配置 ChatHub，让你能快速地体验与 AI 模型的对话。
+在本节中，我们将指导你如何安装和配置 ChatHub，让你能快速地体验与 AI 模型的对话。
 
 ## 安装 Koishi
 
@@ -8,18 +8,18 @@
 
 你可以使用 `node -v` 命令检查 Node.js 版本。
 
-然后按照 [Koishi 官方文档](https://koishi.chat/zh-CN/) 安装 Koishi。
+然后按照 [Koishi 官方文档](https://koishi.chat/zh-CN/) 来安装 Koishi。
 
 ## 配置聊天平台
 
-安装 Koishi 后，你需要选择一个聊天平台来接入机器人，或者使用 [沙盒环境测试](https://koishi.chat/zh-CN/manual/console/sandbox.html)。
+安装 Koishi 后，你需要选择一个聊天平台来接入机器人，或使用 [沙盒环境](https://koishi.chat/zh-CN/manual/console/sandbox.html) 测试。
 
-如果你选择使用沙盒环境测试，可以直接跳到 [下一步](/guide/getting-started.html#安装前置依赖插件)。
+如你选择使用沙盒环境，可以直接跳到 [下一步](/guide/getting-started.html#安装前置依赖插件)。
 
-如果你选择接入实际的聊天平台，请参考以下链接：
+如你选择接入实际的聊天平台，请参考以下链接：
 
-- [查看如何接入 QQ](https://forum.koishi.xyz/t/topic/2502/1)
-- [查看如何接入其他聊天平台](https://koishi.chat/zh-CN/manual/console/adapter.html)
+- [接入 QQ](https://forum.koishi.xyz/t/topic/2502/1)
+- [接入其他聊天平台](https://koishi.chat/zh-CN/manual/console/adapter.html)
 
 ## 安装前置依赖插件
 
@@ -29,7 +29,7 @@
 
 ChatHub 需要一个提供 `database` 服务的插件来存储会话信息等持久化数据。
 
-我们推荐使用 `database-sqlite`，它基本自带在大部分 Koishi 环境里，轻量且开箱即用。
+我们推荐使用 `database-sqlite`，它自带在大部分 Koishi 环境里，轻量且开箱即用。
 
 你也可以安装并配置其他在 Koishi 插件市场上的数据库插件，如 MySQL、MongoDB 等。
 
@@ -44,7 +44,7 @@ ChatHub 还需要一个提供 `cache` 服务的插件来存储某些临时配置
 ### 可选插件
 
 - `puppeteer` 插件：用于网页截图和本地 HTML 渲染。
-- `censor` 服务插件：用于回复内容过滤。注意，有的审核插件仅审核图片不审核文本。
+- `censor` 服务插件：用于回复内容过滤。注意，有的插件不审核文本信息，请注意识别。
 - `vits` 服务插件：用于语音合成。我们推荐使用 `open-vits`。
 
 ## 安装 ChatHub 主插件
@@ -54,11 +54,11 @@ ChatHub 还需要一个提供 `cache` 服务的插件来存储某些临时配置
 主插件本身不包含任何平台适配，后面还需要安装平台适配插件。
 :::
 
-## 安装模型平台适配插件
+## 安装平台适配插件
 
-搜索并安装你需要的模型平台的适配插件，例如 `@dingyi222666/chathub-newbing-adapter`。
+搜索并安装你需要的平台的适配插件，例如 `@dingyi222666/chathub-newbing-adapter`。
 
-你可以同时安装多个平台的适配插件，并通过命令切换。
+你可同时安装多个平台的适配插件，并通过命令切换。
 
 ## 配置主插件
 
@@ -90,7 +90,7 @@ ChatHub 还需要一个提供 `cache` 服务的插件来存储某些临时配置
 
 ## 开始聊天
 
-最后使用 [`chathub.chat`](/guide/useful-commands#模型对话) 或 [`聊天`](/guide/useful-commands#模型对话) 命令开始和设置好的 AI 模型聊天。
+最后使用 [`chathub.chat`](/guide/useful-commands#模型对话) 或 [`聊天`](/guide/useful-commands#模型对话) 命令和设置好的 AI 模型聊天。
 
 通过以上步骤，你已经配置好了 ChatHub，并且可以和 AI 模型聊天了。
 
