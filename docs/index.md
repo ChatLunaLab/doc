@@ -19,13 +19,13 @@ hero:
 features:
   - icon: 🛠️
     title: 快速部署 
-    details: 安装相关插件并进行简单配置后即可使用，无需编写复杂配置文件。
+    details: 无需编写复杂配置文件，安装相关插件并进行简单配置后即可使用。
   - icon: 🌻
     title: 多平台模型接入
     details: 支持 OpenAI (API)、Bing Chat 等平台接入，并将继续接入更多平台。
   - icon: 🔩
     title: 高扩展性
-    details: 拥有中间件系统、多平台模型接入与调用 API 等特性，便于第三方开发者进行扩展。
+    details: 拥有中间件系统、多平台模型接入，丰富的 API 等特性，便于第三方开发者进行扩展。
 ---
 
 <script setup>

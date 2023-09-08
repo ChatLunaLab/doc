@@ -139,7 +139,7 @@ function sidebarGuide() {
                     text: "会话相关",
                     collapsed: true,
                     items: [
-                        { text: "会话", link: '/guide/session-related/session' },
+                        { text: "房间系统", link: '/guide/session-related/room' },
                         { text: "黑名单", link: '/guide/session-related/blacklist' },
                         { text: "长期记忆", link: '/guide/session-related/long-term-memory' },
                         { text: "并发限制", link: '/guide/session-related/concurrency-limit' },
@@ -180,13 +180,10 @@ function sidebarGuide() {
             text: 'FAQ',
             items: [
                 {
-                    text: '代理常见问题',
-                    link: '/guide/faq/proxy'
+                    text: '错误码表',
+                    link: '/guide/faq/error_code'
                 },
-                {
-                    text: '模型常见问题',
-                    link: '/guide/faq/model'
-                }
+               
             ]
         }
     ]
@@ -212,7 +209,7 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
             ]
         },
         {
-            text: '接入核心服务',
+            text: '接入服务',
             items: [
                 {
                     text: "语言模型",
@@ -230,11 +227,15 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                     text: '中间件',
                     link: '/development/connect-to-core-services/middleware'
                 },
+                {
+                    text: '消息读取',
+                    link: '/development/connect-to-core-services/message-read'
+                },
             ]
         },
 
         {
-            text: '调用核心服务',
+            text: '调用服务',
             items: [
                 {
                     text: "语言模型",
@@ -262,7 +263,7 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                     link: '/development/api-reference/chathub-chat-chain'
                 },
                 {
-                    text: "ChatHub (ChatHub Plugin)",
+                    text: "ChatHub 插件(ChatHub Plugin)",
                     link: '/development/api-reference/chathub-plugin'
                 },
                 {
@@ -270,8 +271,8 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                     collapsed: true,
                     items: [
                         { text: '人格预设 (Preset Template)', link: '/development/api-reference/llm-core/preset-template' },
-                        { text: '模型工厂 (Factory)', link: '/development/api-reference/llm-core/factory' },
-                        { text: '模型提供者 (Provider)', link: '/development/api-reference/llm-core/provider' },
+                        { text: '平台 (Platform)', link: '/development/api-reference/llm-core/platform' },
+                        { text: '模型请求器 (Requester)', link: '/development/api-reference/llm-core/requester' },
                         { text: '模型 (Model)', link: '/development/api-reference/llm-core/model' },
                         { text: '模型聊天接口 (Model Chat Interface)', link: '/development/api-reference/llm-core/model-chat-interface' },
                     ]
