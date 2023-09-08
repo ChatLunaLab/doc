@@ -11,7 +11,14 @@ export default defineConfig({
     ignoreDeadLinks: true,
     lastUpdated: true,
     cleanUrls: false,
-    head: [['meta', { name: 'theme-color', content: '#47A69E' }]],
+    head: [
+        ['meta', { name: 'theme-color', content: '#47A69E' }],
+        [
+            'link',
+            { rel: 'icon', href: 'logo.jpg' }
+        ]
+
+    ],
 
     themeConfig: {
         outline: {
@@ -183,7 +190,7 @@ function sidebarGuide() {
                     text: '错误码表',
                     link: '/guide/faq/error_code'
                 },
-               
+
             ]
         }
     ]
