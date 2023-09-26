@@ -90,11 +90,21 @@ prompts 属性内是一个数组，数组内含有 `role`, `content` 属性组�
 
 `format_user_prompt` 的值为 `"用户{sender}说: {prompt}"`
 
-那么实际向模型发送的消息就会被替换为 "用户114514说:压力马斯内"。
+那么实际向模型发送的消息就会被替换为 `"用户114514说:压力马斯内"`。
 
 ### 变量占位符
 
-??
+变量占位符是由 ChatHub 提供的一些固定量，在发送时会被替换为某些值。语法如下:
+
+```txt
+text{variable_name}
+```
+目前 ChatHub 提供了以下变量供使用（后续可能还会增加其他变量）:
+
+- `date`: 当前日期，遵循标准 UTC 格式。
+- `sender`: 发送者 (只在 format_user_prompt 里有效）
+- `name`: 机器人姓名，实际对应[此](/guide/useful-configurations)
+- `prompt`: 用户实际发送的内容 （只在 format_user_prompt 里有效)
 
 ## 预设文件
 
