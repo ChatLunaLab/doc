@@ -102,9 +102,9 @@ text{variable_name}
 目前 ChatHub 提供了以下变量供使用（后续可能还会增加其他变量）:
 
 - `date`: 当前日期，遵循标准 UTC 格式。
-- `sender`: 发送者 (只在 format_user_prompt 里有效）
-- `name`: 机器人姓名，实际对应[此](/guide/useful-configurations)
-- `prompt`: 用户实际发送的内容 （只在 format_user_prompt 里有效)
+- `sender`: 发送者 (只在 format_user_prompt 里有效）。
+- `name`: 机器人姓名，实际对应[此](/guide/useful-configurations/#bot-配置) 内的 bot name。
+- `prompt`: 用户实际发送的内容（只在 format_user_prompt 里有效)。
 
 ## 预设文件
 
