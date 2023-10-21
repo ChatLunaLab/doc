@@ -1,6 +1,6 @@
 # koishi-chathub-doc
 
-本项目是一个开源的文档项目，为 ChatHub 提供使用教程和开发指南，方便使用者或开发者更好地理解和使用 ChatHub 。
+本项目为 Chathub 官方的文档网站项目，为 ChatHub 提供使用教程和开发指南，方便使用者或开发者更好地理解和使用 ChatHub 。
 
 ## 特性
 
