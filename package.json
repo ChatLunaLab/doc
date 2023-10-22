@@ -6,8 +6,9 @@
     "repository": "https://github.com/ChatHubLab/doc",
     "author": "dingyi222666 <dingyi222666@foxmail.com>",
     "license": "Apache-2.0",
+    "type": "module",
     "devDependencies": {
-        "vitepress": "^1.0.0-beta.5"
+        "vitepress": "^1.0.0-rc.23"
     },
     "scripts": {
         "dev": "vitepress dev docs",
