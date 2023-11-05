@@ -79,7 +79,6 @@ ChatHub 还需要一个提供 `cache` 服务的插件来存储某些临时配置
 
 ::: warning 注意
 如果你在国内环境使用，需要设置代理，请在`chathub`主插件的设置里设置代理(请求设置 -> [`isProxy`](/guide/useful-configurations#代理设置)，请求设置 -> [`proxyAddress`](/guide/useful-configurations#代理设置))。
-
 :::
 
 可以使用 [`chathub.model.list`](/guide/useful-commands#模型列表)查看已启用的平台。
@@ -91,6 +90,10 @@ ChatHub 还需要一个提供 `cache` 服务的插件来存储某些临时配置
 ![images](../public/images/plugin_template_room.png)
 
 设置好模型，聊天模式和预设，右上角保存后即完成配置。
+
+::: tips
+对于初次使用 ChatHub 的新手，我们推荐直接使用模型克隆房间。当你对 ChatHub 有深入了解后，才推荐使用自定义的房间系统。
+:::
 
 ## 开始聊天
 
