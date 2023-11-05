@@ -18,7 +18,6 @@
 
 如你选择接入实际的聊天平台，请参考以下链接：
 
-- [接入 QQ](https://forum.koishi.xyz/t/topic/2502/1)
 - [接入其他聊天平台](https://koishi.chat/zh-CN/manual/console/adapter.html)
 
 ## 安装前置依赖插件
@@ -27,7 +26,7 @@
 
 ### 数据库插件
 
-ChatHub 需要一个提供 `database` 服务的插件来存储会话信息等持久化数据。
+ChatHub 需要 `database` 服务，用于存储会话信息等持久化数据。
 
 我们推荐使用 `database-sqlite`，它自带在大部分 Koishi 环境里，轻量且开箱即用。
 
@@ -39,13 +38,13 @@ ChatHub 还需要一个提供 `cache` 服务的插件来存储某些临时配置
 
 我们推荐使用 `cache-database`，它几乎不需要配置。
 
-需要注意，`cache` 服务版本需要 v2.0.0-alpha.0+。
+需要注意，`cache` 服务版本需要 v2.0.0 以上。
 
 ### 可选插件
 
-- `puppeteer` 插件：用于网页截图和本地 HTML 渲染。
+- `puppeteer` 插件：用于渲染模型发送内容。
 - `censor` 服务插件：用于回复内容过滤。注意，有的插件不审核文本信息，请注意识别。
-- `vits` 服务插件：用于语音合成。我们推荐使用 `open-vits`。
+- `vits` 服务插件：用于渲染模型回复，生成语音。
 
 ## 安装 ChatHub 主插件
 
@@ -66,32 +65,37 @@ ChatHub 还需要一个提供 `cache` 服务的插件来存储某些临时配置
 
 - [`isProxy`](/guide/useful-configurations#代理设置)：是否使用代理，对国内用户**强烈推荐**开启。
 - [`proxyAddress`](/guide/useful-configurations#代理设置)：代理地址，格式为 `http://host:port`。
-- [`msgCooldown`](/guide/useful-configurations#回复选项)：全局冷却时间，避免请求过于频繁。
 - [`outputMode`](/guide/useful-configurations#回复选项)：回复的输出格式，支持语音、文本、图片等。
 
 ## 配置模型平台
 
 以 New Bing 为例，进入平台适配插件配置页面：
 
-- [`cookie（可选）`](/guide/configure-model-platform/bing-chat.html#请求设置)：填写 New Bing 账号的 cookie。
+![images](../public/images/plugin_newbing_pic1.png)
 
-配置好后启用相关插件即可。
+在 cookies 配置项，点击添加项目，然后填写你[获取](/guild/useful-configurations)来的 cookie。
+
+填写完后右上角保存配置，启用插件即可。
 
 ::: warning 注意
 如果你在国内环境使用，需要设置代理，请在`chathub`主插件的设置里设置代理(请求设置 -> [`isProxy`](/guide/useful-configurations#代理设置)，请求设置 -> [`proxyAddress`](/guide/useful-configurations#代理设置))。
 
 :::
 
-可以使用 [`chathub.listmodel`](/guide/useful-commands#模型列表) 或 [`模型列表`](/guide/useful-commands#模型列表) 查看已启用的平台。
+可以使用 [`chathub.model.list`](/guide/useful-commands#模型列表)查看已启用的平台。
 
-## 设置默认模型
+## 设置模版房间配置
 
-使用 [`chathub.setmodel`](/guide/useful-commands#设置模型) 或 [`切换模型`](/guide/useful-commands#设置模型) 命令设置默认聊天模型。
+在控制面板里可设置模版房间的相关配置，如图所示：
+
+![images](../public/images/plugin_template_room.png)
+
+设置好模型，聊天模式和预设，右上角保存后即完成配置。
 
 ## 开始聊天
 
-最后使用 [`chathub.chat`](/guide/useful-commands#模型对话) 或 [`聊天`](/guide/useful-commands#模型对话) 命令和设置好的 AI 模型聊天。
+最后使用 [`chathub.chat.text`](/guide/useful-commands#模型对话) 命令开始和模型聊天。
 
-通过以上步骤，你已经配置好了 ChatHub，并且可以和 AI 模型聊天了。
+通过以上步骤，你已经配置好了 ChatHub，并且可以和模型聊天了。
 
-接下来可以在下面的章节学习到更多的配置和使用方法。
+接下来你可以在下面的章节学习到更多的配置和使用方法。

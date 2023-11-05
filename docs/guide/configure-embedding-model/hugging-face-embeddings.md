@@ -2,8 +2,8 @@
 
 Hugging Face 平台是一个模型的开源分享相关平台。
 
-用户可以基于 Hugging Face 平台分享自己的模型，也可以下载其他用户分享的模型。
-甚至可以使用 Hugging Face 平台提供的 API 来直接使用这些模型。
+用户可以基于 Hugging Face 平台分享或下载其他用户分享的模型。
+甚至还可使用 Hugging Face 平台提供的 API 来直接使用这些模型。
 Hugging Face 社区提供了大量的模型，其中就包括了一些嵌入模型。
 
 在 ChatHub 中也提供了 Hugging Face 的 API 接入，让我们可以直接使用 Hugging Face 平台所拥有的嵌入模型。
@@ -22,6 +22,6 @@ Hugging Face 社区提供了大量的模型，其中就包括了一些嵌入模�
 
 6. 启用嵌入模型服务插件。
 
-7. 执行一次 `chathub.listembeddings` 指令，然后寻找有 `huggingface/` 前缀的嵌入模型。
+7. 执行一次 `chathub.embeddings.list` 指令，然后寻找有 `huggingface/` 前缀的嵌入模型。
 
 8. 设置默认使用的嵌入模型为上一步找到的嵌入模型。如果你直接使用了默认的嵌入模型，那么就应该是 `huggingface/sentence-transformers/distilbert-base-nli-mean-tokens`。

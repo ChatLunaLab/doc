@@ -120,7 +120,7 @@ keywords:
   - 雌小鬼
 ```
 
-从网上随便找几个内容，写入 prompts，设定为系统：
+从网上随便找几个内容，写入 prompts，设定为系统消息：
 
 ``` yml
 prompts:
@@ -130,7 +130,7 @@ prompts:
 
 ```
 
-可以在后面加入以模型视角的回复，固化对话风格。
+可在后面加入模型视角的回复，固化对话风格。
 
 ```yaml
 prompts:
@@ -140,7 +140,6 @@ prompts:
  - role: assistant
    content: 杂鱼大叔这么快就想人家了嘛？
 ```
-
 
 把写好的文件复制到 `你的 koishi 目录 + data/chathub/preset` 文件夹，然后调用 `chathub.preset.list`。此时如果正常，则会在输出的列表中找到雌小鬼这个预设。后续自己使用 `chathub.room.set -p <preset>` 设置即可。
 
