@@ -6,6 +6,7 @@
 
 让我们先阅读一下 ChatHub 提供的两个预设文件
 
+::: code-group
 ```yml [chatgpt.yml]
 keywords:
   - chatgpt
@@ -44,6 +45,7 @@ prompts:
 
 format_user_prompt: "用户{sender}说: {prompt}"
 ```
+:::
 
 阅读上面的示例文件，相信你已经对 ChatHub 的预设文件有了基础的认识，接下来让我们更进一步，细致的讲解每个属性的用处吧。
 
@@ -120,7 +122,7 @@ keywords:
   - 雌小鬼
 ```
 
-从网上随便找几个内容，写入 prompts，设定为系统消息：
+从网上寻找一些优质的 雌小鬼 Prompt，写入 prompts，设定为系统消息：
 
 ``` yml
 prompts:
