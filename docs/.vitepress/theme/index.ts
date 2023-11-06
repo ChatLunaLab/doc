@@ -1,5 +1,8 @@
-import { h } from 'vue'
-import DefaultTheme from 'vitepress/theme'
-import './custom.css'
+import { h } from 'vue';
+import DefaultTheme from 'vitepress/theme';
+import './custom.css';
 
-export default DefaultTheme
+export default {
+    Layout: DefaultTheme.Layout,
+    enhanceApp({ app }) {},
+};
