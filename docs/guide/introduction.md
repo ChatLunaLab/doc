@@ -16,9 +16,9 @@
 
 ## 下一步
 
-- 快速上手：请参考 [快速上手](/guide/getting-started) 来安装和使用此插件。
-- 指令列表：请参考 [指令列表](/guide/useful-commands) 来了解可用指令或某个指令的用法。
-- 配置项：请参考 [配置项](/guide/useful-configurations.html) 来了解主插件的所有配置项。
-- 配置模型平台：请参考 [配置模型平台](/guide/configure-model-platform/introduction.html) 来了解如何配置某个语言模型平台。
+- 快速上手：参考 [快速上手](/guide/getting-started) 来入门 ChatHub
+- 指令列表：参考 [指令列表](/guide/useful-commands) 来了解 ChatHub 可用的指令或某个指令的用法。
+- 配置项：参考 [配置项](/guide/useful-configurations.html) 来了解 ChatHub 主插件的所有配置项。
+- 配置模型平台：参考 [配置模型平台](/guide/configure-model-platform/introduction.html) 来了解如何配置某个语言模型平台。
 - 开发指南：如果您是第三方插件开发者，请参考 [开发指南](/development/introduction) 来了解如何接入或使用 ChatHub 提供的相关 API。
 - 帮助和贡献：如果您想要帮助我们完善或翻译文档，请在 Github 上 Fork 文档项目后提交 PR。[项目地址](https://github.com/ChatHubLab/doc)
