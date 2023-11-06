@@ -79,19 +79,19 @@ Bot 回复时是否引用原消息回复。开启后 Bot 的回复都会引用�
   - `text`：将模型生成的文本渲染成 Koishi 支持的 Markdown 格式后发送
   - `image`：将模型生成的文本渲染成图片后发送（图片里为模型原文本）
 
-        该选项需要你的 Koishi 在运行提供了 puppeteer 服务的插件。我们需要 puppeteer 渲染 html 文件。
+    该选项需要你的 Koishi 在运行提供了 puppeteer 服务的插件。我们需要 puppeteer 渲染 html 文件。
 
   - `voice`：将模型生成的文本转化成语音后发送（语音里为模型原文本）
 
-        该选项需要你的 Koishi 在运行提供了 vits 服务的插件。我们需要 vits 服务将文本转化成语音文件。
+    该选项需要你的 Koishi 在运行提供了 vits 服务的插件。我们需要 vits 服务将文本转化成语音文件。
 
   - `mixed-image`: 基于 Markdown 语法识别，对于某些 Markdown 语法（如列表，代码块）会渲染图片，其他的某些 Markdown 语法（如纯文本的自然段）会直接作为文本发送。
 
-        和 `image` 选项一样，该选项需要你的 Koishi 在运行提供了 puppeteer 服务的插件。
+    和 `image` 选项一样，该选项需要你的 Koishi 在运行提供了 puppeteer 服务的插件。
 
   - `mixed-voice`: 将模型生成的文本同时渲染成 Markdown 格式和语音后发送。
 
-        和 `voice` 选项一样，该选项需要你的 Koishi 在运行提供了 vits 服务的插件。
+    和 `voice` 选项一样，该选项需要你的 Koishi 在运行提供了 vits 服务的插件。
 
 - 默认值：`'text'`
 
