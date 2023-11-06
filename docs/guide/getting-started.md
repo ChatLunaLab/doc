@@ -8,7 +8,7 @@
 
 你可以使用 `node -v` 命令检查 Node.js 版本。
 
-然后按照 [Koishi 官方文档](https://koishi.chat/zh-CN/) 来安装 Koishi。
+按照 [Koishi 官方文档](https://koishi.chat/zh-CN/) 来安装 Koishi。
 
 ## 配置聊天平台
 
@@ -22,7 +22,7 @@
 
 ## 安装前置依赖插件
 
-接下来需要安装 ChatHub 的必要前置依赖插件，这些插件为 ChatHub 提供了基础的服务。
+安装 ChatHub 的必要前置依赖插件，这些插件为 ChatHub 提供了基础的服务。
 
 ### 数据库插件
 
@@ -34,11 +34,9 @@ ChatHub 需要 `database` 服务，用于存储会话信息等持久化数据。
 
 ### 缓存插件
 
-ChatHub 还需要一个提供 `cache` 服务的插件来存储某些临时配置。
+ChatHub 还需要 `cache` 服务，用于存储某些临时配置。
 
 我们推荐使用 `cache-database`，它几乎不需要配置。
-
-需要注意，`cache` 服务版本需要 v2.0.0 以上。
 
 ### 可选插件
 
@@ -53,11 +51,13 @@ ChatHub 还需要一个提供 `cache` 服务的插件来存储某些临时配置
 主插件本身不包含任何平台适配，后面还需要安装平台适配插件。
 :::
 
-## 安装平台适配插件
+## 安装模型适配器
 
-搜索并安装你需要的平台的适配插件，例如 `@dingyi222666/chathub-newbing-adapter`。
+安装你需要平台的模型适配器。在插件市场输入 chathub  + adapter 搜索。然后选择你需要的适配器安装。
 
-你可同时安装多个平台的适配插件，并通过命令切换。
+![image](../public//images/plugin_market_pic1.png)
+
+你可同时安装多个平台的模型适配器，后续可通过模版房间配置或房间里的模型配置项切换。
 
 ## 配置主插件
 
@@ -67,9 +67,9 @@ ChatHub 还需要一个提供 `cache` 服务的插件来存储某些临时配置
 - [`proxyAddress`](/guide/useful-configurations#代理设置)：代理地址，格式为 `http://host:port`。
 - [`outputMode`](/guide/useful-configurations#回复选项)：回复的输出格式，支持语音、文本、图片等。
 
-## 配置模型平台
+## 配置模型适配器
 
-以 New Bing 为例，进入平台适配插件配置页面：
+以 New Bing 为例，进入模型适配器的插件配置页面：
 
 ![images](../public/images/plugin_newbing_pic1.png)
 
@@ -91,7 +91,7 @@ ChatHub 还需要一个提供 `cache` 服务的插件来存储某些临时配置
 
 设置好模型，聊天模式和预设，右上角保存后即完成配置。
 
-::: tips
+::: tip 提示
 对于初次使用 ChatHub 的新手，我们推荐直接使用模型克隆房间。当你对 ChatHub 有深入了解后，才推荐使用自定义的房间系统。
 :::
 
