@@ -5,7 +5,7 @@ title: ChatLuna Doc
 editLink: true
 
 hero:
-  name: ChatLuna ChatHub
+  name: ChatLuna
   text: 使用教程 & 开发指南
   tagline: 提供多平台语言模型聊天服务，可选多种输出格式，另配高度可扩展插件系统
   actions:

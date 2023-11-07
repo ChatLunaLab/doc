@@ -1,6 +1,6 @@
 # 插件介绍
 
-[ChatLuna](https://github.com/ChatLunaLab/chathub) 是一款基于 [LangChain](https://github.com/hwchase17/langchainjs) 的语言模型聊天服务插件，运行在 [Koishi](https://koishi.chat/zh-CN/) 上。
+[ChatLuna](https://github.com/ChatLunaLab/chatluna) 是一款基于 [LangChain](https://github.com/hwchase17/langchainjs) 的语言模型聊天服务插件，运行在 [Koishi](https://koishi.chat/zh-CN/) 上。
 
 它可以让用户与目前流行的语言模型或平台进行聊天互动，如 OpenAI（API）、New Bing、ChatGLM 等。项目底层和语言模型交互的模块基于 LangChain，其他 Koishi 插件开发者也可以使用此项目提供的 [LangChain Model](https://js.langchain.com/docs/modules/models/chat/) 和大语言模型进行交互。
 
