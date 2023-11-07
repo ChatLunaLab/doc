@@ -1,5 +1,5 @@
 export function fetchReleaseTag() {
-    return fetch('https://api.github.com/repos/dingyi222666/koishi-plugin-chathub/releases')
+    return fetch('https://api.github.com/repos/ChatLunaLab/chatluna/releases')
       .then((res) => res.json())
       .then((json) => json?.[0]?.name ?? '')
       .then(releaseTag => {

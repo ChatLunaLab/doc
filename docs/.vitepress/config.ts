@@ -5,9 +5,9 @@ import { DefaultTheme } from 'vitepress/types/default-theme';
 
 export default defineConfig({
     lang: 'zh-CN',
-    title: 'Koishi ChatHub',
+    title: 'ChatLuna',
     // base: "",
-    description: 'Koishi ChatHub 相关文档',
+    description: 'ChatLuna 相关文档',
     ignoreDeadLinks: true,
     lastUpdated: true,
     cleanUrls: false,
@@ -28,16 +28,16 @@ export default defineConfig({
             '/development/': sidebarDevelopment(),
         },
         editLink: {
-            pattern: 'https://github.com/ChatHubLab/doc/edit/main/docs/:path',
+            pattern: 'https://github.com/ChatLunaLab/doc/edit/main/docs/:path',
             text: '在 GitHub 上编辑此页',
         },
 
         socialLinks: [
-            { icon: 'github', link: 'https://github.com/ChatHubLab/chathub' },
+            { icon: 'github', link: 'https://github.com/ChatLunaLab/chatluna' },
         ],
         footer: {
             message: '文档在 CC-BY-SA-4.0 许可下发布',
-            copyright: 'Copyright © 2023 ChatHub Lab',
+            copyright: 'Copyright © 2023 ChatLuna Lab',
         },
         lastUpdatedText: '上次更新时间',
         returnToTopLabel: '返回顶部',
