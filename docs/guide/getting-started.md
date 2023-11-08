@@ -97,7 +97,7 @@ ChatLuna 还需要 `cache` 服务，用于存储某些临时配置。
 
 ## 开始聊天
 
-最后使用 [`chatLuna.chat.text`](/guide/useful-commands#模型对话) 命令开始和模型聊天。
+最后使用 [`chatluna.chat.text`](/guide/useful-commands#模型对话) 命令开始和模型聊天。
 
 通过以上步骤，你已经配置好了 ChatLuna，并且可以和模型聊天了。
 
