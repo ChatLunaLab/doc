@@ -1,6 +1,6 @@
 # 配置项
 
-本节介绍了主插件(`@dingyi222666/chatLuna`)可用的配置项。对于其他插件或适配器的配置项，请参考对应的文档。
+本节介绍了主插件(`chatluna`)可用的配置项。对于其他插件或适配器的配置项，请参考对应的文档。
 
 ## Bot 配置
 
@@ -141,7 +141,7 @@ Bot 回复时是否引用原消息回复。开启后 Bot 的回复都会引用�
 
 当经过该时间后模型仍在生成时，基于[`sendThinkingMessage`](#sendthinkingmessage) 选项的开启发送一条消息。
 
-消息的内容基于下面[thinkingMessage](#thinkingmessage)设定的内容。
+消息的内容基于下面[`thinkingMessage`](#thinkingmessage)设定的内容。
 
 ### thinkingMessage
 
