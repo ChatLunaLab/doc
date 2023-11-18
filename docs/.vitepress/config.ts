@@ -285,7 +285,7 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
             link: '/development/introduction',
         },
         {
-            text: '开发起步',
+            text: '起步',
             items: [
                 {
                     text: '为 ChatHub 开发插件',
