@@ -16,7 +16,7 @@
 
 ## 下一步
 
-- 快速上手：参考 [快速上手](/guide/getting-started) 来入门 ChatLuna
+- 快速上手：参考 [快速上手](/guide/getting-started) 来入门 ChatLuna。
 - 指令列表：参考 [指令列表](/guide/useful-commands) 来了解 ChatLuna 可用的指令或某个指令的用法。
 - 配置项：参考 [配置项](/guide/useful-configurations.html) 来了解 ChatLuna 主插件的所有配置项。
 - 配置模型平台：参考 [配置模型平台](/guide/configure-model-platform/introduction.html) 来了解如何配置某个语言模型平台。

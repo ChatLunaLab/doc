@@ -46,9 +46,10 @@ ChatLuna 还需要 `cache` 服务，用于存储某些临时配置。
 
 ## 安装 ChatLuna 主插件
 
-搜索并安装 `@dingyi222666/chatLuna` 插件，这是 ChatLuna 的主插件。
+搜索并安装 `chatluna` 插件，这是 ChatLuna 的主插件。
+
 ::: warning 注意
-主插件本身不包含任何平台适配，后面还需要安装平台适配插件。
+主插件本身不包含任何模型平台适配，后面还需要安装平台适配插件。
 :::
 
 ## 安装模型适配器
@@ -81,7 +82,7 @@ ChatLuna 还需要 `cache` 服务，用于存储某些临时配置。
 如果你在国内环境使用，需要设置代理，请在`ChatLuna`主插件的设置里设置代理(请求设置 -> [`isProxy`](/guide/useful-configurations#代理设置)，请求设置 -> [`proxyAddress`](/guide/useful-configurations#代理设置))。
 :::
 
-可以使用 [`chatLuna.model.list`](/guide/useful-commands#模型列表)查看已启用的平台。
+可使用 [`chatluna.model.list`](/guide/useful-commands#模型列表)查看已启用的平台。
 
 ## 设置模版房间配置
 
