@@ -160,6 +160,7 @@ $msgbox-left: 4.2rem;
     position: relative;
     margin-left: $msgbox-left;
     width: fit-content;
+    white-space: pre-line;
     border-radius: 0.5rem;
     background-color: var(--vp-c-bg);
     word-break: break-all;
@@ -178,6 +179,7 @@ $msgbox-left: 4.2rem;
     }
 
     p {
+        white-space: pre-line;
         margin: 0 !important;
         line-height: 26px !important;
     }
