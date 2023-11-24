@@ -9,6 +9,8 @@
 - 文档内容以 CC-BY-SA-4.0 许可证开源 (.vitepress 目录以外的部分)
 - 对原主题库进行的扩展使用 AGPL-3.0 许可证开源 (.vitepress 目录中的部分)
 
+特别感谢 [Koishi VitePress Theme](https://github.com/koishijs/vitepress-theme) 项目，参考了其的部分 vue 组件实现。
+
 ## 贡献者名单  
 
 <a href="https://github.com/ChatLunaLab/doc/graphs/contributors">
