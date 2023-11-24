@@ -13,7 +13,7 @@
 以下为命令格式：
 
 ```shell
-chatluna.chat.text -r <room> <message>
+chatluna.chat.text -r <room:string> <message:text>
 ```
 
 以下为命令的可选参数：
@@ -36,7 +36,7 @@ chatluna.chat.text -r <room> <message>
 以下为命令格式：
 
 ```shell
-chatluna.chat.voice -s <speakerId> -r <room> <message>
+chatluna.chat.voice -s <speakerId:number> -r <room:string> <message:text>
 ```
 
 以下为可选参数：
@@ -53,23 +53,23 @@ chatluna.chat.voice -s <speakerId> -r <room> <message>
   </chat-message>
 </chat-panel>
 
-## 模型
+## 模型（向量数据库，嵌入模型，大语言模型）
 
-### 列出模型列表
+### 列出语音模型列表
 
-列出当前 ChatLuna 可用的模型列表。
-可以指定 `page` 参数来选择页码，指定 `limit` 参数来选择返回的模型列表数量上限。
+列出当前 ChatLuna 可用的语音模型列表。
+可指定 `page` 参数来选择页码，指定 `limit` 参数来选择返回的语言模型列表数量上限。
 
 以下为命令格式：
 
 ```shell
-chatluna.model.list -l <limit> -p <page>
+chatluna.model.list -l <limit:number> -p <page:number>
 ```
 
 以下为可选参数：
 
-- `-l,--limit`: 指定返回的模型数量上限，默认为 5。
-- `-p,--page`: 指定返回的模型页数，默认为 1。
+- `-l,--limit`: 指定返回语音模型名称的数量上限，默认为 5。
+- `-p,--page`: 指定返回语言模型名称的页数，默认为 1。
 
 以下为例子：
 
@@ -104,7 +104,7 @@ wenxin/ERNIE-Bot-turbo<br/>
 以下为命令格式：
 
 ```shell
-chatluna.preset.list -l <limit> -p <page>
+chatluna.preset.list -l <limit:number> -p <page:number>
 ```
 
 以下为可选参数：
@@ -153,7 +153,7 @@ Current date: {date}......<br/>
 以下为命令格式：
 
 ```shell
-chatluna.preset.add <preset>
+chatluna.preset.add <preset:string>
 ```
 
 以下为例子：
@@ -169,3 +169,95 @@ chatluna.preset.add <preset>
 :::tip 提示
 对于为 `string` 类型的指令参数，如传递的参数有空格，这会影响到最终参数解析。不妨使用双引号包围参数，如“测试 123”。
 :::
+
+### 克隆预设
+
+克隆某个 ChatLuna 预设。
+这样可以方便的修改现有的预设，修改出其他类似但是效果又不一样的预设。
+
+:::warning 警告
+此命令需要被执行者含有 3 级权限。
+在未来我们可能会跟随 Koishi 更新，使用其他方式进行权限验证（权限组）。
+:::
+
+以下为命令格式：
+
+```shell
+chatluna.preset.clone <originPreset:string> [newPresetName:string]
+```
+
+以下为参数：
+
+- `-o,--originPreset`: 原始的预设名。（必须参数）
+- `-n,--newPresetName`: 新的预设名。如果未输入，则按 `原预设名+(1)` 处理。如 `猫娘` -> `猫娘(1)`。
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.preset.clone 猫娘 猫娘改进版</chat-message>
+  <chat-message nickname="Bot">你确定要克隆预设 猫娘 吗？如果你确定要克隆，请输入 Y 来确认。</chat-message>
+  <chat-message nickname="User">Y</chat-message>
+  <chat-message nickname="Bot">预设克隆成功，预设名称为: 猫娘改进版。 请调用预设列表命令查看。</chat-message>
+</chat-panel>
+
+### 设置预设
+
+修改已有的 ChatLuna 预设的内容。
+执行后会要求你发送新的预设的内容。
+
+使用此命令修改的预设只能是简单预设（即单条 system message），如需编写复杂预设，请参考 [此](./preset-system/write-preset.md) 来编写或修改复杂预设。
+
+:::warning 警告
+此命令需要被执行者含有 3 级权限。
+在未来我们可能会跟随 Koishi 更新，使用其他方式进行权限验证（权限组）。
+:::
+
+以下为命令格式：
+
+```shell
+chatluna.preset.set <preset:string>
+```
+
+以下为参数：
+
+- `-p,--preset`: 需要修改的预设名称。
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.preset.set "充当 SQL 终端"</chat-message>
+  <chat-message nickname="Bot">请发送你的预设内容。</chat-message>
+  <chat-message nickname="User">测试</chat-message>
+  <chat-message nickname="Bot">预设修改成功，预设名称为: 充当 SQL 终端。 请调用预设列表命令查看。</chat-message>
+</chat-panel>
+
+### 删除预设
+
+删除 ChatLuna 预设。
+
+删除后该预设会无法找回，ChatLuna 也会尝试将使用了该预设的房间切换到其他预设。
+
+:::warning 警告
+此命令需要被执行者含有 3 级权限。
+在未来我们可能会跟随 Koishi 更新，使用其他方式进行权限验证（权限组）。
+:::
+
+以下为命令格式：
+
+```shell
+chatluna.preset.delete <preset:string>
+```
+
+以下为参数：
+
+- `-p,--preset`: 需要修改的预设名称。
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.preset.delete 猫娘改进版</chat-message>
+  <chat-message nickname="Bot">是否要删除 猫娘改进版 预设？输入大写 Y 来确认删除，输入其他字符来取消删除。提示：删除后使用了该预设的会话将会自动删除无法使用。</chat-message>
+  <chat-message nickname="User">Y</chat-message>
+  <chat-message nickname="Bot">
+已删除预设: 猫娘改进版，即将自动重启完成更改。</chat-message>
+</chat-panel>

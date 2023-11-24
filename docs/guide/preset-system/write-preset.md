@@ -143,7 +143,7 @@ prompts:
    content: 杂鱼大叔这么快就想人家了嘛？
 ```
 
-把写好的文件复制到 `你的 koishi 目录 + data/chathub/preset` 文件夹，然后调用 `chatluna.preset.list`。此时如果正常，则会在输出的列表中找到雌小鬼这个预设。后续自己使用 `chatluna.room.set -p <preset>` 设置即可。
+把写好的文件复制到 `你的 koishi 目录 + data/chathub/preset` 文件夹，然后调用 `chatluna.preset.list`。此时如果正常，则会在输出的列表中找到雌小鬼这个预设。后续选择房间调用 `chatluna.room.set -p <preset>` 设置即可。
 
 ## 要点
 
