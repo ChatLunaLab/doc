@@ -79,10 +79,10 @@ ChatLuna 还需要 `cache` 服务，用于存储某些临时配置。
 填写完后右上角保存配置，启用插件即可。
 
 ::: warning 注意
-如果你在国内环境使用，需要设置代理，请在`ChatLuna`主插件的设置里设置代理(请求设置 -> [`isProxy`](/guide/useful-configurations#代理设置)，请求设置 -> [`proxyAddress`](/guide/useful-configurations#代理设置))。
+如果你在国内环境使用，需要设置代理，请在`ChatLuna`主插件的设置里设置代理(请求设置 -> [`isProxy`](./useful-configurations#isproxy)，请求设置 -> [`proxyAddress`](./useful-configurations#proxyaddress))。
 :::
 
-可使用 [`chatluna.model.list`](/guide/useful-commands#模型列表)查看已启用的平台。
+可使用 [`chatluna.model.list`](./useful-commands.md#列出语言模型列表)查看可用的模型。
 
 ## 设置模版房间配置
 
@@ -98,8 +98,8 @@ ChatLuna 还需要 `cache` 服务，用于存储某些临时配置。
 
 ## 开始聊天
 
-最后使用 [`chatluna.chat.text`](/guide/useful-commands#模型对话) 命令开始和模型聊天。
+最后使用 [`chatluna.chat.text`](/guide/useful-commands#模型对话) 命令，开始和模型进行交互对话。
 
-通过以上步骤，你已经配置好了 ChatLuna，并且可以和模型聊天了。
+通过以上步骤，你已经基本配置好了 ChatLuna，并且可以和模型对话了。
 
 接下来你可以在下面的章节学习到更多的配置和使用方法。

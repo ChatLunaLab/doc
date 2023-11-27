@@ -1,5 +1,3 @@
-// @ts-ignore
-import { createRequire } from 'module';
 import { defineConfig } from 'vitepress';
 import { DefaultTheme } from 'vitepress/types/default-theme';
 import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs';

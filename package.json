@@ -1,5 +1,6 @@
 {
     "name": "koishi-chathub-doc",
+    "private": true,
     "version": "1.0.0",
     "description": "Chathub 插件的官方文档",
     "main": "index.js",
@@ -7,7 +8,6 @@
     "author": "dingyi222666 <dingyi222666@foxmail.com>",
     "license": "Apache-2.0",
     "type": "module",
-    "module": "co",
     "devDependencies": {
         "less": "^4.2.0",
         "sass": "^1.69.5",

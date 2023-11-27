@@ -80,6 +80,21 @@ chatluna.room.switch <room:text>
   </chat-message>
 </chat-panel>
 
+### 列出房间列表
+
+列出你目前在当前环境里已经加入了的房间列表。
+
+以下为命令格式：
+
+```shell
+chatluna.room.list -l <limit:number> -p <page:number>
+```
+
+以下为可选参数：
+
+- `-l,--limit`: 指定返回的房间数量上限，默认为 3。
+- `-p,--page`: 指定返回的房间页数，默认为 1。
+
 
 ## 预设
 
