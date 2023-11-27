@@ -14,7 +14,7 @@
 
 一切准备就绪，现在就可以开始新建一个插件了！
 
-阅读 [此] (https://koishi.chat/zh-CN/guide/develop/workspace.html#%E5%88%9B%E5%BB%BA%E6%96%B0%E6%8F%92%E4%BB%B6)文档，先新建一个插件。
+阅读 [此](https://koishi.chat/zh-CN/guide/develop/workspace.html#%E5%88%9B%E5%BB%BA%E6%96%B0%E6%8F%92%E4%BB%B6)文档，先新建一个插件。
 
 ### 添加 ChatLuna 依赖
 
