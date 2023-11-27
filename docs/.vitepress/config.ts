@@ -288,11 +288,11 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
             text: '起步',
             items: [
                 {
-                    text: '为 ChatHub 开发插件',
+                    text: '为 ChatLuna 开发插件',
                     link: '/development/getting-started',
                 },
                 {
-                    text: '调用 ChatHub API',
+                    text: '调用 ChatLuna API',
                     link: '/development/call-chathub-api',
                 },
             ],
@@ -348,19 +348,19 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
             text: 'API 参考',
             items: [
                 {
-                    text: 'ChatHub 服务 （ChatHub Service）',
+                    text: 'ChatLuna 服务 （ChatLuna Service）',
                     link: '/development/api-reference/chathub-service',
                 },
                 {
-                    text: 'ChatHub 中间件聊天链（ChatChain）',
+                    text: 'ChatLuna 中间件聊天链（ChatChain）',
                     link: '/development/api-reference/chathub-chat-chain',
                 },
                 {
-                    text: 'ChatHub 插件(ChatHub Plugin)',
+                    text: 'ChatLuna 插件(ChatLuna Plugin)',
                     link: '/development/api-reference/chathub-plugin',
                 },
                 {
-                    text: 'ChatHub 大语言模型核心 （LLM Core）',
+                    text: 'ChatLuna 大语言模型核心 （LLM Core）',
                     collapsed: true,
                     items: [
                         {
@@ -386,7 +386,7 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                     ],
                 },
                 {
-                    text: 'ChatHub 辅助工具 （ChatHub Utils）',
+                    text: 'ChatLuna 辅助工具 （ChatLuna Utils）',
                     collapsed: true,
                     items: [
                         {

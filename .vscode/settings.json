@@ -1,4 +1,4 @@
 {
-    "cSpell.words": ["onappear"],
+    "cSpell.words": ["onappear", "vectorstore"],
     "typescript.tsdk": "node_modules/typescript/lib"
 }
