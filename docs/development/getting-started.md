@@ -8,7 +8,7 @@
 
 1. 基于 Koishi 官方的 [文档](https://koishi.chat/zh-CN/guide/develop/setup.html)，搭建好模版项目。
 2. 模版项目里安装 ChatLuna 的主插件。
-3. 学会并搭建好 Koishi 模版项目，了解并掌握编写 Koishi 插件的知识。
+3. 了解并掌握编写 Koishi 插件的知识。
 
 ## 配置基础环境
 
