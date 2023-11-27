@@ -12,6 +12,7 @@
         "less": "^4.2.0",
         "sass": "^1.69.5",
         "vitepress": "^1.0.0-rc.23",
+        "vitepress-plugin-tabs": "^0.5.0",
         "vue": "^3.3.8"
     },
     "scripts": {

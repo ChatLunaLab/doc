@@ -2,6 +2,7 @@
 import { createRequire } from 'module';
 import { defineConfig } from 'vitepress';
 import { DefaultTheme } from 'vitepress/types/default-theme';
+import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs';
 
 export default defineConfig({
     lang: 'zh-CN',
@@ -72,6 +73,11 @@ export default defineConfig({
         root: {
             label: 'Chinese',
             lang: 'zh',
+        },
+    },
+    markdown: {
+        config(md) {
+            md.use(tabsMarkdownPlugin);
         },
     },
 });
