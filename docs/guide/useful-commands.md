@@ -80,6 +80,38 @@ chatluna.room.switch <room:text>
   </chat-message>
 </chat-panel>
 
+### 列出当前房间信息
+
+列出在当前环境的默认使用的房间的信息
+
+以下为命令格式：
+
+```shell
+chatluna.room.info [room:text]
+```
+
+以下为可选参数：
+
+- `room`: 指定要查询的房间，默认为当前环境的默认房间。
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">/chatluna.room.info</chat-message>
+  <chat-message nickname="Bot">
+   以下是查询到你当前使用的房间的信息：<br/>
+
+<br/>房间名: ChatLuna 闲聊群 的模版克隆房间<br/>
+房间ID: 1<br/>
+房间预设: 猫娘<br/>
+房间模型: bing/creative<br/>
+房间可见性: template_clone<br/>
+房间聊天模式: chat<br/>
+房间创建者ID: 2187778735<br/>
+房间可用性：false<br/>
+  </chat-message>
+</chat-panel>
+
 ### 列出房间列表
 
 列出你目前在当前环境里已经加入了的房间列表。
@@ -95,6 +127,57 @@ chatluna.room.list -l <limit:number> -p <page:number>
 - `-l,--limit`: 指定返回的房间数量上限，默认为 3。
 - `-p,--page`: 指定返回的房间页数，默认为 1。
 
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">/chatluna.room.list -l 10</chat-message>
+  <chat-message nickname="Bot">
+   以下是查询到你加入的房间列表：<br/>
+
+<br/>房间名: ChatLuna 闲聊群 的模版克隆房间<br/>
+房间ID: 1<br/>
+房间预设: 猫娘<br/>
+房间模型: bing/creative<br/>
+房间可见性: template_clone<br/>
+房间聊天模式: chat<br/>
+房间创建者ID: 2187778735<br/>
+房间可用性：false<br/>
+
+<br/>房间名: 测试<br/>
+房间ID: 2<br/>
+房间预设: chatgpt<br/>
+房间模型: openai/gpt-3.5-turbo<br/>
+房间可见性: public<br/>
+房间聊天模式: chat<br/>
+房间创建者ID: 2187778735<br/>
+房间可用性：true<br/>
+
+<br/>你可以使用 chatluna.room.switch &lt;name/id&gt; 来切换当前环境里你的默认房间。<br/>
+
+<br/>当前为第 1 / 1 页
+  </chat-message>
+</chat-panel>
+
+### 清除房间聊天记录
+
+清除当前房间的聊天记录。
+
+相当于重置模型记忆，重新开始新的会话。有助于获取不同的对话风格。
+
+以下为命令格式：
+
+```shell
+chatluna.room.clear [room:text]
+```
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">/chatluna.room.clear 测试</chat-message>
+  <chat-message nickname="Bot">
+    已清除房间 测试 的聊天记录。
+  </chat-message>
+</chat-panel>
 
 ## 预设
 
@@ -264,7 +347,6 @@ chatluna.preset.delete <preset:string>
 已删除预设: 猫娘改进版，即将自动重启完成更改。</chat-message>
 </chat-panel>
 
-
 ## 模型（向量数据库，嵌入模型，大语言模型）
 
 ### 列出语言模型列表
@@ -395,7 +477,6 @@ chatluna.embeddings.set <embeddings:string>
   <chat-message nickname="Bot">已将默认嵌入模型设置为 openai/openai/text-embedding-ada-002&nbsp;(将自动重启插件应用更改)
   </chat-message>
 </chat-panel>
-
 
 ### 设置默认向量数据库
 

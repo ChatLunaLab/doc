@@ -94,9 +94,45 @@ export function apply(ctx: Context) {
 
 ```
 
-对于一个模型平台适配插件，其的主要组成部分包括 `Client`,`ModelRequester`,`Config`,`Plugin`。
-
+对于一个模型平台适配插件，其的主要组成部分包括 `Client`,`ModelRequester`,`ClientConfig`,`Plugin` 等。
 
 下面让我们一步步来了解这些部分。
 
-## 模型配置
+## 平台配置
+
+对于一个模型适配器，通常都是通过 API 连接到目标平台，这之间自然少不了各种配置，API KEY 等。那么平台配置这块就是实体化这些配置的地方。
+
+### 定义 Schema 配置
+
+Schema 配置能让用户在 Koishi 控制面板里进行配置，并在插件里使用。
+
+ChatLuna 也提供了一套通用的 Schema，用于设置聊天限额，超时时间等。
+
+这里我们直接基础即可，然后新增 `apiKeys` 字段，用于模拟 `apiKeys` 验证。
+
+```ts
+...
+export const name = 'example' 
+
+export const inject = ['chatluna'] 
+
+export interface Config extends ChatLunaPlugin.Config {  //[!code focus:12]
+    apiKeys: string[]
+}
+
+export const Config: Schema<Config> = Schema.intersect([
+    ChatLunaPlugin.Config,
+
+    Schema.object({
+       apiKeys: Schema.array(Schema.string()).description('API Key'),
+    }).description('请求设置'),
+])
+
+export function apply(ctx: Context) {
+    // write your plugin here
+}
+```
+
+需要注意的是，ChatLuna 支持一个平台使用多份配置，来实现负载均衡或自动弹出无效配置。
+
+因此在声明 `apiKeys` 字段时我们使用了 `Schema.array(Schema.string())` 而不是 `Schema.string()`，这样可以让用户在控制面板里配置多个 API Key。
