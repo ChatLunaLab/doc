@@ -80,7 +80,7 @@ chatluna.room.switch <room:text>
   </chat-message>
 </chat-panel>
 
-### 列出当前房间信息
+### 列出房间信息
 
 列出在当前环境的默认使用的房间的信息
 
@@ -111,6 +111,145 @@ chatluna.room.info [room:text]
 房间可用性：false<br/>
   </chat-message>
 </chat-panel>
+
+### 转移房主
+
+将你在当前环境里默认使用的房间的房主转移给其他用户。
+
+需要当前你默认使用的房间为房主。
+
+::: tip 提示
+如果执行者在数据库的权限大于3，那么他将可以直接转移房主，包括转移到自己身上。
+:::
+
+以下为命令格式：
+
+```shell
+chatluna.room.transfer <user:user>
+```
+
+以下为可选参数：
+
+- `user`: 指定转移房间房主的用户 ID。（需要为 at）
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">/chatluna.room.transfer @dingyi</chat-message>
+  <chat-message nickname="Bot">
+    你确定要把房间 测试 转移给用户 2187778735 吗？转移后ta将成为房间的房主，你将失去房主权限。如果你确定要转移，请输入 Y 来确认。
+  </chat-message>
+  <chat-message nickname="User">Y</chat-message>
+  <chat-message nickname="Bot">
+    已将房间 测试 转移给用户 2187778735。
+  </chat-message>
+</chat-panel>
+
+### 邀请用户加入房间
+
+邀请其他用户加入当前环境里默认使用的房间。
+
+需要当前你默认使用的房间为管理员或房间权限。
+
+::: tip 提示
+如果执行者在数据库的权限大于3，那么他将可以直接邀请用户加入房间，包括邀请自己加入。
+:::
+
+以下为命令格式：
+
+```shell
+chatluna.room.invite <...arg:user>
+```
+
+以下为可选参数：
+
+- `user`: 邀请加入房间的用户 ID。（支持为多个 at）
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">/chatluna.room.invite @dingyi</chat-message>
+  <chat-message nickname="Bot">
+    已邀请用户 2187778735 加入房间 测试
+    </chat-message>
+</chat-panel>
+
+### 离开房间
+
+退出加入某给房间。
+
+::: tip 提示
+如果执行者为房主，这将导致该房间被删除。
+:::
+
+以下为命令格式：
+
+```shell
+chatluna.room.leave [room:text]
+```
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">/chatluna.room.leave</chat-message>
+  <chat-message nickname="Bot">
+    已退出房间 测试。您可能需要重新加入或者切换房间。
+  </chat-message>
+</chat-panel>
+
+### 踢出房间
+
+将某用户踢出当前环境里默认使用的房间。
+
+需要当前你默认使用的房间为管理员或房间权限。
+
+以下为命令格式：
+
+```shell
+chatluna.room.kick <...arg:user>
+```
+
+以下为可选参数：
+
+- `user`: 踢出房间的用户 ID。（需要为 at）
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">/chatluna.room.kick @dingyi</chat-message>
+  <chat-message nickname="Bot">
+    已将以下用户踢出房间 测试：2187778735
+    </chat-message>
+</chat-panel>
+
+### 禁言用户
+
+禁言某用户在当前环境里默认使用的房间。
+
+执行一次为禁言操作，在执行一次则为取消禁言操作。禁言操作没有时间限制。
+
+需要当前你默认使用的房间为管理员或房间权限。
+
+
+以下为命令格式：
+
+```shell
+chatluna.room.mute <...arg:user>
+```
+
+以下为可选参数：
+
+- `user`: 禁言房间的用户 ID。（需要为 at）
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">/chatluna.room.mute @dingyi</chat-message>
+  <chat-message nickname="Bot">
+    已将用户 2960586094 在房间 测试 禁言或解除禁言。
+    </chat-message>
+</chat-panel>
+
 
 ### 列出房间列表
 
@@ -158,7 +297,7 @@ chatluna.room.list -l <limit:number> -p <page:number>
   </chat-message>
 </chat-panel>
 
-### 清除房间聊天记录
+### 清除聊天记录
 
 清除当前房间的聊天记录。
 
