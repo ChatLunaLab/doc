@@ -136,3 +136,71 @@ export function apply(ctx: Context) {
 需要注意的是，ChatLuna 支持一个平台使用多份配置，来实现负载均衡或自动弹出无效配置。
 
 因此在声明 `apiKeys` 字段时我们使用了 `Schema.array(Schema.string())` 而不是 `Schema.string()`，这样可以让用户在控制面板里配置多个 API Key。
+
+### 解析 ClientConfig
+
+在 ChatLuna 中，对于每个模型平台，都需要一套 `ClientConfig`，也就是平台配置，其的接口定义如下：
+
+```ts
+export interface ClientConfig {
+    apiKey: string;
+    platform: PlatformClientNames;
+    maxRetries: number;
+    concurrentMaxSize: number;
+    apiEndpoint?: string;
+    timeout: number;
+    chatLimit: Computed<Awaitable<number>>;
+}
+```
+
+导入 `ClientConfig` 类型，然后新建一个 `ChatLunaPlugin`，其中两个泛型，第一个为当前插件的 Schema 配置接口，第二个为 `ClientConfig` 或其但的子类型。
+
+传入构建参数的三个值，第一个为当前插件的 `Context`，第二个为当前插件的 Schema 配置实例，在后面可以用于解析 `ClientConfig`。第三个为当前的平台名，这也是识别不同平台的关键参数。
+
+`ClientConfig` 默认已经提供了 apiKey 等字段，我们无需继承直接使用即可。
+
+```ts
+...
+import { ClientConfig } from 'koishi-plugin-chatluna/lib/services/chat'; // [!code focus]
+
+...
+export function apply(ctx: Context) {
+    const plugin = new ChatLunaPlugin<BingClientConfig, Config>(  //[!code focus:5] 
+        ctx, 
+        config, 
+        'test'  
+    ) 
+}
+```
+
+完成后我们监听 `ctx` 的 `ready` 参数，在里面解析 `ClientConfig`。
+
+```ts
+...
+export function apply(ctx: Context) {
+    const plugin = new ChatLunaPlugin<BingClientConfig, Config>( 
+        ctx,
+        config,
+        'test',
+    )
+
+    ctx.on('ready', async () => { //[!code focus:18] 
+        // 注意这句，需要把当前 Plugin 注册到 ChatLuna 服务里
+        await plugin.registerToService() 
+
+        // 解析 ClientConfig
+        await plugin.parseConfig((config) => {
+            return config.apiKeys.map((apiKey) => {
+                return { 
+                    apiKey, 
+                    platform: 'test', 
+                    chatLimit: config.chatTimeLimit, 
+                    timeout: config.timeout, 
+                    maxRetries: config.maxRetries, 
+                    concurrentMaxSize: config.chatConcurrentMaxSize, 
+                } 
+            }) 
+        }) 
+    })
+}
+```
