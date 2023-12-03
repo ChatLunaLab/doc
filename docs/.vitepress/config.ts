@@ -5,6 +5,7 @@ import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs';
 export default defineConfig({
     lang: 'zh-CN',
     title: 'ChatLuna',
+    titleTemplate: ':title - ChatLuna Doc',
     // base: "",
     description: 'ChatLuna 相关文档',
     ignoreDeadLinks: true,
