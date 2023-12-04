@@ -74,7 +74,7 @@ chatluna.room.switch <room:text>
 以下为例子：
 
 <chat-panel>
-  <chat-message nickname="User">/chatluna.room.switch 测试</chat-message>
+  <chat-message nickname="User">chatluna.room.switch 测试</chat-message>
   <chat-message nickname="Bot">
     已切换到房间 测试
   </chat-message>
@@ -97,7 +97,7 @@ chatluna.room.info [room:text]
 以下为例子：
 
 <chat-panel>
-  <chat-message nickname="User">/chatluna.room.info</chat-message>
+  <chat-message nickname="User">chatluna.room.info</chat-message>
   <chat-message nickname="Bot">
    以下是查询到你当前使用的房间的信息：<br/>
 
@@ -145,7 +145,7 @@ chatluna.room.transfer <user:user>
   </chat-message>
 </chat-panel>
 
-### 邀请用户加入房间
+### 邀请加入房间
 
 邀请其他用户加入当前环境里默认使用的房间。
 
@@ -222,6 +222,35 @@ chatluna.room.kick <...arg:user>
     </chat-message>
 </chat-panel>
 
+### 修改用户权限
+
+修改某用户在当前环境里默认使用的房间的权限。
+
+需要当前你默认使用的房间为管理员或房间权限。
+
+以下为命令格式：
+
+```shell
+chatluna.room.permission <user:user>
+```
+
+以下为可选参数：
+
+- `user`: 指定修改权限的用户 ID。（需要为 at）
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.room.permission @dingyi</chat-message>
+  <chat-message nickname="Bot">
+   你确定要为用户 2187778735 设置房间 test 的权限吗？目前可以设置的权限为 member 和 admin。如果你确定要设置，请输入设置权限的值或首字母大写，其他输入均视为取消。
+    </chat-message>
+    <chat-message nickname="User">admin</chat-message>
+    <chat-message nickname="Bot">
+    已为用户 2187778735 设置房间 test 的权限为 admin
+    </chat-message>
+</chat-panel>
+
 ### 禁言用户
 
 禁言某用户在当前环境里默认使用的房间。
@@ -229,7 +258,6 @@ chatluna.room.kick <...arg:user>
 执行一次为禁言操作，在执行一次则为取消禁言操作。禁言操作没有时间限制。
 
 需要当前你默认使用的房间为管理员或房间权限。
-
 
 以下为命令格式：
 
@@ -244,12 +272,11 @@ chatluna.room.mute <...arg:user>
 以下为例子：
 
 <chat-panel>
-  <chat-message nickname="User">/chatluna.room.mute @dingyi</chat-message>
+  <chat-message nickname="User">chatluna.room.mute @dingyi</chat-message>
   <chat-message nickname="Bot">
     已将用户 2960586094 在房间 测试 禁言或解除禁言。
     </chat-message>
 </chat-panel>
-
 
 ### 列出房间列表
 
