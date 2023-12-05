@@ -19,7 +19,7 @@ hero:
 features:
   - icon: 🛠️
     title: 快速部署 
-    details: 无需编写复杂配置文件，安装插件后，在 Koishi Web UI 简单配置后即可使用。
+    details: 无需编写复杂配置文件，安装插件后，在 Koishi Web UI 上简单配置后即可使用。
   - icon: 🌻
     title: 多平台模型接入
     details: 支持 OpenAI (API)、Bing Chat、文心一言（API）等平台，仍将继续接入更多平台。
