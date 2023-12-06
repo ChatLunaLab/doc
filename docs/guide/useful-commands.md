@@ -112,6 +112,34 @@ chatluna.room.info [room:text]
   </chat-message>
 </chat-panel>
 
+### 设置自动更新权限
+
+设置当前环境的默认房间是否跟随控制模版的配置更新。
+
+如果设置为 false，当修改主插件的里的模版房间配置（如模型等），将不会跟随更新配置。
+
+该选项只对模版控制房间生效。
+
+以下为命令格式：
+
+```shell
+chatluna.room.auto-update -r <room:string> <enable:boolean>
+```
+
+以下为可选参数：
+
+- `-r,--room`: 指定要设置的房间，默认为当前环境的默认房间。
+- `enable`: 指定是否开启自动更新权限，默认为 true。
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.room.auto-update true</chat-message>
+  <chat-message nickname="Bot">
+   已设置房间 测试 的模版克隆房间 的自动更新属性为 true
+  </chat-message>
+</chat-panel>
+
 ### 转移房主
 
 将你在当前环境里默认使用的房间的房主转移给其他用户。
