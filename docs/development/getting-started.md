@@ -420,7 +420,7 @@ import {
 export class TestRequester extends ModelRequester {
     ...
 
-    async *completionStream(
+    async *completionStream( //[!code focus:8] 
         params: ModelRequestParams
     ): AsyncGenerator<ChatGenerationChunk> {
         if (!this._config.apiKey.startsWith("chatluna_")) {
@@ -441,13 +441,13 @@ export class TestRequester extends ModelRequester {
 
 ``` ts
 ...
-import { ChatGenerationChunk } from "langchain/schema";
+import { ChatGenerationChunk } from "langchain/schema"; //[!code focus] 
 ...
 
 export class TestRequester extends ModelRequester {
    ...
 
-    async *completionStream(
+    async *completionStream( //[!code focus:3] 
         params: ModelRequestParams
     ): AsyncGenerator<ChatGenerationChunk> {
         if (!this._config.apiKey.startsWith("chatluna_")) {
@@ -456,7 +456,7 @@ export class TestRequester extends ModelRequester {
         }
 
         
-        const { input: messages } = params;
+        const { input: messages } = params; //[!code focus:17] 
         const input = messages[messages.length - 1].content as string;
 
         const response = input
@@ -466,6 +466,8 @@ export class TestRequester extends ModelRequester {
             .replaceAll("吗", " ")
             .replaceAll("有", "没有")
             .replaceAll("？", "！");
+
+        logger.debug(`[test] ${input} => ${response}`);    
 
         yield new ChatGenerationChunk({
             text: response,
@@ -492,7 +494,7 @@ import { TestRequester } from "./requester";
 export class TestClient extends BasePlatformClient<ClientConfig, ChatLunaChatModel | ChatHubBaseEmbeddings> {
     ...
 
-    protected _createModel(model: string): ChatLunaChatModel {
+    protected _createModel(model: string): ChatLunaChatModel { //[!code focus:11] 
         return new ChatLunaChatModel({
             modelInfo: this._models[0],
             requester: new TestRequester(this.ctx, this.config),
