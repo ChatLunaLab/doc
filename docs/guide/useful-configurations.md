@@ -272,7 +272,7 @@ ChatLuna 默认使用的向量数据库。
 
 ## 杂项
 
-### authSystem <Badge type="warning" text="experimental" />
+### authSystem <Badge type="warning" text="实验性" />
 
 - 类型: `boolean`
 - 默认值: `false`

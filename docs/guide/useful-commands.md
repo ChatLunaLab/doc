@@ -80,6 +80,127 @@ chatluna.room.switch <room:text>
   </chat-message>
 </chat-panel>
 
+### 创建房间
+
+创建新的房间，并将当前环境的默认房间切换为新创建的房间。
+
+此命令是目前已知的 ChatLuna 里前三复杂的指令。
+
+命令含有两种模式，如果没有携带任何子参数，则自动进入交互式创建，否则将直接基于子参数进行创建。
+
+以下为命令格式：
+
+```shell
+chatluna.room.create -n <name:string> -p <preset:string> -m <model:string> -c <chatMode:string> -w <password:string> -v <visibility:string>
+```
+
+以下为可选参数：
+
+- `-n,--name`: 指定房间的名字。
+- `-p,--preset`: 指定房间的预设。
+- `-m,--model`: 指定房间的模型。
+- `-c,--chatMode`: 指定房间的聊天模式。
+- `-w,--password`: 指定房间的密码。
+
+在这里我们只介绍交互式创建的例子，如需自己使用子参数，请自行摸索（或等待文档继续完善）。
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.room.create</chat-message>
+  <chat-message nickname="Bot">
+    请输入你需要使用的房间名，如：我的房间
+  </chat-message>
+  <chat-message nickname="User">测试</chat-message>
+  <chat-message nickname="Bot">
+    请输入你需要使用的模型，如：openai/gpt-3.5-turbo
+  </chat-message>
+  <chat-message nickname="User">openai/gpt-3.5-turbo</chat-message>
+  <chat-message nickname="Bot">
+    请输入你需要使用的聊天模式，如：chat
+  </chat-message>
+  <chat-message nickname="User">chat</chat-message>
+  <chat-message nickname="Bot">
+    请输入你需要使用的预设，如：chatgpt。如果不输入预设请回复 N（则使用默认 chatgpt 预设）。否则回复你需要使用的预设。
+  </chat-message>
+  <chat-message nickname="User">chatgpt</chat-message>
+  <chat-message nickname="Bot">
+   请输入你需要使用的可见性，如：private。如果不输入可见性请回复 N（则使用默认 private 可见性）。否则回复你需要使用的可见性。(目前支持 public, private)
+  </chat-message>
+  <chat-message nickname="User">房间创建成功，房间号为：2，房间名为：测试。</chat-message>
+</chat-panel>
+
+### 设置房间
+
+设置当前环境的默认房间的配置。
+
+此命令是目前已知的 ChatLuna 里前三复杂的指令。
+
+和创建房间一样，命令含有两种模式，如果没有携带任何子参数，则自动进入交互式创建，否则将直接基于子参数进行创建。
+
+以下为命令格式：
+
+```shell
+chatluna.room.set -n <name:string> -p <preset:string> -m <model:string> -c <chatMode:string> -w <password:string> -v <visibility:string>
+```
+
+以下为可选参数：
+
+- `-n,--name`: 指定房间的名字。
+- `-p,--preset`: 指定房间的预设。
+- `-m,--model`: 指定房间的模型。
+- `-c,--chatMode`: 指定房间的聊天模式。
+- `-w,--password`: 指定房间的密码。
+- `-v,--visibility`: 指定房间的可见性。
+
+如果你想更换当前环境默认房间的模型，可以只带上 `-m` 参数，如：
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.room.set -m openai/gpt-3.5-turbo</chat-message>
+  <chat-message nickname="Bot">
+    你目前已设置参数，是否直接更新房间属性？如需直接更新请回复 Y，如需进入交互式创建请回复 N，其他回复将视为取消。
+  </chat-message>
+  <chat-message nickname="User">Y</chat-message>
+  <chat-message nickname="Bot">
+    房间 测试 已更新。
+  </chat-message>
+</chat-panel>
+
+对于该命令，我们不推荐你使用交互式创建。
+
+另外，如果你对该房间设置了新的预设，那么该房间之前的聊天记录会自动清空。
+
+### 删除房间
+
+删除某个已经加入了的房间。
+
+:::warning 警告
+此命令只有房主能够执行。但如果执行者含有 3 级权限，那么也将会执行删除房间的操作。
+:::
+
+以下为命令格式：
+
+```shell
+chatluna.room.delete <room:text>
+```
+
+以下为可选参数：
+
+- `room`: 指定要删除的房间，默认为当前环境的默认房间。
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.room.delete 测试</chat-message>
+  <chat-message nickname="Bot">
+    你确定要删除房间 测试 吗？这将会删除房间内的所有消息。并且成员也会被移除。如果你确定要删除，请输入 Y 来确认。
+    <br/>
+    输入 Y 确认删除房间。
+  </chat-message>
+  <chat-message nickname="User">Y</chat-message>
+  <chat-message nickname="Bot">
+    已删除房间 测试。
+  </chat-message>
+</chat-panel>
+
 ### 列出房间信息
 
 列出在当前环境的默认使用的房间的信息
@@ -107,7 +228,7 @@ chatluna.room.info [room:text]
 房间模型: bing/creative<br/>
 房间可见性: template_clone<br/>
 房间聊天模式: chat<br/>
-房间创建者ID: 2187778735<br/>
+房间创建者ID: 0<br/>
 房间可用性：false<br/>
   </chat-message>
 </chat-panel>
@@ -165,11 +286,11 @@ chatluna.room.transfer <user:user>
 <chat-panel>
   <chat-message nickname="User">/chatluna.room.transfer @dingyi</chat-message>
   <chat-message nickname="Bot">
-    你确定要把房间 测试 转移给用户 2187778735 吗？转移后ta将成为房间的房主，你将失去房主权限。如果你确定要转移，请输入 Y 来确认。
+    你确定要把房间 测试 转移给用户 0 吗？转移后ta将成为房间的房主，你将失去房主权限。如果你确定要转移，请输入 Y 来确认。
   </chat-message>
   <chat-message nickname="User">Y</chat-message>
   <chat-message nickname="Bot">
-    已将房间 测试 转移给用户 2187778735。
+    已将房间 测试 转移给用户 0。
   </chat-message>
 </chat-panel>
 
@@ -198,7 +319,7 @@ chatluna.room.invite <...arg:user>
 <chat-panel>
   <chat-message nickname="User">/chatluna.room.invite @dingyi</chat-message>
   <chat-message nickname="Bot">
-    已邀请用户 2187778735 加入房间 测试
+    已邀请用户 0 加入房间 测试
     </chat-message>
 </chat-panel>
 
@@ -244,9 +365,9 @@ chatluna.room.kick <...arg:user>
 以下为例子：
 
 <chat-panel>
-  <chat-message nickname="User">/chatluna.room.kick @dingyi</chat-message>
+  <chat-message nickname="User">chatluna.room.kick @dingyi</chat-message>
   <chat-message nickname="Bot">
-    已将以下用户踢出房间 测试：2187778735
+    已将以下用户踢出房间 测试：0
     </chat-message>
 </chat-panel>
 
@@ -271,11 +392,11 @@ chatluna.room.permission <user:user>
 <chat-panel>
   <chat-message nickname="User">chatluna.room.permission @dingyi</chat-message>
   <chat-message nickname="Bot">
-   你确定要为用户 2187778735 设置房间 test 的权限吗？目前可以设置的权限为 member 和 admin。如果你确定要设置，请输入设置权限的值或首字母大写，其他输入均视为取消。
+   你确定要为用户 0 设置房间 test 的权限吗？目前可以设置的权限为 member 和 admin。如果你确定要设置，请输入设置权限的值或首字母大写，其他输入均视为取消。
     </chat-message>
     <chat-message nickname="User">admin</chat-message>
     <chat-message nickname="Bot">
-    已为用户 2187778735 设置房间 test 的权限为 admin
+    已为用户 0 设置房间 test 的权限为 admin
     </chat-message>
 </chat-panel>
 
@@ -334,7 +455,7 @@ chatluna.room.list -l <limit:number> -p <page:number>
 房间模型: bing/creative<br/>
 房间可见性: template_clone<br/>
 房间聊天模式: chat<br/>
-房间创建者ID: 2187778735<br/>
+房间创建者ID: 0<br/>
 房间可用性：false<br/>
 
 <br/>房间名: 测试<br/>
@@ -343,7 +464,7 @@ chatluna.room.list -l <limit:number> -p <page:number>
 房间模型: openai/gpt-3.5-turbo<br/>
 房间可见性: public<br/>
 房间聊天模式: chat<br/>
-房间创建者ID: 2187778735<br/>
+房间创建者ID: 0<br/>
 房间可用性：true<br/>
 
 <br/>你可以使用 chatluna.room.switch &lt;name/id&gt; 来切换当前环境里你的默认房间。<br/>
@@ -456,7 +577,7 @@ chatluna.preset.add <preset:string>
 
 :::warning 警告
 此命令需要被执行者含有 3 级权限。
-在未来我们可能会跟随 Koishi 更新，使用其他方式进行权限验证（权限组）。
+
 :::
 
 以下为命令格式：
@@ -488,7 +609,6 @@ chatluna.preset.clone <originPreset:string> [newPresetName:string]
 
 :::warning 警告
 此命令需要被执行者含有 3 级权限。
-在未来我们可能会跟随 Koishi 更新，使用其他方式进行权限验证（权限组）。
 :::
 
 以下为命令格式：
@@ -518,7 +638,6 @@ chatluna.preset.set <preset:string>
 
 :::warning 警告
 此命令需要被执行者含有 3 级权限。
-在未来我们可能会跟随 Koishi 更新，使用其他方式进行权限验证（权限组）。
 :::
 
 以下为命令格式：
@@ -651,7 +770,6 @@ pinecone<br/>
 
 :::warning 警告
 此命令需要被执行者含有 3 级权限。
-在未来我们可能会跟随 Koishi 更新，使用其他方式进行权限验证（权限组）。
 :::
 
 :::tip 提示
@@ -667,7 +785,7 @@ chatluna.embeddings.set <embeddings:string>
 以下为例子：
 
 <chat-panel>
-  <chat-message nickname="User">/chatluna.embeddings.set openai/text-embedding-ada-002</chat-message>
+  <chat-message nickname="User">chatluna.embeddings.set openai/text-embedding-ada-002</chat-message>
   <chat-message nickname="Bot">已将默认嵌入模型设置为 openai/openai/text-embedding-ada-002&nbsp;(将自动重启插件应用更改)
   </chat-message>
 </chat-panel>
@@ -680,7 +798,6 @@ chatluna.embeddings.set <embeddings:string>
 
 :::warning 警告
 此命令需要被执行者含有 3 级权限。
-在未来我们可能会跟随 Koishi 更新，使用其他方式进行权限验证（权限组）。
 :::
 
 :::tip 提示
@@ -699,4 +816,197 @@ chatluna.vectorstore.set <vectorstore:string>
   <chat-message nickname="User">/chatluna.vectorstore.set faiss</chat-message>
   <chat-message nickname="Bot">已将默认向量数据库设置为 faiss，&nbsp;(将自动重启插件应用更改)
   </chat-message>
+</chat-panel>
+
+## 配额组和余额系统 <Badge type="warning" text="实验性" />
+
+目前此功能为实验性功能，随时可能会出现破坏性更改或移除。
+
+如需使用相关功能，请先前往插件配置里开启[`authSystem`](./useful-configurations.md#authsystem)。
+
+### 查询余额
+
+查询某个用户的余额。
+
+:::warning 警告
+此命令需要被执行者含有 3 级权限。
+:::
+
+以下为命令格式：
+
+```shell
+chatluna.balance.query [user:user]
+```
+
+以下为参数说明：
+
+- `user`: 指定查询的用户，如为空则默认为当前用户。
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.balance.query</chat-message>
+  <chat-message nickname="Bot">用户 0 当前的账户余额为 1</chat-message>
+</chat-panel>
+
+### 清空余额
+
+清空某个用户的余额。
+
+:::warning 警告
+此命令需要被执行者含有 3 级权限。
+:::
+
+以下为命令格式：
+
+```shell
+chatluna.balance.clear [user:user]
+```
+
+以下为参数说明：
+
+- `user`: 指定清空的用户，如为空则默认为当前用户。
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.balance.clear</chat-message>
+  <chat-message nickname="Bot">已将用户 0 账户余额修改为 0</chat-message>
+</chat-panel>
+
+### 设置余额
+
+设置某个用户的余额。
+
+:::warning 警告
+此命令需要被执行者含有 3 级权限。
+:::
+
+以下为命令格式：
+
+```shell
+chatluna.balance.set -u [user:user] [balance:number]
+```
+
+以下为参数说明：
+
+- `-u,--user`: 指定设置的用户，如为空则默认为当前用户。
+- `balance`: 指定设置的余额。
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.balance.set -u 0 100</chat-message>
+  <chat-message nickname="Bot">已将用户 0 账户余额修改为 100</chat-message>
+</chat-panel>
+
+### 添加用户到配额组
+
+将某位用户添加到某个配额组。
+
+:::warning 警告
+此命令需要被执行者含有 3 级权限。
+:::
+
+以下为命令格式：
+
+```shell
+chatluna.auth.add -u <user:user> <group:string>
+```
+
+以下为参数说明：
+
+- `-u,--user`: 指定添加的用户。
+- `group`: 指定添加的用户组。
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">chathub.auth.add guest -u @dingyi</chat-message>
+  <chat-message nickname="Bot">已将用户 0 添加到配额组 guest</chat-message>
+</chat-panel>
+
+### 从配额组里移除用户
+
+将某位用户从某个配额组中移除。
+
+:::warning 警告
+此命令需要被执行者含有 3 级权限。
+:::
+
+以下为命令格式：
+
+```sh
+chathub.auth.kick -u <user:user> <group:name>
+```
+
+以下为参数说明：
+
+- `-u,--user`: 指定移除的用户。
+- `group`: 指定移除的用户组。
+
+:::tip 提示
+此命令只会将用户从指定的配额组中移除，不会删除用户。
+:::
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">chathub.auth.kick guest -u @dingyi</chat-message>
+  <chat-message nickname="Bot">已将用户 2371124484 踢出配额组 admin</chat-message>
+</chat-panel>
+
+### 列出配额组
+
+列出当前 ChatLuna 可用的配额组列表。
+
+:::warning 警告
+此命令需要被执行者含有 3 级权限。
+:::
+
+以下为命令格式：
+
+```shell
+chatluna.auth.list -l <limit:number> -p <page:number>
+```
+
+以下为可选参数：
+
+- `-l,--limit`: 指定返回配额组名称的数量上限，默认为 3。
+- `-p,--page`: 指定返回配额组名称的页数，默认为 1。
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.auth.list -l 10</chat-message>
+  <chat-message nickname="Bot">以下是查询到目前可用的配额组列表：<br/>
+
+<br/>名称：admin<br/>
+适用模型平台：通用<br/>
+计费：1 / 1000 token<br/>
+优先级: 0<br/>
+限制模型：通用<br/>
+并发限制每 4 条消息/分<br/>
+并发限制每 4 条消息/天<br/>
+
+<br/>名称：guest<br/>
+适用模型平台：通用<br/>
+计费：0.3 / 1000 token<br/>
+优先级: 0<br/>
+限制模型：通用<br/>
+并发限制每 10 条消息/分<br/>
+并发限制每 2000 条消息/天<br/>
+
+<br/>名称：测试<br/>
+适用模型平台：通用<br/>
+计费：0.01 / 1000 token<br/>
+优先级: 1<br/>
+限制模型：openai/gpt-3.5-turbo-16k, openai/gpt-3.5-turbo-16k-0613<br/>
+并发限制每 10 条消息/分<br/>
+并发限制每 100 条消息/天<br/>
+
+<br/>你可以使用 chathub.auth.add &lt;name/id&gt; 来加入某个配额组。<br/>
+
+<br/>当前为第 1 / 1 页<br/>
+</chat-message>
 </chat-panel>
