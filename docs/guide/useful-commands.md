@@ -47,7 +47,7 @@ chatluna.chat.voice -s <speakerId:number> -r <room:string> <message:text>
 以下为例子：
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.chat.text Hello，GPT</chat-message>
+  <chat-message nickname="User">chatluna.chat.voice Hello，GPT</chat-message>
   <chat-message nickname="Bot">
     [假装是一条语音消息]
   </chat-message>
