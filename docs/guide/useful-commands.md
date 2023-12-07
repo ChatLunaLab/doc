@@ -175,7 +175,7 @@ chatluna.room.set -n <name:string> -p <preset:string> -m <model:string> -c <chat
 删除某个已经加入了的房间。
 
 :::warning 警告
-此命令只有房主能够执行。但如果执行者含有 3 级权限，那么也将会执行删除房间的操作。
+此命令只有房主能够执行。但如果执行者最低 3 级权限，那么也将会执行删除房间的操作。
 :::
 
 以下为命令格式：
@@ -578,7 +578,7 @@ chatluna.preset.add <preset:string>
 这样可以方便的修改现有的预设，修改出其他类似但是效果又不一样的预设。
 
 :::warning 警告
-此命令需要被执行者含有 3 级权限。
+此命令需要被执行者最低 3 级权限。
 
 :::
 
@@ -610,7 +610,7 @@ chatluna.preset.clone <originPreset:string> [newPresetName:string]
 使用此命令修改的预设只能是简单预设（即单条 system message），如需编写复杂预设，请参考 [此](./preset-system/write-preset.md) 来编写或修改复杂预设。
 
 :::warning 警告
-此命令需要被执行者含有 3 级权限。
+此命令需要被执行者最低 3 级权限。
 :::
 
 以下为命令格式：
@@ -639,7 +639,7 @@ chatluna.preset.set <preset:string>
 删除后该预设会无法找回，ChatLuna 也会尝试将使用了该预设的房间切换到其他预设。
 
 :::warning 警告
-此命令需要被执行者含有 3 级权限。
+此命令需要被执行者最低 3 级权限。
 :::
 
 以下为命令格式：
@@ -771,7 +771,7 @@ pinecone<br/>
 设置后如使用到嵌入模型，则优先使用设置的嵌入模型。
 
 :::warning 警告
-此命令需要被执行者含有 3 级权限。
+此命令需要被执行者最低 3 级权限。
 :::
 
 :::tip 提示
@@ -799,7 +799,7 @@ chatluna.embeddings.set <embeddings:string>
 设置后如使用到向量数据库，则优先使用设置的向量数据库。
 
 :::warning 警告
-此命令需要被执行者含有 3 级权限。
+此命令需要被执行者最低 3 级权限。
 :::
 
 :::tip 提示
@@ -831,7 +831,7 @@ chatluna.vectorstore.set <vectorstore:string>
 查询某个用户的余额。
 
 :::warning 警告
-此命令需要被执行者含有 3 级权限。
+此命令需要被执行者最低 3 级权限。
 :::
 
 以下为命令格式：
@@ -856,7 +856,7 @@ chatluna.balance.query [user:user]
 清空某个用户的余额。
 
 :::warning 警告
-此命令需要被执行者含有 3 级权限。
+此命令需要被执行者最低 3 级权限。
 :::
 
 以下为命令格式：
@@ -881,7 +881,7 @@ chatluna.balance.clear [user:user]
 设置某个用户的余额。
 
 :::warning 警告
-此命令需要被执行者含有 3 级权限。
+此命令需要被执行者最低 3 级权限。
 :::
 
 以下为命令格式：
@@ -907,7 +907,7 @@ chatluna.balance.set -u [user:user] [balance:number]
 将某位用户添加到某个配额组。
 
 :::warning 警告
-此命令需要被执行者含有 3 级权限。
+此命令需要被执行者最低 3 级权限。
 :::
 
 以下为命令格式：
@@ -933,7 +933,7 @@ chatluna.auth.add -u <user:user> <group:string>
 将某位用户从某个配额组中移除。
 
 :::warning 警告
-此命令需要被执行者含有 3 级权限。
+此命令需要被执行者最低 3 级权限。
 :::
 
 以下为命令格式：
@@ -958,12 +958,71 @@ chathub.auth.kick -u <user:user> <group:name>
   <chat-message nickname="Bot">已将用户 2371124484 踢出配额组 admin</chat-message>
 </chat-panel>
 
+### 创建配额组
+
+新建一个配额组。
+
+和 [创建房间](#创建房间) 类似，可以交互式创建或直接从选项里创建，也是 ChatLuna 里前三复杂的命令。
+
+:::warning 警告
+此命令需要被执行者最低为 3 级权限。
+:::
+
+以下为命令格式：
+
+```sh
+chatluna.auth.create -n <name:string> -s [...model] -c <cost:number> -pm <preMin:number> -p <priority:number> -pd <day:number> -pf <platform:string>
+```
+
+以下为可选参数：
+
+- `-n`：配额组名称。
+- `-s`：配额组里可用的模型，在该模型之外的其他模型不可用。
+- `-c`：配额组的费用消耗，按千 token 计算。
+- `-pm`：配额组每分钟的最大调用次数。所有用户共享同一配额组的调用次数。
+- `-p`：配额组优先级，优先级（数字）越大的，越会被优先调用。
+- `-pd`：配额组每天的最大调用次数，所有用户共享同一配额组的调用测试。
+- `-pd`：适用的模型平台，用于区分不同平台的配额组。
+
+下面我们只演示交互式创建的例子，其他的使用方法请自行摸索（或等待文档继续完善）
+
+<chat-panel>
+  <chat-message nickname="User">chathub.auth.create -n 测试</chat-message>
+  <chat-message nickname="Bot">
+    你已经输入了配额组名：测试，是否需要更换？如需更换请回复更换后的配额组名，否则回复 N。
+  </chat-message>
+  <chat-message nickname="User">N</chat-message>
+  <chat-message nickname="Bot">
+   请输入配额组每分钟的限额条数，要求为数字并且大于 0。
+  </chat-message>
+  <chat-message nickname="User">10</chat-message>
+  <chat-message nickname="Bot">
+    请输入对该配额组的模型平台标识符，如： openai。表示会优先在使用该平台模型时使用该配额组，如需不输入回复 N
+  </chat-message>
+  <chat-message nickname="User">N</chat-message>
+  <chat-message nickname="Bot">
+    请输入配额组的优先级（数字，越大越优先）（这很重要，会决定配额组的使用顺序）
+  </chat-message>
+  <chat-message nickname="User">1</chat-message>
+  <chat-message nickname="Bot">
+   请输入配额组的 token 费用（数字，按一千 token 计费，实际扣除用户余额
+  </chat-message>
+  <chat-message nickname="User">0.001</chat-message>
+  <chat-message nickname="Bot">
+   请输入该配额组可使用的模型列表（白名单机制），用英文逗号分割，如（openai/gpt-3.5-turbo, openai/gpt-4）。如果不输入请回复 N（则不设置模型列表）。
+  </chat-message>
+  <chat-message nickname="User">openai/gpt-3.5-turbo-16k, openai/gpt-3.5-turbo-16k-0613</chat-message>
+  <chat-message nickname="Bot">
+   配额组创建成功，配额组名为：测试。
+  </chat-message>
+</chat-panel>
+
 ### 列出配额组
 
 列出当前 ChatLuna 可用的配额组列表。
 
 :::warning 警告
-此命令需要被执行者含有 3 级权限。
+此命令需要被执行者最低 3 级权限。
 :::
 
 以下为命令格式：
