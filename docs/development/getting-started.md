@@ -161,11 +161,11 @@ export interface ClientConfig {
 
 ```ts
 ...
-import { ClientConfig } from 'koishi-plugin-chatluna/lib/services/chat'; // [!code focus]
+import { ClientConfig } from 'koishi-plugin-chatluna/lib/services/chat'; // [!code focus:1]
 
 ...
 export function apply(ctx: Context) {
-    const plugin = new ChatLunaPlugin<ClientConfig, Config>(  //[!code focus:5] 
+    const plugin = new ChatLunaPlugin<ClientConfig, Config>(  // [!code focus:5] 
         ctx, 
         config, 
         'test'  
@@ -184,7 +184,7 @@ export function apply(ctx: Context) {
         'test',
     )
 
-    ctx.on('ready', async () => { //[!code focus:18] 
+    ctx.on('ready', async () => { // [!code focus:18] 
         // 注意这句，需要把当前 Plugin 注册到 ChatLuna 服务里，才能进行后续操作
         await plugin.registerToService() 
 
@@ -277,11 +277,11 @@ import { ModelInfo } from "koishi-plugin-chatluna/lib/llm-core/platform/types";
 export class TestClient extends PlatformModelClient<ClientConfig> {
     ...
 
-    private _models: ModelInfo[] = [] //[!code focus] 
+    private _models: ModelInfo[] = [] // [!code focus:1] 
 
     ...
 
-    async refreshModels(): Promise<ModelInfo[]> { //[!code focus:10] 
+    async refreshModels(): Promise<ModelInfo[]> { // [!code focus:10] 
         return ["test"].map((name) => {
             return {
                 // 模型名称
@@ -308,11 +308,11 @@ export class TestClient extends PlatformModelClient<ClientConfig> {
 
    ...
 
-    async init(): Promise<void> { //[!code focus:3] 
+    async init(): Promise<void> { // [!code focus:3] 
         this._models = await this.refreshModels()
     }
 
-    async getModels(): Promise<ModelInfo[]> { //[!code focus:3] 
+    async getModels(): Promise<ModelInfo[]> { // [!code focus:3] 
         return this._models
     }
 }
@@ -334,10 +334,10 @@ export function apply(ctx: Context) {
         'test'  
     ) 
 
-    ctx.on('ready', async () => { //[!code focus] 
+    ctx.on('ready', async () => { // [!code focus:1] 
         ...
 
-        await plugin.registerClient( //[!code focus:5] 
+        await plugin.registerClient( // [!code focus:6] 
             (_, clientConfig) => new TestClient(ctx, config, clientConfig)
         )
 
@@ -420,7 +420,7 @@ import {
 export class TestRequester extends ModelRequester {
     ...
 
-    async *completionStream( //[!code focus:8] 
+    async *completionStream( // [!code focus:8] 
         params: ModelRequestParams
     ): AsyncGenerator<ChatGenerationChunk> {
         if (!this._config.apiKey.startsWith("chatluna_")) {
@@ -441,7 +441,7 @@ export class TestRequester extends ModelRequester {
 
 ``` ts
 ...
-import { ChatGenerationChunk } from "langchain/schema"; //[!code focus] 
+import { ChatGenerationChunk } from "langchain/schema"; // [!code focus:1] 
 ...
 
 export class TestRequester extends ModelRequester {
@@ -456,7 +456,7 @@ export class TestRequester extends ModelRequester {
         }
 
         
-        const { input: messages } = params; //[!code focus:17] 
+        const { input: messages } = params; // [!code focus:17] 
         const input = messages[messages.length - 1].content as string;
 
         const response = input
@@ -494,7 +494,7 @@ import { TestRequester } from "./requester";
 export class TestClient extends BasePlatformClient<ClientConfig, ChatLunaChatModel | ChatHubBaseEmbeddings> {
     ...
 
-    protected _createModel(model: string): ChatLunaChatModel { //[!code focus:11] 
+    protected _createModel(model: string): ChatLunaChatModel { // [!code focus:11] 
         return new ChatLunaChatModel({
             modelInfo: this._models[0],
             requester: new TestRequester(this.ctx, this.config),
