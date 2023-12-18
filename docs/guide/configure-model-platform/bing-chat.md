@@ -60,14 +60,14 @@ New Bing 是基于 GPT 4 的聊天机器人，可以实现对话式问答。并�
 
 在主插件页面，下划到 [模版房间选项](../useful-configurations.md#模版房间选项)，查看 [defaultModel](../useful-configurations.md#defaultmodel) 的选项里是否含有符合 `bing/xxx` 格式的模型，如果有，则说明 New Bing 适配器已经成功的运行。
 
-但我们仍未确认 New Bing 适配器是否成功运行。
+但我们仍未确认 New Bing 适配器是否连接到 New Bing。
 
 因此我们需要新建一个房间，使用 `chatluna.room.create -m bing/creative -p chatgpt -n test-bing-adapter -c chat -v private` 指令来创建一个使用了 New Bing 适配器的房间。
 
 ![images](../../public/images/plugin_newbing_pic3.png)
 
 让我们尝试和模型对话。
-只要能正常对话，就说明你成功的接入了 New Bing 适配器。
+只要能正常对话，就说明你成功的连接到了 New Bing，接入了 New Bing 适配器。
 
 ![images](../../public/images/plugin_newbing_pic4.png)
 
