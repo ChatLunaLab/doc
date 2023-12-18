@@ -278,6 +278,10 @@ function sidebarGuide() {
                     text: '错误码表',
                     link: '/guide/faq/error_code',
                 },
+                {
+                    text: '代理设置',
+                    link: '/guide/faq/set_proxy',
+                },
             ],
         },
     ];
