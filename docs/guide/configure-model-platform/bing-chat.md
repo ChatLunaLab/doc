@@ -74,3 +74,14 @@ New Bing 是基于 GPT 4 的聊天机器人，可以实现对话式问答。并�
 别忘了在测试完成后调用 `chatluna.room.delete test-bing-adapter` 指令删除测试房间。
 
 ![images](../../public/images/plugin_newbing_pic5.png)
+
+## 常见问题
+
+### 什么是 Sydney 模式？
+
+开启 Sydney 模式后，会通过某些方式突破 New Bing 的限制，可以做到：
+
+1. 支持上下文对话，不再局限于 30 次限制（但是仍然是有限的，历史聊天记录容量太大就可能会裁剪或清空对话）
+2. 人格设定，设置系统 Prompt，默认设置为 Sydney
+
+而且打开此功能突破了限制后账号可能会有被封风险，谨慎使用。
