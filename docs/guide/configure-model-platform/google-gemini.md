@@ -34,7 +34,7 @@ Google 目前推出了免费的 `gemini-pro` 模型，快去试试吧！
 
 ## 使用
 
-在 OpenAI 适配器的配置页面，点击运行按钮，如无误，你应该看不到任何错误 log，那即可转到 ChatLuna 的主插件页面。
+在 gemini 适配器的配置页面，点击运行按钮，如无误，你应该看不到任何错误 log，那即可转到 ChatLuna 的主插件页面。
 
 在主插件页面，下划到 [模版房间选项](../useful-configurations.md#模版房间选项)，查看 [defaultModel](../useful-configurations.md#defaultmodel) 的选项里是否含有 `gemini` 模型，如果有，则说明你已经成功地接入了 Google 平台。
 
