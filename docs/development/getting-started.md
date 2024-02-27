@@ -116,7 +116,7 @@ export const name = 'example'
 
 export const inject = ['chatluna'] 
 
-export interface Config extends ChatLunaPlugin.Config {  //[!code focus:12]
+export interface Config extends ChatLunaPlugin.Config {  // [!code focus:12]
     apiKeys: string[]
 }
 
