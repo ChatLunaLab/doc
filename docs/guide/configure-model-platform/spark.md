@@ -35,4 +35,4 @@
 
 在主插件页面，下划到 [模版房间选项](../useful-configurations.md#模版房间选项)，查看 [defaultModel](../useful-configurations.md#defaultmodel) 的选项里是否含有 OpenAI 模型，如果有，则说明你已经成功地接入了 OpenAI 平台。
 
-![images](../../public/images/plugin_spark pic_1.png)
+![images](../../public/images/plugin_spark_pic_1.png)
