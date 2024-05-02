@@ -10,18 +10,20 @@
 本适配器支持 plugin 聊天模式，能让模型调用本地插件工具，但不是很推荐调用
 
 ## 安装
+
 前往插件市场，搜索 `chatluna-spark-adapter`，安装即可
 
 ![images](../../public/images/plugin_market_spark.png)
 
 ## 配置
-在配置之前，请先获取 星火 平台的 `APPID  APISecret  APIKey`
+
+在配置之前，请先获取 星火平台的 `APPID  APISecret  APIKey`
 
 ::: tip 提示
 未来我们可能会录制官方教程，敬请期待。
 :::
 
-获取到`APPID  APISecret  APIKey`后，转到 `spark-adapter `的配置页面
+获取到`APPID APISecret APIKey`后，转到 `spark-adapter `的配置页面
 
 默认插件有一个空的适配项，填入你的 `APPID  APISecret  APIKey` 即可
 
