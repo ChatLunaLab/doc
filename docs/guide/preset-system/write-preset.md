@@ -105,7 +105,14 @@ text{variable_name}
 目前 ChatLuna 提供了以下变量供使用（后续可能还会增加其他变量）:
 
 - `date`: 当前日期，遵循标准 UTC 格式。
-- `sender`: 发送者 (只在 format_user_prompt 里有效）。
+- `sender`: 发送者昵称 (只在 format_user_prompt 里有效）。
+- `sender_id`: 发送者 id (只在 format_user_prompt 里有效）。
+- `is_group`: 是否在群聊。
+- `is_private`: 是否为私聊。
+- `weekday`: 当前星期几。
+- `bot_id`: bot 本身的 id。
+- `user_id`: 发送者 id。（只在 prompt 里有效）
+- `user`: 发送者昵称。(只在 prompt 里有效)
 - `name`: 机器人姓名，实际对应[此](/guide/useful-configurations/#bot-配置)内的 bot name。
 - `prompt`: 用户实际发送的内容（只在 format_user_prompt 里有效)。
 
