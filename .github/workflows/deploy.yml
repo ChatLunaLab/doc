@@ -1,0 +1,47 @@
+name: deploy
+
+permissions:
+  contents: write
+  pages: write 
+  id-token: write
+
+concurrency: 
+  group: "pages" 
+  cancel-in-progress: false
+
+on:
+  push:
+    branches:
+      - main
+      
+  workflow_dispatch:
+
+jobs:
+  
+  deploy:
+    environment: 
+        name: github-pages 
+        url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+      - run: yarn install
+      - name: Build
+        run: yarn build
+      - name: Setup Pages
+        uses: actions/configure-pages@v5        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: 'docs/.vitepress/dist'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+      
