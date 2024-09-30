@@ -104,7 +104,7 @@ chatluna.room.create -n <name:string> -p <preset:string> -m <model:string> -c <c
 - `-c,--chatMode`: 指定房间的聊天模式。
 - `-w,--password`: 指定房间的密码。
 
-在这里我们只介绍交互式创建的例子，如需自己使用子参数，请自行摸索（或等待文档继续完善）。
+在这里我们只介绍交互式创建的例子，如需自己使用子参数，请自行摸索。
 
 <chat-panel>
   <chat-message nickname="User">chatluna.room.create</chat-message>
