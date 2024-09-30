@@ -168,10 +168,6 @@ function sidebarGuide() {
                             text: "Faiss",
                             link: "/guide/configure-vector-database/faiss",
                         },
-                        {
-                            text: "Pinecone",
-                            link: "/guide/configure-vector-database/pinecone",
-                        },
                     ],
                 },
                 {
