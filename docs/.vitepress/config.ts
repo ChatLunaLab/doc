@@ -121,10 +121,6 @@ function sidebarGuide() {
                         },
 
                         {
-                            text: "Bard",
-                            link: "/guide/configure-model-platform/bard",
-                        },
-                        {
                             text: "文心一言",
                             link: "/guide/configure-model-platform/wenxin",
                         },
