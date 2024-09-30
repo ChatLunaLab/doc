@@ -1,10 +1,10 @@
 # 介绍
 
-嵌入模型(Embeddings) 可以将文本转换为向量，从而实现文本的语义表示。
+嵌入模型（Embeddings） 可以将文本转换为向量，从而实现文本的语义表示。
 
 ChatLuna 使用嵌入模型来将用户的输入，模型的输出等数据转换为向量。
 
-目前，ChatLuna 通过 嵌入模型 和 [向量数据库](../configure-vector-database/introduction.md) 为用户提供 [长期记忆](guide/session-related/long-term-memory) 功能。
+目前，ChatLuna 通过 嵌入模型和[向量数据库](../configure-vector-database/introduction.md) 来为用户提供 [长期记忆](guide/session-related/long-term-memory) 功能。
 
 ::: tip
 在未来，我们可能还会基于嵌入模型和长期记忆库，实现基于资料的 QA 问答。
@@ -36,10 +36,10 @@ ChatLuna 使用嵌入模型来将用户的输入，模型的输出等数据转�
 
 你可以点击上面的链接查看如何配置相应的嵌入模型。
 
-## 使用嵌入模型
+## 使用
 
 当你接入一个嵌入模型后，你需要将它设置为默认的嵌入模型。
 
-你可以在本体的配置项中 [选择](../useful-configurations#模型选项) 默认使用的嵌入模型。
+你可以在 ChatLuna 主插件的配置项中 [选择](../useful-configurations#模型选项) 默认使用的嵌入模型。
 
 也可使用指令设置默认嵌入模型，详见 [嵌入模型和向量数据库管理](../useful-commands.md#嵌入模型和向量数据库管理)。

@@ -2,12 +2,12 @@
 
 ## 介绍
 
-New Bing 是基于 GPT 4 的聊天机器人，可以实现对话式问答。并能结合 Bing 的搜索能力与网页阅读能力实现联网获取信息。
+New Bing 是基于 GPT 4 的聊天机器人，可以实现对话式问答。并结合 Bing 的搜索能力与网页阅读能力实现实时联网获取信息。
 
 我们支持对接 New Bing 中的三种聊天模式（创造，平衡，精确），并且额外适配了 New Bing 的识图功能。
 
 ::: tip 提示
-在短期内我们不会适配 New Bing 的画图功能。
+我们不会适配 New Bing 的画图功能。
 :::
 
 ## 安装
@@ -56,7 +56,7 @@ New Bing 是基于 GPT 4 的聊天机器人，可以实现对话式问答。并�
 
 ## 使用
 
-在 New Bing 适配器的配置页面，点击运行按钮，如无误，你应该看不到任何错误 log，那即可转到 ChatLuna 的主插件页面。
+在 New Bing 适配器的配置页面，点击运行按钮，如无误，你应该看不到任何错误 log，随后可转到 ChatLuna 的主插件页面。
 
 在主插件页面，下划到 [模版房间选项](../useful-configurations.md#模版房间选项)，查看 [defaultModel](../useful-configurations.md#defaultmodel) 的选项里是否含有符合 `bing/xxx` 格式的模型，如果有，则说明 New Bing 适配器已经成功的运行。
 
@@ -67,6 +67,7 @@ New Bing 是基于 GPT 4 的聊天机器人，可以实现对话式问答。并�
 ![images](../../public/images/plugin_newbing_pic3.png)
 
 让我们尝试和模型对话。
+
 只要能正常对话，就说明你成功的连接到了 New Bing，接入了 New Bing 适配器。
 
 ![images](../../public/images/plugin_newbing_pic4.png)

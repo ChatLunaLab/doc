@@ -14,5 +14,4 @@ export default {
         app.component('chat-message', ChatMessage);
         enhanceAppWithTabs(app);
     },
-    themeConfig: {},
-} as Theme;
+} satisfies Theme;

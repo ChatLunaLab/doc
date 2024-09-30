@@ -6,8 +6,11 @@ Faiss 是一个由 Meta 的基础人工智能研究小组开发，用于高效�
 
 ## 安装
 
-前往插件市场，搜索并安装`chatluna-vector-store-service`即可。Faiss 数据库的依赖`faiss-node`已标记为该插件的依赖，您无需在安装后进行其他的操作。
+前往插件市场，搜索并安装 `chatluna-vector-store-service` 即可。
+
+注意 Faiss 数据库的依赖 `faiss-node` 被标记为该插件的可选依赖，你需要在安装前设置 `faiss-node` 安装。
 
 ## 配置
 
-在配置之前，您需要确保安装 ChatLuna 与`chatluna-vector-store-service`，并确保该插件已经启用。然后在 ChatLuna 的 [模型选项](../useful-configurations.md#模型选项) 中找到 [defaultVectorStore](../useful-configurations.md#defaultvectorstore) 配置项，并选择数据库为`faiss`即可。
+1. 安装 `chatluna-vector-store-service`，并确保已一同安装 `faiss-node`，确认安装成功后，启用该插件。
+2. 在主插件的[模型选项](../useful-configurations.md#模型选项)中找到 [defaultVectorStore](../useful-configurations.md#defaultvectorstore) 配置项，选择为 `faiss` 即可。

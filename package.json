@@ -1,8 +1,8 @@
 {
-    "name": "koishi-chathub-doc",
+    "name": "chatluna-doc",
     "private": true,
     "version": "1.0.0",
-    "description": "Chathub 插件的官方文档",
+    "description": "ChatLuna 插件的官方文档",
     "main": "index.js",
     "repository": "https://github.com/ChatHubLab/doc",
     "author": "dingyi222666 <dingyi222666@foxmail.com>",
@@ -10,13 +10,14 @@
     "type": "module",
     "devDependencies": {
         "less": "^4.2.0",
-        "sass": "^1.69.5",
-        "vitepress": "^1.0.0-rc.41",
+        "sass": "^1.79.4",
+        "vitepress": "^1.3.4",
         "vitepress-plugin-tabs": "^0.5.0"
     },
     "scripts": {
         "dev": "vitepress dev docs",
         "build": "vitepress build docs",
         "serve": "vitepress serve docs"
-    }
+    },
+    "packageManager": "yarn@4.3.1+sha512.af78262d7d125afbfeed740602ace8c5e4405cd7f4735c08feb327286b2fdb2390fbca01589bfd1f50b1240548b74806767f5a063c94b67e431aabd0d86f7774"
 }

@@ -1,4 +1,4 @@
 {
-    "cSpell.words": ["newbing", "onappear", "vectorstore"],
+    "cSpell.words": ["newbing", "Ollama", "onappear", "vectorstore"],
     "typescript.tsdk": "node_modules/typescript/lib"
 }

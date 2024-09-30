@@ -4,7 +4,7 @@
 
 ## 安装 Koishi
 
-在使用 ChatLuna 之前，你需要确保 [Node.js](https://nodejs.org/en) 版本在 v18 以上。
+在使用 ChatLuna 之前，你需要确保 [Node.js](https://nodejs.org/en) 版本在 18.0 以上。
 
 你可以使用 `node -v` 命令检查 Node.js 版本。
 
@@ -16,15 +16,13 @@
 
 如你选择使用沙盒环境，可以直接跳到 [下一步](/guide/getting-started.html#安装前置依赖插件)。
 
-如你选择接入实际的聊天平台，请参考以下链接：
+如你选择接入实际的聊天平台，请参考 [接入真实聊天平台](https://koishi.chat/zh-CN/manual/usage/adapter.html#%E6%8E%A5%E5%85%A5%E7%9C%9F%E5%AE%9E%E8%81%8A%E5%A4%A9%E5%B9%B3%E5%8F%B0)。
 
-- [接入其他聊天平台](https://koishi.chat/zh-CN/manual/console/adapter.html)
+## 安装前置依赖服务
 
-## 安装前置依赖插件
+安装 ChatLuna 的必要前置依赖服务，ChatLuna 需要这些服务来提供基础功能。
 
-安装 ChatLuna 的必要前置依赖插件，这些插件为 ChatLuna 提供了基础的服务。
-
-### 数据库插件
+### 数据库服务
 
 ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据。
 
@@ -32,29 +30,31 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 
 你也可以安装并配置其他在 Koishi 插件市场上的数据库插件，如 MySQL、MongoDB 等。
 
-### 缓存插件
+### 缓存服务
 
 ChatLuna 还需要 `cache` 服务，用于存储某些临时配置。
 
-我们推荐使用 `cache-database`，它几乎不需要配置。
+我们推荐使用 `cache-database`，它几乎不需要额外配置。随 `database` 相关服务插件一同启用后即可。
 
-### 可选插件
+### 可选服务
 
-- `puppeteer` 插件：用于渲染模型发送内容。
-- `censor` 服务插件：用于回复内容过滤。注意，有的插件不审核文本信息，请注意识别。
-- `vits` 服务插件：用于渲染模型回复，生成语音。
+这些服务是为了 ChatLuna 的某些功能而额外需要的服务。你可以根据需要选择安装。
 
-## 安装 ChatLuna 主插件
+- `puppeteer` 服务：用于渲染模型回复。（用于图片模式的输出格式，搜索服务的必须插件）
+- `censor` 服务：用于回复内容过滤。注意，有的插件不审核文本信息，请注意识别。
+- `vits` 服务：用于渲染模型回复，生成语音。
+
+## 安装主插件
 
 搜索并安装 `chatluna` 插件，这是 ChatLuna 的主插件。
 
 ::: warning 注意
-主插件本身不包含任何模型平台适配，后面还需要安装平台适配插件。
+主插件本身不包含任何模型适配器，后面还需要安装模型适配器。
 :::
 
 ## 安装模型适配器
 
-安装你需要平台的模型适配器。在插件市场输入 ChatLuna  + adapter 搜索。然后选择你需要的适配器安装。
+安装你需要平台的模型适配器。在插件市场输入 `ChatLuna + adapter` 搜索。然后选择你需要的适配器安装。
 
 ![image](../public//images/plugin_market_pic1.png)
 
@@ -98,7 +98,7 @@ ChatLuna 还需要 `cache` 服务，用于存储某些临时配置。
 
 ## 开始聊天
 
-最后使用 [`chatluna.chat.text`](/guide/useful-commands#模型对话) 命令，开始和模型进行交互对话。
+最后使用 [`chatluna.chat.text`](/guide/useful-commands#模型对话) 命令，即可和模型进行交互对话。
 
 通过以上步骤，你已经基本配置好了 ChatLuna，并且可以和模型对话了。
 
