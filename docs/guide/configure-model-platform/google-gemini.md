@@ -1,8 +1,8 @@
-# Google gemini
+# Google Gemini
 
 ## 介绍
 
-Google gemini 是谷歌在 2023 年年底宣布推出其认为规模最大、功能最强大的人工智能模型。
+Google Gemini 是谷歌在 2023 年年底宣布推出其认为规模最大、功能最强大的人工智能模型。
 
 Google 目前推出了免费的 `gemini-1.5-pro` 模型，快去试试吧！
 

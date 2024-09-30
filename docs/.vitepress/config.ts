@@ -112,7 +112,7 @@ function sidebarGuide() {
                             link: "/guide/configure-model-platform/bing-chat",
                         },
                         {
-                            text: "Google gemini",
+                            text: "Google Gemini",
                             link: "/guide/configure-model-platform/google-gemini",
                         },
                         {
