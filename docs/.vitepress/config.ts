@@ -168,6 +168,10 @@ function sidebarGuide() {
                             text: "Faiss",
                             link: "/guide/configure-vector-database/faiss",
                         },
+                        {
+                            text: "Redis",
+                            link: "/guide/configure-vector-database/redis",
+                        },
                     ],
                 },
                 {
