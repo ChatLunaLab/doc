@@ -112,7 +112,7 @@ function sidebarGuide() {
                             link: "/guide/configure-model-platform/bing-chat",
                         },
                         {
-                            text: "Google gemini",
+                            text: "Google Gemini",
                             link: "/guide/configure-model-platform/google-gemini",
                         },
                         {
@@ -120,10 +120,6 @@ function sidebarGuide() {
                             link: "/guide/configure-model-platform/cluade-2",
                         },
 
-                        {
-                            text: "Bard",
-                            link: "/guide/configure-model-platform/bard",
-                        },
                         {
                             text: "文心一言",
                             link: "/guide/configure-model-platform/wenxin",
@@ -173,8 +169,8 @@ function sidebarGuide() {
                             link: "/guide/configure-vector-database/faiss",
                         },
                         {
-                            text: "Pinecone",
-                            link: "/guide/configure-vector-database/pinecone",
+                            text: "Redis",
+                            link: "/guide/configure-vector-database/redis",
                         },
                     ],
                 },

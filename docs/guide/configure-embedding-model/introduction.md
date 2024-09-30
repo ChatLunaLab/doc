@@ -10,7 +10,7 @@ ChatLuna 使用嵌入模型来将用户的输入，模型的输出等数据转�
 在未来，我们可能还会基于嵌入模型和长期记忆库，实现基于资料的 QA 问答。
 :::
 
-嵌入模型的服务由多个插件提供，这其中某些模型适配器已经提供了相关服务，如 [OpenAI](./openai-embeddings.md)。
+嵌入模型的服务由多个插件提供，这其中某些模型适配器已经提供了相关服务，如 [OpenAI](./openai-embeddings.md) 与 [Google Gemini](../configure-model-platform/google-gemini.md) 。
 
 因此，你可以直接使用这些插件来使用嵌入模型服务而无需安装嵌入模型服务插件。
 
