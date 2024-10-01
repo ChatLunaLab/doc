@@ -2,7 +2,9 @@
 
 Claude 是 Anthropic 公司推出的大语言模型，旗下同时开放 `claude-3.5-Sonnet`,`claude-3-haiku` 等模型。
 
-我们支持对接 Claude 里大部分可用的聊天大语言模型或嵌入模型。由于 Claude 的 API 限制，我们无法获取到 Claude 的模型列表，所以当 Claude 发布新模型时，我们无法及时更新。
+我们支持对接 Claude 里大部分可用的聊天大语言模型或嵌入模型。
+
+由于 API 限制，我们无法获取到 Claude 的最新模型列表。所以当 Claude 发布新模型时，我们滞后一段时间才会更新模型列表。
 
 ## 安装
 
