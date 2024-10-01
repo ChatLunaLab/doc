@@ -29,10 +29,6 @@ Redis Stack 是 Redis 的扩展版本，集成了多个模块，提供更强大�
 - **redis/redis-stack** 包含 Redis Stack 服务器和 Redis Insight。该容器非常适合本地开发，因为您可以使用内置的 Redis Insight 来可视化数据。
 - **redis/redis-stack-server** 仅提供 Redis Stack 服务器。该容器适合用于生产部署。
 
-::: tip
-<del>如果你想方便的删除你的黑历史，那么请选用 redis/redis-stack</del>
-:::
-
 ###### redis/redis-stack-server
 要使用 `redis-stack-server` 镜像启动 Redis Stack 服务器，请在终端中运行以下命令：
 
@@ -118,7 +114,7 @@ docker run -e REDISTIMESERIES_ARGS="RETENTION_POLICY=20" redis/redis-stack:lates
    ```ini
    [Redis]
    name=Redis
-   baseurl=http://packages.redis.io/rpm/rhel9
+   baseurl=https://packages.redis.io/rpm/rhel9
    enabled=1
    gpgcheck=1
    ```
