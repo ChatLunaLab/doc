@@ -13,7 +13,7 @@
 我们目前支持接入（使用）以下向量数据库：
 
 - [Faiss](./faiss.md)
-- [Redis](./redis.md)
+- [Redis Stack](./redis-stack.md)
 - [LanceDB](./lancedb.md)
 
 ## 使用

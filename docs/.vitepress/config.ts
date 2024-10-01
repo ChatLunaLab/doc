@@ -193,8 +193,8 @@ function sidebarGuide() {
                             link: '/guide/configure-vector-database/faiss',
                         },
                         {
-                            text: 'Redis',
-                            link: '/guide/configure-vector-database/redis',
+                            text: 'Redis Stack',
+                            link: '/guide/configure-vector-database/redis-stack',
                         },
                     ],
                 },
