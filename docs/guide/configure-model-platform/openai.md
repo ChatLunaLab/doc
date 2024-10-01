@@ -1,10 +1,10 @@
 # OpenAI
 
-OpenAI 是目前顶尖的研究大语言模型相关的实验室，旗下同时开放 `gpt-3`,`gpt-3-16k`,`gpt-4` 等模型。
+OpenAI 是目前顶尖的研究大语言模型相关的实验室，旗下同时开放 `gpt-40`,`gpt-4-32k`,`gpt-3.5-turbo` 等模型。
 
 也是 ChatLuna 里最稳定的模型平台适配器。
 
-我们支持对接除了 `gpt-4-vision` 外的所有模型。通过 `v1/models` API 去动态获取模型列表。使得用户无需手动输入模型名称或者等待适配器适配最新的 API。
+我们支持对接 OpenAI 里大部分可用的聊天大语言模型或嵌入模型。并通过 `v1/models` API 动态获取 OpenAI 的模型列表，支持大多数可用的聊天大语言模型和嵌入模型，无需用户手动输入或等待适配器更新。
 
 OpenAI 模型适配器还支持 `plugin` 聊天模式，允许模型调用本地插件工具。
 
@@ -16,17 +16,17 @@ OpenAI 模型适配器还支持 `plugin` 聊天模式，允许模型调用本地
 
 ## 配置
 
-在配置之前，请先获取 OpenAI 平台的 `API KEY`。
+在配置之前，请先前往 [OpenAI](https://platform.openai.com/account/api-keys) 获取 API key。
 
-如使用为其他代理平台（转发接口，API-ADAPTER），还需额外获取 API host 地址。
+如使用为其他代理平台（转发接口，API-Adapter），还需额外获取 API host 地址。
 
 ::: tip 提示
 未来我们可能会录制官方教程，敬请期待。
 :::
 
-获取到 `API KEY` 后，转到 `openai-adapter` 的配置页面。
+获取到 API key 后，转到 `openai-adapter` 的配置页面。
 
-默认插件有一个空的适配项，填入你的 `API KEY` 即可。
+默认插件有一个空的适配项，填入你的 API key 即可。
 
 ![images](../../public/images/plugin_openai_adapter_1.png)
 

@@ -12,7 +12,7 @@
 
 ## 配置
 
-在配置之前，请先获取你的星火平台的 `APPID`，`APISecret` 和 `APIKey`。
+在配置之前，请先从[星火平台](https://console.xfyun.cn/services/bm4)获取你的 `APPID`，`APISecret` 和 `APIKey`。
 
 ::: tip 提示
 未来我们可能会录制官方教程，敬请期待。
