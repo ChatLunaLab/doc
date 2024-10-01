@@ -755,7 +755,7 @@ chatluna.vectorstore.list -l <limit:number> -p <page:number>
   <chat-message nickname="Bot">以下是目前可用的向量数据库列表：<br/>
 
 <br/>faiss<br/>
-redis stack<br/>
+redis<br/>
 lancedb<br/>
 
 <br/>你可以使用 chatluna.vectorstore.set -m &lt;model&gt; 来设置默认使用的向量数据库（如果没有任何向量数据库，会使用存储在内存里的向量数据库（临时的））<br/>
