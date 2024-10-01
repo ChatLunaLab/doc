@@ -18,7 +18,7 @@ OpenAI 模型适配器还支持 `plugin` 聊天模式，允许模型调用本地
 
 在配置之前，请先前往 [OpenAI](https://platform.openai.com/account/api-keys) 获取 API key。
 
-如使用为其他代理平台（转发接口，API-Adapter），还需额外获取 API host 地址。
+如使用的是其他代理平台（转发接口，API-Adapter），还需额外获取 API host 地址。
 
 ::: tip 提示
 未来我们可能会录制官方教程，敬请期待。

@@ -193,6 +193,10 @@ function sidebarGuide() {
                             link: '/guide/configure-vector-database/faiss',
                         },
                         {
+                            text: 'LanceDB',    
+                            link: '/guide/configure-vector-database/lancedb',
+                        },
+                        {
                             text: 'Redis',
                             link: '/guide/configure-vector-database/redis',
                         },

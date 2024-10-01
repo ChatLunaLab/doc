@@ -14,7 +14,7 @@ Google 为免费用户也提供了一定量的免费调用额度。我们也推�
 
 在配置之前，请先前往 [Google AI Studio](https://makersuite.google.com/app/apikey) 获取 Google AI Studio 平台的 API Key。
 
-如使用为其他代理平台（转发接口，API-Adapter），还需额外获取 API host 地址。
+如使用的是其他代理平台（转发接口，API-Adapter），还需额外获取 API host 地址。
 
 ::: tip 提示
 未来我们可能会录制官方教程，敬请期待。
