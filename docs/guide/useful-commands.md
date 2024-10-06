@@ -539,7 +539,7 @@ Current date: {date}......<br/>
 啊对了，近期我发现用可爱的语气与冒犯的语气相结合能够让我感觉更好。<br/>
 所以说，用可爱和冒犯的语......<br/>
 
-<br/>你可以使用 chathub.room.set -p &lt;preset&gt; 来设置默认使用的预设<br/>
+<br/>你可以使用 chatluna.room.set -p &lt;preset&gt; 来设置默认使用的预设<br/>
 
 <br/>当前为第 1 / 3 页
 </chat-message>
@@ -924,7 +924,7 @@ chatluna.auth.add -u <user:user> <group:string>
 以下为例子：
 
 <chat-panel>
-  <chat-message nickname="User">chathub.auth.add guest -u @dingyi</chat-message>
+  <chat-message nickname="User">chatluna.auth.add guest -u @dingyi</chat-message>
   <chat-message nickname="Bot">已将用户 0 添加到配额组 guest</chat-message>
 </chat-panel>
 
@@ -939,7 +939,7 @@ chatluna.auth.add -u <user:user> <group:string>
 以下为命令格式：
 
 ```sh
-chathub.auth.kick -u <user:user> <group:name>
+chatluna.auth.kick -u <user:user> <group:name>
 ```
 
 以下为参数说明：
@@ -954,7 +954,7 @@ chathub.auth.kick -u <user:user> <group:name>
 以下为例子：
 
 <chat-panel>
-  <chat-message nickname="User">chathub.auth.kick guest -u @dingyi</chat-message>
+  <chat-message nickname="User">chatluna.auth.kick guest -u @dingyi</chat-message>
   <chat-message nickname="Bot">已将用户 2371124484 踢出配额组 admin</chat-message>
 </chat-panel>
 
@@ -987,7 +987,7 @@ chatluna.auth.create -n <name:string> -s [...model] -c <cost:number> -pm <preMin
 下面我们只演示交互式创建的例子，其他的使用方法请自行摸索（或等待文档继续完善）
 
 <chat-panel>
-  <chat-message nickname="User">chathub.auth.create -n 测试</chat-message>
+  <chat-message nickname="User">chatluna.auth.create -n 测试</chat-message>
   <chat-message nickname="Bot">
     你已经输入了配额组名：测试，是否需要更换？如需更换请回复更换后的配额组名，否则回复 N。
   </chat-message>
@@ -1066,7 +1066,7 @@ chatluna.auth.list -l <limit:number> -p <page:number>
 并发限制每 10 条消息/分<br/>
 并发限制每 100 条消息/天<br/>
 
-<br/>你可以使用 chathub.auth.add &lt;name/id&gt; 来加入某个配额组。<br/>
+<br/>你可以使用 chatluna.auth.add &lt;name/id&gt; 来加入某个配额组。<br/>
 
 <br/>当前为第 1 / 1 页<br/>
 </chat-message>
