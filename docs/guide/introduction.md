@@ -16,14 +16,14 @@ ChatLuna 不仅为用户提供了模型聊天功能，还为其他 Koishi 插件
 
 ## 下一步
 
-想要使用 ChatLuna，请阅读[快速上手](/guide/getting-started)指南。
+想要使用 ChatLuna，请阅读 [快速上手](/guide/getting-started) 指南。
 
-要了解 ChatLuna 的所有可用指令及其用法，请参考[指令列表](/guide/useful-commands)。
+要了解 ChatLuna 的所有可用指令及其用法，请参考 [指令列表](/guide/useful-commands)。
 
-如需深入了解 ChatLuna 的配置选项，请查看[配置说明](/guide/useful-configurations.html)。
+如需深入了解 ChatLuna 的配置选项，请查看 [配置说明](/guide/useful-configurations.html)。
 
-要学习如何配置特定的语言模型平台，请参阅[模型配置](/guide/configure-model-platform/introduction.html)指南。
+要学习如何配置特定的语言模型平台，请参阅 [模型配置](/guide/configure-model-platform/introduction.html)指南。
 
-对于第三方插件开发者，我们提供了详细的[开发文档](/development/introduction)，帮助您集成和使用 ChatLuna 的 API。
+对于第三方插件开发者，我们提供了详细的 [开发文档](/development/introduction)，帮助您集成和使用 ChatLuna 的 API。
 
-如果您希望为 ChatLuna 的文档做出贡献，欢迎查看我们的[贡献指南](https://github.com/ChatLunaLab/doc)并提交 PR。
+如果您希望为 ChatLuna 的文档做出贡献，欢迎查看我们的 [贡献指南](https://github.com/ChatLunaLab/doc) 并提交 PR。
