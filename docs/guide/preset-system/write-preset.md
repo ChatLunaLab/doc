@@ -7,6 +7,7 @@
 让我们先阅读一下 ChatLuna 提供的两个预设文件
 
 ::: code-group
+
 ```yml [chatgpt.yml]
 keywords:
   - chatgpt
@@ -45,6 +46,7 @@ prompts:
 
 format_user_prompt: "用户{sender}说: {prompt}"
 ```
+
 :::
 
 阅读上面的示例文件，相信你已经对 ChatLuna 的预设文件有了基础的认识，接下来让我们更进一步，细致的讲解每个属性的用处吧。
@@ -99,14 +101,14 @@ prompts 属性内是一个数组，数组内含有 `role`, `content` 属性组�
 变量占位符是由 ChatLuna 提供的一些固定量，在发送时会被替换为某些值。语法如下:
 
 ```txt
-text{variable_name}
+text{variable_name} | {variable_name::xx::xx} | {variable_name:xx,xx,xx}
 ```
 
 目前 ChatLuna 提供了以下变量供使用（后续可能还会增加其他变量）:
 
 - `date`: 当前日期，遵循标准 UTC 格式。
-- `sender`: 发送者昵称 (只在 format_user_prompt 里有效）。
-- `sender_id`: 发送者 id (只在 format_user_prompt 里有效）。
+- `sender`: 发送者昵称 (只在 format_user_prompt 里有效)。
+- `sender_id`: 发送者 id (只在 format_user_prompt 里有效)。
 - `is_group`: 是否在群聊。
 - `is_private`: 是否为私聊。
 - `weekday`: 当前星期几。
@@ -115,6 +117,69 @@ text{variable_name}
 - `user`: 发送者昵称。(只在 prompt 里有效)
 - `name`: 机器人姓名，实际对应[此](/guide/useful-configurations/#bot-配置)内的 bot name。
 - `prompt`: 用户实际发送的内容（只在 format_user_prompt 里有效)。
+- `isotime`: 当前时间，遵循标准 ISO 格式。
+- `isodate`: 当前日期，遵循标准 ISO 格式。
+- `time_UTC±X`: 当前时间，遵循标准 UTC 格式，X 为正负小时差。如 `time_UTC+8` 表示东八区时间。
+- `random:(args)`: 从列表中随机选择一个值。如 `random:1,2,3,4,5` 会随机选择 1,2,3,4,5 中的一个值。
+- `random::(min)::(max)`: 从 min 到 max 的随机数。如 `random::1::10` 会随机选择 1 到 10 的随机数。
+- `roll:(formula)`: 使用 D&D 骰子语法投掷骰子。如 `roll:d6` 会投掷 1 到 6 的骰子。
+- `idle_duration`: 插入一个表示自上次用户消息发送以来的时间范围的人性化字符串（例如：1 day, 2 hours）。
+
+### 世界书
+
+World Book （或称 Lorebooks）是 ChatLuna 的特色功能之一，它允许你为你的预设编写一系列信息，并且通过关键词在合适的时机插入这些信息。
+
+下面是一个示例：
+
+```yml
+world_lores:
+  - scanDepth: 2
+    tokenLimit: 1050
+    recursiveScan: true
+    maxRecursionDepth: 3
+
+  - keywords:
+      - 友好
+      - 亲密
+      - 熟悉
+    content: 你好啊，旅行者。我很高兴能再次见到你。你今天有什么新奇的发现吗？我很想听听。      
+```
+
+我们逐步讲解这些属性：
+
+对于第一个没有 `keywords` 的 `world_lore` 的项目，这代表着这个世界书的默认配置项，以下是可用的配置项：
+
+- `scanDepth`: 扫描深度，代表着会扫描多深的聊天信息。当设置为 0 时，不会扫描任何聊天信息，设置为 1 时，会扫描最近 1 条聊天信息，设置为 2 时，会扫描最近 2 条聊天信息，以此类推。
+- `tokenLimit`: 当所有扫描后可用的世界书信息总 token 数超过这个值时，会停止扫描。
+- `recursiveScan`: 是否递归扫描。递归扫描意味着世界书条目类的内容可以继续触发其他的世界书条目类。
+- `maxRecursionDepth`: 最大递归深度。当设置为 3 时，会递归扫描 3 层世界书条目类。
+
+对于第二个有 `keywords` 的 `world_lore` 的项目或者其他 `world_lore` 的项目，这代表着这个世界书的主要条目类，以下是可用的配置项：
+
+- `keywords`: 关键词，代表着触发世界书条目类的关键词。可以使用正则表达式来匹配关键词。
+- `content`: 内容，代表着当扫描到关键词的聊天信息时，会插入的内容。
+- `scanDepth`: 扫描深度，代表着会扫描多深的聊天信息。当设置为 0 时，不会扫描任何聊天信息，设置为 1 时，会扫描最近 1 条聊天信息，设置为 2 时，会扫描最近 2 条聊天信息，以此类推。
+- `recursiveScan`: 是否递归扫描。递归扫描意味着世界书条目类的内容可以继续触发其他的世界书条目类。
+- `maxRecursionDepth`: 最大递归深度。当设置为 3 时，会递归扫描 3 层世界书条目类。
+- `matchWholeWord`: 是否匹配整个单词。当设置为 true 时，只会匹配整个单词。当设置为 false 时，会匹配单词的一部分。
+- `caseSensitive`: 是否区分大小写。当设置为 true 时，会区分大小写。当设置为 false 时，不区分大小写。
+
+### 更多配置项
+
+我们还可以在预设文件中添加更多配置项，例如：
+
+```yml
+- config:
+     longMemoryPrompt: '{user_input}'
+     longMemoryExtractPrompt: '{user_input}'
+     loreBooksPrompt: '{input}'
+```
+
+下面是每个配置项的解释：
+
+- `longMemoryPrompt`: 长期记忆的触发 Prompt，使用 {long_history} 表示可用的长期记忆。可以参考 [此处](https://github.com/ChatLunaLab/chatluna/blob/2e5247f44f5d04556fda3949b5170ace1e626e01/packages/core/src/llm-core/chain/prompt.ts#L100C49-L100C61) 的配置。
+- `longMemoryExtractPrompt`: 长期记忆的提取 Prompt，使用 {user_input} 表示输入的对话历史记录。可以参考 [此处](https://github.com/ChatLunaLab/chatluna/blob/2e5247f44f5d04556fda3949b5170ace1e626e01/packages/core/src/llm-core/memory/history/index.ts#L303) 的配置。
+- `loreBooksPrompt`: 世界书的输入格式化 Prompt，使用 {input} 表示输入的世界书内容。可以参考 [此处](https://github.com/ChatLunaLab/chatluna/blob/2e5247f44f5d04556fda3949b5170ace1e626e01/packages/core/src/llm-core/chain/prompt.ts#L100C49-L100C61) 的配置。
 
 ## 最佳实践
 
@@ -156,6 +221,6 @@ prompts:
 
 编写预设时有一些要点，遵循它可以编写出更高质量的预设。
 
-1. 对于长篇中文 prompt，考虑使用英文。这样会大幅缩短 token 数，提高回复效率。
+1. 对于长篇中文 Prompt，考虑使用英文。这样会大幅缩短 Token 数，提高回复效率。
 2. 可以多模拟几轮对话，有助于固化对话内容。
 3. 多使用思维链等方式启发模型。
