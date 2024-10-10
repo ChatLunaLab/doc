@@ -22,7 +22,7 @@ ChatLuna 不仅为用户提供了模型聊天功能，还为其他 Koishi 插件
 
 如需深入了解 ChatLuna 的配置选项，请查看 [配置说明](/guide/useful-configurations.html)。
 
-要学习如何配置特定的语言模型平台，请参阅 [模型配置](/guide/configure-model-platform/introduction.html)指南。
+要学习如何配置特定的语言模型平台，请参阅 [模型配置](/guide/configure-model-platform/introduction.html) 指南。
 
 对于第三方插件开发者，我们提供了详细的 [开发文档](/development/introduction)，帮助您集成和使用 ChatLuna 的 API。
 
