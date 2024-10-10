@@ -233,13 +233,9 @@ function sidebarGuide() {
                     ],
                 },
                 {
-                    text: '会话相关',
+                    text: '会话配置',
                     collapsed: true,
                     items: [
-                        {
-                            text: '房间系统',
-                            link: '/guide/session-related/room',
-                        },
                         {
                             text: '黑名单',
                             link: '/guide/session-related/blacklist',
@@ -249,7 +245,11 @@ function sidebarGuide() {
                             link: '/guide/session-related/long-term-memory',
                         },
                         {
-                            text: '配额组',
+                            text: '房间系统',
+                            link: '/guide/session-related/room',
+                        },
+                        {
+                            text: '聊天限额',
                             link: '/guide/session-related/concurrency-limit',
                         },
                     ],
@@ -269,6 +269,10 @@ function sidebarGuide() {
                         {
                             text: '输出格式',
                             link: '/guide/chat-chain/output-mode',
+                        },
+                        {
+                            text: '流式输出',
+                            link: '/guide/chat-chain/stream'
                         },
                     ],
                 },
