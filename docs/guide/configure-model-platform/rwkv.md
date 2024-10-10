@@ -2,7 +2,7 @@
 
 RWKV（Receptance Weighted Key Value）是一种创新的深度学习网络架构，旨在结合RNN（递归神经网络）和Transformer模型的优点。它通过引入Token shift和Channel Mix机制来优化位置编码和多头注意力机制，从而在处理长序列时具有较低的计算复杂度。
 
-目前在开源社区，我们可以使用 [RWKV Runner](https://github.com/josStorer/RWKV-Runner) 或 [ai00_server](https://github.com/Ai00-X/ai00_server) 来运行 RWKV 相关模型。
+目前在开源社区，我们可以使用 [RWKV Runner](https://github.com/josStorer/RWKV-Runner) 或 [ai00 Server](https://github.com/Ai00-X/ai00_server) 来运行 RWKV 相关模型。
 
 ## 安装
 
@@ -11,8 +11,8 @@ RWKV（Receptance Weighted Key Value）是一种创新的深度学习网络架�
 ![alt text](../../public/images/image-17.png)
 
 ::tip 提示
-由于开发者的粗心大意，该插件的全名为 `chatluna-rmkv-adapter`。（错误的键入了 `rwkv`）
-如果你在添加新插件时找不到，可以试试搜索 `rmkv`。
+由于开发者的粗心大意，该插件实际的全名为 `chatluna-rmkv-adapter`。（错误的键入了 `rwkv`）
+如果你在添加插件配置时找不到，可以试试搜索 `rmkv`。
 ::
 
 ## 配置

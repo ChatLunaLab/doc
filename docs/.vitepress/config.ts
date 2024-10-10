@@ -153,6 +153,10 @@ function sidebarGuide() {
                             link: '/guide/configure-model-platform/deepseek',
                         },
                         {
+                            text: 'Moonshot',
+                            link: '/guide/configure-model-platform/moonshot',
+                        },
+                        {
                             text: 'Ollama',
                             link: '/guide/configure-model-platform/ollama',
                         },
