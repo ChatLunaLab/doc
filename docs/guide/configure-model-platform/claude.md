@@ -38,7 +38,7 @@ Claude 是 Anthropic 公司推出的大语言模型，旗下同时开放 `claude
 
 ![images](../../public/images/plugin_claude_config.png)
 
-但我们仍未完全确认 Claude 适配器是否连接到你设置了的平台。
+但我们仍未完全确认 Claude 适配器是否可用。
 
 因此我们需要新建一个房间，使用 `chatluna.room.create -m claude/claude-3-haiku-20240307 -p chatgpt -n test-claude-adapter` 指令来创建一个使用了 Claude 适配器的房间。
 

@@ -7,5 +7,8 @@
         "Stackoverflow",
         "vectorstore"
     ],
-    "typescript.tsdk": "node_modules/typescript/lib"
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "markdown.copyFiles.destination": {
+          "**/*": "${documentWorkspaceFolder}/docs/public/images/image.png"
+    }
 }

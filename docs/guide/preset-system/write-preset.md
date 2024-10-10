@@ -173,10 +173,10 @@ world_lores:
 我们还可以在预设文件中添加其他的配置项，用于设置其他功能。
 
 ```yml
-- config:
-     longMemoryPrompt: '{user_input}'
-     longMemoryExtractPrompt: '{user_input}'
-     loreBooksPrompt: '{input}'
+config:
+    longMemoryPrompt: '{user_input}'
+    longMemoryExtractPrompt: '{user_input}'
+    loreBooksPrompt: '{input}'
 ```
 
 下面是每个配置项的解释：
