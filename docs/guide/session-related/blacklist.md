@@ -10,6 +10,8 @@ ChatLuna 基于 Koishi 的 [条件属性](https://koishi.chat/zh-CN/manual/usage
 
 下面就来了解下怎么配置吧。
 
+## 配置
+
 默认情况下黑名单列表应该是空的，我们可以点击右边的三点触发菜单，点击 「添加分支」菜单即可新建一个黑名单属性。
 
 ![alt text](../../public/images/image-22.png)
