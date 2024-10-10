@@ -149,6 +149,10 @@ function sidebarGuide() {
                             link: '/guide/configure-model-platform/hunyuan',
                         },
                         {
+                            text: 'DeepSeek',
+                            link: '/guide/configure-model-platform/deepseek',
+                        },
+                        {
                             text: 'Ollama',
                             link: '/guide/configure-model-platform/ollama',
                         },
