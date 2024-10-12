@@ -157,6 +157,10 @@ function sidebarGuide() {
                             link: '/guide/configure-model-platform/moonshot',
                         },
                         {
+                            text: 'OpenAI Like',
+                            link: '/guide/configure-model-platform/openai-like',
+                        },
+                        {
                             text: 'Ollama',
                             link: '/guide/configure-model-platform/ollama',
                         },
