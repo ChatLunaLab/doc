@@ -9,6 +9,9 @@
     vertical-align: middle;
 }
 
+.VPHero.has-image.VPHomeHero > div > div.main > image {
+    margin-right: 260px;
+}
 
 
 /* 背景模糊 */

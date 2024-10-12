@@ -7,9 +7,6 @@ editLink: true
 hero:
   name: ChatLuna
   text: ''
-  image:
-    src: /logo.png
-    alt: ChatLuna logo
   tagline: 多平台模型接入，可扩展，多种输出格式，提供大语言模型聊天服务的插件
   actions:
     - theme: brand
