@@ -1,11 +1,28 @@
 # 模型平台
 
-ChatLuna 的模型平台无疑是最基础的功能。它为 ChatLuna 本体和模型之间提供一个统一的对接 API，因此 ChatLuna 才能方便快速的接入多样的模型。
+ChatLuna 的模型平台是其核心功能之一。它为 ChatLuna 核心和各种模型之间提供了统一的接口 API，使得 ChatLuna 能够高效地集成多样化的模型。
 
-截止 2024/10/11，我们仍可宣称，ChatLuna 所支持的模型平台数量是在同类 Koishi 插件中最多的！
+截至 2024 年 10 月 12 日，ChatLuna 在同类 Koishi 插件中支持的模型平台数量仍然保持领先地位。
 
-## 接下来
+## 支持平台
 
-在接下来的章节中，我们将详细介绍 ChatLuna 各类的模型平台，包括其的配置项，如何接入和常见问题等。
+我们目前支持以下模型平台：
 
-继续向下滚动，你将在每一页的底部看到前往下一节的链接。
+- [OpenAI](openai.md)
+- [Google Gemini](google-gemini.md)
+- [Claude](claude.md)
+- [New Bing](bing-chat.md)
+- [文心一言](wenxin.md)
+- [智谱 AI（ChatGLM）](zhipu.md)
+- [通义千问](qwen.md)
+- [讯飞星火](spark.md)
+- [Moonshot](moonshot.md)
+- [DeepSeek](deepseek.md)
+- [Ollama](ollama.md)
+- [RWKV](rwkv.md)
+- [混元大模型](hunyuan.md)
+- [OpenAI Like](openai-like.md)
+
+## 使用
+
+请参考各个模型适配器的具体安装和配置指南

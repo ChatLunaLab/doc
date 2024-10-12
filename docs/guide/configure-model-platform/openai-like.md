@@ -4,7 +4,8 @@ ChatLuna 为其他任意兼容 OpenAI 格式的 API提供了一个统一的 `ope
 
 `openai-like-adapter` 具有以下特性：
 
-- 可以设置 `platform` 的名称，并支持同时启用多个模型适配器（只需要确保 `platform` 不同即可。）
+- 可以设置 `platform` 的名称。
+- 支持同时启用多个模型适配器。（只需要确保 `platform` 不同即可。）
 
 ## 安装
 
@@ -14,7 +15,7 @@ ChatLuna 为其他任意兼容 OpenAI 格式的 API提供了一个统一的 `ope
 
 ## 配置
 
-只需要从你的 API 提供商获取 API Key 和 API Host 即可转到下一把
+从你的 API 提供商获取 API Key 和 API Host 后即可转到下一步。
 
 ::: tip 提示
 未来我们可能会录制官方教程，敬请期待。

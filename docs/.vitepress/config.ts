@@ -187,6 +187,18 @@ function sidebarGuide() {
                             link: '/guide/configure-embedding-model/openai-embeddings',
                         },
                         {
+                            text: 'Gemini Embeddings',
+                            link: '/guide/configure-embedding-model/gemini-embeddings',
+                        },
+                        {
+                            text: '通义千问 Embeddings',
+                            link: '/guide/configure-embedding-model/qwen-embeddings',
+                        },
+                        {
+                            text: '智谱 Embeddings',
+                            link: '/guide/configure-embedding-model/zhipu-embeddings',
+                        },
+                        {
                             text: 'Hugging Face Embeddings',
                             link: '/guide/configure-embedding-model/hugging-face-embeddings',
                         },
@@ -205,7 +217,7 @@ function sidebarGuide() {
                             link: '/guide/configure-vector-database/faiss',
                         },
                         {
-                            text: 'LanceDB',    
+                            text: 'LanceDB',
                             link: '/guide/configure-vector-database/lancedb',
                         },
                         {
@@ -276,7 +288,7 @@ function sidebarGuide() {
                         },
                         {
                             text: '流式输出',
-                            link: '/guide/chat-chain/stream'
+                            link: '/guide/chat-chain/stream',
                         },
                     ],
                 },
