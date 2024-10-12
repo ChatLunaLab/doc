@@ -21,8 +21,11 @@ ChatLuna 的模型平台是其核心功能之一。它为 ChatLuna 核心和各�
 - [Ollama](ollama.md)
 - [RWKV](rwkv.md)
 - [混元大模型](hunyuan.md)
+
+对于 OpenAI 兼容的 API，可以使用以下适配器进行多开接入：
+
 - [OpenAI Like](openai-like.md)
 
 ## 使用
 
-请参考各个模型适配器的具体安装和配置指南
+请参考各个模型适配器的具体安装和配置指南。

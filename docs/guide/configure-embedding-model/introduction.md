@@ -30,11 +30,16 @@ ChatLuna 使用嵌入模型来将用户的输入，模型的输出等数据转�
 
 我们目前支持以下提供了嵌入模型的平台：
 
-- [OpenAI](openai-embeddings)
-
-- [Hugging Face](hugging-face-embeddings)
+- [OpenAI](openai-embeddings.md)
+- [Google Gemini](gemini-embeddings.md)
+- [Hugging Face](hugging-face-embeddings.md)
+- [智谱 AI（ChatGLM）](zhipu-embeddings.md)
+- [通义千问](qwen-embeddings.md)
 
 你可以点击上面的链接查看如何配置相应的嵌入模型。
+
+其他的部分模型适配器可能也支持嵌入模型，但是由于其他原因我们并没有编写文档，欢迎各位自行探索。
+
 
 ## 使用
 

@@ -4,6 +4,6 @@
 
 ## 使用
 
-1. 安装并启用 Gemini 平台适配器，详见 [Gemini](../configure-model-platform/google-gemini.md)。
+1. 安装并启用 Gemini 平台适配器，详见 [Google Gemini](../configure-model-platform/google-gemini.md)。
 
 2. 将 `gemini/text-embedding-004` 设置为默认使用的嵌入模型。
