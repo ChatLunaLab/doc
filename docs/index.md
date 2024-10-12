@@ -6,7 +6,7 @@ editLink: true
 
 hero:
   name: ChatLuna
-  text: ‘’
+  text: ''
   image:
     src: /logo.png
     alt: ChatLuna logo
