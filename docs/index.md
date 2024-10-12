@@ -6,8 +6,8 @@ editLink: true
 
 hero:
   name: ChatLuna
-  text: 使用教程 & 开发指南
-  tagline: 多平台接入、高度可扩展、多样化输出的大语言模型聊天插件
+  text: ‘’
+  tagline: 多平台模型接入，可扩展，多种输出格式，提供大语言模型聊天服务的插件
   actions:
     - theme: brand
       text: 了解更多

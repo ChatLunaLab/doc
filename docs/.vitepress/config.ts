@@ -7,7 +7,7 @@ export default defineConfig({
     title: 'ChatLuna',
     titleTemplate: ':title - ChatLuna Doc',
     // base: "",
-    description: 'ChatLuna 相关文档',
+    description: 'ChatLuna Official',
     ignoreDeadLinks: true,
     lastUpdated: true,
     cleanUrls: false,
@@ -23,6 +23,7 @@ export default defineConfig({
         sidebar: {
             '/guide/': sidebarGuide(),
             '/development/': sidebarDevelopment(),
+            '/ecosystem/': sidebarEcosystem(),
         },
         editLink: {
             pattern: 'https://github.com/ChatLunaLab/doc/edit/main/docs/:path',
@@ -33,7 +34,7 @@ export default defineConfig({
             { icon: 'github', link: 'https://github.com/ChatLunaLab/chatluna' },
         ],
         footer: {
-            message: '文档在 CC-BY-SA-4.0 许可下发布',
+            message: '在 CC-BY-SA-4.0 许可下发布',
             copyright: `Copyright © 2023-${new Date().getFullYear()} ChatLuna Lab`,
         },
         lastUpdatedText: '上次更新时间',
@@ -93,7 +94,7 @@ export default defineConfig({
     },
 });
 
-function sidebarGuide() {
+function sidebarGuide(): DefaultTheme.SidebarItem[] {
     return [
         {
             text: '指南',
@@ -474,17 +475,31 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
     ];
 }
 
+function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
+    return [
+        {
+            text: '总览',
+            link: '/ecosystem/introduction',
+        },
+    ];
+}
+
 function nav() {
     return [
         {
-            text: '使用教程',
+            text: '教程',
             link: '/guide/introduction',
             activeMatch: '/guide/',
         },
         {
-            text: '开发指南',
+            text: '开发',
             link: '/development/introduction',
             activeMatch: '/development/',
+        },
+        {
+            text: '生态',
+            link: '/ecosystem/introduction',
+            activeMatch: '/ecosystem/',
         },
     ];
 }
