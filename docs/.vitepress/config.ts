@@ -11,7 +11,7 @@ export default defineConfig({
     ignoreDeadLinks: true,
     lastUpdated: true,
     cleanUrls: false,
-    head: [['link', { rel: 'icon', href: 'logo.jpg' }]],
+    head: [['link', { rel: 'icon', href: 'logo.png' }]],
 
     themeConfig: {
         outline: {
