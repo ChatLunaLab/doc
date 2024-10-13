@@ -72,28 +72,10 @@ html, body {
   max-width: unset;
 }
 
-/* 标题所需要的字体 */
-@font-face {
-  font-family: tengwarannatar;
-  src: url(/tengwar-annatar-glaemscrafu.woff2) format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: block;
-}
-
-/* 标题所需要的字体 */
-@font-face {
-  font-family: tengwarannatar-bold;
-  src: url(/tengwar-annatar-glaemscrafu-bold.woff2) format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: block;
-}
 
 /* 首页标题样式 */
 .VPHomeHero > .container > .main > h1 {
   font-size: 5rem;
-  font-family: 'tengwarannatar-bold';
 }
 
 /* 首页子标题样式 */
@@ -199,63 +181,23 @@ html, body {
 .vp-doc a:hover {
   text-decoration: underline;
 }
-
-/**
-  Discord 链接按钮样式
-*/
-
-.VPHero.VPHomeHero .actions a[href="https://discord.gg/XuNFDcDZGj"] {
-  color: #6972d4;
-  border: 2px #6972d4 solid;
-  background-color: transparent;
-}
-
-.VPHero.VPHomeHero .actions a[href="https://discord.gg/XuNFDcDZGj"]:hover {
-  color: white;
-  background-color: #6975f2;
-}
-
-.VPHero.VPHomeHero .actions a[href="https://discord.gg/XuNFDcDZGj"]:active {
-  color: white;
-  background-color: #404eed;
-}
-
-/**
-  暗色模式下 Discord 链接按钮样式
-*/
-
-.dark .VPHero.VPHomeHero .actions a[href="https://discord.gg/XuNFDcDZGj"] {
-  color: #898fcf;
-  border: 2px #898fcf solid;
-  background-color: transparent;
-}
-
-.dark .VPHero.VPHomeHero .actions a[href="https://discord.gg/XuNFDcDZGj"]:hover {
-  color: white;
-  background-color: #404eed;
-}
-
-.dark .VPHero.VPHomeHero .actions a[href="https://discord.gg/XuNFDcDZGj"]:active {
-  color: white;
-  background-color: #444c9e;
-}
-
+、
 /**
   GitHub 链接按钮样式
 */
 
-.VPHero.VPHomeHero .actions a[href="https://github.com/nolebase/nolebase"] {
+.VPHero.VPHomeHero .actions a[href="https://github.com/ChatLunaLab/chatluna"] {
   color: #616161;
   border: 2px #616161 solid;
   background-color: transparent;
 }
 
-.VPHero.VPHomeHero .actions a[href="https://github.com/nolebase/nolebase"]:hover {
+.VPHero.VPHomeHero .actions a[href="https://github.com/ChatLunaLab/chatluna"]:hover {
   color: white;
   background-color: #4b4b4b;
 }
 
-.VPHero.VPHomeHero .actions a[href="https://github.com/nolebase/nolebase"]:active {
+.VPHero.VPHomeHero .actions a[href="https://github.com/ChatLunaLab/chatluna"]:active {
   color: white;
   background-color: #000;
 }
@@ -264,18 +206,18 @@ html, body {
   暗色模式下 GitHub 链接按钮样式
 */
 
-.dark .VPHero.VPHomeHero .actions a[href="https://github.com/nolebase/nolebase"] {
+.dark .VPHero.VPHomeHero .actions a[href="https://github.com/ChatLunaLab/chatluna"] {
   color: #a4a4a4;
   border: 2px #a4a4a4 solid;
   background-color: transparent
 }
 
-.dark .VPHero.VPHomeHero .actions a[href="https://github.com/nolebase/nolebase"]:hover {
+.dark .VPHero.VPHomeHero .actions a[href="https://github.com/ChatLunaLab/chatluna"]:hover {
   color: white;
   background-color: #252525;
 }
 
-.dark .VPHero.VPHomeHero .actions a[href="https://github.com/nolebase/nolebase"]:active {
+.dark .VPHero.VPHomeHero .actions a[href="https://github.com/ChatLunaLab/chatluna"]:active {
   color: white;
   background-color: #4b4b4b;
 }

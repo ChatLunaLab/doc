@@ -3,7 +3,7 @@ import timelinePlugin from 'vitepress-markdown-timeline';
 import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs';
 import math from 'markdown-it-mathjax3';
 import { BiDirectionalLinks } from '@nolebase/markdown-it-bi-directional-links';
-import UnoCSS from 'unocss/vite'
+import UnoCSS from 'unocss/vite';
 import { InlineLinkPreviewElementTransform } from '@nolebase/vitepress-plugin-inline-link-preview/markdown-it';
 import {
     GitChangelog,
@@ -120,9 +120,9 @@ export default defineConfig({
         },
         ssr: {
             noExternal: [
-                '@nolebase/vitepress-plugin-enhanced-readabilities',
-                '@nolebase/vitepress-plugin-highlight-targeted-heading',
-                '@nolebase/vitepress-plugin-inline-link-preview',
+                '@nolebase/*',
+                'vue-demi',
+                '@unlazy/*',
             ],
         },
         plugins: [
