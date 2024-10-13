@@ -19,9 +19,9 @@ import { transformerTwoslash } from '@shikijs/vitepress-twoslash';
 export default defineConfig({
     lang: 'zh-CN',
     title: 'ChatLuna',
-    titleTemplate: ':title - ChatLuna Doc',
+    titleTemplate: ':title - ChatLuna Official Website',
     // base: "",
-    description: 'ChatLuna Official',
+    description: 'ChatLuna Official Website',
     ignoreDeadLinks: true,
     lastUpdated: true,
     cleanUrls: false,
@@ -49,7 +49,7 @@ export default defineConfig({
         ],
         footer: {
             message: '在 CC-BY-SA-4.0 许可下发布',
-            copyright: `Copyright © 2023-${new Date().getFullYear()} ChatLuna Lab`,
+            copyright: `Copyright © 2023-${new Date().getFullYear()} dingyi`,
         },
         lastUpdatedText: '上次更新时间',
         returnToTopLabel: '返回顶部',
