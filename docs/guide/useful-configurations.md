@@ -1,6 +1,6 @@
 # 配置项
 
-本节介绍了主插件(`chatluna`)可用的配置项。对于其他插件或适配器的配置项，请参考对应的文档。
+本节介绍了主插件 (`chatluna`) 可用的配置项。对于其他插件的配置项，请前往 [生态](../ecosystem/introduction.md) 参考对应的文档。
 
 ## Bot 配置
 
@@ -9,7 +9,7 @@
 - 类型：`string`
 - 默认值：`香草`
 
-Bot 的昵称，该昵称可用于下方的[关键词唤醒](#isnickname)对话。
+Bot 的昵称，该昵称可用于下方的 [关键词唤醒](#isnickname) 对话。
 
 ### isNickName
 
@@ -18,7 +18,7 @@ Bot 的昵称，该昵称可用于下方的[关键词唤醒](#isnickname)对话�
 
 是否可从昵称唤醒对话。当开启后，如发出的消息开头含有 [botName](#botname) 属性，将自动触发对话。
 
-## 回复选项
+## 对话行为选项
 
 ### allowPrivate
 
@@ -61,6 +61,42 @@ Bot 回复时是否引用原消息回复。开启后 Bot 的回复都会引用�
 
 开启后，在私聊里的其他非命令调用都会被识别成和 Bot 对话，触发对话。
 
+### allowChatWithRoomName
+
+- 类型：`boolean`
+- 默认值：`false`
+
+是否允许使用房间名前缀触发对话。注意：启用此选项可能会显著影响 ChatLuna 的性能，建议配合过滤器仅在特定群组中启用。
+
+### randomReplyFrequency
+
+- 类型：`number`
+- 默认值：`0.0`
+- 最大值：`1.0`
+
+随机回复频率。
+
+插件会对每条消息，生成一个随机数，当该随机数小于该频率时，会触发随机回复。
+
+## 对话响应选项
+
+### sendThinkingMessage
+
+- 类型：`boolean`
+- 默认值：`true`
+
+当模型生成耗时过长时发送一条消息。
+
+可用于提示用户模型正在生成回复，同时也能知道前方队列的排队情况。
+
+### sendThinkingMessageTimeout
+
+- 类型：`number`
+- 默认值：`15000`
+- 单位：毫秒（ms）
+
+当经过该时间后模型仍在生成文本时，基于[`sendThinkingMessage`](#sendthinkingmessage) 选项的状态发送一条消息。
+
 ### msgCooldown
 
 - 类型：`number`
@@ -70,6 +106,15 @@ Bot 回复时是否引用原消息回复。开启后 Bot 的回复都会引用�
 - 单位：`秒(s)`
 
 全局冷却时间，开启后，在该时间内，Bot 不会响应任何消息。
+
+### showThoughtMessage
+
+- 类型：`boolean`
+- 默认值：`false`
+
+在使用插件模式时，是否显示模型调用工具的过程。
+
+## 消息渲染选项
 
 ### outputMode
 
@@ -96,7 +141,7 @@ Bot 回复时是否引用原消息回复。开启后 Bot 的回复都会引用�
 - 默认值：`'text'`
 
 ::: warning 警告
-如你开启了[流式传输](#bot-配置)，那么输出格式请直接选择默认的 `text`。
+如你开启了 [流式传输](#streamresponse)，那么输出格式请直接选择默认的 `text`。
 否则可能出现意想不到的渲染结果。
 :::
 
@@ -108,7 +153,7 @@ Bot 回复时是否引用原消息回复。开启后 Bot 的回复都会引用�
 切割消息发送。
 
 开启后会将模型生成的文本基于 Markdown 语法切割成多个文本块，发送成多条消息。
-配合[流式传输](#bot-配置)使用，可实现更优的体验。
+配合[流式传输](#streamresponse)使用，可实现更优的体验。
 
 ::: tip 提示
 本选项开启后，[outputMode](#outputmode) 选项只推荐设置为 `text`。
@@ -124,45 +169,25 @@ Bot 回复时是否引用原消息回复。开启后 Bot 的回复都会引用�
 
 开启后会对模型生成的文本进行文本审核，基于 Koishi 的 [censor](https://censor.koishi.chat) 服务。
 
-### sendThinkingMessage
+### streamResponse
 
-- 类型：`boolean`
-- 默认值：`true`
+- 类型: `boolean`
+- 默认值: `false`
 
-当模型生成耗时过长时发送一条消息。
+流式响应。开启后将使用流式响应，类似 ChatGPT 的打字机效果。对于不支持的平台，会自动进行分句多段发送。
 
-可用于提示用户模型正在生成回复，同时也能知道前方队列的排队情况。
+## 黑名单选项
 
-### sendThinkingMessageTimeout
+### blackList
 
-- 类型：`number`
-- 默认值：`15000`
-- 单位：毫秒（ms）
+- 类型：`koishi 条件属性`
+- 默认值：``
 
-当经过该时间后模型仍在生成文本时，基于[`sendThinkingMessage`](#sendthinkingmessage) 选项的状态发送一条消息。
+黑名单列表。可以选择对群，用户或平台开启。只需在满足对于条件的分支上打开开关即可。
 
-消息的内容基于下面[`thinkingMessage`](#thinkingmessage)设定的内容。
+该列表为全局机制，进入该名单的用户或平台将无法使用 ChatLuna 的各项功能。（扩展插件除外）
 
-### thinkingMessage
-
-- 类型：`string`
-- 默认值：`我还在思考中，前面还有 {count} 条消息等着我回复呢，稍等一下哦~`
-
-耗时过长的消息发送提示内容。
-
-对于 `{count}` 占位符，会自动替换成当前队列中等待回复的消息数量。
-
-### randomReplyFrequency
-
-- 类型：`number`
-- 默认值：`0.0`
-- 最大值：`1.0`
-
-随机回复频率。
-
-插件会对每条消息，生成一个随机数，当该随机数小于该频率时，会触发随机回复。
-
-## 对话选项
+## 长期记忆选项
 
 ### longMemory
 
@@ -176,21 +201,32 @@ Bot 回复时是否引用原消息回复。开启后 Bot 的回复都会引用�
 在使用前还需要配置好 [`defaultEmbeddings`](#defaultembeddings) 和 [`defaultVectorStore`](#defaultvectorstore)
 :::
 
-### blackList
+### longMemorySimilarity
 
-- 类型：`koishi 计算属性`
-- 默认值：``
+- 类型: `number`
+- 默认值: `0.3`
+- 最小值: `0.1`
+- 最大值: `1.0`
 
-黑名单列表。可以选择对群，用户或平台开启。只需在满足对于条件的分支上打开开关即可。
+长期记忆相似度阈值，取值范围在 0 到 1 之间。
 
-该列表为全局机制，进入该名单的用户或平台将无法使用 ChatLuna 的各项功能。（扩展插件除外）
+### longMemoryInterval
 
-### blockText
+- 类型: `number`
+- 默认值: `3`
+- 最小值: `1`
+- 最大值: `10`
+
+设置长期记忆的存储频率，即每隔多少轮对话存储一次长期记忆。
+
+### longMemoryExtractModel
 
 - 类型: `string`
-- 默认值: `哎呀(ｷ｀ﾟДﾟ´)!!，你怎么被拉入黑名单了呢？要不你去问问我的主人吧。`
+- 默认值: ``
 
-被拉黑的用户操作时会发送的回复。
+长期记忆的提取模型。
+
+## 历史记录选项
 
 ### messageCount
 
@@ -200,20 +236,6 @@ Bot 回复时是否引用原消息回复。开启后 Bot 的回复都会引用�
 - 最大值: `100`
 
 数据库里存储的单个对话的最大消息数量，超出后会自动删除最久远的历史聊天消息。
-
-### streamResponse
-
-- 类型: `boolean`
-- 默认值: `false`
-
-流式响应。开启后将使用流式响应，类似 ChatGPT 的打字机效果。对于不支持的平台，会自动进行分句多段发送。
-
-### showThoughtMessage
-
-- 类型: `boolean`
-- 默认值: `false`
-
-使用插件模式时是否显示模型调用工具的过程。
 
 ### historyMode
 
@@ -227,6 +249,21 @@ Bot 回复时是否引用原消息回复。开启后 Bot 的回复都会引用�
 
 使用 `summary` 模式时更能节省 token，但是也可能会遇到未知的 bug，连续对话效果不好。
 使用 `default` 模式时对话效果更佳，兼容性也最好。
+
+### autoDelete
+
+- 类型: `boolean`
+- 默认值: `false`
+
+开启后将自动删除久远未使用的历史消息。
+
+### autoDeleteTimeout
+
+- 类型: `number`
+- 默认值: `30`
+- 单位: 秒(s)
+
+设置自动删除久远未使用历史消息的时间。
 
 ## 模型选项
 
@@ -244,6 +281,15 @@ ChatLuna 默认使用的向量数据库。
 
 ## 模版房间选项
 
+### autoCreateRoomFromUser
+
+- 类型: `boolean`
+- 默认值: `false`
+
+是否默认为每个用户隔离创建私有房间。
+当开启后，每个用户将默认在和 Bot 聊天时自动创建一个私有房间。
+此选项用于隔离用户之间的对话。
+
 ### defaultChatMode
 
 - 类型: `chat` | `browsing` | `plugin` ...
@@ -256,19 +302,19 @@ ChatLuna 默认使用的向量数据库。
 
 - chat: 普通聊天模式，支持预设和长期记忆，没有联网权限。
 - browsing: 浏览模式，支持预设和长期记忆，可以通过与用户的聊天内容从网络上搜索信息。
-- plugin: 插件模式，支持预设，不支持长期记忆，模型可以调用各种工具如网络搜索插件，可以自主获取网络上的消息和执行某些操作。
+- plugin: 插件模式，不完全支持预设，不支持长期记忆，模型可以调用各种工具如网络搜索插件，可以自主获取网络上的消息和执行某些操作。
 
 ### defaultModel
 
 模版克隆房间里默认使用的模型。
 
-如想接入模型，可以查看目录里的 [模型平台](../guide/configure-model-platform/introduction.md)
+如想接入模型，可以查看目录里的 [模型平台](../guide/configure-model-platform/introduction.md)。
 
 ### defaultPreset
 
 模版克隆房间里默认使用的预设。
 
-如需了解预设，可查看 [预设](../guide/preset-system/introduction.md)\
+如需了解预设，可查看 [预设](../guide/preset-system/introduction.md)。
 
 ## 杂项
 
@@ -279,7 +325,7 @@ ChatLuna 默认使用的向量数据库。
 
 配额组和其相关的用户系统。
 
-如需了解，可查看 [配额组和用户系统](../guide/session-related/concurrency-limit.md)
+如需了解，可查看 [配额组和用户系统](../guide/session-related/concurrency-limit.md)。
 
 ### isProxy
 
@@ -292,7 +338,14 @@ ChatLuna 默认使用的向量数据库。
 
 推荐所有国内用户开启该配置项配置代理。
 
-### isDebug
+### voiceSpeakId
+
+- 类型: `number`
+- 默认值: `0`
+
+设置 vits 服务默认使用的发音人。
+
+### isLog
 
 - 类型: `boolean`
 - 默认值: `false`
