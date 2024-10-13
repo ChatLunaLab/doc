@@ -19,9 +19,9 @@ import { transformerTwoslash } from '@shikijs/vitepress-twoslash';
 export default defineConfig({
     lang: 'zh-CN',
     title: 'ChatLuna',
-    titleTemplate: ':title - ChatLuna Official Website',
+    titleTemplate: ':title | ChatLuna',
     // base: "",
-    description: 'ChatLuna Official Website',
+    description: 'ChatLuna',
     ignoreDeadLinks: true,
     lastUpdated: true,
     cleanUrls: false,

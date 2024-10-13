@@ -15,7 +15,7 @@
 
 配置好了之后，前往 Koishi 控制面板，在主插件的配置页，打开 [长期记忆](../useful-configurations.md#longmemory) 开关即可。
 
-开启后还需要设置长期记忆的[提取模型](../useful-configurations.md#longmemoryextractmodel)。目前的长期记忆基于大语言模型来提取关键信息，因此需要设置一个模型。
+开启后还需要设置长期记忆的 [提取模型](../useful-configurations.md#longmemoryextractmodel)。目前的长期记忆基于大语言模型来提取关键信息，因此需要设置一个模型。
 
 推荐使用速度快的模型，如 `gpt-4o-mini`。
 
