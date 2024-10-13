@@ -3,14 +3,29 @@
         "target": "es2022",
         "rootDir": ".",
         "jsx": "preserve",
+        "module": "nodenext",
         "declaration": true,
         "composite": true,
         "incremental": true,
         "skipLibCheck": true,
         "esModuleInterop": true,
-        "moduleResolution": "node",
+        "moduleResolution": "nodenext",
         "resolveJsonModule": true,
-        "types": ["vite/client"]
+        "types": ["vite/client"],
+        "allowJs": true,
+        "strict": true,
+        "strictNullChecks": true,
+        "noUnusedLocals": true,
+        "forceConsistentCasingInFileNames": true,
+        "isolatedModules": true
     },
-    "include": ["**/*"]
+    "include": [
+        "**/*.ts",
+        "**/*.d.ts",
+        "**/*.tsx",
+        "**/*.vue",
+        "./docs/.vitepress/**/*.ts",
+        "./docs/.vitepress/**/*.tsx",
+        "./docs/.vitepress/**/*.vue"
+    ]
 }

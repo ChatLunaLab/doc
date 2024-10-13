@@ -37,7 +37,7 @@ ChatLuna 基于 Koishi 的 [条件属性](https://koishi.chat/zh-CN/manual/usage
 
 ## 本地化
 
-ChatLuna 默认提供了中英两种语言的支持。当然你也可以在 Koishi WebUI 的本地化中修改相关拉黑文本。
+ChatLuna 默认提供了中英两种语言的支持。当然你也可以在 Koishi 控制面板的本地化中修改拉黑文本。
 
 ![alt text](../../public/images/image-26.png)
 

@@ -6,12 +6,26 @@
     "main": "index.js",
     "repository": "https://github.com/ChatHubLab/doc",
     "author": "dingyi222666 <dingyi222666@foxmail.com>",
-    "license": "Apache-2.0",
     "type": "module",
     "devDependencies": {
-        "less": "^4.2.0",
-        "sass": "^1.79.4",
+        "@nolebase/markdown-it-bi-directional-links": "^2.6.1",
+        "@nolebase/vitepress-plugin-enhanced-mark": "^2.6.1",
+        "@nolebase/vitepress-plugin-enhanced-readabilities": "^2.6.1",
+        "@nolebase/vitepress-plugin-git-changelog": "^2.6.1",
+        "@nolebase/vitepress-plugin-highlight-targeted-heading": "^2.6.1",
+        "@nolebase/vitepress-plugin-inline-link-preview": "^2.6.1",
+        "@nolebase/vitepress-plugin-page-properties": "^2.6.1",
+        "@nolebase/vitepress-plugin-thumbnail-hash": "^2.6.1",
+        "@shikijs/vitepress-twoslash": "^1.22.0",
+        "markdown-it": "^14.1.0",
+        "markdown-it-mathjax3": "^4.3.2",
+        "markdown-it-task-lists": "^2.1.1",
+        "sass": "^1.79.5",
+        "typescript": "^5.6.3",
+        "unocss": "^0.63.4",
         "vitepress": "^1.4.0",
+        "vitepress-markdown-timeline": "^1.2.1",
+        "vitepress-plugin-group-icons": "^1.2.4",
         "vitepress-plugin-tabs": "^0.5.0"
     },
     "scripts": {
@@ -19,5 +33,5 @@
         "build": "vitepress build docs",
         "serve": "vitepress serve docs"
     },
-    "packageManager": "yarn@4.3.1+sha512.af78262d7d125afbfeed740602ace8c5e4405cd7f4735c08feb327286b2fdb2390fbca01589bfd1f50b1240548b74806767f5a063c94b67e431aabd0d86f7774"
+    "packageManager": "yarn@4.5.0"
 }

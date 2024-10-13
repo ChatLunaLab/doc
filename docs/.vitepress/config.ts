@@ -1,6 +1,20 @@
-import { defineConfig } from 'vitepress';
-import { DefaultTheme } from 'vitepress/types/default-theme';
+import { defineConfig, DefaultTheme } from 'vitepress';
+import timelinePlugin from 'vitepress-markdown-timeline';
 import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs';
+import math from 'markdown-it-mathjax3';
+import { BiDirectionalLinks } from '@nolebase/markdown-it-bi-directional-links';
+import UnoCSS from 'unocss/vite'
+import { InlineLinkPreviewElementTransform } from '@nolebase/vitepress-plugin-inline-link-preview/markdown-it';
+import {
+    GitChangelog,
+    GitChangelogMarkdownSection,
+} from '@nolebase/vitepress-plugin-git-changelog/vite';
+import {
+    PageProperties,
+    PagePropertiesMarkdownSection,
+} from '@nolebase/vitepress-plugin-page-properties/vite';
+import { ThumbnailHashImages } from '@nolebase/vitepress-plugin-thumbnail-hash/vite';
+import { transformerTwoslash } from '@shikijs/vitepress-twoslash';
 
 export default defineConfig({
     lang: 'zh-CN',
@@ -76,9 +90,22 @@ export default defineConfig({
         hostname: 'https://chatluna.chat',
     },
     markdown: {
+        theme: {
+            light: 'github-light',
+            dark: 'one-dark-pro',
+        },
+        math: true,
         config(md) {
             md.use(tabsMarkdownPlugin);
+
+            md.use(timelinePlugin as any);
+
+            md.use(math);
+            md.use(BiDirectionalLinks());
+
+            md.use(InlineLinkPreviewElementTransform);
         },
+        codeTransformers: [transformerTwoslash()],
         image: {
             lazyLoading: true,
         },
@@ -91,6 +118,32 @@ export default defineConfig({
                 },
             },
         },
+        ssr: {
+            noExternal: [
+                '@nolebase/vitepress-plugin-enhanced-readabilities',
+                '@nolebase/vitepress-plugin-highlight-targeted-heading',
+                '@nolebase/vitepress-plugin-inline-link-preview',
+            ],
+        },
+        plugins: [
+            UnoCSS(),
+            ThumbnailHashImages(),
+            GitChangelog({
+                maxGitLogCount: 2000,
+                repoURL: () => 'https://github.com/chatlunalab/doc',
+            }),
+            GitChangelogMarkdownSection({
+                exclude: (id) => id.endsWith('index.md'),
+                sections: {
+                    disableChangelog: false,
+                    disableContributors: true,
+                },
+            }),
+            PageProperties(),
+            PagePropertiesMarkdownSection({
+                excludes: ['index.md'],
+            }),
+        ],
     },
 });
 
