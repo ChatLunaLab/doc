@@ -24,21 +24,14 @@
 
 ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据。
 
-我们推荐使用 `database-sqlite`，它自带在大部分 Koishi 环境里，轻量且开箱即用。
+我们推荐使用 `database-sqlite`，它自带在大部分 Koishi 环境里，已被默认安装并启用。
 
 你也可以安装并配置其他在 Koishi 插件市场上的数据库插件，如 MySQL、MongoDB 等。
-
-### 缓存服务
-
-ChatLuna 还需要 `cache` 服务，用于存储某些临时配置。
-
-我们推荐使用 `cache-database`，它几乎不需要额外配置。安装后随 `database` 相关服务插件一同启用后即可。
 
 ### 可选服务
 
 这些服务是为了 ChatLuna 的某些功能而额外需要的服务。你可以根据需要选择安装。
 
-- `puppeteer` 服务：用于渲染模型回复。（用于图片模式的输出格式，搜索服务的必须插件）
 - `censor` 服务：用于回复内容过滤。注意，有的插件不审核文本信息，请注意识别。
 - `vits` 服务：用于渲染模型回复，生成语音。
 
@@ -54,7 +47,7 @@ ChatLuna 还需要 `cache` 服务，用于存储某些临时配置。
 
 安装你需要平台的模型适配器。在插件市场输入 `ChatLuna + adapter` 搜索。然后选择你需要的适配器安装。
 
-![image](../public//images/plugin_market_pic1.png)
+![image](../public/images/plugin_market_pic1.png)
 
 你可同时安装多个平台的模型适配器，后续可通过模版房间配置或房间里的模型配置项切换。
 
