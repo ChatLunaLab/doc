@@ -315,12 +315,16 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                             link: '/guide/session-related/long-term-memory',
                         },
                         {
-                            text: '房间系统',
-                            link: '/guide/session-related/room',
+                            text: '聊天限额',
+                            link: '/guide/session-related/chat-limit',
                         },
                         {
-                            text: '聊天限额',
-                            link: '/guide/session-related/concurrency-limit',
+                            text: '并发限制和重试',
+                            link: '/guide/session-related/concurrency-limit-and-retry',
+                        },
+                        {
+                            text: '房间系统',
+                            link: '/guide/session-related/room',
                         },
                     ],
                 },

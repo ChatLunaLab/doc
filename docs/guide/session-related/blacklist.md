@@ -6,7 +6,7 @@ ChatLuna 基于 Koishi 的 [条件属性](https://koishi.chat/zh-CN/manual/usage
 
 1. 可以精确指定不同账号的拉黑，或者大致指定某个群，甚至是某个平台拉黑。
 2. 实际值存储在 Koishi 配置文件中，无需从数据库读取，加快速度。
-3. Koishi 自带的 WebUI 能以可视化形式编辑这些列表，无需接触配置文件。
+3. Koishi 自带的控制面板能以可视化形式编辑这些列表，无需接触配置文件。
 
 下面就来了解下怎么配置吧。
 
@@ -37,7 +37,7 @@ ChatLuna 基于 Koishi 的 [条件属性](https://koishi.chat/zh-CN/manual/usage
 
 ## 本地化
 
-ChatLuna 默认提供了中英两种语言的支持。当然你也可以在 Koishi 控制面板的本地化中修改拉黑文本。
+ChatLuna 默认提供了中英两种语言的支持。当然你也可以在 Koishi 控制面板的本地化中自行修改拉黑文本。
 
 ![alt text](../../public/images/image-26.png)
 
