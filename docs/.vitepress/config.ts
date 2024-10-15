@@ -341,8 +341,12 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                             link: '/guide/chat-chain/chat-mode',
                         },
                         {
-                            text: '输出格式',
+                            text: '渲染输出',
                             link: '/guide/chat-chain/output-mode',
+                        },
+                        {
+                            text: '文本审核',
+                            link: '/guide/chat-chain/text-censor',
                         },
                         {
                             text: '流式输出',
