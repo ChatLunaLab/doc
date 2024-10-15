@@ -1,7 +1,7 @@
 ---
 layout: home
 
-title: ChatLuna Doc
+title: ''
 editLink: true
 
 hero:
