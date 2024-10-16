@@ -45,7 +45,7 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 
 ## 安装模型适配器
 
-安装你需要平台的模型适配器。在插件市场输入 `ChatLuna + adapter` 搜索。然后选择你需要的适配器安装。
+安装你需要平台的模型适配器。在插件市场输入 `ChatLuna + <adapter>` 搜索并选择你需要的适配器安装。
 
 ![image](../public/images/plugin_market_pic1.png)
 
@@ -61,10 +61,10 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 
 ## 配置模型适配器
 
-参考 [模型平台](./configure-model-platform/introduction.md)，选择你需要配置的模型即可。
+参考 [模型平台](./configure-model-platform/introduction.md)，选择你需要配置的模型平台类型。
 
 ::: warning 注意
-如果你在国内环境使用某些国外的模型适配器，需要设置代理，请在 `ChatLuna` 主插件的设置里设置代理(请求设置 -> [`isProxy`](./useful-configurations#isproxy)，请求设置 -> [`proxyAddress`](./useful-configurations#proxyaddress))。
+如果你所在的地区无法访问某些模型 API 服务，则可能需要设置代理。请在 `ChatLuna` 主插件的设置里设置代理(请求设置 -> [`isProxy`](./useful-configurations#isproxy)，请求设置 -> [`proxyAddress`](./useful-configurations#proxyaddress))。
 :::
 
 可使用 [`chatluna.model.list`](./useful-commands.md#列出语言模型列表) 查看可用的模型。
