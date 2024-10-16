@@ -23,7 +23,7 @@ DeepSeek 是一家专注于通用人工智能底层模型与技术研究的公�
 在 `openai-like-adapter` 配置页里可以更改平台名，我们建议更改为 `deepseek`。
 当然，你也可以更改你喜欢的其他平台名。
 
-然后在请求设置里填入你的 API key 和 请求地址。请求地址应为 `https://api.deepseek.com/v1`。
+完成后在请求设置里填入你的 API key 和 请求地址。请求地址应为 `https://api.deepseek.com/v1`。
 
 ![deepseek](../../public/images/image-12.png)
 

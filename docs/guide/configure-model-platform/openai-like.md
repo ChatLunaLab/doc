@@ -26,7 +26,7 @@ ChatLuna 为其他任意兼容 OpenAI 格式的 API提供了一个统一的 `ope
 在 `openai-like-adapter` 配置页里可以更改平台名，你需要更改为与其他模型适配器都不一样的平台名，防止冲突。
 当然，你也可以更改你喜欢的其他平台名。
 
-然后在请求设置里填入你的 API key 和 OpenAI 兼容的请求地址。一般 OpenAI 兼容的格式为 `https://xxx.com/api/v1`。
+完成后在请求设置里填入你的 API key 和 OpenAI 兼容的请求地址。一般 OpenAI 兼容的格式为 `https://xxx.com/api/v1`。
 
 也就是在调用 OpenAI 库时的 `baseUrl`，但是注意后面需要添加 `v1` 后缀。
 

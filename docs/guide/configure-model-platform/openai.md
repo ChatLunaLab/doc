@@ -44,4 +44,4 @@ OpenAI 模型适配器还支持 `plugin` 聊天模式，允许模型调用本地
 
 ### 1. 国内平台如何接入？
 
-国内平台接入 OpenAI 官方的接口，需要代理设置，前往主插件的配置页面，开启 [代理模式](../useful-configurations.md/#isproxy)，然后配置 [代理地址](../useful-configurations.md#proxyaddress)。
+国内平台接入 OpenAI 官方的接口，需要代理设置，前往主插件的配置页面，开启 [代理模式](../useful-configurations.md/#isproxy)，并配置 [代理地址](../useful-configurations.md#proxyaddress)。

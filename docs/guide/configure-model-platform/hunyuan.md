@@ -14,7 +14,7 @@
 
 ## 配置
 
-在配置之前，请先参考 [混元API接入指南](https://cloud.tencent.com/document/product/1729/97730) 开通服务，然后前往 [控制台](https://console.cloud.tencent.com/hunyuan/api-key) 获取 API Key。
+在配置之前，请先参考 [混元API接入指南](https://cloud.tencent.com/document/product/1729/97730) 开通服务，并前往 [控制台](https://console.cloud.tencent.com/hunyuan/api-key) 获取 API Key。
 
 ::: tip 提示
 未来我们可能会录制官方教程，敬请期待。
@@ -40,7 +40,7 @@
 
 因此我们需要新建一个房间，使用 `chatluna.room.create -m hunyuan/hunyuan-turbo -p chatgpt -n test-hunyuan-adapter` 指令来创建一个使用了混元适配器的房间。
 
-然后尝试和模型对话。
+新建房间后请尝试和模型对话。
 
 只要能正常对话，就说明你成功的连接到了混元 API。
 

@@ -40,7 +40,7 @@
 
 因此我们需要新建一个房间，使用 `chatluna.room.create -m wenxin/ERNIE-lite -p chatgpt -n test-wenxin-adapter` 指令来创建一个使用了文心一言适配器的房间。
 
-然后尝试和模型对话。
+新建房间后请尝试和模型对话。
 
 只要能正常对话，就说明你成功的连接到了文心一言 API。
 

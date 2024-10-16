@@ -23,7 +23,7 @@ Moonshot API 是由 Moonshot AI 提供的一种基于 HTTP 的 API 服务，允�
 在 `openai-like-adapter` 配置页里可以更改平台名，我们建议更改为 `moonshot`。
 当然，你也可以更改你喜欢的其他平台名。
 
-然后在请求设置里填入你的 API key 和 请求地址。请求地址应为 `https://api.moonshot.cn/v1`。
+完成后在请求设置里填入你的 API key 和 请求地址。请求地址应为 `https://api.moonshot.cn/v1`。
 
 ![alt text](../../public/images/image-20.png)
 

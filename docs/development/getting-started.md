@@ -267,7 +267,7 @@ export class TestClient extends PlatformModelClient<ClientConfig> {
 
 我们只是在编写测试插件，因此在 `init` 中，无须实现真正的耗时请求操作来获取模型列表，只需硬写入模型，模拟一般的模型平台，调用 `refreshModels` 即可。
 
-先声明 `_models` 属性，模拟缓存的模型，然后在 `refreshModels` 里面直接覆写 `_models` 属性。
+先声明 `_models` 属性，模拟缓存的模型，并在 `refreshModels` 里面直接覆写 `_models` 属性。
 
 ``` ts
 ...
@@ -437,7 +437,7 @@ export class TestRequester extends ModelRequester {
 
 在为 ChatLuna 提供任何功能时，建议都使用 ChatLuna 内置的错误类，这样可以更友好的让用户了解到错误的原因。
 
-然后我们简易的弄一个类似复读机的效果，实现 `completionStream` 方法。
+我们简易的弄一个类似复读机的效果，实现 `completionStream` 方法。
 
 ``` ts
 ...

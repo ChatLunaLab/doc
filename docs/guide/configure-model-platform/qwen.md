@@ -14,7 +14,7 @@
 
 ## 配置
 
-在配置之前，请先参考 [首次调用通义千问 API](https://help.aliyun.com/zh/model-studio/getting-started/first-api-call-to-qwen?spm=5176.12818093_-1363046575.console-base_help.dexternal.3bd416d0aMZwE0#f92b9b9cc7huw) 开通 API 服务。然后前往[控制台](https://bailian.console.aliyun.com/?spm=a2c4g.11186623.0.0.6a822562V5KcWo&apiKey=1#/api-key)获取 API key。
+在配置之前，请先参考 [首次调用通义千问 API](https://help.aliyun.com/zh/model-studio/getting-started/first-api-call-to-qwen?spm=5176.12818093_-1363046575.console-base_help.dexternal.3bd416d0aMZwE0#f92b9b9cc7huw) 开通 API 服务。并前往[控制台](https://bailian.console.aliyun.com/?spm=a2c4g.11186623.0.0.6a822562V5KcWo&apiKey=1#/api-key)获取 API key。
 
 ::: tip 提示
 未来我们可能会录制官方教程，敬请期待。
@@ -40,7 +40,7 @@
 
 因此我们需要新建一个房间，使用 `chatluna.room.create -m qwen/qwen-turbo -p chatgpt -n test-qwen-adapter` 指令来创建一个使用了 qwen 适配器的房间。
 
-然后尝试和模型对话。
+新建房间后请尝试和模型对话。
 
 只要能正常对话，就说明你成功的连接到了阿里云的通义千问 API。
 

@@ -40,4 +40,4 @@ Google 为免费用户也提供了一定量的免费调用额度。我们也推�
 
 ### 1. 国内平台如何接入？
 
-国内平台接入 Google 官方的接口，需要代理设置，前往主插件的配置页面，开启[代理模式](../useful-configurations.md/#isproxy)，然后配置[代理地址](../useful-configurations.md#proxyaddress)。
+国内平台接入 Google 官方的接口，需要代理设置，前往主插件的配置页面，开启[代理模式](../useful-configurations.md/#isproxy) 并配置[代理地址](../useful-configurations.md#proxyaddress)。

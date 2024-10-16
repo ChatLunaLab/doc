@@ -24,7 +24,7 @@ New Bing 是基于 GPT 4 的聊天机器人，可以实现对话式问答。并�
 未来我们可能会录制官方教程，敬请期待。
 :::
 
-打开 `Microsoft Edge` 浏览器（其他基于 Chromium 内核的浏览器也类似），然后键入 `https://www.bing.com` 打开 bing 官网。
+打开 `Microsoft Edge` 浏览器（其他基于 Chromium 内核的浏览器也类似），键入 `https://www.bing.com` 打开 bing 官网。
 
 ![images](../../public/images/plugin_newbing_cookie_1.png)
 
@@ -32,7 +32,7 @@ New Bing 是基于 GPT 4 的聊天机器人，可以实现对话式问答。并�
 
 ![images](../../public/images/plugin_newbing_cookie_2.png)
 
-点击上方的红色监听按钮取消监听，在点击一次监听按钮然后立即按 `f5` 刷新网页。等待几秒后点击监听按钮取消监听。
+点击上方的红色监听按钮取消监听，在点击一次监听按钮后立即按 `f5` 刷新网页。等待几秒后点击监听按钮取消监听。
 
 此时滚动鼠标，将监听列表拉至最上，可以看到 `bing.com` 的请求，点开它。
 

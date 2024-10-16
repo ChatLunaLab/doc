@@ -42,7 +42,7 @@ Claude 是 Anthropic 公司推出的大语言模型，旗下同时开放 `claude
 
 因此我们需要新建一个房间，使用 `chatluna.room.create -m claude/claude-3-haiku-20240307 -p chatgpt -n test-claude-adapter` 指令来创建一个使用了 Claude 适配器的房间。
 
-然后尝试和模型对话。
+新建房间后请尝试和模型对话。
 
 只要能正常对话，就说明你成功的连接到了 Claude，接入了 Claude 适配器。
 
@@ -52,4 +52,4 @@ Claude 是 Anthropic 公司推出的大语言模型，旗下同时开放 `claude
 
 ### 1. 国内平台如何接入？
 
-国内平台接入 Claude 官方的接口，需要代理设置，前往主插件的配置页面，开启 [代理模式](../useful-configurations.md/#isproxy)，然后配置 [代理地址](../useful-configurations.md#proxyaddress)。
+国内平台接入 Claude 官方的接口，需要代理设置，前往主插件的配置页面，开启 [代理模式](../useful-configurations.md/#isproxy)，并且配置 [代理地址](../useful-configurations.md#proxyaddress)。

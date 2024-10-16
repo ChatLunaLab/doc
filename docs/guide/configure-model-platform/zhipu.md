@@ -14,7 +14,7 @@ ChatGLM 是一种由清华大学联合智谱AI开发的大型语言模型家族�
 
 ## 配置
 
-在配置之前，请先参考 [介绍](https://open.bigmodel.cn/dev/howuse/introduction) 开通 API 服务。然后前往[控制台](https://open.bigmodel.cn/usercenter/apikeys) 获取 API key。
+在配置之前，请先参考 [介绍](https://open.bigmodel.cn/dev/howuse/introduction) 开通 API 服务。并前往[控制台](https://open.bigmodel.cn/usercenter/apikeys) 获取 API key。
 
 ::: tip 提示
 未来我们可能会录制官方教程，敬请期待。
@@ -40,7 +40,7 @@ ChatGLM 是一种由清华大学联合智谱AI开发的大型语言模型家族�
 
 因此我们需要新建一个房间，使用 `chatluna.room.create -m zhipu/GLM-4-Flash -p chatgpt -n test-zhipu-adapter` 指令来创建一个使用了智谱适配器的房间。
 
-然后尝试和模型对话。
+新建房间后请尝试和模型对话。
 
 只要能正常对话，就说明你成功的连接到了智谱 API。
 

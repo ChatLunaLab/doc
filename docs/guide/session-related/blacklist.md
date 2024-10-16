@@ -41,7 +41,7 @@ ChatLuna 默认提供了中英两种语言的支持。当然你也可以在 Kois
 
 ![alt text](../../public/images/image-26.png)
 
-我们可以修改成 「闭嘴吧你」，然后重新试试触发拉黑文本。
+我们可以修改成 「闭嘴吧你」，重新尝试触发拉黑文本。
 
 <chat-panel>
   <chat-message nickname="10001">chatluna.chat.text Hello</chat-message>
