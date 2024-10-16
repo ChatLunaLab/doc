@@ -66,7 +66,7 @@ export default defineConfig({
                                 buttonAriaLabel: '搜索文档',
                             },
                             modal: {
-                                noResultsText: '无法找到相关结果',
+                                noResultsText: '无���找到相关结果',
                                 resetButtonTitle: '清除查询条件',
                                 footer: {
                                     selectText: '选择',
@@ -541,6 +541,34 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
         {
             text: '总览',
             link: '/ecosystem/introduction',
+        },
+        {
+            text: '聊天模式 / 插件模式工具',
+            items: [
+                { text: '搜索服务 (Search Service)', link: '/ecosystem/plugin/search-service' },
+                { text: '基础工具合集 (Plugin Common)', link: '/ecosystem/plugin/common' },
+            ]
+        },
+        {
+            text: '回复渲染器',
+            items: [
+                { text: '图片渲染器 (Image Renderer)', link: '/ecosystem/renderer/image' },
+            ]
+        },
+        {
+            text: '能力扩展',
+            items: [
+                { text: '知识库实现 (Knowledge)', link: '/ecosystem/extension/knowledge' },
+                { text: '角色卡兼容 (Character Card)', link: '/ecosystem/extension/character-card' },
+            ]
+        },
+        {
+            text: '其他插件',
+            items: [
+                { text: '伪装群友 (Character)', link: '/ecosystem/other/character' },
+                { text: '翻译服务 (Translator)', link: '/ecosystem/other/translator' },
+                { text: '预设仓库服务 (Preset Market)', link: '/ecosystem/other/preset-market' },
+            ]
         },
     ];
 }

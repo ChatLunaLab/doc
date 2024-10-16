@@ -34,8 +34,12 @@
 
 - [koishi-plugin-chatluna-character](./other/character.md): 让大语言模型进行角色扮演，伪装成群友。
 - [koishi-plugin-chatluna-translator](./other/translator.md): 由 ChatLuna 中的大语言模型驱动提供的翻译服务。
-- [koishi-plugin-chatluna-preset-market](./other/chat-mode-browsing.md): 为 ChatLuna 提供一站式预设仓库服务搜索，下载的插件。
+- [koishi-plugin-chatluna-preset-market](./other/preset-market.md): 为 ChatLuna 提供一站式预设仓库服务搜索，下载的插件。
 
 ## 非官方插件
 
 其他非 ChatLuna 官方维护的插件。
+
+::tip 提示
+这里应该有一个列表，但是还没有人 PR 呢...
+::

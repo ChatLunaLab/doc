@@ -24,9 +24,9 @@ ChatLuna 针对模型的输出提供了一套渲染 API，可以方便的将模�
 
 ![alt text](../../public/images/image-34.png)
 
-::tip 提示
+:::tip 提示
 可以使用 `impl:vits` 来搜寻实现了 `vits` 服务的插件。
-::
+:::
 
 具体配置请自行参考插件本身的主页，帮助等。
 
@@ -42,9 +42,9 @@ ChatLuna 针对模型的输出提供了一套渲染 API，可以方便的将模�
 
 使用 [`chatluna.chat.text -t <mode>`](../useful-commands.md#直接对话) 命令进行聊天，`-t` 后面配上你的模式即可。
 
-::tip 提示
+:::tip 提示
 使用 at 的响应无法进行单次设置输出模式。
-::
+:::
 
 ### 全局设置（推荐）
 
