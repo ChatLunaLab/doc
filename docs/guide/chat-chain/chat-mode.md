@@ -44,8 +44,8 @@ plugin 模式基于 LangChain 的 `Agent` 和 `Tool`，需要有相关的工具�
 
 ### 普通房间
 
-使用 [`chatluna.room.set -t <chatmode>`](../useful-commands.md#设置房间) 命令，对当前你所在的房间切换为你想要使用的聊天模式即可。
+使用 [`chatluna.room.set -c <chatmode>`](../useful-commands.md#设置房间) 命令，对当前你所在的房间切换为你想要使用的聊天模式即可。
 
 ### 模版克隆房间
 
-前往 Koishi 控制台，找到 ChatLuna 主插件的配置项，在 [`defaultChatMode`](../useful-configurations.md#defaultchatmode) 选项里选择你需要使用的聊天模式即可即可。
+前往 Koishi 控制台，找到 ChatLuna 主插件的配置项，在 [`defaultChatMode`](../useful-configurations.md#defaultchatmode) 选项里选择你需要使用的聊天模式即可。
