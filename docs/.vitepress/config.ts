@@ -351,7 +351,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                     ],
                 },
                 {
-                    text: '模型插件',
+                    text: '模型工具',
                     collapsed: true,
                     items: [
                         {
@@ -383,8 +383,16 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                             link: '/guide/model-plugin-system/cron',
                         },
                         {
-                            text: '画图',
+                            text: '文生图',
                             link: '/guide/model-plugin-system/draw',
+                        },
+                        {
+                            text: '代码执行',
+                            link: '/guide/model-plugin-system/code-interpreter',
+                        },
+                        {
+                            text: '主动记忆',
+                            link: '/guide/model-plugin-system/active-memory',
                         },
                     ],
                 },
