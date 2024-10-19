@@ -217,11 +217,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                         {
                             text: 'RWKV',
                             link: '/guide/configure-model-platform/rwkv',
-                        },
-                        {
-                            text: 'New Bing',
-                            link: '/guide/configure-model-platform/bing-chat',
-                        },
+                        }
                     ],
                 },
                 {
