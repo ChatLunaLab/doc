@@ -219,7 +219,7 @@ prompts:
    content: 杂鱼大叔这么快就想人家了嘛？
 ```
 
-将编写好的预设文件(如 `girl.yml`)复制到 Koishi 的预设文件夹中(路径通常为 `你的Koishi目录/data/chathub/preset/`)。
+将编写好的预设文件(如 `girl.yml`)复制到 Koishi 的预设文件夹中(路径通常为 `<你的Koishi数据目录>/data/chathub/preset`)。
 
 复制完成后在 Koishi 控制台中执行 `chatluna.preset.list` 命令来查看可用的预设列表。如一切正常，你应该能在列表中看到刚刚添加的"雌小鬼"预设。
 
