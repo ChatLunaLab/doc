@@ -8,6 +8,10 @@
 
 此插件还需要配置后才能使用，你可以在下面的介绍中选择你喜欢的模型工具，按照其介绍进行配置。
 
+::: tip 提示
+建议在主插件中开启 [`showThoughtMessage`](../useful-configurations.md#showThoughtMessage) 选项。可以让模型在调用工具时，显示调用过程。
+:::
+
 ## 可用工具
 
 目前 ChatLuna 支持以下的模型工具：
