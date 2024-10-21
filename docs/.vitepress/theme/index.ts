@@ -83,6 +83,7 @@ export default {
                     NolebaseEnhancedReadabilitiesLayoutMode.SidebarWidthAdjustableOnly,
             },
             spotlight: {
+                disableHelp: true,
                 defaultToggle: true,
                 hoverBlockColor: 'rgb(240 197 52 / 7%)',
             },
@@ -118,12 +119,10 @@ export default {
                                 type: 'readingTime',
                                 dateFnsLocaleName: 'zhCN',
                             },
-                        },
+                        }
                     ],
                 },
             }
         );
-
-        app.use(TwoslashFloatingVue);
     },
 } satisfies Theme;

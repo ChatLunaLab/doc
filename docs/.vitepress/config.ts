@@ -15,12 +15,12 @@ import {
 } from '@nolebase/vitepress-plugin-page-properties/vite';
 import { ThumbnailHashImages } from '@nolebase/vitepress-plugin-thumbnail-hash/vite';
 import { transformerTwoslash } from '@shikijs/vitepress-twoslash';
+import { transformHeadMeta } from '@nolebase/vitepress-plugin-meta/vitepress'
 
 export default defineConfig({
     lang: 'zh-CN',
     title: 'ChatLuna',
-    titleTemplate: ':title | ChatLuna',
-    // base: "",
+    base: "/",
     description: 'ChatLuna',
     ignoreDeadLinks: true,
     lastUpdated: true,
@@ -141,6 +141,15 @@ export default defineConfig({
             }),
         ],
     },
+    async transformHead(context) {
+        let head = [...context.head]
+    
+        const returnedHead = await transformHeadMeta()(head, context)
+        if (typeof returnedHead !== 'undefined')
+          head = returnedHead
+    
+        return head
+      },
 });
 
 function sidebarGuide(): DefaultTheme.SidebarItem[] {

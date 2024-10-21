@@ -1,15 +1,15 @@
 {
     "compilerOptions": {
-        "target": "es2022",
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "target": "ESNext",
         "rootDir": ".",
         "jsx": "preserve",
-        "module": "nodenext",
         "declaration": true,
         "composite": true,
         "incremental": true,
         "skipLibCheck": true,
         "esModuleInterop": true,
-        "moduleResolution": "nodenext",
         "resolveJsonModule": true,
         "types": ["vite/client"],
         "allowJs": true,
@@ -27,5 +27,7 @@
         "./docs/.vitepress/**/*.ts",
         "./docs/.vitepress/**/*.tsx",
         "./docs/.vitepress/**/*.vue"
-    ]
+    ],
+
+    "exclude": ["node_modules"]
 }

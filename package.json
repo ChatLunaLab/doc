@@ -16,6 +16,7 @@
         "@nolebase/vitepress-plugin-inline-link-preview": "^2.6.1",
         "@nolebase/vitepress-plugin-page-properties": "^2.6.1",
         "@nolebase/vitepress-plugin-thumbnail-hash": "^2.6.1",
+         "@nolebase/vitepress-plugin-meta": "^2.6.1",
         "@shikijs/vitepress-twoslash": "^1.22.0",
         "markdown-it": "^14.1.0",
         "markdown-it-mathjax3": "^4.3.2",
@@ -31,7 +32,8 @@
     "scripts": {
         "dev": "vitepress dev docs",
         "build": "vitepress build docs",
-        "serve": "vitepress serve docs"
+        "serve": "vitepress serve docs",
+        "preview": "vitepress preview docs"
     },
     "packageManager": "yarn@4.5.0"
 }
