@@ -371,12 +371,12 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                             link: '/guide/model-plugin-system/file-io',
                         },
                         {
-                            text: '群管',
-                            link: '/guide/model-plugin-system/guild-manager',
-                        },
-                        {
                             text: '定时任务',
                             link: '/guide/model-plugin-system/cron',
+                        },
+                        {
+                            text: 'Koishi 命令执行',
+                            link: '/guide/model-plugin-system/command-execution',
                         },
                         {
                             text: '文生图',
@@ -389,6 +389,10 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                         {
                             text: '主动记忆',
                             link: '/guide/model-plugin-system/active-memory',
+                        },
+                        {
+                            text: '简易音频生成',
+                            link: '/guide/model-plugin-system/simple-audio-generation',
                         },
                     ],
                 },
@@ -564,7 +568,7 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
             text: '能力扩展',
             items: [
                 {
-                    text: '知识库实现 (Knowledge)',
+                    text: '知识库 (Knowledge)',
                     link: '/ecosystem/extension/knowledge',
                 },
                 {

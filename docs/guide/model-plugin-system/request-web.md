@@ -4,12 +4,10 @@
 
 ## 配置
 
-- 参考 [介绍](introduction.md) 中的配置方法，启用 plugin-common 插件。
-- 开启下图功能即可。
+- 参考 [介绍](introduction.md) 中的配置方法，启用 `plugin-common` 插件。
+- 按照下图配置在 `plugin-common` 插件中启用 `request` 功能。
 
 ![image](../../public/images/image-37.png)
-
-配置了搜索服务插件后，就可以让模型调用网络请求工具了。
 
 ## 测试
 
