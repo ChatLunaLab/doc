@@ -11,16 +11,16 @@
 
 ## 测试
 
-将当前房间设置为插件模式，然后询问模型请求某个 API，当模型回复的内容包含 API 响应式时，说明网络请求工具配置成功。
+将当前房间设置为插件模式，即可询问模型请求某个 API。当模型回复的内容包含 API 响应式时，说明网络请求工具配置成功。
 
 例如:
 
 <chat-panel>
   <chat-message nickname="User">chatluna.chat.text 请求 https://v2.jokeapi.dev/joke/Any 给我讲个笑话</chat-message>
   <chat-message nickname="Bot">
-    {
-      tool: 'requests_get',
-      arg: '{"input":"https://v2.jokeapi.dev/joke/Any"}'
+    {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;tool: 'requests_get',<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;arg: '{"input":"https://v2.jokeapi.dev/joke/Any"}'<br>
     }
   </chat-message>
    <chat-message nickname="Bot">

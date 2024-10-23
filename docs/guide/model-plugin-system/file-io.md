@@ -11,7 +11,7 @@
 
 ## 测试
 
-将当前房间设置为插件模式，然后询问模型阅读文件，当文件阅读内容成功时，则说明工具启用成功。
+将当前房间设置为插件模式，即可询问模型阅读文件，当文件阅读内容成功时，则说明工具启用成功。
 
 ::: warning 警告
 目前文件工具只能阅读纯文本内容，对于二进制文件暂时无法读取！
@@ -22,9 +22,9 @@
 <chat-panel>
   <chat-message nickname="User">chatluna.chat.text 阅读 koishi.yml，分析文件内容</chat-message>
   <chat-message nickname="Bot">
-   {
-    tool: 'read_file',
-    arg: '{"input":"koishi.yml"}'
+   {<br>
+    &nbsp;&nbsp;tool: 'read_file',<br>
+    &nbsp;&nbsp;arg: '{"input":"koishi.yml"}'<br>
    }
   </chat-message>
    <chat-message nickname="Bot">

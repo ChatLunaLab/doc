@@ -22,9 +22,9 @@
 <chat-panel>
   <chat-message nickname="User">chatluna.chat.text 一分钟后提醒我看电影</chat-message>
   <chat-message nickname="Bot">
-  {
-   tool: 'cron',
-   arg: '{"time":"1m","type":"echo","content":"看电影时间到了！"}'
+   {<br>
+    &nbsp;&nbsp;tool: 'cron',<br>
+    &nbsp;&nbsp;arg: '{"time":"1m","type":"echo","content":"看电影时间到了！"}'<br>
   }
   </chat-message>
   <chat-message nickname="Bot">模型请求执行定时指令 schedule 1m -- echo -u @User 看电影时间到了！，如需同意，请输入以下字符：4ekrCsxA</chat-message>
