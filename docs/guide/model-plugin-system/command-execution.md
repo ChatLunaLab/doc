@@ -1,6 +1,6 @@
 # 命令执行
 
-此工具可以让模型调用当前 Koishi 实例上的[命令](https://koishi.chat/zh-CN/manual/usage/command.html)。
+此工具可以让模型调用当前 Koishi 实例上的 [命令](https://koishi.chat/zh-CN/manual/usage/command.html)。
 
 我们会智能转换 Koishi 命令的参数，提供给模型调用。
 
