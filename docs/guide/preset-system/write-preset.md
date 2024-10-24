@@ -173,8 +173,8 @@ world_lores:
 作者注释提供了在不定频率随机插入内容的功能。下面是一个示例：
 
 ```yml
-author_notes:
-  - content: "这是一条作者注释"
+authors_note:
+    content: "这是一条作者注释"
     insertPosition: 'in_chat'
     insertDepth: 0
     insertionFrequency: 1
