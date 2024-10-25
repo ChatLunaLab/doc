@@ -6,9 +6,9 @@ LanceDB 是一个高性能的向量数据库，专为大规模机器学习和 AI
 
 前往插件市场，搜索并安装 `chatluna-vector-store-service` 即可。注意在安装前，需要先安装 `lancedb` 的依赖。
 
-类似 Faiss，注意 LanceDB 的依赖 `vector-db` 和 `apache-arrow` 被标记为该插件的可选依赖，你需要在安装前设置 `vector-db` 和 `apache-arrow` 安装。
+类似 Faiss，注意 LanceDB 的依赖 `vector-db` 和 `apache-arrow` 被标记为该插件的可选依赖，你需要在启用前安装 `vector-db` 和 `apache-arrow`。
 
 ## 使用
 
 1. 安装 `chatluna-vector-store-service`，启用该插件。
-2. 在主插件的[模型选项](../useful-configurations.md#模型选项)中找到 [defaultVectorStore](../useful-configurations.md#defaultvectorstore) 配置项，选择为 `lancedb` 即可。
+2. 在主插件的 [模型选项](../useful-configurations.md#模型选项) 中找到 [defaultVectorStore](../useful-configurations.md#defaultvectorstore) 配置项，选择为 `lancedb` 即可。

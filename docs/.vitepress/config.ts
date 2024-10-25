@@ -392,6 +392,10 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                             link: '/guide/model-plugin-system/draw',
                         },
                         {
+                            text: '思考工具',
+                            link: '/guide/model-plugin-system/thinking',
+                        },
+                        {
                             text: '代码执行',
                             link: '/guide/model-plugin-system/code-interpreter',
                         },

@@ -18,6 +18,6 @@
 
 ## 使用
 
-配置好任一向量数据库后，即可在主插件的配置项中[选择](../useful-configurations#defaultvectorstore)配置好了的向量数据库。
+配置好任一向量数据库后，即可在主插件的配置项中 [选择](../useful-configurations#defaultvectorstore) 配置好了的向量数据库。
 
-也可使用指令设置默认向量数据库，详见[嵌入模型和向量数据库管理](../useful-commands.md#嵌入模型和向量数据库管理)。
+也可使用指令设置默认向量数据库，详见 [嵌入模型和向量数据库管理](../useful-commands.md#嵌入模型和向量数据库管理)。

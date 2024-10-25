@@ -23,7 +23,9 @@
 - [Koishi 命令执行](command-execution.md)
 - [定时任务](cron.md)
 - [文生图](draw.md)
+- [思考工具](thinking.md)
 - [代码执行](code-interpreter.md)
 - [主动记忆](active-memory.md)
+- [简易音频生成](simple-audio-generation.md)
 
 你可以点击上面的链接查看如何配置相应的模型工具。
