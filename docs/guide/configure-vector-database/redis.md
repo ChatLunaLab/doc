@@ -17,7 +17,13 @@ Redis 同时支持安装扩展模块，可以通过安装 `Redisearch` 模块来
 
 将 Redis Stack 的连接地址填入 `vector-database-service` 中的 `redisUrl` 中即可。
 
+![alt text](../../public/images/image-53.png)
+
 ## 使用
 
 1. 安装 `chatluna-vector-store-service`，启用该插件。
-2. 在主插件的 [模型选项](../useful-configurations.md#模型选项) 中找到 [defaultVectorStore](../useful-configurations.md#defaultvectorstore) 配置项，选择为 `redis` 即可。
+2. 在向量适配器中选中 redis。
+
+   ![alt text](../../public/images/image-52.png)
+
+3. 在主插件的 [模型选项](../useful-configurations.md#模型选项) 中找到 [defaultVectorStore](../useful-configurations.md#defaultvectorstore) 配置项，选择为 `redis` 即可。

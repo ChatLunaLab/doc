@@ -14,10 +14,14 @@
 
 - [Faiss](./faiss.md)
 - [Redis](./redis.md)
-- [LanceDB](./lancedb.md)
+- [Milvus](./milvus.md)
 
 ## 使用
 
-配置好任一向量数据库后，即可在主插件的配置项中 [选择](../useful-configurations#defaultvectorstore) 配置好了的向量数据库。
+配置好任一向量数据库后，还需要在向量适配器中选中配置好的向量数据库。
+
+![alt text](../../public/images/image-52.png)
+
+选择后，即可在主插件的配置项中 [选择](../useful-configurations#defaultvectorstore) 配置好了的向量数据库。
 
 也可使用指令设置默认向量数据库，详见 [嵌入模型和向量数据库管理](../useful-commands.md#嵌入模型和向量数据库管理)。

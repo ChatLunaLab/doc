@@ -272,8 +272,8 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                             link: '/guide/configure-vector-database/faiss',
                         },
                         {
-                            text: 'LanceDB',
-                            link: '/guide/configure-vector-database/lancedb',
+                            text: 'Milvus',
+                            link: '/guide/configure-vector-database/milvus',
                         },
                         {
                             text: 'Redis',
