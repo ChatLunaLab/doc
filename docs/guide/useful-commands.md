@@ -53,6 +53,57 @@ chatluna.chat.voice -s <speakerId:number> -r <room:string> <message:text>
   </chat-message>
 </chat-panel>
 
+### 停止对话
+
+如果遇到模型长时间未响应，可以手动停止对话。
+
+以下为命令格式：
+
+```shell
+chatluna.chat.stop -r <room:string>
+```
+
+以下为可选参数：
+
+- `-r,--room`: 指定对话的房间，默认为用户在当前环境里使用的房间，可为房间名或房间ID。
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.chat.stop</chat-message>
+  <chat-message nickname="Bot">
+    已成功停止当前对话。
+  </chat-message>
+</chat-panel>
+
+### 回滚对话
+
+回滚对话用于重新生成模型的上一条回复消息。
+
+:::tip 提示
+请求错误后，由于最新的聊天消息没有保存。因此调用此命令后，将重新生成上一次请求成功后模型的回复消息。
+:::
+
+以下为命令格式：
+
+```shell
+chatluna.chat.rollback -r <room:string> [content:text]
+```
+
+以下为可选参数：
+
+- `-r,--room`: 指定对话的房间，默认为用户在当前环境里使用的房间，可为房间名或房间ID。
+- `content`: 指定需要回滚的聊天消息内容。这将作为回滚时你的消息内容。（不是模型的回复，是你自己的消息）
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.chat.rollback 你好</chat-message>
+  <chat-message nickname="Bot">
+    [假装是模型生成的消息]
+  </chat-message>
+</chat-panel>
+
 ## 房间
 
 房间是 ChatLuna 的主要组成部分。想象一下你在不同的群里都可以私人订制不同的房间，使用不同的预设，聊天模式。可以多个用户在一个房间里一起调教模型。这可能是目前最复杂的在 bot 上的聊天系统，但也是自由度最高的系统。
@@ -664,10 +715,10 @@ chatluna.preset.delete <preset:string>
 
 ## 模型（向量数据库，嵌入模型，大语言模型）
 
-### 列出语言模型列表
+### 列出大语言模型列表
 
-列出当前 ChatLuna 可用的语音模型列表。
-可指定 `page` 参数来选择页码，指定 `limit` 参数来选择返回的语言模型列表数量上限。
+列出当前 ChatLuna 可用的大语言模型列表。
+可指定 `page` 参数来选择页码，指定 `limit` 参数来选择返回的大语言模型列表数量上限。
 
 以下为命令格式：
 
@@ -677,8 +728,8 @@ chatluna.model.list -l <limit:number> -p <page:number>
 
 以下为可选参数：
 
-- `-l,--limit`: 指定返回语言模型名称的数量上限，默认为 5。
-- `-p,--page`: 指定返回语言模型名称的页数，默认为 1。
+- `-l,--limit`: 指定返回大语言模型名称的数量上限，默认为 5。
+- `-p,--page`: 指定返回大语言模型名称的页数，默认为 1。
 
 以下为例子：
 
@@ -700,6 +751,37 @@ wenxin/ERNIE-Bot-turbo<br/>
 <br/>你可以使用 chatluna.room.set -m &lt;model&gt; 来设置默认使用的模型<br/>
 
 <br/>当前为第 1 / 2 页
+</chat-message>
+</chat-panel>
+
+### 搜索大语言模型
+
+搜索当前 ChatLuna 里可用的大语言模型。
+
+以下为命令格式：
+
+```shell
+chatluna.model.search <keyword:string> -l <limit:number> -p <page:number>
+```
+
+以下为可选参数：
+
+- `-l,--limit`: 指定返回大语言模型名称的数量上限，默认为 5。
+- `-p,--page`: 指定返回大语言模型名称的页数，默认为 1。
+
+以下为例子：
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.model.search gpt-4o-mini</chat-message>
+  <chat-message nickname="Bot">以下是目前搜索到的模型列表：<br/>
+
+<br/>openai-like/gpt-4o-mini<br/>
+openai/gpt-4o-mini<br/>
+openai/gpt-4o-mini-2024-07-18<br/>
+
+<br/>你可以使用 chatluna.room.set -m &lt;model&gt; 来设置默认使用的模型<br/>
+
+<br/>当前为第 1 / 1 页
 </chat-message>
 </chat-panel>
 
