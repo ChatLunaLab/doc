@@ -4,7 +4,7 @@
 
 ## 配置
 
-前往插件市场搜索 `chatluna-plugin-common` 并安装。
+- 前往插件市场搜索 `chatluna-plugin-common` 并安装。
 
 ![alt text](../../public/images/image-55.png)
 
