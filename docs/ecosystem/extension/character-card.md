@@ -64,14 +64,14 @@
 #### personalityPrompt
 
 - 类型：`string`
-- 默认值：`"{{char}}'s personality: {{personality}}“`
+- 默认值：`"{{char}}'s personality: {{personality}}"`
 
 角色的个性 Prompt。
 
 #### scenarioPrompt
 
 - 类型：`string`
-- 默认值：`"{{char}}'s scenario: {{scenario}}“`
+- 默认值：`"{{char}}'s scenario: {{scenario}}"`
 
 角色的场景 Prompt。
 
