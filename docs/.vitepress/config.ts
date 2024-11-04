@@ -602,7 +602,7 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
                     link: '/ecosystem/other/translator',
                 },
                 {
-                    text: '预设仓库服务 (Preset Market)',
+                    text: '预设仓库 (Preset Market)',
                     link: '/ecosystem/other/preset-market',
                 },
             ],
