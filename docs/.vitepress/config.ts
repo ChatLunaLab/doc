@@ -415,11 +415,11 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
             text: '最佳实践',
             items: [
                 {
-                    text: '猫娘角色扮演',
+                    text: '猫娘角色扮演 Bot',
                     link: '/guide/best-practice/cat-girl',
                 },
                 {
-                    text: '知识库客服机器人',
+                    text: '知识库客服 Bot',
                     link: '/guide/best-practice/knowledge-base-and-customer-service-robot',
                 }
             ],
