@@ -433,12 +433,12 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
             text: '起步',
             items: [
                 {
-                    text: '为 ChatLuna 开发插件',
+                    text: '使用 ChatLuna API',
                     link: '/development/getting-started',
                 },
                 {
-                    text: '调用 ChatLuna API',
-                    link: '/development/call-chatluna-api',
+                    text: '扩展 ChatLuna 能力',
+                    link: '/development/extend-chatluna-api',
                 },
             ],
         },
