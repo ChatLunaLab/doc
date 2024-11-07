@@ -456,10 +456,31 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
             ],
         },
         {
+            text: '调用服务',
+            items: [
+                {
+                    text: '大语言模型',
+                    link: '/development/call-core-services/language-model',
+                },
+                {
+                    text: '嵌入模型',
+                    link: '/development/call-core-services/embedding-model',
+                },
+                {
+                    text: '向量数据库',
+                    link: '/development/call-core-services/vector-database',
+                },
+                {
+                    text: '模型工具',
+                    link: '/development/call-core-services/model-tool',
+                },
+            ],
+        },
+        {
             text: '接入服务',
             items: [
                 {
-                    text: '语言模型',
+                    text: '大语言模型',
                     link: '/development/connect-to-core-services/language-model',
                 },
                 {
@@ -481,24 +502,6 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                 {
                     text: '消息读取',
                     link: '/development/connect-to-core-services/message-read',
-                },
-            ],
-        },
-
-        {
-            text: '调用服务',
-            items: [
-                {
-                    text: '语言模型',
-                    link: '/development/call-core-services/language-model',
-                },
-                {
-                    text: '嵌入模型',
-                    link: '/development/call-core-services/embedding-model',
-                },
-                {
-                    text: '向量数据库',
-                    link: '/development/call-core-services/vector-database',
                 },
             ],
         },
@@ -536,11 +539,7 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                         {
                             text: '模型 (Model)',
                             link: '/development/api-reference/llm-core/model',
-                        },
-                        {
-                            text: '模型聊天接口 (Model Chat Interface)',
-                            link: '/development/api-reference/llm-core/model-chat-interface',
-                        },
+                        }
                     ],
                 },
                 {

@@ -4,7 +4,7 @@ ChatLuna 在 Koishi 上提供了统一的大语言模型接入方案。通过 Ch
 
 ## 添加依赖
 
-首先，需要在你的 Koishi 插件的 `package.json` 文件中添加必要的依赖：
+首先，需要在 Koishi 插件的 `package.json` 中添加所需依赖：
 
 ```json
 {
