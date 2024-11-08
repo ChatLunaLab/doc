@@ -43,6 +43,7 @@ export const inject = ['chatluna']
 
 ```typescript
 import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
+import { Tool } from '@langchain/core/tools'
 import {
     fuzzyQuery,
     getMessageContent
