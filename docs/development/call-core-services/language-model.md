@@ -21,7 +21,7 @@ console.log(message)
 
 ## 获取可用的模型
 
-在 ChatLuna 中，实际掌握模型的是 `PlatformService` 服务。
+在 ChatLuna 中，实际掌握各类模型和平台的是 `PlatformService` 类。
 
 如果你需要获取当前平台下可用的大语言模型列表，可以调用 `PlatformService` 的 `getAllModels` 方法。
 
