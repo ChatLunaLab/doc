@@ -11,7 +11,7 @@ ChatLuna 支持插件聊天模式 (Plugin Chat Mode)，允许其他插件定义 
 ```json
 {
     "peerDependencies": {
-        "koishi": "^4.15.6",
+        "koishi": "^4.18.0",
         "koishi-plugin-chatluna": "^1.0.0-beta.119"
     },
     "devDependencies": {
