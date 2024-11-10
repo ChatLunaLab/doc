@@ -23,6 +23,10 @@ const thinks = [
         name: "Ling",
     },
     {
+        avatar: "https://avatar.viki.moe?qq=1919892171",
+        name: "上学",
+    },
+    {
         avatar: "https://avatar.viki.moe?qq=503753255",
         name: "飞@^O^",
     },
