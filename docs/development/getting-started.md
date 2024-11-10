@@ -29,7 +29,7 @@ ChatLuna 在 Koishi 上提供了统一的大语言模型接入方案。通过 Ch
 运行 `npm install` 或 `yarn install` 安装依赖后，在插件的主入口文件中引入并声明 ChatLuna 服务：
 
 ```typescript
-import type {} from "koishi-plugin-chatluna/lib/services/chat";
+import type {} from "koishi-plugin-chatluna/services/chat";
 import { ChatLunaChatModel } from 'koishi-plugin-chatluna/llm-core/platform/model'
 
 export const inject = ['chatluna']
@@ -56,7 +56,7 @@ export function apply(ctx: Context) {
 
 在实际应用中，我们不建议在代码中硬编码使用特定的模型，因为以下几点：
 
-- 你硬编码的模型在用户使用的环境中可能不存在
+- 硬编码的模型在用户使用的环境中可能不存在
 - 用户希望能选择其他模型
 
 更好的做法是使用 [`Schema.dynamic`](https://koishi.chat/zh-CN/schema/advanced/dynamic.html) 让用户自主选择使用的模型：
@@ -64,7 +64,7 @@ export function apply(ctx: Context) {
 ```typescript
 import { parseRawModelName } from 'koishi-plugin-chatluna/llm-core/utils/count_tokens'
 import { ChatLunaChatModel } from 'koishi-plugin-chatluna/llm-core/platform/model'
-import type {} from "koishi-plugin-chatluna/lib/services/chat";
+import type {} from "koishi-plugin-chatluna/services/chat";
 
 export interface Config {
     model: string

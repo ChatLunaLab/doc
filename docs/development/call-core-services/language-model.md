@@ -7,7 +7,7 @@ ChatLuna 的基本能力之一就是聚合和调用各种大语言模型。
 使用 `chatluna` 服务中的 `createChatModel` 方法来创建一个 `ChatLunaChatModel` 实例。
 
 ```typescript
-import type {} from "koishi-plugin-chatluna/lib/services/chat";
+import type {} from "koishi-plugin-chatluna/services/chat";
 
 // platform, model
 const model = ctx.chatluna.createChatModel("openai", "gpt-4o-mini")

@@ -31,7 +31,7 @@ ChatLuna 支持插件聊天模式 (Plugin Chat Mode)，允许其他插件定义 
 运行 `npm install` 或 `yarn install` 安装依赖后，在插件的主入口文件中引入并声明 ChatLuna 服务：
 
 ```typescript
-import type {} from "koishi-plugin-chatluna/lib/services/chat";
+import type {} from "koishi-plugin-chatluna/services/chat";
 import { ChatLunaChatModel } from 'koishi-plugin-chatluna/llm-core/platform/model'
 
 export const inject = ['chatluna']

@@ -7,7 +7,7 @@ ChatLuna 也能聚合和调用各种嵌入模型。
 使用 `chatluna` 服务中的 `createEmbeddings` 方法来创建一个 `Embeddings` 实例。
 
 ```typescript
-import type {} from "koishi-plugin-chatluna/lib/services/chat";
+import type {} from "koishi-plugin-chatluna/services/chat";
 
 // platform, model
 const model = ctx.chatluna.createEmbeddings("openai", "text-embedding-3-small")
@@ -36,6 +36,20 @@ const models = ctx.chatluna.platform.getAllModels(ModelType.embedding)
 - `llm`：大语言模型
 - `embedding`：嵌入模型
 - `all`：所有模型
+
+## 从用户配置中创建向量数据库
+
+ChatLuna 的主插件中允许用户设置 [`defaultEmbeddings`](../../guide/useful-configurations.md#defaultembeddings) 配置项，用于指定默认的嵌入模型。
+
+开发者也可以直接使用这个配置项指定的嵌入模型来创建嵌入模型实例。
+
+```typescript
+import type {} from "koishi-plugin-chatluna/services/chat";
+import { parseRawModelName } from 'koishi-plugin-chatluna/llm-core/utils/model'
+
+const [embeddingsPlatform, embeddingsModel] = parseRawModelName(ctx.chatluna.config.defaultEmbeddings)
+const embeddings = ctx.chatluna.createEmbeddings(embeddingsPlatform, embeddingsModel)
+```
 
 ## 获取详细模型信息
 
