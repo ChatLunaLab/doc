@@ -66,7 +66,7 @@ const vectorStores = ctx.chatluna.platform.getVectorStores()
 // ['faiss', 'milvus']
 ```
 
-## 从用户配置中创建向量数据库
+## 从用户配置中创建
 
 ChatLuna 的主插件中允许用户设置 [`defaultVectorStore`](../../guide/useful-configurations.md#defaultvectorstore) 配置项，用于指定默认的向量数据库。
 

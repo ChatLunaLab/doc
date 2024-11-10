@@ -23,7 +23,7 @@ console.log(vector)
 
 在 ChatLuna 中，实际掌握各类模型和平台的是 `PlatformService` 类。
 
-如果你需要获取当前平台下可用的大语言模型列表，可以调用 `PlatformService` 的 `getAllModels` 方法。
+如果你需要获取当前平台下可用的嵌入模型列表，可以调用 `PlatformService` 的 `getAllModels` 方法。
 
 ```typescript
 import { ModelType } from 'koishi-plugin-chatluna/llm-core/platform/types'
@@ -37,7 +37,7 @@ const models = ctx.chatluna.platform.getAllModels(ModelType.embedding)
 - `embedding`：嵌入模型
 - `all`：所有模型
 
-## 从用户配置中创建向量数据库
+## 从用户配置中创建
 
 ChatLuna 的主插件中允许用户设置 [`defaultEmbeddings`](../../guide/useful-configurations.md#defaultembeddings) 配置项，用于指定默认的嵌入模型。
 
