@@ -38,6 +38,7 @@ export default defineConfig({
             '/guide/': sidebarGuide(),
             '/development/': sidebarDevelopment(),
             '/ecosystem/': sidebarEcosystem(),
+            '/about/': about(),
         },
         editLink: {
             pattern: 'https://github.com/ChatLunaLab/doc/edit/main/docs/:path',
@@ -622,7 +623,24 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
     ];
 }
 
-function nav() {
+function about(): DefaultTheme.SidebarItem[] {
+    return [
+        {
+            text: "参与讨论",
+            link: "/about/contact"
+        },
+        {
+            text: "赞助者",
+            link: "/about/sponsor"
+        },
+        {
+            text: "关于",
+            link: "/about/about"
+        }
+    ]
+}
+
+function nav(): DefaultTheme.NavItem[] {
     return [
         {
             text: '教程',
@@ -639,5 +657,23 @@ function nav() {
             link: '/ecosystem/introduction',
             activeMatch: '/ecosystem/',
         },
+        {
+            text: "更多",
+            items: [
+                {
+                    text: "参与讨论",
+                    link: "/about/contact"
+                },
+                {
+                    text: "赞助者",
+                    link: "/about/sponsor"
+                },
+                {
+                    text: "关于",
+                    link: "/about/about"
+                }
+            ],
+            activeMatch: '/about/',
+        }
     ];
 }
