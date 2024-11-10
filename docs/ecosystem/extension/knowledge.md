@@ -31,7 +31,7 @@
 
 添加一个文档到知识库中。
 
-> [!NOTE] 提示
+> [!TIP] 提示
 > 目前支持直接解析 `txt`、`md`、`json`、`csv` 和部分纯文本代码格式的文件。
 > 如需解析 `pdf`、`docx` 等文件，请查看插件的说明安装额外的依赖。
 > 或使用 [unstructured](https://github.com/Unstructured-IO/unstructured) 解析。
@@ -81,7 +81,7 @@ chatluna.knowledge.delete <documentPath:string>
 
 列出当前知识库中的所有文档。
 
-> [!NOTE] 提示
+> [!TIP] 提示
 > 此命令的输出格式为 `[id] => [documentPath]`。
 > 如需在基础工具合集里使用，填写左边的 id 即可。
 
