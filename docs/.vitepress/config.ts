@@ -15,12 +15,12 @@ import {
 } from '@nolebase/vitepress-plugin-page-properties/vite';
 import { ThumbnailHashImages } from '@nolebase/vitepress-plugin-thumbnail-hash/vite';
 import { transformerTwoslash } from '@shikijs/vitepress-twoslash';
-import { transformHeadMeta } from '@nolebase/vitepress-plugin-meta/vitepress'
+import { transformHeadMeta } from '@nolebase/vitepress-plugin-meta/vitepress';
 
 export default defineConfig({
     lang: 'zh-CN',
     title: 'ChatLuna',
-    base: "/",
+    base: '/',
     description: 'ChatLuna',
     ignoreDeadLinks: true,
     lastUpdated: true,
@@ -143,14 +143,13 @@ export default defineConfig({
         ],
     },
     async transformHead(context) {
-        let head = [...context.head]
-    
-        const returnedHead = await transformHeadMeta()(head, context)
-        if (typeof returnedHead !== 'undefined')
-          head = returnedHead
-    
-        return head
-      },
+        let head = [...context.head];
+
+        const returnedHead = await transformHeadMeta()(head, context);
+        if (typeof returnedHead !== 'undefined') head = returnedHead;
+
+        return head;
+    },
 });
 
 function sidebarGuide(): DefaultTheme.SidebarItem[] {
@@ -227,7 +226,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                         {
                             text: 'RWKV',
                             link: '/guide/configure-model-platform/rwkv',
-                        }
+                        },
                     ],
                 },
                 {
@@ -422,7 +421,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                 {
                     text: '知识库客服 Bot',
                     link: '/guide/best-practice/knowledge-base-and-customer-service-robot',
-                }
+                },
             ],
         },
         {
@@ -540,7 +539,7 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                         {
                             text: '模型 (Model)',
                             link: '/development/api-reference/llm-core/model',
-                        }
+                        },
                     ],
                 },
                 {
@@ -626,18 +625,18 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
 function about(): DefaultTheme.SidebarItem[] {
     return [
         {
-            text: "参与讨论",
-            link: "/about/contact"
+            text: '参与讨论',
+            link: '/about/contact',
         },
         {
-            text: "赞助者",
-            link: "/about/sponsor"
+            text: '赞助者',
+            link: '/about/sponsor',
         },
         {
-            text: "关于",
-            link: "/about/about"
-        }
-    ]
+            text: '关于',
+            link: '/about/about',
+        },
+    ];
 }
 
 function nav(): DefaultTheme.NavItem[] {
@@ -658,22 +657,22 @@ function nav(): DefaultTheme.NavItem[] {
             activeMatch: '/ecosystem/',
         },
         {
-            text: "更多",
+            text: '更多',
             items: [
                 {
-                    text: "参与讨论",
-                    link: "/about/contact"
+                    text: '参与讨论',
+                    link: '/about/contact',
                 },
                 {
-                    text: "赞助者",
-                    link: "/about/sponsor"
+                    text: '赞助者',
+                    link: '/about/sponsor',
                 },
                 {
-                    text: "关于",
-                    link: "/about/about"
-                }
+                    text: '关于',
+                    link: '/about/about',
+                },
             ],
             activeMatch: '/about/',
-        }
+        },
     ];
 }

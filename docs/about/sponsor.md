@@ -1,42 +1,51 @@
 <script setup>
-import { VPTeamMembers, VPTeamPageSection } from 'vitepress/theme'
+import { VPTeamMembers, VPTeamPageSection, VPSponsors } from 'vitepress/theme'
 
 const thinks = [
     {
-        avatar: "https://avatar.viki.moe?qq=766949709",
+        img: "https://q1.qlogo.cn/g?b=qq&nk=766949709&s=0",
         name: "EF台风",
+        url: "#EF台风",
     },
     {
-        avatar: "https://avatar.viki.moe?qq=2371124484",
+        img: "https://q1.qlogo.cn/g?b=qq&nk=2371124484&s=0",
         name: "TR0MX",
+        url: "#TR0MX",
     },
     {
-        avatar: "https://avatar.viki.moe?qq=52473342",
+        img: "https://q1.qlogo.cn/g?b=qq&nk=52473342&s=0",
         name: "僵尸尸",
+        url: "#僵尸尸",
     },
     {
-        avatar: "https://avatar.viki.moe?qq=3373167460",
+        img: "https://q1.qlogo.cn/g?b=qq&nk=3373167460&s=0",
         name: "Nawyjx",
+        url: "#Nawyjx",
     },
     {
-        avatar: "https://avatar.viki.moe?qq=3283406743",
+        img: "https://q1.qlogo.cn/g?b=qq&nk=3283406743&s=0",
         name: "Ling",
+        url: "#Ling",
     },
     {
-        avatar: "https://avatar.viki.moe?qq=1919892171",
+        img: "https://q1.qlogo.cn/g?b=qq&nk=1919892171&s=0",
         name: "上学",
+        url: "#上学",
     },
     {
-        avatar: "https://avatar.viki.moe?qq=503753255",
+        img: "https://q1.qlogo.cn/g?b=qq&nk=503753255&s=0",
         name: "飞@^O^",
+        url: "#飞@^O^",
     },
     {
-        avatar: "https://avatar.viki.moe?qq=3374687501",
+        img: "https://q1.qlogo.cn/g?b=qq&nk=3374687501&s=0",
         name: "WhiteGivenMan",
+        url: "#WhiteGivenMan",
     },
     {
-        avatar: "https://pic1.afdiancdn.com/default/avatar/avatar-blue.png?imageView2/1/w/120/h/120",
+        img: "https://pic1.afdiancdn.com/default/avatar/avatar-blue.png?imageView2/1/w/120/h/120",
         name: "KaleElus",
+        url: "#KaleElus",
     }
 ];
 </script>
@@ -47,12 +56,6 @@ ChatLuna 是一个开源项目，在开发过程中，我们也收到了很多�
 
 [爱发电](https://afdian.com/a/dingyi222666)
 
-<VPTeamPage>
-    <VPTeamPageSection>
-        <template #title>Sponsors</template>
-        <template #lead>排名不分先后</template>
-        <template #members>
-            <VPTeamMembers size="small" :members="thinks" />
-        </template>
-    </VPTeamPageSection>
-</VPTeamPage>
+> 以下排名不分先后
+
+<VPSponsors :tier="排名不分先后" :data="thinks" />
