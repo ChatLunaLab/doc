@@ -132,7 +132,7 @@
 }
 
 .dark .sponsor-grid-item:hover {
-    background-color: var(--vp-c-white);
+    background-color: rgba(255, 255, 255, 0.2); 
 }
 
 .dark .sponsor-grid-item.empty:hover {
