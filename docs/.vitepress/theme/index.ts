@@ -41,9 +41,10 @@ import 'virtual:uno.css'
 
 import './styles/main.css';
 import './styles/vars.css';
+import './styles/sponsor.css';
 
-import TwoslashFloatingVue from '@shikijs/vitepress-twoslash/client';
 import '@shikijs/vitepress-twoslash/style.css';
+import Sponsors from './components/Sponsors.vue';
 
 import('@nolebase/vitepress-plugin-inline-link-preview/client');
 
@@ -64,6 +65,7 @@ export default {
     enhanceApp({ app }) {
         app.component('chat-panel', ChatPanel);
         app.component('chat-message', ChatMessage);
+        app.component('sponsors', Sponsors);
 
         enhanceAppWithTabs(app);
 

@@ -58,4 +58,4 @@ ChatLuna 是一个开源项目，在开发过程中，我们也收到了很多�
 
 > 以下排名不分先后
 
-<VPSponsors :tier="排名不分先后" :data="thinks" />
+<sponsors  :data="thinks" />

@@ -1,0 +1,194 @@
+/**
+ * VPSponsors styles are defined as global because a new class gets
+ * allied in onMounted` hook and we can't use scoped style.
+ */
+.sponsor {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.sponsor.aside {
+    border-radius: 12px;
+}
+
+.sponsor-section + .sponsor-section {
+    margin-top: 4px;
+}
+
+.sponsor-tier {
+    margin: 0 0 4px !important;
+    text-align: center;
+    letter-spacing: 1px !important;
+    line-height: 24px;
+    width: 100%;
+    font-weight: 600;
+    color: var(--vp-c-text-2);
+    background-color: var(--vp-c-bg-soft);
+}
+
+.sponsor.normal .sponsor-tier {
+    padding: 13px 0 11px;
+    font-size: 14px;
+}
+
+.sponsor.aside .sponsor-tier {
+    padding: 9px 0 7px;
+    font-size: 12px;
+}
+
+.sponsor-grid + .sponsor-tier {
+    margin-top: 4px;
+}
+
+.sponsor-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.sponsor-grid.xmini .sponsor-grid-link {
+    height: 64px;
+}
+.sponsor-grid.xmini .sponsor-grid-image {
+    max-width: 64px;
+    max-height: 22px;
+}
+
+.sponsor-grid.mini .sponsor-grid-link {
+    height: 72px;
+}
+.sponsor-grid.mini .sponsor-grid-image {
+    max-width: 96px;
+    max-height: 24px;
+}
+
+.sponsor-grid.small .sponsor-grid-link {
+    height: 96px;
+}
+.sponsor-grid.small .sponsor-grid-image {
+    max-width: 96px;
+    max-height: 24px;
+}
+
+.sponsor-grid.medium .sponsor-grid-link {
+    height: 112px;
+}
+.sponsor-grid.medium .sponsor-grid-image {
+    max-width: 120px;
+    max-height: 36px;
+}
+
+.sponsor-grid.big .sponsor-grid-link {
+    height: 184px;
+}
+.sponsor-grid.big .sponsor-grid-image {
+    max-width: 192px;
+    max-height: 56px;
+}
+
+.sponsor-grid[data-vp-grid='2'] .sponsor-grid-item {
+    width: calc((100% - 4px) / 2);
+}
+
+.sponsor-grid[data-vp-grid='3'] .sponsor-grid-item {
+    width: calc((100% - 4px * 2) / 3);
+}
+
+.sponsor-grid[data-vp-grid='4'] .sponsor-grid-item {
+    width: calc((100% - 4px * 3) / 4);
+}
+
+.sponsor-grid[data-vp-grid='5'] .sponsor-grid-item {
+    width: calc((100% - 4px * 4) / 5);
+}
+
+.sponsor-grid[data-vp-grid='6'] .sponsor-grid-item {
+    width: calc((100% - 4px * 5) / 6);
+}
+
+.sponsor-grid-item {
+    flex-shrink: 1;
+    width: 100%;
+    background-color: var(--vp-c-bg-soft);
+    transition: background-color 0.25s;
+}
+
+.sponsor-grid-item:hover {
+    background-color: var(--vp-c-default-soft);
+}
+
+.sponsor-grid-item:hover .sponsor-grid-image {
+    filter: grayscale(0) invert(0);
+}
+
+.sponsor-grid-item:hover .sponsor-grid-name {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(-4px);
+}
+
+.sponsor-grid-item.empty:hover {
+    background-color: var(--vp-c-bg-soft);
+}
+
+.dark .sponsor-grid-item:hover {
+    background-color: var(--vp-c-white);
+}
+
+.dark .sponsor-grid-item.empty:hover {
+    background-color: var(--vp-c-bg-soft);
+}
+
+.sponsor-grid-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sponsor-grid-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.sponsor-grid-image {
+    max-width: 100%;
+    filter: grayscale(1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 100px;
+    transform: translateY(0);
+}
+
+.dark .sponsor-grid-image {
+    filter: grayscale(1) invert(1);
+}
+
+.sponsor-grid-name {
+    font-size: 14px;
+    color: var(--vp-c-text-2);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: absolute;
+    bottom: -32px;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.sponsor-grid-name.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.sponsor-grid-box:hover .sponsor-grid-image {
+    transform: translateY(-16px);
+}
+
+.sponsor-grid-box:hover {
+    transform: translateY(0);
+}
