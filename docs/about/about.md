@@ -20,8 +20,8 @@ Luna 是月亮的拉丁语，在西方文化中，月亮往往与女性联系在
 
 ## 团队里都有谁？
 
-目前 ChatLuna 主要靠 [dingyi222666](https://github.com/dingyi222666) 一人维护。但在 ChatLuna 的开发过程中，也有网友为此项目提供了 Pull Request。
+目前 ChatLuna 主要靠 [dingyi222666](https://github.com/dingyi222666) 一人维护。但在 ChatLuna 的开发过程中，也有开发者为此项目提供了 Pull Request。
 
 [查看贡献者](https://github.com/ChatLunaLab/chatluna/graphs/contributors)
 
-我们感谢所有为此项目提供帮助的网友。
+我们感谢所有为此项目提供帮助的开发者。
