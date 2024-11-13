@@ -496,10 +496,6 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                     link: '/development/connect-to-core-services/model-tool',
                 },
                 {
-                    text: '中间件',
-                    link: '/development/connect-to-core-services/middleware',
-                },
-                {
                     text: '消息读取',
                     link: '/development/connect-to-core-services/message-read',
                 },
@@ -513,19 +509,19 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                     link: '/development/api-reference/chatluna-service',
                 },
                 {
-                    text: 'ChatLuna 中间件聊天链（ChatChain）',
-                    link: '/development/api-reference/chatluna-chat-chain',
-                },
-                {
                     text: 'ChatLuna 插件(ChatLuna Plugin)',
                     link: '/development/api-reference/chatluna-plugin',
+                },
+                {
+                    text: 'ChatLuna 事件(ChatLuna Events)',
+                    link: '/development/api-reference/chatluna-events',
                 },
                 {
                     text: 'ChatLuna 大语言模型核心 （LLM Core）',
                     collapsed: true,
                     items: [
                         {
-                            text: '人格预设 (Preset Template)',
+                            text: '预设 (Preset Template)',
                             link: '/development/api-reference/llm-core/preset-template',
                         },
                         {
@@ -553,6 +549,10 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                         {
                             text: '请求工具 (request)',
                             link: '/development/api-reference/chatluna-utils/request',
+                        },
+                        {
+                            text: 'SSE 工具 (sse)',
+                            link: '/development/api-reference/chatluna-utils/sse',
                         },
                     ],
                 },

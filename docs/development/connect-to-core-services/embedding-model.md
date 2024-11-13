@@ -1,6 +1,6 @@
-# 大语言模型
+# 嵌入模型
 
-ChatLuna 也提供 API，来接入其他的模型适配器。
+ChatLuna 也提供 API，来接入其他的嵌入模型。
 
 ## 注册插件
 
@@ -142,22 +142,28 @@ ChatLuna 根据模型的不同用途，提供了几种 `Client`:
 - `PlatformEmbeddingsClient`: 用于和嵌入模型进行交互的 `Client`,可创建 `ChatHubBaseEmbeddings`，用于嵌入模型交互。
 - `PlatformModelAndEmbeddingsClient`: 前面两者的组合，可创建 `ChatHubBaseEmbeddings` 和 `ChatLunaChatModel`。
 
-如只接入大语言模型，只需继承 `PlatformModelClient` 即可。
+如需接入嵌入模型，则需要继承 `PlatformEmbeddingsClient`。
 
-以 `OpenAIClient` 为例：
+但在大部分平台下，同时支持大语言模型和嵌入模型，因此推荐继承 `PlatformModelAndEmbeddingsClient`。
+
+以 `GeminiClient` 为例：
 
 ```typescript
 import { Context } from "koishi";
 import { PlatformModelClient } from "koishi-plugin-chatluna/llm-core/platform/client";
 import { ClientConfig } from "koishi-plugin-chatluna/llm-core/platform/config";
-import { ChatLunaChatModel } from "koishi-plugin-chatluna/llm-core/platform/model";
+import {
+    ChatHubBaseEmbeddings,
+    ChatLunaChatModel,
+    ChatLunaEmbeddings
+} from 'koishi-plugin-chatluna/llm-core/platform/model'
 import { ModelInfo } from "koishi-plugin-chatluna/llm-core/platform/types";
 import { Config } from ".";
 
-export class OpenAIClient extends PlatformModelClient<ClientConfig> {
-    platform = 'openai'
+export class GeminiClient extends PlatformModelAndEmbeddingsClient {
+    platform = 'gemini'
 
-    private _requester: OpenAIRequester
+    private _requester: GeminiRequester
 
     private _models: Record<string, ModelInfo>
 
@@ -169,7 +175,7 @@ export class OpenAIClient extends PlatformModelClient<ClientConfig> {
     ) {
         super(ctx, clientConfig)
 
-        this._requester = new OpenAIRequester(clientConfig, plugin)
+        this._requester = new GeminiRequester(clientConfig, plugin)
     }
 
     async init(): Promise<void> {
@@ -180,23 +186,34 @@ export class OpenAIClient extends PlatformModelClient<ClientConfig> {
         try {
             const rawModels = await this._requester.getModels()
 
+            if (!rawModels.length) {
+                throw new ChatLunaError(
+                    ChatLunaErrorCode.MODEL_INIT_ERROR,
+                    new Error('No model found')
+                )
+            }
+
             return rawModels
-                .filter(
-                    (model) =>
-                        model.includes('gpt') ||
-                        model.includes('text-embedding')
-                )
-                .filter(
-                    (model) =>
-                        !(model.includes('instruct') || model.includes('0301'))
-                )
+                .map((model) => model.replace('models/', ''))
                 .map((model) => {
                     return {
                         name: model,
-                        type: model.includes('gpt')
-                            ? ModelType.llm
-                            : ModelType.embeddings,
-                        functionCall: true,
+                        maxTokens: ((model) => {
+                            if (model.includes('gemini-1.5-pro')) {
+                                return 1048576
+                            }
+                            if (model.includes('gemini-1.5-flash')) {
+                                return 2097152
+                            }
+                            if (model.includes('gemini-1.0-pro')) {
+                                return 30720
+                            }
+                            return 30720
+                        })(model),
+                        type: model.includes('embedding')
+                            ? ModelType.embeddings
+                            : ModelType.llm,
+                        functionCall: !model.includes('vision'),
                         supportMode: ['all']
                     }
                 })
@@ -221,50 +238,58 @@ export class OpenAIClient extends PlatformModelClient<ClientConfig> {
 
     protected _createModel(
         model: string
-    ): ChatLunaChatModel {
+    ): ChatLunaChatModel | ChatHubBaseEmbeddings {
         const info = this._models[model]
 
         if (info == null) {
             throw new ChatLunaError(ChatLunaErrorCode.MODEL_NOT_FOUND)
         }
 
-        
-        return new ChatLunaChatModel({
+        if (info.type === ModelType.llm) {
+            return new ChatLunaChatModel({
                 modelInfo: info,
                 requester: this._requester,
                 model,
+                modelMaxContextSize: info.maxTokens,
                 maxTokenLimit: this._config.maxTokens,
-                frequencyPenalty: this._config.frequencyPenalty,
-                presencePenalty: this._config.presencePenalty,
                 timeout: this._config.timeout,
                 temperature: this._config.temperature,
                 maxRetries: this._config.maxRetries,
-                llmType: 'openai'
+                llmType: 'gemini'
+            })
+        }
+
+        return new ChatLunaEmbeddings({
+            client: this._requester,
+            model,
+            maxRetries: this._config.maxRetries
         })
     }
 }
 
 ```
 
-可以看到，`PlatformModelClient` 需要实现 `init` , `getModels` , `refreshModels` 和 `_createModel` 方法。
+可以看到，`Client` 需要实现 `init` , `getModels` , `refreshModels` 和 `_createModel` 方法。
 
 - `init` 方法用于 `PlatformModelClient` 的初始化，通常直接调用 `getModels` 方法获取模型信息。
 - `getModels` 方法用于获取模型信息，如果有缓存，则直接返回缓存，否则调用 `refreshModels` 方法获取模型信息。
 - `refreshModels` 方法用于刷新模型信息，通常调用模型提供商的 API 获取模型信息。
-- `_createModel` 方法用于创建 `ChatLunaChatModel` 实例。
+- `_createModel` 方法用于创建 `ChatLunaChatModel` 或 `ChatLunaEmbeddings` 实例。
 
-注意 `_createModel`中， `ChatLunaChatModel` 需要一个 `requester` 参数。这个 `requester` 就是真正实现模型请求的类。
+注意 `_createModel`中， `ChatLunaChatModel` 和 `ChatLunaEmbeddings` 都需要一个 `requester` 参数。这个 `requester` 就是真正实现模型请求的类。
 
 ## 实现 Requester
 
-`Requester` 用于实现模型请求，通常需要继承 `BaseRequester` 类。
+`Requester` 用于实现模型请求，通常需要继承 `ModelRequester` 类。
 
-让我们继续以 `OpenAIRequester` 为例：
+如果需要实现嵌入模型请求，则需要实现 `EmbeddingsRequester` 接口。
+
+让我们继续以 `GeminiRequester` 为例：
 
 ```typescript
 
-export class OpenAIRequester
-    extends ModelRequester
+export class GeminiRequester
+    extends ModelRequester implements EmbeddingsRequester
 {
     constructor(
         private _config: ClientConfig,
@@ -284,6 +309,13 @@ export class OpenAIRequester
        ...
     }
 
+    async embeddings(
+        params: EmbeddingsRequestParams
+    ): Promise<number[] | number[][]> {
+       ...
+    }
+
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private _post(url: string, data: any, params: fetchType.RequestInit = {}) {
         const requestUrl = this._concatUrl(url)
@@ -295,8 +327,6 @@ export class OpenAIRequester
         }
 
         const body = JSON.stringify(data)
-
-        // console.log('POST', requestUrl, body)
 
         return this._plugin.fetch(requestUrl, {
             body,
@@ -315,30 +345,23 @@ export class OpenAIRequester
         })
     }
 
-    private _buildHeaders() {
-        return {
-            Authorization: `Bearer ${this._config.apiKey}`,
-            'Content-Type': 'application/json'
-        }
-    }
-
-    private _concatUrl(url: string): string {
+    private _concatUrl(url: string) {
         const apiEndPoint = this._config.apiEndpoint
 
         // match the apiEndPoint ends with '/v1' or '/v1/' using regex
-        if (!apiEndPoint.match(/\/v1\/?$/)) {
-            if (apiEndPoint.endsWith('/')) {
-                return apiEndPoint + 'v1/' + url
-            }
-
-            return apiEndPoint + '/v1/' + url
-        }
 
         if (apiEndPoint.endsWith('/')) {
-            return apiEndPoint + url
+            return apiEndPoint + url + `?key=${this._config.apiKey}`
         }
 
-        return apiEndPoint + '/' + url
+        return apiEndPoint + '/' + url + `?key=${this._config.apiKey}`
+    }
+
+    private _buildHeaders() {
+        return {
+            /*  Authorization: `Bearer ${this._config.apiKey}`, */
+            'Content-Type': 'application/json'
+        }
     }
 
     async init(): Promise<void> {}
@@ -352,110 +375,80 @@ export class OpenAIRequester
 > 当需要网络请求时，请使用 `plugin.fetch` 或 `plugin.ws` 方法。
 > 这可以让用户自行配置代理
 
-通常只需要实现 `completionStream` 方法，其他方法可以继承 `BaseRequester` 类。
+对于嵌入模型，通常只需要实现 `embeddings` 方法。
 
 - `getModels` 需要实现获取模型信息的方法，返回的是可用的模型列表数组。
-- `completionStream` 方法用于实现流式响应，通常调用模型提供商的 API 获取流式响应。
+- `embeddings` 方法用于实现嵌入模型请求。
 
-下面是一个完全的 `completionStream` 实现（以 Ollama 为例）：
+下面是一个完全的 `embeddings` 实现（以 Gemini 为例）：
 
 ```typescript
-import { sse } from 'koishi-plugin-chatluna/utils/sse'
-import { readableStreamToAsyncIterable } from 'koishi-plugin-chatluna/utils/stream'
+async embeddings(
+    params: EmbeddingsRequestParams
+): Promise<number[] | number[][]> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let data: CreateEmbeddingResponse | string
 
-async *completionStream(
-    params: ModelRequestParams
-): AsyncGenerator<ChatGenerationChunk> {
+    if (typeof params.input === 'string') {
+        params.input = [params.input]
+    }
+
     try {
         const response = await this._post(
-        'api/chat',
-        {
-            model: params.model,
-            messages: langchainMessageToOllamaMessage(params.input),
-            options: {
-                temperature: params.temperature,
-                // top_k: params.n,
-                top_p: params.topP,
-                stop: typeof params.stop === 'string'
-                        ? params.stop
-                        : params.stop?.[0]
-            },
-            stream: true
-        } satisfies OllamaRequest,
-        {
-            signal: params.signal
-        })
-
-        const stream = new TransformStream<string, OllamaDeltaResponse>()
-
-        const iterable = readableStreamToAsyncIterable<OllamaDeltaResponse>(
-            stream.readable
-        )
-
-        const writable = stream.writable.getWriter()
-
-        let buffer = ''
-        await sse(
-            response,
-            async (rawData) => {
-                buffer += rawData
-
-                const parts = buffer.split('\n')
-
-                buffer = parts.pop() ?? ''
-
-                for (const part of parts) {
-                    try {
-                        writable.write(JSON.parse(part))
-                    } catch (error) {
-                            console.warn('invalid json: ', part)
+            `models/${params.model}:batchEmbedContents`,
+            {
+                requests: params.input.map((input) => {
+                    return {
+                        model: `models/${params.model}`,
+                        content: {
+                            parts: [
+                                {
+                                    text: input
+                                }
+                            ]
                         }
                     }
-                },
-            0
+                })
+            }
         )
 
-        let content = ''
+        data = await response.text()
 
-        for await (const chunk of iterable) {
-            try {
-                content += chunk.message.content
+        data = JSON.parse(data) as CreateEmbeddingResponse
 
-                const generationChunk = new ChatGenerationChunk({
-                    message: new AIMessageChunk(content),
-                    text: content
-                })
-
-                yield generationChunk
-
-                if (chunk.done) {
-                    return
-                }
-            } catch (e) {
-                throw new ChatLunaError(
-                    ChatLunaErrorCode.API_REQUEST_FAILED,
-                    new Error(
-                        'error when calling ollama completion, Result: ' +
-                                chunk
-                        )
-                    )
-                }
+        if (data.embeddings && data.embeddings.length > 0) {
+            return data.embeddings.map((embedding) => {
+                return embedding.values
+            })
         }
+
+        throw new Error(
+            'error when calling gemini embeddings, Result: ' +
+            JSON.stringify(data)
+        )
     } catch (e) {
-        if (e instanceof ChatLunaError) {
-            throw e
-        } else {
-            throw new ChatLunaError(ChatLunaErrorCode.API_REQUEST_FAILED, e)
-        }
+        const error = new Error(
+            'error when calling gemini embeddings, Result: ' +
+                JSON.stringify(data)
+        )
+
+        error.stack = e.stack
+        error.cause = e.cause
+        logger.debug(e)
+
+        throw new ChatLunaError(ChatLunaErrorCode.API_REQUEST_FAILED, error)
     }
 }
 ```
 
-一般的 `completionStream` 实现，需要经过几个步骤：
+一般的 `embeddings` 实现，需要经过几个步骤：
 
-1. 构建请求，需要将 `langchain` 里的 `BaseMessage` 转换为模型提供商的请求格式。
-2. 调用模型提供商的 API 获取流式响应。
-3. 将流式响应转换为 `ChatGenerationChunk` 实例。
+1. 构建请求
+2. 调用模型提供商的 API 获取响应。
+3. 将响应转换为 `number[] | number[][]` 格式。
+
+   如果 input 只为单个字符串，返回 `number[]` 向量。
+   如果 input 为多个字符串，返回 `number[][]` 矩阵。
 
 ## 实例化 Client
 
