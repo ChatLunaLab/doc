@@ -4,7 +4,7 @@ ChatLuna 也提供 API，来接入其他的嵌入模型。
 
 ## 注册插件
 
-所有需要接入功能到 ChatLuna 的插件，都需要新建 `ChatLunaPlugin` 实例，并注册到 `ChatLuna` 服务中。
+所有需要接入功能到 ChatLuna 的插件，都得新建 `ChatLunaPlugin` 实例，并注册到 `ChatLuna` 服务中。
 
 ```typescript
 import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
