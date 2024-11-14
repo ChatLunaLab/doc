@@ -14,20 +14,12 @@ const error = new ChatLunaError(ChatLunaErrorCode.NETWORK_ERROR, new Error('Orig
 
 ## API
 
-### new ChatLunaError(code: number, originalError: Error)
+### new ChatLunaError(code, originalError)
 
-- `code`: 错误码，一般使用 `ChatLunaErrorCode` 枚举值。
-- `originalError`: 原始错误，一个 `Error` 实例。
+- *code*: `number` 错误码，一般使用 `ChatLunaErrorCode` 枚举值。
+- *originalError*: `Error` 原始错误，一个 `Error` 实例。
 
-### ChatLunaError
-
-枚举类，目前可以使用的错误码如下：
-
-- `NETWORK_ERROR`: 网络错误
-- `MODEL_ERROR`: 模型错误
-- `SERVICE_ERROR`: 服务错误
-
-### ChatLunaErrorCode
+### enum ChatLunaErrorCode
 
 枚举类，可用的错误码如下：
 
