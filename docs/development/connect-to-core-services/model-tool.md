@@ -30,7 +30,7 @@ export function apply(ctx: Context, config: Config) {
 
 参考 [LangChain 文档](https://js.langchain.com/docs/concepts/tools/) 创建你的 Tool。
 
-目前 ChatLuna 仍然使用较老的 API 创建 Tool，下面是一个示例：
+ChatLuna 目前仍使用较老的 API 创建 Tool，下面是一个示例：
 
 ```typescript
 import { Tool } from '@langchain/core/tools'
