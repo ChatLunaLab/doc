@@ -38,9 +38,9 @@ const thinks = [
         url: "#飞@^O^",
     },
     {
-        img: "https://q1.qlogo.cn/g?b=qq&nk=3374687501&s=0",
-        name: "WhiteGivenMan",
-        url: "#WhiteGivenMan",
+        img: "https://pic1.afdiancdn.com/user/979158d0e7d211ec95c152540025c377/avatar/d5573d81cfda4cc36f4cda19a264b02c_w640_h640_s16.jpeg?imageView2/1/w/120/h/120",
+        name: "LingLambda",
+        url: "#LingLambda",
     },
     {
         img: "https://pic1.afdiancdn.com/default/avatar/avatar-blue.png?imageView2/1/w/120/h/120",
