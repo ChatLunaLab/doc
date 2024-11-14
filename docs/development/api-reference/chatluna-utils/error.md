@@ -19,6 +19,8 @@ const error = new ChatLunaError(ChatLunaErrorCode.NETWORK_ERROR, new Error('Orig
 - **code**: `number` 错误码，一般使用 `ChatLunaErrorCode` 枚举值。
 - **originalError**: `Error` 原始错误，一个 `Error` 实例。
 
+创建一个 ChatLuna 错误。
+
 ### enum ChatLunaErrorCode
 
 枚举类，可用的错误码如下：
