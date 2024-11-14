@@ -11,7 +11,7 @@ import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
 import { Context, Schema } from 'koishi'
 
 export function apply(ctx: Context, config: Config) {
-    const plugin = new ChatLunaPlugin(ctx, config, 'your-plugin-name')
+    const plugin = new ChatLunaPlugin(ctx, config, 'your-plugin-name', false)
 
     ctx.on('ready', async () => {
         // 在 ready 事件中注册到 ChatLuna 服务
@@ -21,6 +21,10 @@ export function apply(ctx: Context, config: Config) {
     })
 }
 ```
+
+> [!NOTE]
+> 如果你的插件不需要注册模型适配器，`ChatLunaPlugin` 的构造函数需要传入 `false` 作为第四个参数。
+> 该参数默认为 `true`，表示插件需要注册模型适配器。
 
 ## 配置 Schema
 

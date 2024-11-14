@@ -499,6 +499,10 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                     text: '消息读取',
                     link: '/development/connect-to-core-services/message-read',
                 },
+                {
+                    text: '消息渲染',
+                    link: '/development/connect-to-core-services/message-render',
+                },
             ],
         },
         {
@@ -509,15 +513,15 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                     link: '/development/api-reference/chatluna-service',
                 },
                 {
-                    text: 'ChatLuna 插件(ChatLuna Plugin)',
+                    text: 'ChatLuna 插件 (ChatLuna Plugin)',
                     link: '/development/api-reference/chatluna-plugin',
                 },
                 {
-                    text: 'ChatLuna 事件(ChatLuna Events)',
+                    text: 'ChatLuna 事件 (ChatLuna Events)',
                     link: '/development/api-reference/chatluna-events',
                 },
                 {
-                    text: 'ChatLuna 大语言模型核心 （LLM Core）',
+                    text: 'ChatLuna 大语言模型核心',
                     collapsed: true,
                     items: [
                         {
@@ -539,7 +543,25 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                     ],
                 },
                 {
-                    text: 'ChatLuna 辅助工具 （ChatLuna Utils）',
+                    text: 'ChatLuna 中间件相关',
+                    collapsed: true,
+                    items: [
+                        {
+                            text: '消息 (ChatLuna Message)',
+                            link: '/development/api-reference/middleware/message',
+                        },
+                        {
+                            text: '消息渲染器 (Message Renderer)',
+                            link: '/development/api-reference/middleware/message-renderer',
+                        },
+                        {
+                            text: '消息转换器 (Message Transformer)',
+                            link: '/development/api-reference/middleware/message-transformer',
+                        },
+                    ],
+                },
+                {
+                    text: 'ChatLuna 辅助工具',
                     collapsed: true,
                     items: [
                         {
@@ -553,6 +575,10 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                         {
                             text: 'SSE 工具 (sse)',
                             link: '/development/api-reference/chatluna-utils/sse',
+                        },
+                        {
+                            text: '错误 (Error)',
+                            link: '/development/api-reference/chatluna-utils/error',
                         },
                     ],
                 },
