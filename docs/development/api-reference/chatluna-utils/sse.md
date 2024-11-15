@@ -1,4 +1,4 @@
-# SSE
+# SSE 工具
 
 ChatLuna 提供了 Server-Sent Events (SSE) 工具。
 

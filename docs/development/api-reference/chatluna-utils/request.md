@@ -44,6 +44,7 @@ const ua = randomUA()
 - **init**: `WebSocketConstructorInit` 请求配置
 - **proxy**: `string?` 代理地址
 - 返回值: `WebSocket`
+
 建立一个 `ws` 请求。
 
 > [!TIP] 注意

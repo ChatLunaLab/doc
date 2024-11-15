@@ -529,8 +529,8 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                             link: '/development/api-reference/llm-core/preset-template',
                         },
                         {
-                            text: '平台 (Platform)',
-                            link: '/development/api-reference/llm-core/platform',
+                            text: '平台服务 (Platform Service)',
+                            link: '/development/api-reference/llm-core/platform-service',
                         },
                         {
                             text: '模型请求器 (Requester)',

@@ -1,4 +1,4 @@
-# chatluna-doc
+# [ChatLuna 文档](https://chatluna.chat)
 
 本项目为 ChatLuna 官方的文档项目，为 ChatLuna 提供使用教程和开发指南，方便使用者或开发者更好地理解和使用 ChatLuna。
 
