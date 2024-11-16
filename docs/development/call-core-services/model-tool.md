@@ -4,7 +4,7 @@ ChatLuna 也能动态的注册和使用 [`Tool`](https://js.langchain.com/docs/c
 
 ## 基础用法
 
-从 `PlatformService` 中获取 `ChatHubTool` 实例：
+从 `PlatformService` 中获取 `ChatLunaTool` 实例：
 
 ```typescript
 import type {} from "koishi-plugin-chatluna/services/chat";
@@ -26,7 +26,7 @@ interface CreateToolParams {
     userId?: string
 }
 
-interface ChatHubTool {
+interface ChatLunaTool {
     createTool: (
         params: CreateToolParams,
         session?: Session
@@ -44,7 +44,7 @@ interface ChatHubTool {
 - `authorization` 方法用于判断当前的会话是否需要使用该工具。
 - `alwaysRecreate` 方法用于判断是否每次都重新创建工具。如果调用的工具需要 `session`，则设置为 `true`。
 
-每个 `ChatHubTool` 所需要传递的参数都不同，具体需要参考你使用的工具。
+每个 `ChatLunaTool` 所需要传递的参数都不同，具体需要参考你使用的工具。
 
 大部分情况下，你只需要传递 `model` 和 `embeddings` 参数。`model` 参数用于工具需要大语言模型调用场景时使用的模型，`embeddings` 参数用于工具需要文本向量化时使用的 Embeddings。
 
@@ -79,7 +79,7 @@ const tools = ctx.chatluna.platform.getTools()
 
 ## 常用工具的用法
 
-`ChatHubTool` 的 `createTool` 方法返回的是一个 [`StructuredTool`](https://js.langchain.com/docs/concepts/tools/#structured-tools) 实例。
+`ChatLunaTool` 的 `createTool` 方法返回的是一个 [`StructuredTool`](https://js.langchain.com/docs/concepts/tools/#structured-tools) 实例。
 
 但不同的工具需要不同的参数，`StructuredTool` 在调用时的具体传参需要参考你使用的工具。
 

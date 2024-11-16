@@ -536,10 +536,6 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                             text: '模型请求器 (Requester)',
                             link: '/development/api-reference/llm-core/requester',
                         },
-                        {
-                            text: '模型 (Model)',
-                            link: '/development/api-reference/llm-core/model',
-                        },
                     ],
                 },
                 {
