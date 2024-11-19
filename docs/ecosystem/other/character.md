@@ -12,7 +12,7 @@
 
 ## 使用
 
-完成后启用插件。在 [应用群组](#apply-group) 中输入你需要应用的群组 ID，并在 [模型配置](#model-config) 中配置模型。
+完成后启用插件。在 [应用群组](#applygroup) 中输入你需要应用的群组 ID，并在 [模型配置](#model) 中配置模型。
 
 此时即可和尝试和伪装对话。如果正常回复了，则说明配置成功。
 
@@ -93,12 +93,12 @@ system 是整个预设的核心部分。在默认预设中，基于类 yaml 的�
 
   其中 name 为群友的昵称，id 为群友的 id，content 为消息内容。
 
-  颜文字使用 `<emo>emo</emo>` 来表示。
+  颜文字或者其他自分段逻辑使用 `<pre>emo</pre>` 来表示。
 
   示例：
 
   ```xml
-  <message name='丛雨酱' id='0' type='text' sticker='表情包类型'> <emo>(づ｡◕‿‿◕｡)づ</emo> 回复内容 <emo>(✿◠‿◠)</emo></message>
+  <message name='丛雨酱' id='0' type='text' sticker='表情包类型'> <pre>(づ｡◕‿‿◕｡)づ</pre> 回复内容 <pre>(✿◠‿◠)</pre></message>
   ```
 
   在部分时候需要让角色不回复，则可以不填写 content 内容。
