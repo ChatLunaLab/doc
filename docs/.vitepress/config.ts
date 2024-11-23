@@ -420,7 +420,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                 },
                 {
                     text: '知识库客服 Bot',
-                    link: '/guide/best-practice/knowledge-base-and-customer-service-robot',
+                    link: '/guide/best-practice/knowledge-base-and-customer-service-bot',
                 },
             ],
         },
