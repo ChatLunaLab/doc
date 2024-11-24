@@ -269,7 +269,7 @@ prompts:
 
 要应用这个新预设，请先选择或创建一个聊天房间，在该房间中执行以下命令:
 
-```shell
+```powershell
 chatluna.room.set -p 雌小鬼
 ```
 

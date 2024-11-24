@@ -38,7 +38,7 @@
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.knowledge.upload <documentPath:string>
 ```
 
@@ -60,7 +60,7 @@ chatluna.knowledge.upload <documentPath:string>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.knowledge.delete <documentPath:string>
 ```
 
@@ -87,7 +87,7 @@ chatluna.knowledge.delete <documentPath:string>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.knowledge.list -v <vectorStore:string>
 ```
 
@@ -108,7 +108,7 @@ chatluna.knowledge.list -v <vectorStore:string>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.knowledge.upload
 ```
 

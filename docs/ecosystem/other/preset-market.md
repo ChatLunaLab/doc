@@ -26,7 +26,7 @@ ChatLuna 预设仓库地址：[https://github.com/ChatLunaLab/awesome-chatluna-p
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.preset.download <presetName:string>
 ```
 
@@ -47,7 +47,7 @@ chatluna.preset.download <presetName:string>
 
 以下为命令格式:
 
-```shell
+```powershell
 chatluna.preset-market.search <query:string>
 ```
 
@@ -68,7 +68,7 @@ chatluna.preset-market.search <query:string>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.preset-market.list -l <limit:number> -p <page:number>
 ```
 
@@ -122,7 +122,7 @@ chatluna.preset-market.list -l <limit:number> -p <page:number>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.preset-market.refresh
 ```
 
@@ -143,7 +143,7 @@ chatluna.preset-market.refresh
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.preset-market.upload
 ```
 
@@ -160,7 +160,7 @@ chatluna.preset-market.upload
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.preset-market.download-all
 ```
 

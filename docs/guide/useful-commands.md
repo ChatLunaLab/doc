@@ -12,7 +12,7 @@
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.chat.text -r <room:string> <message:text>
 ```
 
@@ -35,7 +35,7 @@ chatluna.chat.text -r <room:string> <message:text>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.chat.voice -s <speakerId:number> -r <room:string> <message:text>
 ```
 
@@ -59,7 +59,7 @@ chatluna.chat.voice -s <speakerId:number> -r <room:string> <message:text>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.chat.stop -r <room:string>
 ```
 
@@ -86,7 +86,7 @@ chatluna.chat.stop -r <room:string>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.chat.rollback -r <room:string> [content:text]
 ```
 
@@ -120,7 +120,7 @@ chatluna.chat.rollback -r <room:string> [content:text]
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.room.switch <room:text>
 ```
 
@@ -143,7 +143,7 @@ chatluna.room.switch <room:text>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.room.create -n <name:string> -p <preset:string> -m <model:string> -c <chatMode:string> -w <password:string> -v <visibility:string>
 ```
 
@@ -191,7 +191,7 @@ chatluna.room.create -n <name:string> -p <preset:string> -m <model:string> -c <c
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.room.set -n <name:string> -p <preset:string> -m <model:string> -c <chatMode:string> -w <password:string> -v <visibility:string>
 ```
 
@@ -231,7 +231,7 @@ chatluna.room.set -n <name:string> -p <preset:string> -m <model:string> -c <chat
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.room.delete <room:text>
 ```
 
@@ -260,7 +260,7 @@ chatluna.room.delete <room:text>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.room.info [room:text]
 ```
 
@@ -296,7 +296,7 @@ chatluna.room.info [room:text]
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.room.auto-update -r <room:string> <enable:boolean>
 ```
 
@@ -326,7 +326,7 @@ chatluna.room.auto-update -r <room:string> <enable:boolean>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.room.transfer <user:user>
 ```
 
@@ -359,7 +359,7 @@ chatluna.room.transfer <user:user>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.room.invite <...arg:user>
 ```
 
@@ -386,7 +386,7 @@ chatluna.room.invite <...arg:user>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.room.leave [room:text]
 ```
 
@@ -407,7 +407,7 @@ chatluna.room.leave [room:text]
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.room.kick <...arg:user>
 ```
 
@@ -432,7 +432,7 @@ chatluna.room.kick <...arg:user>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.room.permission <user:user>
 ```
 
@@ -463,7 +463,7 @@ chatluna.room.permission <user:user>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.room.mute <...arg:user>
 ```
 
@@ -486,7 +486,7 @@ chatluna.room.mute <...arg:user>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.room.list -l <limit:number> -p <page:number>
 ```
 
@@ -534,7 +534,7 @@ chatluna.room.list -l <limit:number> -p <page:number>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.room.clear [room:text]
 ```
 
@@ -556,7 +556,7 @@ chatluna.room.clear [room:text]
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.preset.list -l <limit:number> -p <page:number>
 ```
 
@@ -605,7 +605,7 @@ Current date: {date}......<br/>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.preset.add <preset:string>
 ```
 
@@ -635,7 +635,7 @@ chatluna.preset.add <preset:string>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.preset.clone <originPreset:string> [newPresetName:string]
 ```
 
@@ -666,7 +666,7 @@ chatluna.preset.clone <originPreset:string> [newPresetName:string]
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.preset.set <preset:string>
 ```
 
@@ -695,7 +695,7 @@ chatluna.preset.set <preset:string>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.preset.delete <preset:string>
 ```
 
@@ -722,7 +722,7 @@ chatluna.preset.delete <preset:string>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.model.list -l <limit:number> -p <page:number>
 ```
 
@@ -760,7 +760,7 @@ wenxin/ERNIE-Bot-turbo<br/>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.model.search <keyword:string> -l <limit:number> -p <page:number>
 ```
 
@@ -791,7 +791,7 @@ openai/gpt-4o-mini-2024-07-18<br/>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.embeddings.list -l <limit:number> -p <page:number>
 ```
 
@@ -821,7 +821,7 @@ openai/text-embedding-ada-002<br/>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.vectorstore.list -l <limit:number> -p <page:number>
 ```
 
@@ -861,7 +861,7 @@ redis<br/>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.embeddings.set <embeddings:string>
 ```
 
@@ -889,7 +889,7 @@ chatluna.embeddings.set <embeddings:string>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.vectorstore.set <vectorstore:string>
 ```
 
@@ -913,7 +913,7 @@ chatluna.vectorstore.set <vectorstore:string>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.memory.search -t <type:string>  -l <limit:number> -p <page:number> <keyword:string>
 ```
 
@@ -942,7 +942,7 @@ chatluna.memory.search -t <type:string>  -l <limit:number> -p <page:number> <key
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.memory.add -t <type:string> <content:string>
 ```
 
@@ -964,7 +964,7 @@ chatluna.memory.add -t <type:string> <content:string>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.memory.delete -t <type:string> <id:string>
 ```
 
@@ -986,7 +986,7 @@ chatluna.memory.delete -t <type:string> <id:string>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.memory.edit -t <type:string> <id:string>
 ```
 
@@ -1014,7 +1014,7 @@ chatluna.memory.edit -t <type:string> <id:string>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.memory.clear -t <type:string>
 ```
 
@@ -1045,7 +1045,7 @@ chatluna.memory.clear -t <type:string>
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.balance.query [user:user]
 ```
 
@@ -1070,7 +1070,7 @@ chatluna.balance.query [user:user]
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.balance.clear [user:user]
 ```
 
@@ -1095,7 +1095,7 @@ chatluna.balance.clear [user:user]
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.balance.set -u [user:user] [balance:number]
 ```
 
@@ -1121,7 +1121,7 @@ chatluna.balance.set -u [user:user] [balance:number]
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.auth.add -u <user:user> <group:string>
 ```
 
@@ -1147,7 +1147,7 @@ chatluna.auth.add -u <user:user> <group:string>
 
 以下为命令格式：
 
-```sh
+```powershell
 chatluna.auth.kick -u <user:user> <group:name>
 ```
 
@@ -1179,7 +1179,7 @@ chatluna.auth.kick -u <user:user> <group:name>
 
 以下为命令格式：
 
-```sh
+```powershell
 chatluna.auth.create -n <name:string> -s [...model] -c <cost:number> -pm <preMin:number> -p <priority:number> -pd <day:number> -pf <platform:string>
 ```
 
@@ -1236,7 +1236,7 @@ chatluna.auth.create -n <name:string> -s [...model] -c <cost:number> -pm <preMin
 
 以下为命令格式：
 
-```shell
+```powershell
 chatluna.auth.list -l <limit:number> -p <page:number>
 ```
 
