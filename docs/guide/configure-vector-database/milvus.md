@@ -8,6 +8,12 @@ Milvus 是一款高性能、高扩展性的开源向量数据库，专为处理�
 
 类似 Faiss，注意 Milvus 的依赖 `@zilliz/milvus2-sdk-node` 被标记为该插件的可选依赖，你需要在启用前安装 `@zilliz/milvus2-sdk-node`。
 
+在 Koishi 控制面板的 `依赖管理` 中，安装 `@zilliz/milvus2-sdk-node`。
+
+![alt text](../../public/images/image-64.png)
+
+![alt text](../../public/images/image-66.png)
+
 参考下面的 [Milvus 安装](https://milvus.io/docs/install_standalone-docker-compose.md) 文档，安装 Milvus。
 
 安装完成后，在 `vector-database-service` 中配置 Milvus 连接地址。

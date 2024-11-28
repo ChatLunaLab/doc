@@ -8,6 +8,18 @@ Faiss 是一个由 Meta 的基础人工智能研究小组开发，用于高效�
 
 注意 Faiss 数据库的依赖 `faiss-node` 被标记为该插件的可选依赖，你需要在启用前安装 `faiss-node`。
 
+在 Koishi 控制面板的 `依赖管理` 中，安装 `faiss-node`。
+
+![alt text](../../public/images/image-64.png)
+
+![alt text](../../public/images/image-65.png)
+
+>[!TIP] 重要提示
+>
+> 如你在 windows 环境下使用 Koishi，在安装 `faiss-node` 前，请确保你的系统安装了 `git`, `npm`, 并配置好 `node-gyp`。
+>
+> 还需要你的网络环境可以流畅访问 github。
+
 ## 使用
 
 1. 安装 `chatluna-vector-store-service`，并确保安装 `faiss-node`，确认安装成功后，启用该插件。
