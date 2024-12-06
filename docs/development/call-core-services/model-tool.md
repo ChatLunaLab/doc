@@ -108,7 +108,7 @@ console.log(await tool.invoke("OpenAI 最近新闻"))
 
 `web-browser` 工具基于 `puppeteer` 实现，用于在浏览器中打开网页并进行交互。
 
-使用时需要按照特定格式传入参数：`action params`。
+使用时需要按照特定格式传入参数 `action` 和 `params`，以及 `url`。
 
 支持的操作包括：
 
@@ -132,12 +132,20 @@ const chatlunaTool = ctx.chatluna.platform.getTool('web-browser')
 const tool = await chatlunaTool.createTool({ model, embeddings })
 
 
-console.log(await tool.invoke("open https://example.com"))
+console.log(await tool.invoke({
+    action: "open",
+    url: "https://example.com"
+}))
 
-console.log(await tool.invoke("summarize"))
+console.log(await tool.invoke({
+    action: "summarize",
+    url: "https://example.com"
+}))
 
 
-console.log(await tool.invoke("select .main-content"))
+console.log(await tool.invoke({ 
+    action: "select",
+    params: "main-content",
+    url: "https://example.com"
+}))
 ```
-
-需要注意的是，必须先使用 `open` 操作打开网页，才能进行其他操作。
