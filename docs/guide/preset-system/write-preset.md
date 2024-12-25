@@ -125,6 +125,9 @@ text{variable_name} | {variable_name::xx::xx} | {variable_name:xx,xx,xx}
 - `roll:(formula)`: 使用 D&D 骰子语法投掷骰子。如 `roll:d6` 会投掷 1 到 6 的骰子。
 - `idle_duration`: 插入一个表示上次用户消息发送以来的时间范围的人性化字符串（例如：1 day, 2 hours）。
 
+>![TIP] 提示
+> 如果你的预设需要使用原始的 `{` 和 `}` 字符，可以使用 `{{` 和 `}}` 来代替。
+
 ### 世界书
 
 World Book（或称 Lorebooks）是 ChatLuna 的特色功能之一，它允许你为你的预设编写一系列信息，并且通过关键词在合适的时机插入这些信息。

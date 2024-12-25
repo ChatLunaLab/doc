@@ -11,7 +11,7 @@
 
 ![alt text](../../public/images/image-59.png)
 
-- 确保和长期记忆的前置操作一致，配置了 [嵌入模型](../../guide/configure-embedding-model/introduction.md) 和 [向量存储](../../guide/configure-vector-store/introduction.md)。
+- 确保和长期记忆的前置操作一致，配置了 [嵌入模型](../../guide/configure-embedding-model/introduction.md) 和 [向量存储](../../guide/configure-vector-database/introduction.md)。
 
 - 启用插件。
 
