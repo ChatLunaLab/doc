@@ -126,7 +126,7 @@ text{variable_name} | {variable_name::xx::xx} | {variable_name:xx,xx,xx}
 * `roll:(formula)`: 使用 D&D 骰子语法投掷骰子。如 `roll:d6` 会投掷 1 到 6 的骰子。
 * `idle_duration`: 插入一个表示上次用户消息发送以来的时间范围的人性化字符串（例如：1 day, 2 hours）。
 
-> [!TIP] 提示
+> [! TIP] 提示
 > 如果你的预设需要使用原始的 &#123; 和 &#125; 字符，可以使用 &#123; &#123; 和 &#125; &#125; 来代替。
 
 ### 世界书
@@ -216,6 +216,18 @@ authors_note:
 * 频率 1 = 作者注释将在每个用户输入提示中插入。
 * 频率 4 = 作者注释将在每第 4 个用户输入提示中插入。
 
+### 知识库
+
+ChatLuna 官方基于已有的 API 扩展了[知识库插件](../../ecosystem/extension/knowledge.md)，使得模型可以基于提供的资料回答用户的问题。下面是一个示例：
+
+```yml
+knowledge:
+    knowledge: "Koishi 客服"  # 知识库名称
+   #knowledge: ['知识库1',"知识库2"] #可以指定多个知识库
+```
+
+目前提供了 `knowledge` 配置项，用于指定一个或者多个知识库。
+
 ### 更多配置项
 
 我们还可以在预设文件中添加其他的配置项，用于设置其他功能。
@@ -276,7 +288,7 @@ prompts:
    content: 杂鱼大叔这么快就想人家了嘛？
 ```
 
-将编写好的预设文件 (如 `girl.yml`) 复制到 Koishi 的预设文件夹中。(通常为 `<你的Koishi数据目录>/data/chathub/preset`)。
+将编写好的预设文件 (如 `girl.yml` ) 复制到 Koishi 的预设文件夹中。(通常为 `<你的Koishi数据目录>/data/chathub/preset` )。
 
 复制完成后在 Koishi 控制台中执行 `chatluna.preset.list` 命令来查看可用的预设列表。如一切正常，你应该能在列表中看到刚刚添加的「雌小鬼」预设。
 

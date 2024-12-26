@@ -25,6 +25,10 @@
 
 对于插件模式，需要填写 [基础工具合集](../plugin/common.md#knowledgeid) 里的 ID。
 
+> [!TIP] 提示
+> 如果你使用的是聊天模式或者浏览模式，可在预设中设置使用的知识库，支持设置多个知识库 ID。
+> 请参考 [预设](../../guide/preset-system/write-preset.md#知识库)。
+
 ## 命令
 
 ### 添加知识库文档
