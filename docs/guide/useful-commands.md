@@ -139,7 +139,10 @@ chatluna.room.switch <room:text>
 
 此命令是目前已知的 ChatLuna 里前三复杂的指令。
 
-命令含有两种模式，如果没有携带任何子参数，则自动进入交互式创建，否则将直接基于子参数进行创建。
+命令含有两种模式，如果没有携带任何子参数，则自动进入交互式创建，否则将直接基于子参数进行快速创建。
+
+> [!TIP] 提示
+> 快速创建最低只需要携带 `-n` 参数。对于缺失的必须参数（如模型），会自动使用模版房间的配置。
 
 以下为命令格式：
 
@@ -155,7 +158,9 @@ chatluna.room.create -n <name:string> -p <preset:string> -m <model:string> -c <c
 - `-c,--chatMode`: 指定房间的聊天模式。
 - `-w,--password`: 指定房间的密码。
 
-在这里我们只介绍交互式创建的例子，如需自己使用子参数，请自行摸索。
+在这里我们分别介绍交互式创建和快速创建的例子。
+
+交互式创建：
 
 <chat-panel>
   <chat-message nickname="User">chatluna.room.create</chat-message>
@@ -179,6 +184,19 @@ chatluna.room.create -n <name:string> -p <preset:string> -m <model:string> -c <c
    请输入你需要使用的可见性，如：private。如果不输入可见性请回复 N（则使用默认 private 可见性）。否则回复你需要使用的可见性。(目前支持 public, private)
   </chat-message>
   <chat-message nickname="User">房间创建成功，房间号为：2，房间名为：测试。</chat-message>
+</chat-panel>
+
+快速创建：
+
+<chat-panel>
+  <chat-message nickname="User">chatluna.room.create -p 丛雨</chat-message>
+  <chat-message nickname="Bot">
+    你目前已提供基础参数，是否直接创建房间？如需直接创建房间请回复 Y，如需进入交互式创建请回复 N，其他回复将视为取消。
+  </chat-message>
+  <chat-message nickname="User">Y</chat-message>
+  <chat-message nickname="Bot">
+    房间创建成功，房间号为：41，房间名为：未命名房间。
+  </chat-message>
 </chat-panel>
 
 ### 设置房间
@@ -286,9 +304,9 @@ chatluna.room.info [room:text]
   </chat-message>
 </chat-panel>
 
-### 设置自动更新权限
+### 设置自动更新
 
-设置当前环境的默认房间是否跟随控制模版的配置更新。
+设置当前环境的房间是否跟随控制模版的配置更新。
 
 如果设置为 false，当修改主插件的里的模版房间配置（如模型等），将不会跟随更新配置。
 
