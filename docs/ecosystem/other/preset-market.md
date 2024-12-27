@@ -3,6 +3,7 @@
 此插件提供了 ChatLuna 预设仓库的一站式下载，搜索服务。
 
 ChatLuna 预设仓库地址：[https://github.com/ChatLunaLab/awesome-chatluna-presets](https://github.com/ChatLunaLab/awesome-chatluna-presets)
+
 欢迎各位提交自己的预设到预设仓库，丰富 ChatLuna 的生态。
 
 ## 配置
