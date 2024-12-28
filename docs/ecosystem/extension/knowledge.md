@@ -35,10 +35,12 @@
 
 添加一个文档到知识库中。
 
-> [!TIP] 提示
+> [!WARNING] 警告
 > 目前支持直接解析 `txt`、`md`、`json`、`csv` 和部分纯文本代码格式的文件。
 > 如需解析 `pdf`、`docx` 等文件，请查看插件的说明安装额外的依赖。
-> 或使用 [unstructured](https://github.com/Unstructured-IO/unstructured) 解析。
+> 安装额外的依赖可能会导致你的 Koishi 实例出现无法更新，安装，卸载任何依赖的情况！！！
+> 请在确认你有自行修复 Koishi 实例的能力后再进行操作。
+> 或使用 [unstructured](https://github.com/Unstructured-IO/unstructured)，此方式较为安全。
 
 以下为命令格式：
 

@@ -14,11 +14,14 @@ Faiss 是一个由 Meta 的基础人工智能研究小组开发，用于高效�
 
 ![alt text](../../public/images/image-65.png)
 
->[!TIP] 重要提示
+>[!WARING] 警告
 >
-> 如你在 windows 环境下使用 Koishi，在安装 `faiss-node` 前，请确保你的系统安装了 `git`, `npm`, 并配置好 `node-gyp`。
+> 如你在 Windows 环境下使用 Koishi，在安装 `faiss-node` 前，请确保你的系统安装了 `git`, `npm`, 并配置好 `node-gyp`。
 >
 > 还需要你的网络环境可以流畅访问 github。
+>
+> 另外，安装此依赖可能会导致你的 Koishi 实例出现无法更新，安装，卸载任何依赖的情况！！！
+> 请在确认你有自行修复 Koishi 实例的能力后再进行操作。
 
 ## 使用
 
