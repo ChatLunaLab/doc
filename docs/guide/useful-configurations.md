@@ -187,44 +187,6 @@ Bot 回复时是否引用原消息回复。开启后 Bot 的回复都会引用�
 
 该列表为全局机制，进入该名单的用户或平台将无法使用 ChatLuna 的各项功能。（扩展插件除外）
 
-## 长期记忆选项
-
-### longMemory
-
-- 类型：`boolean`
-- 默认值：`false`
-
-长期记忆支持。基于向量数据库和 embeddings，开启后会尝试索引你的对话历史，将这些信息提供给模型，来模拟人类的记忆。
-
-::: tip 提示
-目前模型的生成重复性仍未解决，该功能可能并非想象中的那么有效。
-在使用前还需要配置好 [`defaultEmbeddings`](#defaultembeddings) 和 [`defaultVectorStore`](#defaultvectorstore)
-:::
-
-### longMemorySimilarity
-
-- 类型: `number`
-- 默认值: `0.3`
-- 最小值: `0.1`
-- 最大值: `1.0`
-
-长期记忆相似度阈值，取值范围在 0 到 1 之间。
-
-### longMemoryInterval
-
-- 类型: `number`
-- 默认值: `3`
-- 最小值: `1`
-- 最大值: `10`
-
-设置长期记忆的存储频率，即每隔多少轮对话存储一次长期记忆。
-
-### longMemoryExtractModel
-
-- 类型: `string`
-- 默认值: ``
-
-长期记忆的提取模型。
 
 ## 历史记录选项
 

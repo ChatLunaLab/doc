@@ -171,6 +171,8 @@ world_lores:
 * `maxRecursionDepth`: 最大递归深度。当设置为 3 时，会递归扫描 3 层世界书条目类。
 * `matchWholeWord`: 是否匹配整个单词。当设置为 true 时，只会匹配整个单词。当设置为 false 时，会匹配单词的一部分。
 * `caseSensitive`: 是否区分大小写。当设置为 true 时，会区分大小写。当设置为 false 时，不区分大小写。
+* `enabled`: 是否启用。当设置为 true 时，会启用世界书条目类。当设置为 false 时，会禁用世界书条目类。
+* `constant`: 是否始终匹配。当设置为 true 时，该世界书条目总是会插入上下文中。
 
 ### 作者注释
 

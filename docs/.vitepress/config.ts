@@ -600,6 +600,10 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
                     text: '基础工具合集 (Plugin Common)',
                     link: '/ecosystem/plugin/common',
                 },
+                 {
+                    text: '长期记忆 (Long Term Memory)',
+                    link: '/ecosystem/plugin/long-term-memory',
+                },
             ],
         },
         {

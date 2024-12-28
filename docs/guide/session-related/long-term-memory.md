@@ -11,15 +11,7 @@
 
 ## 配置
 
-确保你已经配置好了 [嵌入模型](../configure-embedding-model/introduction.md) 和 [向量数据库](../configure-vector-database/introduction.md)。
-
-配置好了之后，前往 Koishi 控制面板，在主插件的配置页，打开 [长期记忆](../useful-configurations.md#longmemory) 开关即可。
-
-开启后还需要设置长期记忆的 [提取模型](../useful-configurations.md#longmemoryextractmodel)。目前的长期记忆基于大语言模型来提取关键信息，因此需要设置一个模型。
-
-推荐使用速度快的模型，如 `gpt-4o-mini`。
-
-对于 [长期记忆存储轮次](../useful-configurations.md#longmemoryinterval)，我们推荐设置为 3-5 轮次，这样既能保证记忆的准确性，也不会出现太多的冗余记忆。
+请参考 [长期记忆插件](../../ecosystem/plugin/long-term-memory.md) 进行配置。
 
 ## 命令
 
