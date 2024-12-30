@@ -15,6 +15,7 @@
 - [Faiss](./faiss.md)
 - [Redis](./redis.md)
 - [Milvus](./milvus.md)
+- [luna-vdb](./luna-vdb.md)
 
 ## 使用
 
