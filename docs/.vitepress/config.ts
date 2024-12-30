@@ -279,6 +279,10 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                             text: 'Redis',
                             link: '/guide/configure-vector-database/redis',
                         },
+                        {
+                            text: 'luna-vdb',
+                            link: '/guide/configure-vector-database/luna-vdb',
+                        }
                     ],
                 },
                 {
