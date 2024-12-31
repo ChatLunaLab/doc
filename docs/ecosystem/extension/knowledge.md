@@ -2,7 +2,7 @@
 
 此插件为 ChatLuna 提供知识库能力。
 
-> [! WARNING] 警告
+> [!WARNING] 警告
 > 此插件不支持 `plugin` 模式。如需在 `plugin` 模式下使用，请使用 [基础工具合集](../plugin/common.md#knowledge) 里的 `knowledge` 工具。
 
 ## 配置
@@ -25,7 +25,7 @@
 
 对于插件模式，需要填写 [基础工具合集](../plugin/common.md#knowledgeid) 里的 ID。
 
-> [! TIP] 提示
+> [!TIP] 提示
 > 如果你使用的是聊天模式或者浏览模式，可在预设中设置使用的知识库，支持设置多个知识库 ID。
 > 请参考 [预设](../../guide/preset-system/write-preset.md#知识库)。
 
@@ -35,7 +35,7 @@
 
 添加一个文档到知识库中。
 
-> [! WARNING] 警告
+> [!WARNING] 警告
 > 目前支持直接解析 `txt` 、 `md` 、 `json` 、 `csv` 和部分纯文本代码格式的文件。
 > 如需解析 `pdf` 、 `docx` 等文件，请查看插件的说明安装额外的依赖。
 > 安装额外的依赖可能会导致你的 Koishi 实例出现无法更新，安装，卸载任何依赖的情况！！！
@@ -87,7 +87,7 @@ chatluna.knowledge.delete <documentPath:string>
 
 列出当前知识库中的所有文档。
 
-> [! TIP] 提示
+> [!TIP] 提示
 > 此命令的输出格式为 `[id] => [documentPath]` 。
 > 如需在基础工具合集里使用，填写左边的 id 即可。
 
