@@ -49,7 +49,7 @@ const thinks = [
         url: "#KaleElus",
     },
     {
-        img: "https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/w/120/h/120"
+        img: "https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/w/120/h/120",
         name:"爱发电用户_GPsK",
         url: "#爱发电用户_GPsK"
     }
