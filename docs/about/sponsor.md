@@ -2,6 +2,7 @@
 import { VPTeamMembers, VPTeamPageSection, VPSponsors } from 'vitepress/theme'
 
 const thinks = [
+
     {
         img: "https://q1.qlogo.cn/g?b=qq&nk=766949709&s=0",
         name: "EF台风",
@@ -46,8 +47,14 @@ const thinks = [
         img: "https://pic1.afdiancdn.com/default/avatar/avatar-blue.png?imageView2/1/w/120/h/120",
         name: "KaleElus",
         url: "#KaleElus",
+    },
+    {
+        img: "https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/w/120/h/120"
+        name:"爱发电用户_GPsK",
+        url: "#爱发电用户_GPsK"
     }
-];
+
+]; 
 </script>
 
 # 赞助者
@@ -58,4 +65,4 @@ ChatLuna 是一个开源项目，在开发过程中，我们也收到了很多�
 
 > 以下排名不分先后
 
-<sponsors  :data="thinks" />
+<sponsors :data="thinks" />
