@@ -1,14 +1,12 @@
 # DeepSeek
 
-DeepSeek 是一家专注于通用人工智能底层模型与技术研究的公司，成立于2023年，由知名私募巨头幻方量化创立。公司致力于探索人工智能的本质，发布了多个开源大模型，包括 DeepSeek-LLM 通用大语言模型和 DeepSeek-Coder 代码大模型
+DeepSeek 是一家专注于通用人工智能底层模型与技术研究的公司，成立于2023年，由知名私募巨头幻方量化创立。公司致力于探索人工智能的本质，发布了多个开源大模型，包括 DeepSeek-LLM 通用大语言模型和 DeepSeek-Coder 代码大模型等。
 
-由于 DeepSeek API 兼容 OpenAI 的 API 格式，我们可以安装 `openai-like-adapter` 适配器来使用该公司提供的模型。
+我们可以安装 `openai-deepseek-adapter` 适配器来使用该公司提供的模型。
 
 ## 安装
 
-前往插件市场，搜索 `chatluna-openai-like-adapter`，安装即可。
-
-![openai-like-adapter](../../public/images/image-11.png)
+前往插件市场，搜索 `chatluna-deepseek-adapter`，安装即可。
 
 ## 配置
 
@@ -18,9 +16,8 @@ DeepSeek 是一家专注于通用人工智能底层模型与技术研究的公�
 未来我们可能会录制官方教程，敬请期待。
 :::
 
-获取到 API key 后，转到 `openai-like-adapter` 的配置页面。
-
-在 `openai-like-adapter` 配置页里可以更改平台名，我们建议更改为 `deepseek`。
+获取到 API key 后，转到 `deepseek-adapter` 的配置页面。
+。
 当然，你也可以更改你喜欢的其他平台名。
 
 完成后在请求设置里填入你的 API key 和 请求地址。请求地址应为 `https://api.deepseek.com/v1`。
