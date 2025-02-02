@@ -8,6 +8,12 @@
 
 按照 [Koishi 官方文档](https://koishi.chat/zh-CN/) 来安装 Koishi。
 
+## 使用第三方安装方式安装koishi和chatluna
+
+**此为 社区作品 可能会遇到一些问题，欢迎反馈。**
+
+项目地址：github.com/hxsyzl/chatluna-install-auto
+
 ## 配置聊天平台
 
 安装 Koishi 后，你需要选择一个聊天平台来接入机器人，或使用 [沙盒环境](https://koishi.chat/zh-CN/manual/console/sandbox.html) 测试。
@@ -88,6 +94,7 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 
 ::: warning 注意
 你只需要替换api.openai这样的网址，不需要替换https和后面的/v1参数
+
 ## 设置模版房间配置
 
 在控制面板里可设置模版房间的相关配置，如图所示：
