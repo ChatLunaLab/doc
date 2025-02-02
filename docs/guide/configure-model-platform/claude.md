@@ -55,7 +55,7 @@ Claude 是 Anthropic 公司推出的大语言模型，旗下同时开放 `claude
 国内平台接入 Claude 官方的接口，需要代理设置，前往主插件的配置页面，开启 [代理模式](../useful-configurations.md/#isproxy)，并且配置 [代理地址](../useful-configurations.md#proxyaddress)。
 
 > [!TIP] 提示
-> 社区成员目前提供了免费的反向代理地址，请在确认风险后使用。
+> 社区成员提供了免费的反向代理地址，请在确认风险后使用。
 >
 > 地址: [https://claude.chatluna.us.kg/v1](https://claude.chatluna.us.kg/v1)
 >
