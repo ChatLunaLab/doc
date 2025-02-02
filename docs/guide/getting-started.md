@@ -2,13 +2,17 @@
 
 本节，我们将指导你如何安装与配置 ChatLuna，让你能快速的和模型进行对话。
 
-## 安装 Koishi
+## 安装插件
 
 在使用 ChatLuna 之前，你需要安装 Koishi。
 
 按照 [Koishi 官方文档](https://koishi.chat/zh-CN/) 来安装 Koishi。
 
-## 配置聊天平台
+> [!TIP] 提示
+> 社区成员为 Windows 和 Linux 提供了一键安装脚本，该脚本可以一键自动安装 Koishi 以及 ChatLuna。
+> 项目地址：https://github.com/hxsyzl/chatluna-install-auto
+
+### 配置聊天平台
 
 安装 Koishi 后，你需要选择一个聊天平台来接入机器人，或使用 [沙盒环境](https://koishi.chat/zh-CN/manual/console/sandbox.html) 测试。
 
@@ -16,11 +20,11 @@
 
 如你选择接入实际的聊天平台，请参考 [接入真实聊天平台](https://koishi.chat/zh-CN/manual/usage/adapter.html#%E6%8E%A5%E5%85%A5%E7%9C%9F%E5%AE%9E%E8%81%8A%E5%A4%A9%E5%B9%B3%E5%8F%B0)。
 
-## 安装前置依赖服务
+### 安装前置依赖服务
 
 安装 ChatLuna 的必要前置依赖服务，ChatLuna 需要这些服务来提供基础功能。
 
-### 数据库服务
+#### 数据库服务
 
 ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据。
 
@@ -28,14 +32,14 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 
 你也可以安装并配置其他在 Koishi 插件市场上的数据库插件，如 MySQL、MongoDB 等。
 
-### 可选服务
+#### 可选服务
 
 这些服务是为了 ChatLuna 的某些功能而额外需要的服务。你可以根据需要选择安装。
 
 - `censor` 服务：用于回复内容过滤。注意，有的插件不审核文本信息，请注意识别。
 - `vits` 服务：用于渲染模型回复，生成语音。
 
-## 安装主插件
+### 安装主插件
 
 搜索并安装 `chatluna` 插件，这是 ChatLuna 的主插件。
 
@@ -43,7 +47,7 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 主插件本身不包含任何模型适配器，无法直接对话，还需安装模型适配器。
 :::
 
-## 安装模型适配器
+### 安装模型适配器
 
 安装你需要平台的模型适配器。在插件市场输入 `ChatLuna + <adapter>` 搜索并选择你需要的适配器安装。
 
@@ -51,7 +55,7 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 
 你可同时安装多个平台的模型适配器，后续可通过模版房间配置或房间里的模型配置项切换。
 
-## 配置主插件
+## 配置插件
 
 进入主插件配置页面，以下是一些重要的配置项，其他配置项可在 [配置项](/guide/useful-configurations) 了解到：
 
@@ -59,7 +63,7 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 - [`proxyAddress`](/guide/useful-configurations#代理设置)：代理地址，格式为 `http://host:port`。
 - [`outputMode`](/guide/useful-configurations#回复选项)：回复的输出格式，支持语音、文本、图片等。
 
-## 配置模型适配器
+### 配置模型适配器
 
 参考 [模型平台](./configure-model-platform/introduction.md)，选择你需要配置的模型平台类型。
 
@@ -69,7 +73,7 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 
 可使用 [`chatluna.model.list`](./useful-commands.md#列出语言模型列表) 查看可用的模型。
 
-## 设置模版房间配置
+### 设置模版房间配置
 
 在控制面板里可设置模版房间的相关配置，如图所示：
 
