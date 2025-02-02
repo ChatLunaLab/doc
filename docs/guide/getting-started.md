@@ -12,7 +12,7 @@
 
 **此为 社区作品 可能会遇到一些问题，欢迎反馈。**
 
-项目地址：github.com/hxsyzl/chatluna-install-auto
+项目地址：https://github.com/hxsyzl/chatluna-install-auto
 
 ## 配置聊天平台
 
