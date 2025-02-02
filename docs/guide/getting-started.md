@@ -80,11 +80,11 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 **claude : claude.chatluna.us.kg**
 
 你需要替换官方的API地址，如api.openai替换为openai.chatluna.us.kg,以此类推
-![openai](./public/images/plugin_openai_adapter_proxy_API.png "openai代理")
+![openai](/public/images/plugin_openai_adapter_proxy_API.png "openai代理")
 
-![gemini](./public/images/plugin_gemini_adapter_proxy_API.png "gemini代理")
+![gemini](/public/images/plugin_gemini_adapter_proxy_API.png "gemini代理")
 
-![claude](./public/images/plugin_claude_adapter_proxy_API.png "claude代理")
+![claude](/public/images/plugin_claude_adapter_proxy_API.png "claude代理")
 
 ::: warning 注意
 你只需要替换api.openai这样的网址，不需要替换https和后面的/v1参数
