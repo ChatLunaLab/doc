@@ -80,14 +80,14 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 **claude : claude.chatluna.us.kg**
 
 你需要替换官方的API地址，如api.openai替换为openai.chatluna.us.kg,以此类推
+![openai](docs/public/images/plugin_openai_adapter_proxy_API.png#openai代理)
 
-(docs/public/images/plugin_openai_adapter_proxy_API.png)
+![gemini](docs/public/images/plugin_gemini_adapter_proxy_API.png#gemini代理)
 
-(docs/public/images/plugin_gemini_adapter_proxy_API.png)
+![claude](docs/public/images/plugin_claude_adapter_proxy_API.png#claude代理)
 
-(docs/public/images/plugin_claude_adapter_proxy_API.png)
-
-
+::: warning 注意
+你只需要替换api.openai这样的网址，不需要替换https和后面的/v1参数
 ## 设置模版房间配置
 
 在控制面板里可设置模版房间的相关配置，如图所示：
