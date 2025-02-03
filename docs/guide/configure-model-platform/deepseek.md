@@ -9,10 +9,16 @@ DeepSeek 是一家专注于通用人工智能底层模型与技术研究的公�
 前往插件市场，搜索 `chatluna-deepseek-adapter`，安装即可。
 
 ::: tip 提示
-有些用户会出现搜不到的情况，这是因为koishi官方源暂时失效了，导致索引无法更新，需要换源方可使用
+如果无法正常搜索到 `chatluna-deepseek-adapter`，则说明官方插件源没有正常更新。
+前往 market 插件设置为其他源即可：
+
 ![market](../../public/images/markethuanyuan.png)
-只需要将图中第三布中内容替换为https://koishi-registry.yumetsuki.moe/index.json
-最后重载market插件即可
+
+以下是推荐的一些插件源：
+
+- [https://koishi-registry.yumetsuki.moe/index.json](https://koishi-registry.yumetsuki.moe/index.json)
+- [https://kp.itzdrli.cc]([https://kp.itzdrli.cc)
+
 :::
 
 ## 配置
