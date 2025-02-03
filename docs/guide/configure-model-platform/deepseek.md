@@ -13,6 +13,7 @@ DeepSeek 是一家专注于通用人工智能底层模型与技术研究的公�
 ![market](../../public/images/markethuanyuan.png)
 只需要将图中第三布中内容替换为https://koishi-registry.yumetsuki.moe/index.json
 最后重载market插件即可
+:::
 
 ## 配置
 
