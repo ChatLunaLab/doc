@@ -102,7 +102,7 @@ Puppeteer 空闲超时时间（毫秒）。
 #### summaryModel
 
 * 类型: `string`
-* 默认值: `gpt-3.5-turbo`
+* 默认值: ``
 
 处理搜索结果的模型。在启用了增强摘要功能后，会使用此模型总结和分析搜索获取的内容。
 
@@ -116,6 +116,13 @@ Puppeteer 空闲超时时间（毫秒）。
 * `speed`: 优先考虑生成速度，直接返回搜索结果。
 * `balanced`: 阅读网页，切块返回，提供一定的质量。
 * `quality`: 使用 LLM 阅读和总结网页，高质量的结果。
+
+#### keywordExtractModel
+
+* 类型: `string`
+* 默认值: `gpt-3.5-turbo`
+
+提取搜索结果关键词的模型。
 
 #### multiSourceMode
 

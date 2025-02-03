@@ -6,7 +6,7 @@ ChatLuna 基于 `fetch` 和 `ws` 封装了请求工具，添加了代理支持�
 
 > [!TIP] 提示
 > 我们更推荐模型适配器的实现者使用 `ChatLunaPlugin` 提供的 `fetch` 和 `ws` 方法。
-> 参考 [ChatLunaPlugin](../api-reference/chatluna-plugin)。
+> 参考 [ChatLunaPlugin](../chatluna-plugin.md)。
 
 ## 基础用法
 
