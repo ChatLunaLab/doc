@@ -4,6 +4,8 @@
 
 用于将模型的回复渲染为图片，默认支持 Markdown 渲染。
 
+除了 Markdown 渲染，还额外扩展支持 Latex 公式渲染，代码块渲染，脑图渲染。
+
 ## 配置
 
 - 前往插件市场，安装 `puppeteer` 和 `chatluna-image-renderer` 插件。
@@ -21,7 +23,6 @@
   <chat-message nickname="Bot">
    <img src="../../public/images/image-51.png" alt="alt text">
   </chat-message>
-
 </chat-panel>
 
 ## 配置项
