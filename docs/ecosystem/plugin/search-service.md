@@ -53,6 +53,24 @@
 
 配置完成后直接启用插件即可。此时已经可以正常使用 `browsing` 聊天模式和相关工具了。
 
+> [!TIP] 提示
+> 搜索服务在浏览网页时会使用 `Puppeteer` 进行网页浏览。
+> 由于 `Puppeteer` 的一些奇妙问题，在使用时可能会出现异常的 CPU 占用。
+> 我们建议对 `puppeteer` 插件进行配置：
+>
+> ```json
+> [
+>  "--no-sandbox",
+>  "--disable-gpu"
+> ]
+> ```
+>
+> ![alt text](../../public/images/image-74.png)
+>
+> ![alt text](../../public/images/image-75.png)
+>
+> 将上面的 JSON 数组粘贴到 `puppeteer` 插件的配置项中即可。
+
 ## 配置项
 
 此处列举了 `chatluna-search-service` 插件的配置项。
