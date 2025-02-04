@@ -45,6 +45,8 @@ Google 为免费用户也提供了一定量的免费调用额度。我们也推�
 > [!TIP] 提示
 > 社区成员提供了免费的反向代理地址，请在确认风险后使用。
 >
+> 使用方式：填写到插件配置的 API host 地址中。
+>
 > 地址1: [https://gemini.chatluna.us.kg/v1beta](https://gemini.chatluna.us.kg/v1beta)
 >
 > 地址2: [https://gemini.xxxv.me/v1beta](https://gemini.xxxv.me/v1beta)

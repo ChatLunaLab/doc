@@ -57,6 +57,8 @@ Claude 是 Anthropic 公司推出的大语言模型，旗下同时开放 `claude
 > [!TIP] 提示
 > 社区成员提供了免费的反向代理地址，请在确认风险后使用。
 >
+>
+> 使用方式：填写到插件配置的 API host 地址中。
 > 地址: [https://claude.chatluna.us.kg/v1](https://claude.chatluna.us.kg/v1)
 >
 > 此地址并非 ChatLuna 官方认证的地址，请自行判断是否安全。
