@@ -49,6 +49,6 @@ Google 为免费用户也提供了一定量的免费调用额度。我们也推�
 >
 > 地址1: [https://gemini.xxxv.me/v1beta](https://gemini.xxxv.me/v1beta)
 >
-> 地址2: [https://api.orwells.one/v1beta](https://api.orwells.one/v1beta)
+> 地址2: [https://gemini.api.2s.lol/v1beta](https://gemini.api.2s.lol/v1beta)
 >
 > 此地址并非 ChatLuna 官方认证的地址，请自行判断是否安全。
