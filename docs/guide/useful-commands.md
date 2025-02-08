@@ -972,7 +972,7 @@ chatluna.memory.add -t <type:string> <content:string>
 以下为例子：
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.memory.add -t  你和 dingyi 是好朋友</chat-message>
+  <chat-message nickname="User">chatluna.memory.add -t 猫娘 你和 dingyi 是好朋友</chat-message>
   <chat-message nickname="User">已添加记忆。</chat-message>
 </chat-panel>
 
