@@ -38,7 +38,7 @@ chatluna.preset.download <presetName:string>
 以下为例子：
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.preset-market.download 小帅</chat-message>
+  <chat-message nickname="User">chatluna.market.download 小帅</chat-message>
   <chat-message nickname="Bot">下载预设 小帅 成功，快使用 chatluna.preset.list 查看吧</chat-message>
 </chat-panel>
 
@@ -49,7 +49,7 @@ chatluna.preset.download <presetName:string>
 以下为命令格式:
 
 ```powershell
-chatluna.preset-market.search <query:string>
+chatluna.market.search <query:string>
 ```
 
 以下为参数说明:
@@ -59,7 +59,7 @@ chatluna.preset-market.search <query:string>
 以下为例子:
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.preset-market.search 小帅</chat-message>
+  <chat-message nickname="User">chatluna.market.search 小帅</chat-message>
   <chat-message nickname="Bot">以下是关于预设 小帅 的结果：</br>名称：小帅</br>关键词: 小帅</br>当前页数：(1/1)</chat-message>
 </chat-panel>
 
@@ -70,7 +70,7 @@ chatluna.preset-market.search <query:string>
 以下为命令格式：
 
 ```powershell
-chatluna.preset-market.list -l <limit:number> -p <page:number>
+chatluna.market.list -l <limit:number> -p <page:number>
 ```
 
 以下为可选参数：
@@ -81,7 +81,7 @@ chatluna.preset-market.list -l <limit:number> -p <page:number>
 以下为例子：
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.preset-market.list -l 10</chat-message>
+  <chat-message nickname="User">chatluna.market.list -l 10</chat-message>
   <chat-message nickname="Bot">预设列表：<br>
   名称：2B<br>
   关键词: 2B<br>
@@ -124,13 +124,13 @@ chatluna.preset-market.list -l <limit:number> -p <page:number>
 以下为命令格式：
 
 ```powershell
-chatluna.preset-market.refresh
+chatluna.market.refresh
 ```
 
 以下为例子：
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.preset-market.refresh</chat-message>
+  <chat-message nickname="User">chatluna.market.refresh</chat-message>
   <chat-message nickname="Bot">刷新预设仓库成功，快使用 chatluna.preset.list 查看吧</chat-message>
 </chat-panel>
 
@@ -145,13 +145,13 @@ chatluna.preset-market.refresh
 以下为命令格式：
 
 ```powershell
-chatluna.preset-market.upload
+chatluna.market.upload
 ```
 
 以下为例子：
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.preset-market.upload</chat-message>
+  <chat-message nickname="User">chatluna.market.upload</chat-message>
   <chat-message nickname="Bot">非常抱歉，由于我们使用 GitHub 作为预设仓库，请有需要上传预设的用户前往此仓库提交 Pull Request: <a href="https://github.com/ChatHubLab/awesome-chathub-presets">https://github.com/ChatHubLab/awesome-chathub-presets</a></chat-message>
 </chat-panel>
 
@@ -162,13 +162,13 @@ chatluna.preset-market.upload
 以下为命令格式：
 
 ```powershell
-chatluna.preset-market.download-all
+chatluna.market.download-all
 ```
 
 以下为例子：
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.preset-market.download-all</chat-message>
+  <chat-message nickname="User">chatluna.market.download-all</chat-message>
   <chat-message nickname="Bot">以下操作将会覆盖你本地的所有预设，请先备份你本地的预设，是否继续？输入 Y 确认，否则取消。</chat-message>
   <chat-message nickname="User">Y</chat-message>
   <chat-message nickname="Bot">开始下载所有预设，总计 20 个预设。可在控制台查看下载进度。</chat-message>
