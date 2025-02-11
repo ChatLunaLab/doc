@@ -14,6 +14,7 @@ ChatLuna 插件同时也是 Koishi 插件。
 
 - [koishi-plugin-chatluna-service-search](./plugin/search-service.md): 搜索服务插件，为 ChatLuna 提供浏览聊天模式和网页搜索能力（工具）。
 - [koishi-plugin-chatluna-plugin-common](./plugin/common.md): ChatLuna 插件模式的基础工具合集。提供文件浏览，画图等工具。
+- [koishi-plugin-chatluna-long-memory](./plugin/long-term-memory.md): ChatLuna 长期记忆插件。提供基于向量数据库的长期记忆能力。
 
 ## 回复渲染器
 
@@ -43,3 +44,10 @@ ChatLuna 插件同时也是 Koishi 插件。
 :::tip 提示
 这里应该有一个列表，但是还没有人 PR 呢...
 :::
+
+## 其他资源
+
+其他 ChatLuna 相关的资源。
+
+- [ChatLuna 插件开发指南](./plugin/development.md): 为 ChatLuna 开发插件的指南。
+- [ChatLuna 预设编辑器](https://preset.chatluna.chat): ChatLuna 预设编辑器。编辑你自己的预设！也可以浏览他人的预设。
