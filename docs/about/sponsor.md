@@ -43,6 +43,11 @@ const thinks = [
         name: "LingLambda",
         url: "#LingLambda",
     },
+     {
+        img: "https://pic1.afdiancdn.com/default/avatar/avatar-orange.png?imageView2/1/w/120/h/120",
+        name: "来自夜航星",
+        url: "#来自夜航星",
+    },
     {
         img: "https://pic1.afdiancdn.com/user/6d4c567450d811eca3c852540025c377/avatar/fae1ec9c8ef86d6d2b34eec959cb23dc_w640_h640_s39.jpg?imageView2/1/w/120/h/120",
         name: "RikoNeko",
