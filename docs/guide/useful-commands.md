@@ -932,13 +932,14 @@ chatluna.vectorstore.set <vectorstore:string>
 以下为命令格式：
 
 ```powershell
-chatluna.memory.search -t <type:string>  -l <limit:number> -p <page:number> <keyword:string>
+chatluna.memory.search -t <type:string>  -l <limit:number> -p <page:number> <keyword:string> -v <layer:string>
 ```
 
 以下为参数说明：
 
 - `-p,--preset`: 指定搜索的预设。
 - `keyword`: 指定搜索的关键词。
+- `-v,--view`: 指定记忆的具体层。目前支持: `preset-user`, `user`, `global`, `preset`。
 
 以下为例子：
 
@@ -961,13 +962,14 @@ chatluna.memory.search -t <type:string>  -l <limit:number> -p <page:number> <key
 以下为命令格式：
 
 ```powershell
-chatluna.memory.add -t <type:string> <content:string>
+chatluna.memory.add -t <type:string> -v <layer:string> <content:string> 
 ```
 
 以下为参数说明：
 
 - `-t,--type`: 指定添加记忆的预设。
 - `content`: 指定添加的记忆内容。
+- `-v,--view`: 指定记忆的具体层。目前支持: `preset-user`, `user`, `global`, `preset`。
 
 以下为例子：
 
@@ -983,13 +985,14 @@ chatluna.memory.add -t <type:string> <content:string>
 以下为命令格式：
 
 ```powershell
-chatluna.memory.delete -t <type:string> <id:string>
+chatluna.memory.delete -t <type:string> -v <layer:string> <id:string>
 ```
 
 以下为参数说明：
 
 - `-t,--type`: 指定删除记忆的预设。
 - `id`: 指定删除的记忆 ID。
+- `-v,--view`: 指定记忆的具体层。目前支持: `preset-user`, `user`, `global`, `preset`。
 
 以下为例子：
 
@@ -1005,13 +1008,14 @@ chatluna.memory.delete -t <type:string> <id:string>
 以下为命令格式：
 
 ```powershell
-chatluna.memory.edit -t <type:string> <id:string>
+chatluna.memory.edit -t <type:string> -v <layer:string> <id:string>
 ```
 
 以下为参数说明：
 
 - `-t,--type`: 指定修改记忆的预设。
 - `id`: 指定修改的记忆 ID。
+- `-v,--view`: 指定记忆的具体层。目前支持: `preset-user`, `user`, `global`, `preset`。
 
 以下为例子：
 
@@ -1033,12 +1037,13 @@ chatluna.memory.edit -t <type:string> <id:string>
 以下为命令格式：
 
 ```powershell
-chatluna.memory.clear -t <type:string>
+chatluna.memory.clear -t <type:string> -v <layer:string>
 ```
 
 以下为参数说明：
 
 - `-t,--type`: 指定清除记忆的预设。
+- `-v,--view`: 指定记忆的具体层。目前支持: `preset-user`, `user`, `global`, `preset`。
 
 以下为例子：
 
