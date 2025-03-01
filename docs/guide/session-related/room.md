@@ -68,6 +68,10 @@ ChatLuna 会自动在群内创建一个模板克隆房间，并且所有人默�
 
 所有的模版克隆房间都会共享同一个模型，同一个预设，同一个聊天模式。
 
+> [!TIP] 提示
+> 可能还需要设置 [autoUpdateRoomMode](../useful-configurations.md#autoupdateroommode) 选项为 `all`。
+> 这样可以让所有房间都自动更新。
+
 ### 群内单独上下文，统一模型和预设
 
 此方式适用于需要在群内每位群友独立上下文的用户。

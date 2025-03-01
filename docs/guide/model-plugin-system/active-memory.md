@@ -2,6 +2,10 @@
 
 相比被动的 [长期记忆](../session-related/long-term-memory.md)，主动记忆工具更偏向于与人类交流般的主动记忆信息。
 
+> [!WARNING] 警告
+> 在最新版本 (v1.1.0) 的 ChatLuna 中，主动记忆工具已经被整合到了 [长期记忆](../../ecosystem/plugin/long-term-memory.md) 中。
+> 你只需要启用长期记忆插件即可。此教程仅作为旧版本的参考。
+
 ## 配置
 
 - 在开始之前，确保 [长期记忆](../session-related/long-term-memory.md) 的前置配置已完成。（可以不启用长期记忆）

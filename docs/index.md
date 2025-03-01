@@ -19,10 +19,10 @@ hero:
 features:
   - icon: 🚀
     title: 快速部署
-    details: 无需编写复杂配置文件和部署其他服务，安装系列插件后，在 Koishi 控制面板上配置后即可使用。
+    details: 无需编写复杂配置文件或部署 Docker 服务，在 Koishi 平台安装相关插件后，即可配置使用。
   - icon: 🌐
     title: 多模型集成
-    details: 集成 OpenAI、Google Gemini、Anthropic Claude 等主流服务，持续扩展更多平台。
+    details: 集成 Deepseek、OpenAI、Google Gemini、Anthropic Claude 等主流服务，持续扩展更多平台。
   - icon: 🎨
     title: 渲染输出
     details: 可渲染模型回复，支持文本、图片、语音等多种格式。
