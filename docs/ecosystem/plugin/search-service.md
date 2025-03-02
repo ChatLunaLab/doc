@@ -135,6 +135,9 @@ Puppeteer 空闲超时时间（毫秒）。
 * `balanced`: 阅读网页，切块返回，提供一定的质量。
 * `quality`: 使用 LLM 阅读和总结网页，高质量的结果。
 
+> [!WARNING] 警告
+> 对于 `balanced` 和 `quality` 模式，还需要额外配置主插件的 [`defaultEmbeddings`](../../guide/useful-configurations.md#defaultembeddings) 项，用于内容的向量化生成。
+
 #### keywordExtractModel
 
 * 类型: `string`
