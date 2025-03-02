@@ -7,11 +7,13 @@ Dify 是一款开源的大语言模型（LLM）应用开发平台，旨在通过
 
 ## 提示
 
-Dify 的 API 更接近于 LLM 应用层的 API，而不是类似 OpenAI 等平台的 API，且 Dify 自维护了对话上下文。所以 ChatLuna 的 Dify 适配器无法兼容现有的 ChatLuna 生态。
+Dify 的 API 更接近于 LLM 应用层的 API，而不是类似 OpenAI 等平台的 API，且 Dify 自维护了对话上下文。由于 ChatLuna 本身就维护了自己的对话上下文，这和 Dify 自维护的对话上下文冲突。所以 ChatLuna 的 Dify 适配器无法兼容现有的 ChatLuna 生态。
 
-包括长期记忆，搜索服务，ChatLuna 知识库等都不支持。ChatLuna 本身就维护了自己的对话上下文，这和 Dify 自维护的对话上下文冲突。
+包括 **ChatLuna 的预设系统**，**长期记忆**，**搜索服务**，**ChatLuna 知识库**等都不支持。请自行使用 Dify 工作流实现上面的功能。
 
-ChatLuna 最终选择以兼容的方式来接入 Dify 应用。当用户使用 ChatLuna 时，ChatLuna 会根据不同的房间，创建不同的 Dify 对话，通过 Dify 自带的对话上下文来管理对话。
+ChatLuna 最终选择以兼容的方式来接入 Dify 应用。当用户使用 ChatLuna 时，ChatLuna 会根据不同的房间，创建不同的 Dify 对话 ID，通过 Dify 自带的对话 ID 来管理对话。
+
+可以理解为：一个 ChatLuna 房间对应一个 Dify 对话 ID。
 
 但 ChatLuna 在运行 Dify 工作流时也会传入一些变量，包括用户的历史聊天内容，当前的用户名等，这使得你可以自定义更多的工作流内容，在下文我们会介绍。
 

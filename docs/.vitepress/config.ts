@@ -182,7 +182,10 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                             text: "OpenAI",
                             link: "/guide/configure-model-platform/openai",
                         },
-
+                        {
+                            text: "DeepSeek",
+                            link: "/guide/configure-model-platform/deepseek",
+                        },
                         {
                             text: "Google Gemini",
                             link: "/guide/configure-model-platform/google-gemini",
@@ -194,6 +197,10 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                         {
                             text: "通义千问",
                             link: "/guide/configure-model-platform/qwen",
+                        },
+                        {
+                            text: "Dify",
+                            link: "/guide/configure-model-platform/dify",
                         },
                         {
                             text: "智谱（ChatGLM）",
@@ -211,10 +218,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                             text: "混元大模型",
                             link: "/guide/configure-model-platform/hunyuan",
                         },
-                        {
-                            text: "DeepSeek",
-                            link: "/guide/configure-model-platform/deepseek",
-                        },
+                       
                         {
                             text: "Moonshot",
                             link: "/guide/configure-model-platform/moonshot",
