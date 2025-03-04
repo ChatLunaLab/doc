@@ -310,6 +310,9 @@ prompts:
 chatluna.room.set -p 雌小鬼
 ```
 
+> [!TIP] 提示
+> 如果你使用的是模版房间，请前往主插件的 [默认预设](../useful-configurations.md#defaultpreset) 设置预设，而不是执行命令配置。
+
 这将把当前房间的预设设置为「雌小鬼」。设置完成后，ChatLuna 就会按照这个预设的设定来回应消息了。
 
 ## 要点
