@@ -937,7 +937,7 @@ chatluna.vectorstore.set <vectorstore:string>
 
 长期记忆的相关命令功能目前为实验性功能，随时可能会出现破坏性更改。
 
-在使用相关命令前，请先前往插件配置里开启 [`longMemory`](./useful-configurations.md#longmemory)。
+在使用相关命令前，请先安装 [长期记忆插件](../ecosystem/plugin/long-term-memory.md)。
 
 ### 搜索长期记忆
 
@@ -951,7 +951,7 @@ chatluna.memory.search -t <type:string>  -l <limit:number> -p <page:number> <key
 
 以下为参数说明：
 
-- `-p,--preset`: 指定搜索的预设。
+- `-t,--type`: 指定搜索的预设。
 - `keyword`: 指定搜索的关键词。
 - `-v,--view`: 指定记忆的具体层。目前支持: `preset-user`, `user`, `global`, `preset`。
 

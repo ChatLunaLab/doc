@@ -55,13 +55,18 @@ const thinks = [
     },
     {
         img: "https://pic1.afdiancdn.com/default/avatar/avatar-blue.png?imageView2/1/w/120/h/120",
-        name: "KaleElus",
-        url: "#KaleElus",
+        name: "Cloudwind.♨",
+        url: "#Cloudwind.♨",
     },
     {
         img: "https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/w/120/h/120",
         name:"爱发电用户_GPsK",
         url: "#爱发电用户_GPsK"
+    },
+    {
+     img: "https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/w/120/h/120",
+        name:"爱发电用户_2ad12",
+        url: "#爱发电用户_2ad12"   
     }
 
 ]; 
