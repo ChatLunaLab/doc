@@ -101,11 +101,11 @@ function listenModel(ctx: Context) {
         service.getAllModels(ModelType.llm).map((m) => Schema.const(m))
 
     ctx.on('chatluna/model-added', (service) => {
-        ctx.schema.set('model', Schema.union(ctx.chatluna.getModelNames(service)))
+        ctx.schema.set('model', Schema.union(getModelNames(service)))
     })
 
     ctx.on('chatluna/model-removed', (service) => {
-        ctx.schema.set('model', Schema.union(ctx.chatluna.getModelNames(service)))
+        ctx.schema.set('model', Schema.union(getModelNames(service)))
     })
 
     ctx.on('ready', () => {
