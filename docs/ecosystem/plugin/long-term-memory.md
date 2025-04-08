@@ -8,6 +8,20 @@
 
 ![alt text](../../public/images/image-68.png)
 
+::: tip 提示
+如果无法正常搜索到 `chatluna-long-memory`，则说明官方插件源没有正常更新。
+前往 market 插件设置为其他源即可：
+
+![market](../../public/images/markethuanyuan.png)
+
+以下是推荐的一些插件源：
+
+- [https://koishi-registry.yumetsuki.moe/index.json](https://koishi-registry.yumetsuki.moe/index.json)
+- [https://kp.itzdrli.cc]([https://kp.itzdrli.cc)
+
+:::
+
+
 ## 使用
 
 确保你已经配置好了 [嵌入模型](../configure-embedding-model/introduction.md) 和 [向量数据库](../configure-vector-database/introduction.md)。
