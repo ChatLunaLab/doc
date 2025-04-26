@@ -58,7 +58,11 @@ const thinks = [
         url: "#ffmpeg",
         img: "https://pic1.afdiancdn.com/user/e09d2c8c082a11efaf7e5254001e7c00/avatar/708e1356e53a647823e760a5a9611658_w500_h500_s67.jpeg?imageView2/1/w/120/h/120",
     },
-
+    {
+        name: "爱发电用户_ba642"
+        url: "#爱发电用户_ba642"
+        img: "https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/"
+    },
     {
         img: "https://pic1.afdiancdn.com/user/6cec4d5aaf5611eda22e52540025c377/avatar/142700cc6b59c77aac5ee7490b0cc036_w1080_h1080_s43.jpeg?imageView2/1/w/120/h/120",
         name: "Mirage",

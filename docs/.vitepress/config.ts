@@ -620,6 +620,10 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
                     text: "长期记忆 (Long Term Memory)",
                     link: "/ecosystem/plugin/long-term-memory",
                 },
+                {
+                    text: "图片服务 (Image Service)",
+                    link: "/ecosystem/plugin/image-service",
+                },
             ],
         },
         {
