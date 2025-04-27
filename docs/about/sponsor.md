@@ -59,8 +59,8 @@ const thinks = [
         img: "https://pic1.afdiancdn.com/user/e09d2c8c082a11efaf7e5254001e7c00/avatar/708e1356e53a647823e760a5a9611658_w500_h500_s67.jpeg?imageView2/1/w/120/h/120",
     },
     {
-        name: "爱发电用户_ba642"
-        url: "#爱发电用户_ba642"
+        name: "爱发电用户_ba642",
+        url: "#爱发电用户_ba642",
         img: "https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/"
     },
     {
@@ -93,7 +93,6 @@ const thinks = [
      name:"爱发电用户_2ad12",
      url: "#爱发电用户_2ad12"   
     }
-
 ]; 
 </script>
 
