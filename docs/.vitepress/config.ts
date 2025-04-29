@@ -646,6 +646,10 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
                     text: "角色卡兼容 (Character Card)",
                     link: "/ecosystem/extension/character-card",
                 },
+                {
+                    text: "动作 (Action)",
+                    link: "/ecosystem/extension/action",
+                },
             ],
         },
         {
