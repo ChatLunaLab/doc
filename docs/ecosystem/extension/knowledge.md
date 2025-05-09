@@ -115,13 +115,13 @@ chatluna.knowledge.list -v <vectorStore:string>
 以下为命令格式：
 
 ```powershell
-chatluna.knowledge.upload
+chatluna.knowledge.init
 ```
 
 以下为例子：
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.knowledge.upload</chat-message>
+  <chat-message nickname="User">chatluna.knowledge.init</chat-message>
   <chat-message nickname="Bot">已对 C:\Users\dingyi\data\chathub\knowledge\default\测试文档.txt 解析成 1 个文档块。正在保存至数据库</chat-message>
   <chat-message nickname="Bot">已成功上传到 faiss 向量数据库</chat-message>
   <chat-message nickname="Bot">已成功上传 1 / 1 个文档到 faiss 向量数据库</chat-message>
