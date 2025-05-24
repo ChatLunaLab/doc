@@ -621,6 +621,10 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
                     link: "/ecosystem/plugin/long-term-memory",
                 },
                 {
+                    text: "MCP 协议客户端 (MCP Client)",
+                    link: "/ecosystem/plugin/mcp-client",
+                },
+                {
                     text: "图片服务 (Image Service)",
                     link: "/ecosystem/plugin/image-service",
                 },
