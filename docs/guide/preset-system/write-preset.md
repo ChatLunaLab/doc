@@ -120,14 +120,15 @@ text{variable_name} | {variable_name::xx::xx} | {variable_name:xx,xx,xx}
 * `user_id`: 发送者 id。（只在 prompt 里有效）
 * `user`: 发送者昵称。(只在 prompt 里有效)
 * `name`: 机器人姓名，实际对应[此](/guide/useful-configurations/#bot-配置)内的 bot name。
-* `prompt`: 用户实际发送的内容（只在 format_user_prompt 里有效)。
+* `prompt`: 用户实际发送的内容（只在 format_user_prompt 里有效）。
 * `isotime`: 当前时间，遵循标准 ISO 格式。
 * `isodate`: 当前日期，遵循标准 ISO 格式。
 * `time_UTC±X`: 当前时间，遵循标准 UTC 格式，X 为正负小时差。如 `time_UTC+8` 表示东八区时间。
-* `random:(args)`: 从列表中随机选择一个值。如 `random:1,2,3,4,5` 会随机选择 1, 2, 3, 4, 5 中的一个值。
+* `random:(args)`: 从列表中随机选择一个值。如 `random:1,2,3,4,5` 会随机选择 1, 2, 3, 4, 5 中的一个值。这些值也可以为字符串，如 `random:a,b,c` 会随机选择 a, b, c 中的一个值。
 * `random::(min)::(max)`: 从 min 到 max 的随机数。如 `random::1::10` 会随机选择 1 到 10 的随机数。
 * `roll:(formula)`: 使用 D&D 骰子语法投掷骰子。如 `roll:d6` 会投掷 1 到 6 的骰子。
 * `idle_duration`: 插入一个表示上次用户消息发送以来的时间范围的人性化字符串（例如：1 day, 2 hours）。
+* `url::[get/post]::[url]::[data]`: 发送 HTTP 请求，并将请求结果插入到上下文中。如 `url::get::https://api.example.com/data` 会发送 GET 请求到 <https://api.example.com/data>，并将请求结果插入到上下文中。
 
 > [!TIP] 提示
 > 如果你的预设需要使用原始的 &#123; 和 &#125; 字符，可以使用 &#123; &#123; 和 &#125; &#125; 来代替。
@@ -168,7 +169,7 @@ world_lores:
 对于第二个有 `keywords` 的 `world_lore` 子项或者其他 `world_lore` 子项，这代表世界书的主要条目类，以下是可用的配置项（会覆盖默认配置项）：
 
 * `keywords`: 关键词，代表着触发世界书条目类的关键词。可以使用正则表达式来匹配关键词。
-* `content`: 内容，代表着当扫描到关键词的聊天信息时，会插入的内容。
+* `content`: 内容，代表着当扫描到关键词的聊天信息时，会插入的内容。该内容支持变量占位符。
 * `scanDepth`: 扫描深度，代表着会扫描多深的聊天信息。当设置为 0 时，不会扫描任何聊天信息，设置为 1 时，会扫描最近 1 条聊天信息，设置为 2 时，会扫描最近 2 条聊天信息，以此类推。
 * `recursiveScan`: 是否递归扫描。递归扫描意味着世界书条目类的内容可以继续触发其他的世界书条目类。
 * `maxRecursionDepth`: 最大递归深度。当设置为 3 时，会递归扫描 3 层世界书条目类。
