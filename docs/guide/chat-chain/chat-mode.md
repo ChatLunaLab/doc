@@ -28,7 +28,10 @@ plugin 模式也是 ChatLuna 主插件中内置的聊天模式。
 
 plugin 模式基于 LangChain 的 `Agent` 和 `Tool`，需要有相关的工具才能让模型调用它们。
 
-但 ChatLuna 主插件中并没有内置可供 plugin 使用的工具，因此你需要安装 [`chatluna-plugin-common`](../../ecosystem/introduction.md) 插件，来为 plugin 模式提供一些工具。
+> [!TIP]
+> ChatLuna 主插件中没有内置可供 plugin 聊天模式使用的工具。
+>
+> 因此你需要安装 [`chatluna-plugin-common`](../../ecosystem/introduction.md) 或 [`chatluna-mcp-client`](../../ecosystem/plugin/mcp-client.md) 插件来为 plugin 模式提供可用的工具。
 
 ### browsing
 

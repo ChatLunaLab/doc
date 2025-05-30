@@ -6,8 +6,7 @@
         "onappear",
         "Redisearch",
         "Stackoverflow",
-        "vectorstore",
-        "chatluna"
+        "vectorstore"
     ],
     "typescript.tsdk": "node_modules/typescript/lib",
     "markdown.copyFiles.destination": {
