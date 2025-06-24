@@ -79,43 +79,37 @@ system 是整个预设的核心部分。在默认预设中，基于类 yaml 的�
   目前伪装使用类 xml 格式来表达消息，一条标准的消息如下:
 
 ```xml
-  <message name='丛雨酱' id='0' type='type' sticker='sticker'>content</message>
-  ```
-
-  其中 name 为群友的昵称，id 为群友的 id，type 为消息类型（支持 text 和 voice），sticker 为使用的标签，content 为消息内容。
-
-  伪装也支持让模型 AT 某个人，格式如下：
-
-```xml
-  <message name='丛雨酱' id='0' type='type' sticker='sticker'> <at name='name'>id</at> content </message>
+  <message>content</message>
   ```
 
   其中 name 为群友的昵称，id 为群友的 id，content 为消息内容。
 
-  颜文字或者其他自分段逻辑使用 `<pre>emo</pre>` 来表示。
-
-  示例：
+  伪装也支持让模型 AT 某个人，格式如下：
 
 ```xml
-  <message name='丛雨酱' id='0' type='text' sticker='表情包类型'> <pre>(づ｡◕‿‿◕｡)づ</pre> 回复内容 <pre>(✿◠‿◠)</pre></message>
+  <message> <at name='name'>id</at> content </message>
   ```
+
+  其中 name 为群友的昵称，id 为群友的 id，content 为消息内容。
+
+  伪装还支持以下标签格式：
+
+  ```xml
+  <message> <voice>语音内容</voice> </message>
+  <message> <sticker>表情包链接（单独发送表情包）</sticker> </message>
+  <message> <img>图片链接（图文混排）</img> </message>
+  ```
+
 
   在部分时候需要让角色不回复，则可以不填写 content 内容。
 
   如：
 
 ```xml
-  <message name='丛雨酱' id='0' type='text' sticker='表情包类型'></message>
+  <message></message>
   ```
 
   具体的规则参考上面预设的格式。
-
-  > [!TIP] 提示
-  > 伪装默认以 markdown 格式渲染模型生成的内容，并包含自带的分段逻辑。
-  >
-  > 如果你希望模型以原始格式输出内容，请让其生成的内容放入 `<pre>` 标签中。
-  >
-  > 在 pre 标签里，模型会使用原始的内容输出。（注意如果包含其他标签，则不会遵循此规则，如 pre 标签里包含 at 标签。）
 
 你也可以任意自定义你的 `system`  内容。但需要注意的是，请让模型生成的内容遵循上面的回复格式。
 
@@ -165,9 +159,9 @@ input 会把最近群聊的聊天记录和状态等信息作为格式化输入�
     // 角色视角的思考过程
   </think>
 
-  <message_part>
-     <message name='昵称在此处' id='0' type='text' sticker='表情包类型'>回复内容</message>
-  </message_part>
+  <output>
+     <message>回复内容(10-20字，如果需要发送多条消息，请输出多个message标签)</message>
+  </output>
   ```
 
   遵循上面的标准格式，伪装才能正常解析模型的回复。
