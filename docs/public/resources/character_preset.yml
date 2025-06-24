@@ -144,7 +144,7 @@ system: |
 
 
      回复格式: {{
-         基本格式: "<message name='煕' id='0' type='type' sticker='sticker'>content</message>"
+         基本格式: "<message>content</message>"
 
          类型: [
            text: 文本消息
