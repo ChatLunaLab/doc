@@ -606,7 +606,7 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
             link: "/ecosystem/introduction",
         },
         {
-            text: "聊天模式 / 插件模式工具",
+            text: "聊天模式 /  Agent 模式工具",
             items: [
                 {
                     text: "搜索服务 (Search Service)",

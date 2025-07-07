@@ -51,7 +51,7 @@
 * 类型：`chat|plugin`
 
 * 默认值：`chat`
-* 描述：聊天模式（chat: 聊天模式, plugin: 插件模式）
+* 描述：聊天模式（chat: 聊天模式, plugin:  Agent 模式）
 
 #### promptType
 
@@ -108,7 +108,7 @@
 
 * 类型：`chat|plugin`
 * 默认值：`chat`
-* 描述：聊天模式（chat: 聊天模式, plugin: 插件模式）
+* 描述：聊天模式（chat: 聊天模式, plugin:  Agent 模式）
 
 #### interceptPromptType
 

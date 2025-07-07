@@ -22,16 +22,16 @@ ChatLuna 中内置了以下几种聊天模式：
 
 chat，也就是最主要的聊天模式。ChatLuna 的主插件已经内置此模式，无需额外配置。
 
-### plugin
+### agent
 
-plugin 模式也是 ChatLuna 主插件中内置的聊天模式。
+agent 模式也是 ChatLuna 主插件中内置的聊天模式。
 
-plugin 模式基于 LangChain 的 `Agent` 和 `Tool`，需要有相关的工具才能让模型调用它们。
+agent 模式让模型可以调用工具，并根据工具的返回结果，继续调用工具，直到完成任务。能实现复杂的任务。
 
 > [!TIP]
-> ChatLuna 主插件中没有内置可供 plugin 聊天模式使用的工具。
+> ChatLuna 主插件中没有内置可供 agent 聊天模式使用的工具。
 >
-> 因此你需要安装 [`chatluna-plugin-common`](../../ecosystem/introduction.md) 或 [`chatluna-mcp-client`](../../ecosystem/plugin/mcp-client.md) 插件来为 plugin 模式提供可用的工具。
+> 因此你需要安装 [`chatluna-plugin-common`](../../ecosystem/introduction.md) 或 [`chatluna-mcp-client`](../../ecosystem/plugin/mcp-client.md) 插件来为 agent 模式提供可用的工具。
 
 ### browsing
 

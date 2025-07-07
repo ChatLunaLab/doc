@@ -112,7 +112,7 @@ export class EchoTool extends Tool {
 
 ## 测试
 
-将当前房间的聊天模式设置为插件模式，并确保上面的工具已经注册到 ChatLuna 服务。
+将当前房间的聊天模式设置为 Agent 模式，并确保上面的工具已经注册到 ChatLuna 服务。
 
 尝试让模型调用你的工具，如成功，则说明你已经掌握了如何为 ChatLuna 添加自定义工具。
 

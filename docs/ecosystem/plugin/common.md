@@ -1,6 +1,6 @@
 # 基础工具合集 (Plugin Common)
 
-此插件为 ChatLuna 的插件模式提供了一些基础的工具。
+此插件为 ChatLuna 的 Agent 模式提供了一些基础的工具。
 
 ## 配置
 
