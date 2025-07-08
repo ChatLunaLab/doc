@@ -40,15 +40,13 @@ Google 为免费用户也提供了一定量的免费调用额度。我们也推�
 
 ### 1. 国内平台如何接入？
 
-国内平台接入 Google 官方的接口，需要代理设置，前往主插件的配置页面，开启[代理模式](../useful-configurations.md/#isproxy) 并配置[代理地址](../useful-configurations.md#proxyaddress)。
+国内平台(含香港) 接入 Google AI Studio 官方的接口，需要代理设置，前往主插件的配置页面，开启[代理模式](../useful-configurations.md/#isproxy) 并配置[代理地址](../useful-configurations.md#proxyaddress)。
 
 > [!TIP] 提示
-> 社区成员提供了免费的反向代理地址，请在确认风险后使用。
+> 社区成员提供了免费的反向代理地址，使用反向代理地址无需开启代理模式，请在确认风险后使用。
 >
-> 使用方式：填写到插件配置的 API host 地址中。
+> 使用方式：将默认的 https://generativelanguage.googleapis.com/v1beta 替换为以下地址。
 >
-> 地址1: [https://gemini.xxxv.me/v1beta](https://gemini.xxxv.me/v1beta)
->
-> 地址2: [https://gemini.api.2s.lol/v1beta](https://gemini.api.2s.lol/v1beta)
+> 地址: [https://gemini.api.2s.lol/v1beta](https://gemini.api.2s.lol/v1beta)
 >
 > 此地址并非 ChatLuna 官方认证的地址，请自行判断是否安全。
