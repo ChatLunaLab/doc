@@ -84,16 +84,21 @@ const thinks = [
         url: "#Cloudwind.♨",
     },
     {
+        img: "https://pic1.afdiancdn.com/user/user_upload_osl/bbcee7deba46b2c757460d6d2c35f0c3_w132_h132_s4.jpeg?imageView2/1/w/120/h/120",
+        name:"MashiroSaber",
+        url: "#MashiroSaber"
+    },
+    {
         img: "https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/w/120/h/120",
         name:"爱发电用户_GPsK",
         url: "#爱发电用户_GPsK"
     },
     {
-     img: "https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/w/120/h/120",
-     name:"爱发电用户_2ad12",
-     url: "#爱发电用户_2ad12"   
+        img: "https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/w/120/h/120",
+        name:"爱发电用户_2ad12",
+        url: "#爱发电用户_2ad12"
     }
-]; 
+];
 </script>
 
 # 赞助者
