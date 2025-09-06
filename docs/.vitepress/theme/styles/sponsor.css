@@ -157,15 +157,12 @@
 
 .sponsor-grid-image {
     max-width: 100%;
-    filter: grayscale(1);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 100px;
     transform: translateY(0);
 }
 
-.dark .sponsor-grid-image {
-    filter: grayscale(1) invert(1);
-}
+
 
 .sponsor-grid-name {
     font-size: 14px;
