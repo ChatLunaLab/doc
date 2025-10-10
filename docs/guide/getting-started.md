@@ -2,7 +2,7 @@
 
 本节，我们将指导你如何安装与配置 ChatLuna，让你能快速的和模型进行对话。
 
-## 安装插件
+## 安装 Koishi
 
 在使用 ChatLuna 之前，你需要安装 Koishi。
 
@@ -14,7 +14,7 @@
 
 ### 配置聊天平台
 
-安装 Koishi 后，你需要选择一个聊天平台来接入机器人，或使用 [沙盒环境](https://koishi.chat/zh-CN/manual/console/sandbox.html) 测试。
+安装 Koishi 后，你需要选择一个聊天平台来接入机器人，或使用 [沙盒环境](https://koishi.chat/zh-CN/manual/usage/adapter.html#%E5%9C%A8%E6%B2%99%E7%9B%92%E4%B8%AD%E6%A8%A1%E6%8B%9F%E5%AF%B9%E8%AF%9D) 测试。
 
 如你选择使用沙盒环境，可以直接跳到 [下一步](/guide/getting-started.html#安装前置依赖插件)。
 
@@ -39,7 +39,7 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 - `censor` 服务：用于回复内容过滤。注意，有的插件不审核文本信息，请注意识别。
 - `vits` 服务：用于渲染模型回复，生成语音。
 
-### 安装主插件
+## 安装主插件
 
 搜索并安装 `chatluna` 插件，这是 ChatLuna 的主插件。
 
@@ -55,7 +55,7 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 
 你可同时安装多个平台的模型适配器，后续可通过模版房间配置或房间里的模型配置项切换。
 
-## 配置插件
+## 配置主插件
 
 进入主插件配置页面，以下是一些重要的配置项，其他配置项可在 [配置项](/guide/useful-configurations) 了解到：
 
@@ -73,7 +73,7 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 
 可使用 [`chatluna.model.list`](./useful-commands.md#列出语言模型列表) 查看可用的模型。
 
-### 设置模版房间配置
+### 配置模版房间
 
 在控制面板里可设置模版房间的相关配置，如图所示：
 
@@ -85,7 +85,7 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 对于初次使用 ChatLuna 的新手，我们推荐直接使用模型克隆房间。当你对 ChatLuna 有深入了解后，才推荐使用自定义的房间系统。
 :::
 
-## 开始聊天
+## 完成！
 
 最后使用 [`chatluna.chat.text`](/guide/useful-commands#模型对话) 命令，即可和模型进行交互对话。
 
