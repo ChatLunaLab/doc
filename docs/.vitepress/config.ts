@@ -163,13 +163,22 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                     link: "/guide/getting-started",
                     collapsed: true,
                 },
-                { text: "用法", link: "/guide/useful-commands" },
-                { text: "配置项", link: "/guide/useful-configurations" },
             ],
         },
         {
-            text: "进阶",
+            text: "配置",
             items: [
+                {
+                    text: "常用指令和配置项",
+                    collapsed: true,
+                    items: [
+                        { text: "用法", link: "/guide/useful-commands" },
+                        {
+                            text: "配置项",
+                            link: "/guide/useful-configurations",
+                        },
+                    ],
+                },
                 {
                     text: "模型平台",
                     collapsed: true,
@@ -218,7 +227,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                             text: "混元大模型",
                             link: "/guide/configure-model-platform/hunyuan",
                         },
-                       
+
                         {
                             text: "Moonshot",
                             link: "/guide/configure-model-platform/moonshot",
@@ -294,6 +303,69 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                     ],
                 },
                 {
+                    text: "模型工具",
+                    collapsed: true,
+                    items: [
+                        {
+                            text: "介绍",
+                            link: "/guide/model-plugin-system/introduction",
+                        },
+                        {
+                            text: "联网搜索",
+                            link: "/guide/model-plugin-system/web-search",
+                        },
+                        {
+                            text: "网络浏览",
+                            link: "/guide/model-plugin-system/web-browser",
+                        },
+                        {
+                            text: "网络请求",
+                            link: "/guide/model-plugin-system/request-web",
+                        },
+                        {
+                            text: "指定 API 请求",
+                            link: "/guide/model-plugin-system/specify-api-request",
+                        },
+                        {
+                            text: "文件读写",
+                            link: "/guide/model-plugin-system/file-io",
+                        },
+                        {
+                            text: "定时任务",
+                            link: "/guide/model-plugin-system/cron",
+                        },
+                        {
+                            text: "Koishi 命令执行",
+                            link: "/guide/model-plugin-system/command-execution",
+                        },
+                        {
+                            text: "文生图",
+                            link: "/guide/model-plugin-system/draw",
+                        },
+                        {
+                            text: "思考工具",
+                            link: "/guide/model-plugin-system/thinking",
+                        },
+                        {
+                            text: "代码执行",
+                            link: "/guide/model-plugin-system/code-interpreter",
+                        },
+                        {
+                            text: "主动记忆",
+                            link: "/guide/model-plugin-system/active-memory",
+                        },
+                        {
+                            text: "简易音频生成",
+                            link: "/guide/model-plugin-system/simple-audio-generation",
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            text: "进阶",
+            items: [
+                {
                     text: "预设系统",
                     collapsed: true,
                     items: [
@@ -364,64 +436,6 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                         {
                             text: "流式输出",
                             link: "/guide/chat-chain/stream",
-                        },
-                    ],
-                },
-                {
-                    text: "模型工具",
-                    collapsed: true,
-                    items: [
-                        {
-                            text: "介绍",
-                            link: "/guide/model-plugin-system/introduction",
-                        },
-                        {
-                            text: "联网搜索",
-                            link: "/guide/model-plugin-system/web-search",
-                        },
-                        {
-                            text: "网络浏览",
-                            link: "/guide/model-plugin-system/web-browser",
-                        },
-                        {
-                            text: "网络请求",
-                            link: "/guide/model-plugin-system/request-web",
-                        },
-                        {
-                            text: "指定 API 请求",
-                            link: "/guide/model-plugin-system/specify-api-request",
-                        },
-                        {
-                            text: "文件读写",
-                            link: "/guide/model-plugin-system/file-io",
-                        },
-                        {
-                            text: "定时任务",
-                            link: "/guide/model-plugin-system/cron",
-                        },
-                        {
-                            text: "Koishi 命令执行",
-                            link: "/guide/model-plugin-system/command-execution",
-                        },
-                        {
-                            text: "文生图",
-                            link: "/guide/model-plugin-system/draw",
-                        },
-                        {
-                            text: "思考工具",
-                            link: "/guide/model-plugin-system/thinking",
-                        },
-                        {
-                            text: "代码执行",
-                            link: "/guide/model-plugin-system/code-interpreter",
-                        },
-                        {
-                            text: "主动记忆",
-                            link: "/guide/model-plugin-system/active-memory",
-                        },
-                        {
-                            text: "简易音频生成",
-                            link: "/guide/model-plugin-system/simple-audio-generation",
                         },
                     ],
                 },

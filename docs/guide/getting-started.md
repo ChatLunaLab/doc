@@ -6,6 +6,8 @@
 
 在使用 ChatLuna 之前，你需要安装 Koishi。
 
+Koishi 是一个跨平台、可扩展、高性能的聊天机器人框架。
+
 按照 [Koishi 官方文档](https://koishi.chat/zh-CN/) 来安装 Koishi。
 
 > [!TIP] 提示
@@ -30,6 +32,8 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 
 我们推荐使用 `database-sqlite`，它自带在大部分 Koishi 环境里，已被默认安装并启用。
 
+因此在大部分场景下，你无需额外操作，可直接跳过此小节。
+
 你也可以安装并配置其他在 Koishi 插件市场上的数据库插件，如 MySQL、MongoDB 等。
 
 #### 可选服务
@@ -44,7 +48,7 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 搜索并安装 `chatluna` 插件，这是 ChatLuna 的主插件。
 
 ::: warning 注意
-主插件本身不包含任何模型适配器，无法直接对话，还需安装模型适配器。
+主插件本身不包含任何模型适配器，无法直接对话。需要参考下面一小节来安装模型适配器。
 :::
 
 ### 安装模型适配器
@@ -59,19 +63,18 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 
 进入主插件配置页面，以下是一些重要的配置项，其他配置项可在 [配置项](/guide/useful-configurations) 了解到：
 
-- [`isProxy`](/guide/useful-configurations#代理设置)：是否使用代理，对国内用户**强烈推荐**开启。
-- [`proxyAddress`](/guide/useful-configurations#代理设置)：代理地址，格式为 `http://host:port`。
-- [`outputMode`](/guide/useful-configurations#回复选项)：回复的输出格式，支持语音、文本、图片等。
+- [`defaultChatMode`](./useful-configurations.md#defaultchatmode)：默认的聊天模式。支持聊天模式，Agent 模式，浏览模式。
+- [`outputMode`](/guide/useful-configurations#回复选项)：回复的输出格式，支持语音、文本、Koishi 元素等。
 
 ### 配置模型适配器
 
 参考 [模型平台](./configure-model-platform/introduction.md)，选择你需要配置的模型平台类型。
 
 ::: warning 注意
-如果你所在的地区无法访问某些模型 API 服务，则可能需要设置代理。请在 `ChatLuna` 主插件的设置里设置代理(请求设置 -> [`isProxy`](./useful-configurations#isproxy)，请求设置 -> [`proxyAddress`](./useful-configurations#proxyaddress))。
+如果你所在的地区无法访问某些模型 API 服务，则需要设置代理。请在 `ChatLuna` 主插件的设置里设置代理(请求设置 -> [`isProxy`](./useful-configurations#isproxy)，请求设置 -> [`proxyAddress`](./useful-configurations#proxyaddress))。
 :::
 
-可使用 [`chatluna.model.list`](./useful-commands.md#列出语言模型列表) 查看可用的模型。
+你可以使用 [`chatluna.model.list`](./useful-commands.md#列出语言模型列表) 查看目前可用的模型。
 
 ### 配置模版房间
 
@@ -82,10 +85,10 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 设置好模型，聊天模式和预设，右上角保存后即完成配置。
 
 ::: tip 提示
-对于初次使用 ChatLuna 的新手，我们推荐直接使用模型克隆房间。当你对 ChatLuna 有深入了解后，才推荐使用自定义的房间系统。
+对于初次使用 ChatLuna 的新手，我们推荐直接使用模型克隆房间（即默认配置，无需操作）。当你对 ChatLuna 有深入了解后，才推荐使用自定义的房间系统。
 :::
 
-## 完成！
+## 下一步？
 
 最后使用 [`chatluna.chat.text`](/guide/useful-commands#模型对话) 命令，即可和模型进行交互对话。
 
