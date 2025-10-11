@@ -2,7 +2,7 @@
 
 Google Gemini 是谷歌推出的一系列的人工智能模型。
 
-Google 为免费用户也提供了一定量的免费调用额度。我们也推荐你使用此系列模型。
+Google 为免费用户也提供了一定的免费调用额度。我们推荐你使用 `Gemini` 模型。
 
 ## 安装
 
@@ -30,11 +30,20 @@ Google 为免费用户也提供了一定量的免费调用额度。我们也推�
 
 ## 使用
 
-在 Gemini 适配器的配置页面，点击运行按钮，如无误，你应该看不到任何错误 log，那即可转到 ChatLuna 的主插件页面。
+在 Gemini 适配器的配置页面，点击运行按钮，检查你的日志界面，是否看到错误日志。
 
-在主插件页面，下划到[模版房间选项](../useful-configurations.md#模版房间选项)，查看 [defaultModel](../useful-configurations.md#defaultmodel) 的选项里是否含有 `gemini` 模型，如果有，则说明你已经成功地接入了 Google 平台。
+如无误，则可以转到沙盒或者其他聊天平台，使用 `chatluna.model.test` 命令查看是否接入成功：
 
-![images](../../public/images/plugin_gemini_config_2.png)
+<chat-panel>
+  <chat-message nickname="User">chatluna.model.test gemini/gemini-2.5-flash-lite</chat-message>
+  <chat-message nickname="Bot">模型 gemini/gemini-2.5-flash-lite 测试成功！<br/>
+响应时间：2255ms<br/>
+示例回复：Hello! How can I assist you today?<br/>
+  </chat-message>
+</chat-panel>  
+
+测试成功后，则代表你已成功接入 Gemini 平台，可以正常使用了。
+
 
 ## 常见问题
 

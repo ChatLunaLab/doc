@@ -4,8 +4,6 @@
 
 ChatLuna 使用嵌入模型来将用户的输入，模型的输出等数据转换为向量。
 
-目前，ChatLuna 通过 嵌入模型和 [向量数据库](../configure-vector-database/introduction.md) 来为用户提供 [长期记忆](guide/session-related/long-term-memory) 功能。
-
 嵌入模型的服务由多个插件提供，这其中某些模型适配器已经提供了相关服务，如 [OpenAI](./openai-embeddings.md) 与 [Google Gemini](../configure-model-platform/google-gemini.md) 。
 
 因此，你可以直接使用这些插件来使用嵌入模型服务，无需再安装嵌入模型服务插件。

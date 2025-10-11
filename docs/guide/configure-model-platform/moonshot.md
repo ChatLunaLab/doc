@@ -21,6 +21,7 @@ Moonshot API 是由 Moonshot AI 提供的一种基于 HTTP 的 API 服务，允�
 获取到 API key 后，转到 `openai-like-adapter` 的配置页面。
 
 在 `openai-like-adapter` 配置页里可以更改平台名，我们建议更改为 `moonshot`。
+
 当然，你也可以更改你喜欢的其他平台名。
 
 完成后在请求设置里填入你的 API key 和 请求地址。请求地址应为 `https://api.moonshot.cn/v1`。
@@ -31,8 +32,16 @@ Moonshot API 是由 Moonshot AI 提供的一种基于 HTTP 的 API 服务，允�
 
 ## 使用
 
-在适配器的配置页面，点击运行按钮，如无误，你应该看不到任何错误 log，那即可转到 ChatLuna 的主插件页面。
+在 `openai-like-adapter` 适配器的配置页面，点击运行按钮，检查你的日志界面，是否看到错误日志。
 
-在主插件页面，下划到 [模版房间选项](../useful-configurations.md#模版房间选项)，查看 [defaultModel](../useful-configurations.md#defaultmodel) 的选项里是否含有 Moonshot 模型，如果有，则说明你已经成功地接入了 Moonshot 平台。
+如无误，则可以转到沙盒或者其他聊天平台，使用 `chatluna.model.test` 命令查看是否接入成功：
 
-![alt text](../../public/images/image-21.png)
+<chat-panel>
+  <chat-message nickname="User">chatluna.model.test moonshot/moonshot-v1-8k</chat-message>
+  <chat-message nickname="Bot">模型 moonshot/moonshot-v1-8k 测试成功！<br/>
+响应时间：2255ms<br/>
+示例回复：Hello! How can I assist you today?<br/>
+  </chat-message>
+</chat-panel>  
+
+测试成功后，则代表你已成功接入 Moonshot 平台，可以正常使用了。

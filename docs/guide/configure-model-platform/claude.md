@@ -1,10 +1,10 @@
 # Claude
 
-Claude 是 Anthropic 公司推出的大语言模型，旗下同时开放 `claude-3.5-Sonnet`,`claude-3-haiku` 等模型。
+Claude 是 Anthropic 公司推出的大语言模型，旗下同时开放 `claude-4.5-Sonnet`,`claude-3.5-haiku` 等模型。
 
 我们支持对接 Claude 里大部分可用的聊天大语言模型或嵌入模型。
 
-由于 API 限制，我们无法获取到 Claude 的最新模型列表。所以当 Claude 发布新模型时，我们滞后一段时间才会更新模型列表。
+由于 API 限制，我们无法获取到 Claude 的最新模型列表。模型列表会滞后一段时间更新。
 
 ## 安装
 
@@ -32,21 +32,19 @@ Claude 是 Anthropic 公司推出的大语言模型，旗下同时开放 `claude
 
 ## 使用
 
-在 Claude 适配器的配置页面，点击运行按钮，如无误，你应该看不到任何错误 log，那即可转到 ChatLuna 的主插件页面。
+在 Claude 适配器的配置页面，点击运行按钮，检查你的日志界面，是否看到错误日志。
 
-在主插件页面，下划到 [模版房间选项](../useful-configurations.md#模版房间选项)，查看 [defaultModel](../useful-configurations.md#defaultmodel) 的选项里是否含有 Claude 模型，如果有，则说明 Claude 适配器已经成功的运行。
+如无误，则可以转到沙盒或者其他聊天平台，使用 `chatluna.model.test` 命令查看是否接入成功：
 
-![images](../../public/images/plugin_claude_config.png)
+<chat-panel>
+  <chat-message nickname="User">chatluna.model.test claude-3-5-haiku-20241022</chat-message>
+  <chat-message nickname="Bot">模型 claude/claude-3-5-haiku-20241022 测试成功！<br/>
+响应时间：2255ms<br/>
+示例回复：Hello! How can I assist you today?<br/>
+  </chat-message>
+</chat-panel>  
 
-但我们仍未完全确认 Claude 适配器是否可用。
-
-因此我们需要新建一个房间，使用 `chatluna.room.create -m claude/claude-3-haiku-20240307 -p chatgpt -n test-claude-adapter` 指令来创建一个使用了 Claude 适配器的房间。
-
-新建房间后请尝试和模型对话。
-
-只要能正常对话，就说明你成功的连接到了 Claude，接入了 Claude 适配器。
-
-别忘了在测试完成后调用 `chatluna.room.delete test-claude-adapter` 指令删除测试房间。
+测试成功后，则代表你已成功接入 Claude 平台，可以正常使用了。
 
 ## 常见问题
 
@@ -57,7 +55,7 @@ Claude 是 Anthropic 公司推出的大语言模型，旗下同时开放 `claude
 > [!TIP] 提示
 > 社区成员提供了免费的反向代理地址，使用反向代理地址无需开启代理模式，请在确认风险后使用。
 >
-> 使用方式：使用方式：将默认的 https://api.anthropic.com/v1 替换为以下地址。
+> 使用方式：使用方式：将默认的 <https://api.anthropic.com/v1> 替换为以下地址。
 >
 > 地址: [https://claude.api.2s.lol/v1](https://claude.api.2s.lol/v1)
 >

@@ -16,7 +16,7 @@ ChatLuna 基于 Koishi 的 [Censor 服务](https://censor.koishi.chat/plugins/te
 
 ## 使用
 
-配置完成后正常使用即可，ChatLuna 会自动调用 `censor` 服务进行文本审核。
+配置完成后正常使用即可。ChatLuna 会自动调用 `censor` 服务进行文本审核。
 
 ![alt text](../../public/images/image-36.png)
 

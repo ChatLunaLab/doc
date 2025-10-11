@@ -84,6 +84,11 @@ const thinks = [
         url: "#Cloudwind.♨",
     },
     {
+        img: "https://pic1.afdiancdn.com/user/c60f4b68d62e11ed9a6052540025c377/avatar/6051a2e73dfd3a6fb35d3ae5307614d4_w1254_h1771_s288.png?imageView2/1/w/120/h/120",
+        name: "hoshino",
+        url: "#hoshino",
+    },
+    {
         img: "https://pic1.afdiancdn.com/user/user_upload_osl/bbcee7deba46b2c757460d6d2c35f0c3_w132_h132_s4.jpeg?imageView2/1/w/120/h/120",
         name:"MashiroSaber",
         url: "#MashiroSaber"

@@ -1,6 +1,6 @@
 # DeepSeek
 
-DeepSeek 是一家专注于通用人工智能底层模型与技术研究的公司，成立于2023年，由知名私募巨头幻方量化创立。公司致力于探索人工智能的本质，发布了多个开源大模型，包括 DeepSeek-V3 通用大语言模型等。
+DeepSeek 是一家专注于通用人工智能底层模型与技术研究的公司，成立于 2023 年，由知名私募巨头幻方量化创立。公司致力于探索人工智能的本质，发布了多个开源大模型，包括 DeepSeek-V3 通用大语言模型等。
 
 我们可以安装 `deepseek-adapter` 适配器来使用该公司提供的模型。
 
@@ -30,10 +30,8 @@ DeepSeek 是一家专注于通用人工智能底层模型与技术研究的公�
 :::
 
 获取到 API key 后，转到 `deepseek-adapter` 的配置页面。
-。
-当然，你也可以更改你喜欢的其他平台名。
 
-完成后在请求设置里填入你的 API key 和 请求地址。请求地址应为 `https://api.deepseek.com/v1`。
+在请求设置里填入你的 API key 和 请求地址。请求地址应为 `https://api.deepseek.com/v1`。
 
 ![deepseek](../../public/images/image-12.png)
 
@@ -41,8 +39,16 @@ DeepSeek 是一家专注于通用人工智能底层模型与技术研究的公�
 
 ## 使用
 
-在适配器的配置页面，点击运行按钮，如无误，你应该看不到任何错误 log，那即可转到 ChatLuna 的主插件页面。
+在 Deepseek 适配器的配置页面，点击运行按钮，检查你的日志界面，是否看到错误日志。
 
-在主插件页面，下划到 [模版房间选项](../useful-configurations.md#模版房间选项)，查看 [defaultModel](../useful-configurations.md#defaultmodel) 的选项里是否含有 DeepSeek 模型，如果有，则说明你已经成功地接入了 DeepSeek 平台。
+如无误，则可以转到沙盒或者其他聊天平台，使用 `chatluna.model.test` 命令查看是否接入成功：
 
-![deepseek](../../public/images/image-13.png)
+<chat-panel>
+  <chat-message nickname="User">chatluna.model.test deepseek/deepseek-chat</chat-message>
+  <chat-message nickname="Bot">模型 deepseek/deepseek-chat 测试成功！<br/>
+响应时间：5255ms<br/>
+示例回复：Hello! How can I assist you today?<br/>
+  </chat-message>
+</chat-panel>  
+
+测试成功后，则代表你已成功接入 Deepseek 平台，可以正常使用了。

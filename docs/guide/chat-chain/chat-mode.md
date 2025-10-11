@@ -31,7 +31,7 @@ agent 模式让模型可以调用工具，并根据工具的返回结果，继�
 > [!TIP]
 > ChatLuna 主插件中没有内置可供 agent 聊天模式使用的工具。
 >
-> 因此你需要安装 [`chatluna-plugin-common`](../../ecosystem/introduction.md) 或 [`chatluna-mcp-client`](../../ecosystem/plugin/mcp-client.md) 插件来为 agent 模式提供可用的工具。
+> 你需要安装 [`chatluna-plugin-common`](../../ecosystem/introduction.md) 或 [`chatluna-mcp-client`](../../ecosystem/plugin/mcp-client.md) 插件来为 agent 模式提供可用的工具。
 
 ### browsing
 

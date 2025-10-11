@@ -6,6 +6,7 @@ ChatLuna 针对模型的输出提供了一套渲染 API，可以方便的将模�
 
 - **raw**: 纯文本输出。将模型的回复内容直接输出。
 - **text**: 基于 [koishi-plugin-markdown](https://markdown.koishi.chat/)，将模型的（Markdown）回复内容渲染为 Koishi 消息格式，输出到聊天平台上。
+- **pure-text**: 纯文本输出。与 `raw` 不同的是，此模式会移除所有的 Markdown 标记。返回纯净文本。
 - **koishi-element**: 基于 [Koishi 消息元素](https://koishi.chat/zh-CN/guide/basic/element.html)，将模型的回复内容渲染为 Koishi 消息元素，输出到聊天平台上。
 - **voice**: 基于 [vits](https://github.com/initialencounter/2022-12-24/blob/neat/plugins/Tool/vits/readme.md) 服务，将模型的回复内容转换成语音输出。
 - **mixed-voice**: 基于 [vits](https://github.com/initialencounter/2022-12-24/blob/neat/plugins/Tool/vits/readme.md) 服务，将模型的回复内容转换成语音输出，同时也回复纯文本。
@@ -30,14 +31,12 @@ ChatLuna 针对模型的输出提供了一套渲染 API，可以方便的将模�
 这类的消息元素，会被渲染为：
 
 <chat-panel>
-  
   <chat-message nickname="Bot">
     <strong>@xx</strong> 你好
   </chat-message>
-  
 </chat-panel>
 
-只需要让模型遵循 [这些](https://koishi.chat/zh-CN/api/message/syntax.html) 格式，就可以发送任意格式的文件，包括艾特，图片，语音，视频等。
+只需要让模型遵循 [这些](https://koishi.chat/zh-CN/api/message/syntax.html) 消息元素格式作为回复，就可以发送任意格式的消息元素。包括 AT，图片，语音，视频等。
 
 ## 语音输出
 
@@ -49,7 +48,7 @@ ChatLuna 针对模型的输出提供了一套渲染 API，可以方便的将模�
 可以使用 `impl:vits` 来搜寻实现了 `vits` 服务的插件。
 :::
 
-具体配置请自行参考插件本身的主页，帮助等。
+具体配置请自行参考这些插件自身的主页，帮助等。
 
 ## 图片输出
 
@@ -64,11 +63,11 @@ ChatLuna 针对模型的输出提供了一套渲染 API，可以方便的将模�
 使用 [`chatluna.chat.text -t <mode>`](../useful-commands.md#直接对话) 命令进行聊天，`-t` 后面配上你的模式即可。
 
 :::tip 提示
-使用 at 的响应无法进行单次设置输出模式。
+使用 AT 的消息，无法设置单次输出模式。
 :::
 
 ### 全局设置（推荐）
 
 前往 Koishi 控制台，找到 ChatLuna 主插件的配置项，在 [`outputMode`](../useful-configurations.md#outputmode) 选项里选择你需要使用的输出模式即可。
 
-这是全局的设置，也包括艾特的响应。
+这是全局的设置，包括 AT 的其他模式的响应。

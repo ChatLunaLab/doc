@@ -32,7 +32,7 @@ RWKV（Receptance Weighted Key Value）是一种创新的深度学习网络架�
 ::: tip 提示
 对于 `ai00_server`，你可能需要修改为 `http://127.0.0.1:65530/api/oai`。注意 `ai00_server` 的地址需要添加 `api/oai` 后缀。
 
-如果上面的后端你设置了 `api key`，请一并填写到 RWKV 适配器里。默认情况下 `RWKV Runner` 没有设置 `api key`。
+当你的 RWKV 后端设置了 `api key` 是，请一并填写到 RWKV 适配器里。默认情况下 `RWKV Runner` 没有设置 `api key`。
 :::
 
 设置好后，记得点击右上角的保存按钮。
