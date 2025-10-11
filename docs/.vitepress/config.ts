@@ -169,10 +169,15 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
             text: "配置",
             items: [
                 {
-                    text: "常用指令和配置项",
+                    text: "常用指令与配置项",
                     collapsed: true,
                     items: [
-                        { text: "用法", link: "/guide/useful-commands" },
+                        { text: "对话", link: "/guide/useful-commands/chat" },
+                        { text: "房间", link: "/guide/useful-commands/room" },
+                        { text: "预设", link: "/guide/useful-commands/preset" },
+                        { text: "模型", link: "/guide/useful-commands/model" },
+                        { text: "长期记忆", link: "/guide/useful-commands/memory" },
+                        { text: "系统", link: "/guide/useful-commands/system" },
                         {
                             text: "配置项",
                             link: "/guide/useful-configurations",
