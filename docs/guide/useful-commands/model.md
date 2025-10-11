@@ -9,6 +9,29 @@ ChatLuna 提供了一些使用的模型指令，用于查看和设置模型。
 >
 > 阅读 [模型平台](../configure-model-platform/introduction.md) 了解更多。
 
+## 测试模型可用性
+
+测试当前平台或模型的可用性。
+
+以下为命令格式:
+
+```powershell
+chatluna.model.test <model:string>
+```
+
+以下为必须参数：
+
+- `model:string`: 模型名称。也可以是一个平台名称，如：（`openai`,`openai/gpt-4.1-nano`）
+
+以下为例子:
+<chat-panel>
+  <chat-message nickname="User">chatluna.model.test openai/gpt-4.1-nano</chat-message>
+  <chat-message nickname="Bot">模型 openai-like/gpt-4.1-nano 测试成功！<br/>
+响应时间：2255ms<br/>
+示例回复：Hello! How can I assist you today?<br/>
+  </chat-message>
+</chat-panel>  
+
 ## 列出大语言模型列表
 
 列出当前 ChatLuna 可用的大语言模型列表。

@@ -34,17 +34,25 @@ OpenAI 模型适配器还支持多模态和 Agent 模式。允许模型读取图
 
 ## 使用
 
-在 OpenAI 适配器的配置页面，点击运行按钮，如无误，你应该看不到任何错误 log，那即可转到 ChatLuna 的主插件页面。
+在 OpenAI 适配器的配置页面，点击运行按钮，检查你的日志界面，是否有看到错误日志。
 
-在主插件页面，下划到 [模版房间选项](../useful-configurations.md#模版房间选项)，查看 [defaultModel](../useful-configurations.md#defaultmodel) 的选项里是否含有 OpenAI 模型，如果有，则说明你已经成功地接入了 OpenAI 平台。
+如无误，则可以转到沙盒或者其他聊天平台，使用 `chatluna.model.test` 命令查看是否接入成功：
 
-![images](../../public/images/plugin_main_pic_1.png)
+<chat-panel>
+  <chat-message nickname="User">chatluna.model.test openai/gpt-4.1-nano</chat-message>
+  <chat-message nickname="Bot">模型 openai-like/gpt-4.1-nano 测试成功！<br/>
+响应时间：2255ms<br/>
+示例回复：Hello! How can I assist you today?<br/>
+  </chat-message>
+</chat-panel>  
+
+测试成功后，则代表你已成功接入 OpenAI 平台，可以正常使用了。
 
 ## 常见问题
 
 ### 1. 国内平台如何接入？
 
-国内平台接入 OpenAI 官方的接口，需要代理设置，前往主插件的配置页面，开启 [代理模式](../useful-configurations.md/#isproxy)，并配置 [代理地址](../useful-configurations.md#proxyaddress)。
+国内平台接入 OpenAI 官方的接口，需要代理设置。前往主插件的配置页面，开启 [代理模式](../useful-configurations.md/#isproxy)，并配置 [代理地址](../useful-configurations.md#proxyaddress)。
 
 > [!TIP] 提示
 > 社区成员提供了免费的反向代理地址，使用反向代理地址无需开启代理模式，请在确认风险后使用。

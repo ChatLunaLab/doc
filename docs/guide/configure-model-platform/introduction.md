@@ -22,7 +22,7 @@ ChatLuna 的模型平台是其核心功能之一。它为 ChatLuna 核心和各�
 - [RWKV](rwkv.md)
 - [混元大模型](hunyuan.md)
 
-对于 OpenAI 兼容 API（如 [One API](https://github.com/songquanpeng/one-api)，[New API](https://github.com/QuantumNous/new-api)，可以使用以下适配器进行多开接入：
+对于 OpenAI 兼容 API（如 [One API](https://github.com/songquanpeng/one-api)，[New API](https://github.com/QuantumNous/new-api)），可以使用以下适配器进行多开接入：
 
 - [OpenAI Like](openai-like.md)
 
