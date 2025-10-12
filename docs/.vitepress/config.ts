@@ -106,7 +106,7 @@ export default defineConfig({
 
             md.use(InlineLinkPreviewElementTransform);
         },
-        codeTransformers: [transformerTwoslash()],
+        codeTransformers: [transformerTwoslash() as any],
         image: {
             lazyLoading: true,
         },
@@ -127,7 +127,7 @@ export default defineConfig({
             ThumbnailHashImages(),
             GitChangelog({
                 maxGitLogCount: 2000,
-                repoURL: () => "https://github.com/chatlunalab/doc",
+                repoURL: () => "https://github.com/ChatLunaLab/doc",
             }),
             GitChangelogMarkdownSection({
                 exclude: (id) => id.endsWith("index.md"),
@@ -176,7 +176,10 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                         { text: "房间", link: "/guide/useful-commands/room" },
                         { text: "预设", link: "/guide/useful-commands/preset" },
                         { text: "模型", link: "/guide/useful-commands/model" },
-                        { text: "长期记忆", link: "/guide/useful-commands/memory" },
+                        {
+                            text: "长期记忆",
+                            link: "/guide/useful-commands/memory",
+                        },
                         { text: "系统", link: "/guide/useful-commands/system" },
                         {
                             text: "配置项",
@@ -379,12 +382,16 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                             link: "/guide/preset-system/introduction",
                         },
                         {
-                            text: "使用预设",
-                            link: "/guide/preset-system/switch-preset",
+                            text: "渲染模板",
+                            link: "/guide/preset-system/template",
                         },
                         {
                             text: "编写预设",
                             link: "/guide/preset-system/write-preset",
+                        },
+                        {
+                            text: "使用预设",
+                            link: "/guide/preset-system/switch-preset",
                         },
                         {
                             text: "分享预设",

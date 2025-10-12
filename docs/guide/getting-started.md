@@ -6,7 +6,7 @@
 
 在使用 ChatLuna 之前，你需要安装 Koishi。
 
-Koishi 是一个跨平台、可扩展、高性能的聊天机器人框架。
+Koishi 是一个跨平台、可扩展、高性能的聊天机器人框架。ChatLuna 基于 Koishi 框架开发。
 
 按照 [Koishi 官方文档](https://koishi.chat/zh-CN/) 来安装 Koishi。
 
@@ -16,9 +16,9 @@ Koishi 是一个跨平台、可扩展、高性能的聊天机器人框架。
 
 ### 配置聊天平台
 
-安装 Koishi 后，你需要选择一个聊天平台来接入机器人，或使用 [沙盒环境](https://koishi.chat/zh-CN/manual/usage/adapter.html#%E5%9C%A8%E6%B2%99%E7%9B%92%E4%B8%AD%E6%A8%A1%E6%8B%9F%E5%AF%B9%E8%AF%9D) 测试。
+安装 Koishi 后，你需要接入一个聊天平台来使用机器人，或在 [沙盒环境](https://koishi.chat/zh-CN/manual/usage/adapter.html#%E5%9C%A8%E6%B2%99%E7%9B%92%E4%B8%AD%E6%A8%A1%E6%8B%9F%E5%AF%B9%E8%AF%9D) 下测试。
 
-如你选择使用沙盒环境，可以直接跳到 [下一步](/guide/getting-started.html#安装前置依赖插件)。
+如你选择使用沙盒环境，可以直接跳到 [下一步](#安装前置依赖服务)。
 
 如你选择接入实际的聊天平台，请参考 [接入真实聊天平台](https://koishi.chat/zh-CN/manual/usage/adapter.html#%E6%8E%A5%E5%85%A5%E7%9C%9F%E5%AE%9E%E8%81%8A%E5%A4%A9%E5%B9%B3%E5%8F%B0)。
 

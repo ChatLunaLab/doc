@@ -3,7 +3,7 @@
 谁不想拥有一只属于自己的赛博猫娘呢？通过使用预设系统，你可以轻松地让模型进行角色扮演，认为自己是猫娘，甚至是其他更多角色。本节将详细讲解如何编写预设，并将其应用到 ChatLuna 上。
 
 > [!TIP] 提示
-> ChatLuna 已经开放了在线预设编辑器！直接在网页上以可视化的方式来编写预设，无需接触复杂的 YAML 配置文件，更有预设广场浏览和下载你心仪的预设！点击 [此处](https://preset.chatluna.chat) 即可访问在线编辑器。
+> ChatLuna 已经开放了在线预设编辑器！你可以网页上以可视化的方式来编写预设，无需接触复杂的 YAML 格式，更有预设广场浏览和下载你心仪的预设！点击 [此处](https://preset.chatluna.chat) 即可访问在线编辑器。
 
 ## 基础格式
 
@@ -53,87 +53,119 @@ format_user_prompt: "用户{sender}说: {prompt}"
 
 :::
 
-阅读上面的示例文件，相信你已经对 ChatLuna 的预设文件有基础的认识，接下来让我们更进一步，细致的讲解每个属性的用处吧。
+阅读上面的示例文件，相信你已经对 ChatLuna 的预设文件有基础的认识。
 
-### 关键词
+下面让我们进一步细致的讲解每个属性的用处吧。
 
-关键词（keywords）是预设文件中重要的属性之一，它代表着预设文件的关键词。
+### 关键词 (keywords)
 
-一个预设文件可以含有多个关键词，这意味着关键词实际上是一个数组。
+关键词（keywords）是预设文件中重要的属性之一，一个预设文件可以含有多个关键词。
 
-预设文件中的关键词可以被 ChatLuna 识别，当用户使用命令创建或修改房间时，输入的关键词就会让 ChatLuna 去寻找对应的预设文件。
+预设文件中的关键词会被 ChatLuna 识别，当用户使用命令创建或修改房间时，会基于输入的关键词，让 ChatLuna 寻找对应的预设文件。
 
-也就是说，关键词属于预设文件的唯一标识符。
+可以认为，属于预设文件的唯一标识符。（但是你可以命名多个关键词，但请不要让多个关键词一致或者冲突）
 
 :::warning
 请不要让不同预设文件里的关键词一致，这会导致关键词冲突。当使用冲突的关键词时，ChatLuna 可能会返回任意一个使用了该关键词的预设（这很可能不会是你想要设置的目标预设）。
 :::
 
-### prompts
+### 提示词 (prompts)
 
-prompts 属性是预设文件里最重要的属性，它代表了预设文件里的对话内容。
+`prompts` 属性是预设文件中的核心配置，用于定义固定的对话消息序列。该属性接受一个消息对象数组，每个对象必须包含 `role` 和 `content` 两个属性。
 
-prompts 本质上就是由多个 prompt 组成的数组，换一种更通俗的说法就是，prompts 就是预设文件里的固定消息内容。
+这些消息会在每次对话时插入到上下文的开头，并在整个对话过程中保持不变，确保模型始终遵循预设中定义的角色设定和行为规范。
 
-prompts 属性内是一个数组，数组内含有 `role` , `content` 属性组成的对象。这些对象就是 prompt。
-每个 prompt 都需要含有 `role` 和 `content` 属性。
+`role` 属性定义消息发送者的身份类型:
 
-`role` 属性代表着发送消息者的身份。可在下列值中选择：
+- `system`: 用于定义角色设定和行为规范，模型会优先遵循系统消息。
+- `user`: 用于模拟用户输入，可提供对话示例。
+- `assistant`: 用于模拟模型回复，多个助手消息可强化特定的回复风格。
 
-* `user`: 用户消息，这部分消息模型会理解为是用户的消息。
-* `system`: 系统消息，这部分消息模型会理解为是系统的消息，模型总是会遵循系统的消息。
-* `assistant`: 模型消息，这部分消息模型会理解为是模型自己生成的消息。多条 `assistant` 消息可让模型生成消息的风格更偏向与这些 `assistant` 的发送的风格。
+`content` 属性定义消息的实际文本内容，支持使用 `|-` 语法定义多行文本、变量占位符和 Markdown 格式。
 
-`content` 属性代表着实际消息的内容。
-
-这些内容会放置在每次和模型对话的消息列表的最前面，无论怎么对话，这些内容始终都不会被移除掉。这和在 ChatGPT 里发送洗脑 Prompt 类似，但是其效果更强（我们会让模型永远能阅读这些内容，并且不会在多次聊天后被移除）。
-
-### format_user_prompt
-
-该属性用于替换用户发送的消息，通过变量占位符，在实际使用的时候替换成对应的文字。
-
-例如:
-
-用户114514向模型发送: `"压力马斯内"`
-
-`format_user_prompt` 的值为 `"用户{sender}说: {prompt}"`
-
-那么实际向模型发送的消息就会被替换为 `"用户114514说:压力马斯内"` 。
-
-### 变量占位符
-
-变量占位符是由 ChatLuna 提供的一些固定量，在发送时会被替换为某些值。语法如下:
-
-```txt
-text{variable_name} | {variable_name::xx::xx} | {variable_name:xx,xx,xx}
+```yaml
+# 应当这样做！
+prompts:
+  - role: system
+    content: |-
+      You are ChatGPT, a large language model trained by OpenAI.
+      Knowledge cutoff: 2021-09
+      Current date: {date}
 ```
 
-目前 ChatLuna 提供了以下变量供使用（后续可能还会增加其他变量）:
+编写预设时，应当在数组开头定义 `system` 消息设定角色基础信息，使用清晰、具体的语言描述角色特征。
 
-* `date`: 当前日期，遵循标准 UTC 格式。
-* `sender`: 发送者昵称 (只在 format_user_prompt 里有效)。
-* `sender_id`: 发送者 id (只在 format_user_prompt 里有效)。
-* `is_group`: 是否在群聊。
-* `is_private`: 是否为私聊。
-* `weekday`: 当前星期几。
-* `bot_id`: bot 本身的 id。
-* `user_id`: 发送者 id。（只在 prompt 里有效）
-* `user`: 发送者昵称。(只在 prompt 里有效)
-* `name`: 机器人姓名，实际对应[此](/guide/useful-configurations/#bot-配置)内的 bot name。
-* `prompt`: 用户实际发送的内容（只在 format_user_prompt 里有效）。
-* `isotime`: 当前时间，遵循标准 ISO 格式。
-* `isodate`: 当前日期，遵循标准 ISO 格式。
-* `time_UTC±X`: 当前时间，遵循标准 UTC 格式，X 为正负小时差。如 `time_UTC+8` 表示东八区时间。
-* `random:(args)`: 从列表中随机选择一个值。如 `random:1,2,3,4,5` 会随机选择 1, 2, 3, 4, 5 中的一个值。这些值也可以为字符串，如 `random:a,b,c` 会随机选择 a, b, c 中的一个值。
-* `random::(min)::(max)`: 从 min 到 max 的随机数。如 `random::1::10` 会随机选择 1 到 10 的随机数。
-* `roll:(formula)`: 使用 D&D 骰子语法投掷骰子。如 `roll:d6` 会投掷 1 到 6 的骰子。
-* `idle_duration`: 插入一个表示上次用户消息发送以来的时间范围的人性化字符串（例如：1 day, 2 hours）。
-* `url::[get/post]::[url]::[data]`: 发送 HTTP 请求，并将请求结果插入到上下文中。如 `url::get::https://api.example.com/data` 会发送 GET 请求到 <https://api.example.com/data>，并将请求结果插入到上下文中。
+你可以通过多组 `user`/`assistant` 对话示例展示预期的交互模式。需要注意的是，过多示例可能导致模型过度拟合，重复回复类似的文本。
 
-> [!TIP] 提示
-> 如果你的预设需要使用原始的 &#123; 和 &#125; 字符，可以使用 &#123; &#123; 和 &#125; &#125; 来代替。
+所有的 `prompts` 消息会占用模型上下文窗口，需要你合理的控制提示词的大小。
 
-### 世界书
+### 输入提示词格式化 (format_user_prompt)
+
+`format_user_prompt` 属性用于定义用户输入消息的格式化模板。
+
+该属性接收一个支持 [ChatLuna 渲染模板](template.md) 的字符串模板，在运行时 ChatLuna 会渲染此模板，将渲染后的消息传递给模型。
+
+```yaml
+# 应当这样做！
+format_user_prompt: "用户{user}说: {prompt}"
+```
+
+当用户 ID 为 `114514` 且消息内容为 `"压力马斯内"` 时，上述配置会将消息渲染为 `"用户114514说: 压力马斯内"`。
+
+该属性为可选配置，如未定义则用户消息将以原始形式发送。
+
+此配置适用于在群聊环境中标识不同发言者、添加时间地点等上下文信息、为不同用户分配称呼或身份等场景。
+
+变量占位符必须使用正确的语法格式，完整的变量列表参见 [变量与函数](#变量与函数) 章节。
+
+### 变量与函数
+
+ChatLuna 预设系统使用花括号 `{}` 进行变量插值和函数调用。变量会在渲染时被替换为对应的值，函数使用圆括号调用，多个参数用逗号分隔。需要特别注意的是，**字符串参数必须使用单引号或双引号包裹**，例如 `{concat('Hello', name)}` 中的 `'Hello'` 是字符串字面量需要加引号，而 `name` 是变量引用不需要加引号。完整的语法规则和控制流语句（条件判断、循环等）请参见 [渲染模板](template.md) 文档。
+
+```yaml
+# 应当这样做！字符串参数需要加引号
+content: "你好，{name}！今天是 {date}"
+content: "{random('优秀', '良好', '及格')}"
+content: "{concat('用户', name, '说：', prompt)}"
+```
+
+以下变量和函数可在预设系统中使用。其中部分变量（如 `sender`、`prompt`）仅在 ChatLuna 主插件的特定上下文中可用，主要用于处理对话相关的信息。
+
+而其他变量和函数（如 `date`、`random`）则在所有支持 ChatLuna 渲染模板的场景中均可使用。
+
+#### 对话上下文变量（仅限 ChatLuna 主插件可用）
+
+- `sender` - 发送者昵称（仅在 `format_user_prompt` 中可用）
+- `sender_id` - 发送者 ID（仅在 `format_user_prompt` 中可用）
+- `user` - 发送者昵称（仅在 `prompts` 中可用）
+- `user_id` - 发送者 ID（仅在 `prompts` 中可用）
+- `prompt` - 用户实际发送的内容（仅在 `format_user_prompt` 中可用）
+- `is_group` - 是否在群聊环境中
+- `is_private` - 是否为私聊环境
+- `idle_duration` - 上次用户消息以来的时间范围，以人性化字符串表示（例如 "1 day, 2 hours"）
+- `bot_id` - 机器人的 ID
+- `name` - 机器人的姓名，对应 [bot 配置](/guide/useful-configurations/#bot-配置)中的 bot name
+
+#### 日期时间变量（通用，所有预设系统均可用）
+
+- `date` 当前日期，遵循标准 UTC 格式
+- `isotime` - 当前时间，遵循标准 ISO 格式
+- `isodate` - 当前日期，遵循标准 ISO 格式
+- `time_UTC('+8')`、`time_UTC('-5')` - 指定时区的当前时间，使用 UTC 偏移量表示时区
+- `weekday` - 当前星期几
+
+#### 随机与骰子函数（通用）
+
+- `random(1, 2, 3)` - 从参数中随机选择一个值，支持数字和字符串。例如 `random('a', 'b', 'c')` 会随机返回 a、b 或 c 之一
+- `random(1, 10)` - 生成指定范围内的随机整数，包含边界值
+- `roll('d6')` - 使用 D&D 骰子语法投掷骰子。支持复杂表达式，如 `roll('2d20+5')` 表示投掷 2 个 20 面骰子并加 5
+
+#### 网络请求函数（通用）
+
+- `url('get', 'https://api.example.com/data')` - 发送 GET 请求到指定 URL，将响应结果插入到上下文中
+- `url('post', 'https://api.example.com/data', '{"key":"value"}')` - 发送 POST 请求，第三个参数为请求体数据
+
+### 世界书 (world_lores)
 
 World Book（或称 Lorebooks）是 ChatLuna 的特色功能之一，它允许你为你的预设编写一系列信息，并且通过关键词在合适的时机插入这些信息。
 
@@ -159,26 +191,26 @@ world_lores:
 
 对于第一个没有 `keywords` 的 `world_lore` 子项，这代表世界书的默认配置项，以下是可用的配置项：
 
-* `scanDepth`: 扫描深度，代表着会扫描多深的聊天信息。当设置为 0 时，不会扫描任何聊天信息，设置为 1 时，会扫描最近 1 条聊天信息，设置为 2 时，会扫描最近 2 条聊天信息，以此类推。
-* `tokenLimit`: 当所有扫描后可用的世界书信息总 token 数超过这个值时，会停止扫描。
-* `recursiveScan`: 是否递归扫描。递归扫描意味着世界书条目类的内容可以继续触发其他的世界书条目类。
-* `maxRecursionDepth`: 最大递归深度。当设置为 3 时，会递归扫描 3 层世界书条目类。
+- `scanDepth`: 扫描深度，代表着会扫描多深的聊天信息。当设置为 0 时，不会扫描任何聊天信息，设置为 1 时，会扫描最近 1 条聊天信息，设置为 2 时，会扫描最近 2 条聊天信息，以此类推。
+- `tokenLimit`: 当所有扫描后可用的世界书信息总 token 数超过这个值时，会停止扫描。
+- `recursiveScan`: 是否递归扫描。递归扫描意味着世界书条目类的内容可以继续触发其他的世界书条目类。
+- `maxRecursionDepth`: 最大递归深度。当设置为 3 时，会递归扫描 3 层世界书条目类。
 
 #### 条目配置
 
 对于第二个有 `keywords` 的 `world_lore` 子项或者其他 `world_lore` 子项，这代表世界书的主要条目类，以下是可用的配置项（会覆盖默认配置项）：
 
-* `keywords`: 关键词，代表着触发世界书条目类的关键词。可以使用正则表达式来匹配关键词。
-* `content`: 内容，代表着当扫描到关键词的聊天信息时，会插入的内容。该内容支持变量占位符。
-* `scanDepth`: 扫描深度，代表着会扫描多深的聊天信息。当设置为 0 时，不会扫描任何聊天信息，设置为 1 时，会扫描最近 1 条聊天信息，设置为 2 时，会扫描最近 2 条聊天信息，以此类推。
-* `recursiveScan`: 是否递归扫描。递归扫描意味着世界书条目类的内容可以继续触发其他的世界书条目类。
-* `maxRecursionDepth`: 最大递归深度。当设置为 3 时，会递归扫描 3 层世界书条目类。
-* `matchWholeWord`: 是否匹配整个单词。当设置为 true 时，只会匹配整个单词。当设置为 false 时，会匹配单词的一部分。
-* `caseSensitive`: 是否区分大小写。当设置为 true 时，会区分大小写。当设置为 false 时，不区分大小写。
-* `enabled`: 是否启用。当设置为 true 时，会启用世界书条目类。当设置为 false 时，会禁用世界书条目类。
-* `constant`: 是否始终匹配。当设置为 true 时，该世界书条目总是会插入上下文中。
+- `keywords`: 关键词，代表着触发世界书条目类的关键词。可以使用正则表达式来匹配关键词。
+- `content`: 内容，代表着当扫描到关键词的聊天信息时，会插入的内容。该内容支持变量占位符。
+- `scanDepth`: 扫描深度，代表着会扫描多深的聊天信息。当设置为 0 时，不会扫描任何聊天信息，设置为 1 时，会扫描最近 1 条聊天信息，设置为 2 时，会扫描最近 2 条聊天信息，以此类推。
+- `recursiveScan`: 是否递归扫描。递归扫描意味着世界书条目类的内容可以继续触发其他的世界书条目类。
+- `maxRecursionDepth`: 最大递归深度。当设置为 3 时，会递归扫描 3 层世界书条目类。
+- `matchWholeWord`: 是否匹配整个单词。当设置为 true 时，只会匹配整个单词。当设置为 false 时，会匹配单词的一部分。
+- `caseSensitive`: 是否区分大小写。当设置为 true 时，会区分大小写。当设置为 false 时，不区分大小写。
+- `enabled`: 是否启用。当设置为 true 时，会启用世界书条目类。当设置为 false 时，会禁用世界书条目类。
+- `constant`: 是否始终匹配。当设置为 true 时，该世界书条目总是会插入上下文中。
 
-### 作者注释
+### 作者注释 (authors_note)
 
 作者注释提供了在不定频率随机插入内容的功能。下面是一个示例：
 
@@ -192,15 +224,15 @@ authors_note:
 
 让我们来解释一下这些配置项：
 
-* `content`: 注释的具体内容，支持上方的变量占位符。
-* `insertPosition`: 插入位置，可选值如下：
-  + `after_char_defs`: 将作者注释放置在角色定义的最后部分之后，以及示例消息之前。
-  + `in_chat`: 将作者注释放入聊天信息的末尾。
+- `content`: 注释的具体内容，支持上方的变量占位符。
+- `insertPosition`: 插入位置，可选值如下：
+  - `after_char_defs`: 将作者注释放置在角色定义的最后部分之后，以及示例消息之前。
+  - `in_chat`: 将作者注释放入聊天信息的末尾。
 
   默认为 `in_chat` 。
 
-* `insertionFrequency`: 插入频率，表示多久插入一次作者注释。
-* `insertDepth`: 插入深度，表示插入到聊天信息的哪个位置。(只在 `insertPosition` 为 `in_chat` 时有效)
+- `insertionFrequency`: 插入频率，表示多久插入一次作者注释。
+- `insertDepth`: 插入深度，表示插入到聊天信息的哪个位置。(只在 `insertPosition` 为 `in_chat` 时有效)
 
 #### 插入位置
 
@@ -209,8 +241,8 @@ authors_note:
 
 2. `in_chat`：
    这会将作者注释放入聊天历史中的指定深度。深度指定为 `insertDepth` 的值。
-   * 深度 0 = 放置在聊天历史的最末端。
-   * 深度 4 = 放置在最近的 3 条聊天消息之前，使其成为聊天历史中的第 4 个实体。
+   - 深度 0 = 放置在聊天历史的最末端。
+   - 深度 4 = 放置在最近的 3 条聊天消息之前，使其成为聊天历史中的第 4 个实体。
 
    作者注释越接近提示的底部，对模型响应的影响就越大。
 
@@ -218,28 +250,9 @@ authors_note:
 
 插入频率决定了你希望作者注释在聊天中出现的频率。
 
-* 频率 0 = 作者注释永远不会被插入。
-* 频率 1 = 作者注释将在每个用户输入提示中插入。
-* 频率 4 = 作者注释将在每第 4 个用户输入提示中插入。
-
-### 知识库
-
-ChatLuna 官方基于已有的 API 扩展了[知识库插件](../../ecosystem/extension/knowledge.md)，使得模型可以基于提供的资料回答用户的问题。下面是一个示例：
-
-```yml
-knowledge:
-    knowledge: "Koishi 客服"  # 知识库名称
-    prompt: "请基于已有的资料回答用户的问题。如果给定的资料不足以回答用户的问题，你可以说“根据我目前的知识无法回答该问题，请提供更多的细节，以便我能够给出更准确的答案。“下面是资料：{input}"
-   #knowledge: ['知识库1',"知识库2"] #可以指定多个知识库
-```
-
-#### knowledge
-
-`knowledge` 字段用于指定使用哪个知识库。可以是单个知识库的名称，也可以是多个知识库的名称组成的数组。
-
-#### prompt
-
-`prompt` 字段用于指定知识库结合资料时所用的 Prompt。使用 {input} 来表示资料。
+- 频率 0 = 作者注释永远不会被插入。
+- 频率 1 = 作者注释将在每个用户输入提示中插入。
+- 频率 4 = 作者注释将在每第 4 个用户输入提示中插入。
 
 ### 更多配置项
 
@@ -254,9 +267,9 @@ config:
 
 下面是每个配置项的解释：
 
-* `longMemoryPrompt`: 长期记忆的触发 Prompt，使用 {long_history} 表示可用的长期记忆。可以参考 [此处](https://github.com/ChatLunaLab/chatluna/blob/2e5247f44f5d04556fda3949b5170ace1e626e01/packages/core/src/llm-core/chain/prompt.ts#L100C49-L100C61) 的配置。
-* `longMemoryExtractPrompt`: 长期记忆的提取 Prompt，使用 {user_input} 表示输入的对话历史记录。可以参考 [此处](https://github.com/ChatLunaLab/chatluna/blob/2e5247f44f5d04556fda3949b5170ace1e626e01/packages/core/src/llm-core/memory/history/index.ts#L303) 的配置。
-* `loreBooksPrompt`: 世界书的输入格式化 Prompt，使用 {input} 表示输入的世界书内容。可以参考 [此处](https://github.com/ChatLunaLab/chatluna/blob/2e5247f44f5d04556fda3949b5170ace1e626e01/packages/core/src/llm-core/chain/prompt.ts#L100C49-L100C61) 的配置。
+- `longMemoryPrompt`: 长期记忆的触发 Prompt，使用 {long_history} 表示可用的长期记忆。可以参考 [此处](https://github.com/ChatLunaLab/chatluna/blob/2e5247f44f5d04556fda3949b5170ace1e626e01/packages/core/src/llm-core/chain/prompt.ts#L100C49-L100C61) 的配置。
+- `longMemoryExtractPrompt`: 长期记忆的提取 Prompt，使用 {user_input} 表示输入的对话历史记录。可以参考 [此处](https://github.com/ChatLunaLab/chatluna/blob/2e5247f44f5d04556fda3949b5170ace1e626e01/packages/core/src/llm-core/memory/history/index.ts#L303) 的配置。
+- `loreBooksPrompt`: 世界书的输入格式化 Prompt，使用 {input} 表示输入的世界书内容。可以参考 [此处](https://github.com/ChatLunaLab/chatluna/blob/2e5247f44f5d04556fda3949b5170ace1e626e01/packages/core/src/llm-core/chain/prompt.ts#L100C49-L100C61) 的配置。
 
 ## 最佳实践
 
@@ -284,9 +297,9 @@ prompts:
 > [!TIP] 提示
 > 优秀的预设 Prompt 应该具有以下要素：
 >
-> * 角色的基础设定，性格，背景，故事。
-> * 角色的对话风格，语气。
-> * 角色的个性，特点和常用对话。
+> - 角色的基础设定，性格，背景，故事。
+> - 角色的对话风格，语气。
+> - 角色的个性，特点和常用对话。
 >
 > 如果是用于实用类的预设，应该简洁直白的要求模型需要扮演什么具体工具，不需要添加过多的 Prompt。
 
