@@ -1,4 +1,4 @@
-# 网络浏览
+# 联网浏览
 
 此工具基于 [search-service](../../ecosystem/plugin/search-service.md) 实现。
 

@@ -311,7 +311,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                     ],
                 },
                 {
-                    text: "模型工具",
+                    text: "Agent 工具",
                     collapsed: true,
                     items: [
                         {
@@ -323,15 +323,15 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                             link: "/guide/model-plugin-system/web-search",
                         },
                         {
-                            text: "网络浏览",
+                            text: "网页浏览",
                             link: "/guide/model-plugin-system/web-browser",
                         },
                         {
-                            text: "网络请求",
+                            text: "URL 请求",
                             link: "/guide/model-plugin-system/request-web",
                         },
                         {
-                            text: "指定 API 请求",
+                            text: "OpenAPI 请求",
                             link: "/guide/model-plugin-system/specify-api-request",
                         },
                         {
@@ -355,8 +355,12 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                             link: "/guide/model-plugin-system/thinking",
                         },
                         {
-                            text: "代码执行",
-                            link: "/guide/model-plugin-system/code-interpreter",
+                            text: "TODO 工具",
+                            link: "/guide/model-plugin-system/todo",
+                        },
+                        {
+                            text: "群管（禁言）工具",
+                            link: "/guide/model-plugin-system/group",
                         },
                         {
                             text: "主动记忆",

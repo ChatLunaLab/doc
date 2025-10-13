@@ -7,8 +7,6 @@
 ## 配置
 
 - 参考 [介绍](introduction.md) 中的配置方法，启用 `plugin-common` 插件。
-- 前往插件市场搜索 `schedule` 插件并安装。
-- (可选) 前往插件市场搜索 `echo` 插件并安装。
 - 按照下图配置在 `plugin-common` 插件中启用 `cron` 选项。
 
 ![alt text](../../public/images/image-39.png)

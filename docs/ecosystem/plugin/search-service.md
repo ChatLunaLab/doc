@@ -19,6 +19,11 @@
 
 但大部分搜索引擎都需要额外的配置相关参数，才能正常使用。
 
+> [!TIP] 提示
+> 由于免费 API 的搜索精度问题，我们不推荐你使用下面这三个搜索引擎。
+>
+> 你可以选择 `tavily` 、 `serper` 等需要 API Key 的搜索引擎。
+
 #### bing-web、google-web、duckduckgo-lite
 
 只需确认 `puppeteer` 插件启用，并且你的网络环境可以正常访问 Bing、Google 和 DuckDuckGo 即可。
