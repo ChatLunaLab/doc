@@ -20,6 +20,7 @@ Agent 工具是 ChatLuna 的核心功能之一，专为 Agent 模式设计。开
 
 - [联网搜索](web-search.md)
 - [网页浏览](web-browser.md)
+- [URL 请求](./specify-api-request.md)
 - [OpenAPI 请求](request-web.md)
 - [文件读写](file-io.md)
 - [Koishi 命令执行](command-execution.md)
