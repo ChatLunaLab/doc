@@ -1,6 +1,6 @@
 # 总览
 
-基于 Koishi 和 LangChain 强大的 API。ChatLuna 依托其编写了一套简单的 API，来方便开发者快速开发 ChatLuna 插件。
+基于 Koishi 和 LangChain 强大的 API。ChatLuna 提供了一套强大简洁的 API，帮助各位开发者基于 ChatLuna 开发自己的插件。
 
 这里包含了官方或者社区，个人开发者维护的与 ChatLuna 相关的插件。
 
@@ -10,11 +10,13 @@ ChatLuna 插件同时也是 Koishi 插件。
 
 ## 聊天模式 /  Agent 模式工具
 
-为 ChatLuna 提供其他聊天模式或是 Agent 模式可用工具的插件。
+为 ChatLuna 提供其他聊天模式或 Agent 模式可用工具的插件。
 
 - [koishi-plugin-chatluna-service-search](./plugin/search-service.md): 搜索服务插件，为 ChatLuna 提供浏览聊天模式和网页搜索能力（工具）。
-- [koishi-plugin-chatluna-plugin-common](./plugin/common.md): ChatLuna  Agent 模式的基础工具合集。提供文件浏览，画图等工具。
+- [koishi-plugin-chatluna-plugin-common](./plugin/common.md): ChatLuna Agent 模式的基础工具合集。提供文件浏览，画图等工具。
 - [koishi-plugin-chatluna-long-memory](./plugin/long-term-memory.md): ChatLuna 长期记忆插件。提供基于向量数据库的长期记忆能力。
+- [koishi-plugin-chatluna-mcp-service](./plugin/mcp-client.md): ChatLuna MCP 协议端插件。提供 MCP 工具接入能力。
+- [koishi-plugin-chatluna-image-service](./plugin/image-service.md): ChatLuna 图片服务插件。为不支持图片多模态的模型提供多模态图片识别能力。
 
 ## 回复渲染器
 

@@ -52,7 +52,7 @@
 
 你可以寻找支持 `mediawiki` 的维基网站，填入 API 地址到 [Wikipedia 设置](#wikipedia) 配置项中即可。
 
-我们默认提供了 `https://en.wikipedia.org/w/api.php` 和 `https://mzh.moegirl.org.cn/api.php` 两个维基网站。
+我们默认提供了 `https://en.wikipedia.org/w/api.php`，官方英文维基网站。（访问此页面需要确保你的服务器可以正常连接到英文维基）
 
 ## 使用
 

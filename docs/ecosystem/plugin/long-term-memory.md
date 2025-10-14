@@ -21,7 +21,6 @@
 
 :::
 
-
 ## 使用
 
 确保你已经配置好了 [嵌入模型](../configure-embedding-model/introduction.md) 和 [向量数据库](../configure-vector-database/introduction.md)。

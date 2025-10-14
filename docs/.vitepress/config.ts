@@ -636,7 +636,7 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
             link: "/ecosystem/introduction",
         },
         {
-            text: "聊天模式 /  Agent 模式工具",
+            text: "聊天模式 / Agent 模式工具",
             items: [
                 {
                     text: "搜索服务 (Search Service)",
@@ -685,6 +685,19 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
                     link: "/ecosystem/extension/action",
                 },
             ],
+        },
+        {
+            text: "娱乐插件",
+            items: [
+                {
+                    text: "群分析 (A)",
+                    link: "/ecosystem/other/character",
+                },
+                {
+                    text: "Smash Or Pass (Translator)",
+                    link: "/ecosystem/other/translator",
+                }
+            ]
         },
         {
             text: "其他插件",
