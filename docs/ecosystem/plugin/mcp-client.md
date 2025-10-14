@@ -54,16 +54,16 @@ MCP 协议是 Model Context Protocol 的缩写，是 LangChain 提供的一种�
 直接调用指令即可：
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.mcp.add {
-  "mcpServers": {
-    "exa": {
-      "command": "npx",
-      "args": ["/path/to/exa-mcp-server/build/index.js"],
-      "env": {
-        "EXA_API_KEY": "your-api-key-here"
-      }
-    }
-  }
+  <chat-message nickname="User">chatluna.mcp.add {<br/>
+  "mcpServers": {<br/>
+    "exa": {<br/>
+      "command": "npx",<br/>
+      "args": ["/path/to/exa-mcp-server/build/index.js"],<br/>
+      "env": {<br/>
+        "EXA_API_KEY": "your-api-key-here"<br/>
+      }<br/>
+    }<br/>
+  }<br/>
 }</chat-message>
   <chat-message nickname="Bot">
    成功添加了 1 个 MCP 服务器。
@@ -135,13 +135,13 @@ chatluna.mcp.add <mcpConfig:text>
 以下为例子:
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.mcp.add {
-  "mcpServers": {
-    "filesystem": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/allowed/files"]
-    }
-  }
+  <chat-message nickname="User">chatluna.mcp.add {<br/>
+  "mcpServers": {<br/>
+    "filesystem": {<br/>
+      "command": "npx",<br/>
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/allowed/files"]<br/>
+    }<br/>
+  }<br/>
 }</chat-message>
   <chat-message nickname="Bot">成功添加了 1 个 MCP 服务器。
   </chat-message>
@@ -150,13 +150,13 @@ chatluna.mcp.add <mcpConfig:text>
 如果添加的服务器名称已存在，系统会提示是否覆盖：
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.mcp.add {
-  "mcpServers": {
-    "exa": {
-      "command": "npx",
-      "args": ["new-server.js"]
-    }
-  }
+  <chat-message nickname="User">chatluna.mcp.add {<br/>
+  "mcpServers": {<br/>
+    "exa": {<br/>
+      "command": "npx",<br/>
+      "args": ["new-server.js"]<br/>
+    }<br/>
+  }<br/>
 }</chat-message>
   <chat-message nickname="Bot">检测到以下服务器名称已存在：exa<br/>
 是否覆盖现有服务器配置？输入 Y 确认，其他任何输入取消。
