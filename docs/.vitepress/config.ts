@@ -319,6 +319,10 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                             link: "/guide/model-plugin-system/introduction",
                         },
                         {
+                            text: "MCP 支持",
+                            link: "/guide/model-plugin-system/mcp",
+                        },
+                        {
                             text: "联网搜索",
                             link: "/guide/model-plugin-system/web-search",
                         },
@@ -696,8 +700,8 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
                 {
                     text: "Smash Or Pass (Translator)",
                     link: "/ecosystem/other/translator",
-                }
-            ]
+                },
+            ],
         },
         {
             text: "其他插件",

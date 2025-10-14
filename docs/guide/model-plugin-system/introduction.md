@@ -18,6 +18,7 @@ Agent 工具是 ChatLuna 的核心功能之一，专为 Agent 模式设计。开
 
 目前 ChatLuna 支持以下的模型工具：
 
+- [MCP 支持](mcp.md)
 - [联网搜索](web-search.md)
 - [网页浏览](web-browser.md)
 - [URL 请求](./specify-api-request.md)
