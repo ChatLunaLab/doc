@@ -21,9 +21,11 @@
 #### request
 
 - 类型：`boolean`
-- 默认值：`false`
+- 默认值：`true`
 
 是否启用网络请求工具。开启后，模型可以调用 `request_get` 和 `request_post` 工具进行网络的 GET 和 POST 请求。
+
+另外可以参考 [request 插件配置](#request-插件配置) 配置请求工具的相关选项。
 
 #### fs
 
@@ -32,7 +34,7 @@
 
 是否启用文件读写工具。开启后，模型可以调用 `file_write` 和 `file_read` 工具读写文件。
 
-另外可以参考 [fs 插件配置](#fs) 配置文件读写的作用域。
+另外可以参考 [fs 插件配置](#fs-插件配置) 配置文件读写的作用域。
 
 #### group
 
@@ -55,7 +57,7 @@
 #### chat
 
 - 类型：`boolean`
-- 默认值：`false`
+- 默认值：`true`
 
 是否启用聊天工具。开启后，模型可以调用 `chat` 工具。该工具会等待用户的输入，返回给模型。
 
@@ -66,17 +68,26 @@
 
 是否启用思考工具。开启后，模型可以调用 `think` 工具。该工具会基于模型输入的内容，调用其他模型进行思维链推理，返回推理结果。一定程度上提升模型输出的质量。
 
+#### todos
+
+- 类型：`boolean`
+- 默认值：`true`
+
+是否启用待办事项工具。开启后，模型可以调用 `todos` 工具。该工具可让 Agent 生成多步骤的待办事项，自动拆解任务。
+
 #### cron
 
 - 类型：`boolean`
-- 默认值：`false`
+- 默认值：`true`
 
 是否启用定时任务工具。开启后，模型可以调用 `cron` 工具。
+
+另可参考 [定时任务插件配置](#定时任务插件配置) 配置定时任务工具。
 
 #### send
 
 - 类型：`boolean`
-- 默认值：`false`
+- 默认值：`true`
 
 是否启用发送消息工具。开启后，模型可以调用 `send` 工具。该工具会发送消息给用户。
 
@@ -87,34 +98,7 @@
 
 是否启用文生图工具。开启后，模型可以调用 `draw` 工具。该工具会基于模型输入的内容，调用 Koishi 上的文生图插件，生成图片。
 
-另可参考 [文生图插件配置](#draw) 配置文生图工具。
-
-#### codeSandbox
-
-- 类型：`boolean`
-- 默认值：`false`
-
-是否启用代码执行工具。开启后，模型可以调用 `codeSandbox` 工具。该工具会基于模型输入的内容，执行 Python 代码。
-
-参考 [代码执行器配置](#代码执行器配置) 配置代码执行工具所需的 API 密钥。
-
-#### memory
-
-- 类型：`boolean`
-- 默认值：`false`
-
-是否启用主动记忆工具。开启后，模型可以调用 `memory_save` 和 `memory_search` 工具，保存和搜索用户的记忆。
-
-使用前需要确保主插件的长期记忆功能是否能正常启用，正确配置了向量数据库和嵌入模型。
-
-#### knowledge
-
-- 类型：`boolean`
-- 默认值：`false`
-
-是否启用知识库工具。开启后，模型可以调用 `knowledge` 工具，搜索知识库中的内容。
-
-另可参考 [知识库插件配置](#knowledge) 配置知识库工具。
+另可参考 [画图插件配置](#画图插件配置) 配置文生图工具。
 
 #### music
 
@@ -125,6 +109,54 @@
 
 在启用此工具前，需要确保 Koishi 的 `@dgck81lnn/music` 插件已启用。
 
+另可参考 [音乐生成插件配置](#音乐生成插件配置) 配置音乐工具。
+
+#### actions
+
+- 类型：`boolean`
+- 默认值：`false`
+
+是否启用 OpenAPI 工具调用功能。开启后，模型可以调用自定义的 OpenAPI 工具。
+
+另可参考 [OpenAPI 工具调用插件配置](#openapi-工具调用插件配置) 配置 OpenAPI 工具。需要启用 request 工具才能请求。
+
+### request 工具配置
+
+#### requestMaxOutputLength
+
+- 类型：`number`
+- 默认值：`58600`
+
+request 插件最大输出长度。
+
+#### requestSelector
+
+- 类型：`string[]`
+- 默认值：`['请求', 'request', 'get', 'post', '获取', '调用', 'api', 'http']`
+
+触发 request 工具的关键词。为空时始终选中。
+
+#### requestHeaders
+
+- 类型：`{ matcher: string, headers: Record<string, string> }[]`
+- 默认值：`[]`
+
+根据域名匹配设置请求头。
+
+##### requestHeaders.matcher
+
+- 类型：`string`
+- 默认值：``
+
+域名匹配模式(支持通配符,如 `*.example.com`, `api.github.com`)。
+
+##### requestHeaders.headers
+
+- 类型：`Record<string, string>`
+- 默认值：`{}`
+
+该域名匹配时应用的请求头。
+
 ### fs 插件配置
 
 #### fsScopePath
@@ -132,16 +164,37 @@
 - 类型：`string`
 - 默认值：``
 
-文件读写的作用域。留空则为任意路径。
+文件读写的作用域。留空则为系统任意路径。
 
-### 指令插件配置
+#### fsSelector
+
+- 类型：`string[]`
+- 默认值：`['文件', 'file', '读取', '写入', '查找', '搜索', 'read', 'write', 'search', '路径', 'path']`
+
+触发 fs 工具的关键词。为空时始终选中。
+
+#### fsIgnores
+
+- 类型：`string[]`
+- 默认值：`['**/node_modules/**', '**/.git/**', '**/dist/**', '**/build/**', '**/.yarn/**', '**/coverage/**', '**/.next/**', '**/.nuxt/**', '**/out/**', '**/.cache/**', '**/.vscode/**', '**/.idea/**', '**/temp/**', '**/tmp/**']`
+
+默认忽略的文件夹表达式。
+
+### 指令工具配置
+
+#### commandWithSend
+
+- 类型：`boolean`
+- 默认值：`true`
+
+是否默认发送指令的执行结果。
 
 #### commandList
 
-- 类型：`{ command: string, description: string, selector: string[] }[]`
+- 类型：`{ command: string, description: string, selector: string[], confirm: boolean }[]`
 - 默认值：`[]`
 
-需要注册的指令列表。
+需要注册的指令列表。不填写则默认注册所有一级指令。
 
 ##### commandList.command
 
@@ -164,14 +217,12 @@
 
 指令的触发条件。当聊天内容包含这些关键词时，此指令才会注册给模型。
 
-### 代码执行器配置
+##### commandList.confirm
 
-#### codeSandboxAPIKey
+- 类型：`boolean`
+- 默认值：`true`
 
-- 类型：`string`
-- 默认值：``
-
-代码执行工具所需的 API 密钥。密钥需要前往 [e2b](https://e2b.dev/) 获取。
+执行指令时是否需要二次确认。
 
 ### 群管插件配置
 
@@ -180,9 +231,25 @@
 - 类型：`string[]`
 - 默认值：`[]`
 
-群管理员账号列表。
+允许使用群管功能的成员 ID 列表。
 
-### 画图插件配置
+#### groupWhitelist
+
+- 类型：`string[]`
+- 默认值：`[]`
+
+允许使用群管功能的群 ID 白名单。为空时在所有群可用。
+
+### 定时工具配置
+
+#### cronScopeSelector
+
+- 类型：`string[]`
+- 默认值：`[]`
+
+允许使用命令类型定时任务的成员 ID 列表。为空时所有人都可以创建提醒任务,但无法创建命令任务。
+
+### 画图工具配置
 
 #### drawPrompt
 
@@ -196,16 +263,64 @@
 - 类型：`string`
 - 默认值：`nai {prompt}`
 
-画图时实际执行的指令。
+画图时实际执行的指令。`{prompt}` 为调用时的 prompt。
 
-### 知识库插件配置
+#### drawSelector
 
-> [!WARNING] 警告
-> 启用此工具前需要配置知识库插件，前往 [知识库插件文档](../extension/knowledge.md) 查看用法。
+- 类型：`string[]`
+- 默认值：`['画', 'image', 'sd', '图', '绘', 'draw', '生成', 'generate', '创作', 'create']`
 
-#### knowledgeId
+触发绘画工具的关键词。为空时始终选中。
+
+### 音乐工具配置
+
+#### musicSelector
+
+- 类型：`string[]`
+- 默认值：`['音乐', 'music', '歌曲', 'song', '音频', 'audio', '创作', 'create', '生成', 'generate']`
+
+触发音乐生成工具的关键词。为空时始终选中。
+
+### OpenAPI 工具调用插件配置
+
+#### actionsList
+
+- 类型：`{ name: string, description: string, openAPISpec: string, headers: Record<string, string>, selector: string[] }[]`
+- 默认值：`[]`
+
+可用 OpenAPI 工具列表。
+
+##### actionsList.name
+
+- 类型：`string`
+- 默认值：``
+
+工具名称。请使用纯英文的名称。
+
+##### actionsList.description
+
+- 类型：`string`
+- 默认值：``
+
+工具描述。
+
+##### actionsList.openAPISpec
+
+- 类型：`string`
+- 默认值：``
+
+OpenAPI 规范文件内容。
+
+##### actionsList.headers
+
+- 类型：`Record<string, string>`
+- 默认值：`{}`
+
+工具请求头。
+
+##### actionsList.selector
 
 - 类型：`string[]`
 - 默认值：`[]`
 
-知识库的 ID 列表。
+触发工具的关键词。
