@@ -694,12 +694,12 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
             text: "娱乐插件",
             items: [
                 {
-                    text: "群分析 (A)",
-                    link: "/ecosystem/other/character",
+                    text: "群分析 (Group Analysis)",
+                    link: "/ecosystem/fun/group-analysis",
                 },
                 {
-                    text: "Smash Or Pass (Translator)",
-                    link: "/ecosystem/other/translator",
+                    text: "Smash Or Pass",
+                    link: "/ecosystem/fun/smash-or-pass",
                 },
             ],
         },

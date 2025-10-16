@@ -31,6 +31,13 @@ ChatLuna 插件同时也是 Koishi 插件。
 - [koishi-plugin-chatluna-knowledge](./extension/knowledge.md): ChatLuna 知识库实现。对聊天模式和浏览模式提供知识库支持。
 - [koishi-plugin-chatluna-character-card](./extension/character-card.md): 让 ChatLuna 兼容加载 SillyTavern 的角色卡。
 
+## 娱乐插件
+
+基于 ChatLuna 实现的一些偏娱乐向，工具向的插件。
+
+- [koishi-plugin-chatluna-group-analysis](./fun/group-analysis.md): ChatLuna 群聊分析插件。
+- [koishi-plugin-chatluna-smash-or-pass-ai](./fun/smash-or-pass.md): 此插件提供了基于大语言模型的图片评价和判断功能。
+
 ## 其他插件
 
 基于 ChatLuna API 的其他插件。
