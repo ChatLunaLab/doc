@@ -1,71 +1,72 @@
-import { h } from 'vue';
-import DefaultTheme from 'vitepress/theme';
-import { enhanceAppWithTabs } from 'vitepress-plugin-tabs/client';
-import './styles/custom.css';
-import ChatPanel from './components/ChatPanel.vue';
-import ChatMessage from './components/ChatMessage.vue';
+import { h } from "vue";
+import DefaultTheme from "vitepress/theme";
+import { enhanceAppWithTabs } from "vitepress-plugin-tabs/client";
+import "./styles/custom.css";
+import ChatPanel from "./components/ChatPanel.vue";
+import ChatMessage from "./components/ChatMessage.vue";
 
-import { Theme } from 'vitepress';
+import { Theme } from "vitepress";
 
 import {
     InjectionKey as NolebaseEnhancedReadabilitiesInjectionKey,
     LayoutMode as NolebaseEnhancedReadabilitiesLayoutMode,
     NolebaseEnhancedReadabilitiesMenu,
     NolebaseEnhancedReadabilitiesScreenMenu,
-} from '@nolebase/vitepress-plugin-enhanced-readabilities/client';
+} from "@nolebase/vitepress-plugin-enhanced-readabilities/client";
 
-import { NolebaseInlineLinkPreviewPlugin } from '@nolebase/vitepress-plugin-inline-link-preview/client';
+import { NolebaseInlineLinkPreviewPlugin } from "@nolebase/vitepress-plugin-inline-link-preview/client";
 
-import { NolebaseHighlightTargetedHeading } from '@nolebase/vitepress-plugin-highlight-targeted-heading/client';
+import { NolebaseHighlightTargetedHeading } from "@nolebase/vitepress-plugin-highlight-targeted-heading/client";
 
 import {
     InjectionKey,
     NolebaseGitChangelogPlugin,
-} from '@nolebase/vitepress-plugin-git-changelog/client';
+} from "@nolebase/vitepress-plugin-git-changelog/client";
 
-import { NolebasePagePropertiesPlugin } from '@nolebase/vitepress-plugin-page-properties/client';
+import { NolebasePagePropertiesPlugin } from "@nolebase/vitepress-plugin-page-properties/client";
 
-import { NolebaseUnlazyImg } from '@nolebase/vitepress-plugin-thumbnail-hash/client';
+import { NolebaseUnlazyImg } from "@nolebase/vitepress-plugin-thumbnail-hash/client";
 
-import AppContainer from './components/AppContainer.vue';
+import AppContainer from "./components/AppContainer.vue";
+import TwoslashFloatingVue from '@shikijs/vitepress-twoslash/client'
 
-import '@nolebase/vitepress-plugin-enhanced-readabilities/client/style.css';
-import '@nolebase/vitepress-plugin-highlight-targeted-heading/client/style.css';
-import '@nolebase/vitepress-plugin-inline-link-preview/client/style.css';
-import '@nolebase/vitepress-plugin-git-changelog/client/style.css';
-import '@nolebase/vitepress-plugin-page-properties/client/style.css';
-import '@nolebase/vitepress-plugin-thumbnail-hash/client/style.css';
-import '@nolebase/vitepress-plugin-enhanced-mark/client/style.css';
+import "@nolebase/vitepress-plugin-enhanced-readabilities/client/style.css";
+import "@nolebase/vitepress-plugin-highlight-targeted-heading/client/style.css";
+import "@nolebase/vitepress-plugin-inline-link-preview/client/style.css";
+import "@nolebase/vitepress-plugin-git-changelog/client/style.css";
+import "@nolebase/vitepress-plugin-page-properties/client/style.css";
+import "@nolebase/vitepress-plugin-thumbnail-hash/client/style.css";
+import "@nolebase/vitepress-plugin-enhanced-mark/client/style.css";
 
-import 'virtual:uno.css'
+import "virtual:uno.css";
 
-import './styles/main.css';
-import './styles/vars.css';
-import './styles/sponsor.css';
+import "./styles/main.css";
+import "./styles/vars.css";
+import "./styles/sponsor.css";
 
-import '@shikijs/vitepress-twoslash/style.css';
-import Sponsors from './components/Sponsors.vue';
+import '@shikijs/vitepress-twoslash/style.css'
+import Sponsors from "./components/Sponsors.vue";
 
-import('@nolebase/vitepress-plugin-inline-link-preview/client');
+import("@nolebase/vitepress-plugin-inline-link-preview/client");
 
 export default {
     extends: DefaultTheme,
     Layout: () => {
         return h(DefaultTheme.Layout, null, {
             // https://vitepress.dev/guide/extending-default-theme#layout-slots
-            'doc-top': () => [h(NolebaseHighlightTargetedHeading)],
-            'nav-bar-content-after': () => [
+            "doc-top": () => [h(NolebaseHighlightTargetedHeading)],
+            "nav-bar-content-after": () => [
                 h(NolebaseEnhancedReadabilitiesMenu),
             ],
-            'nav-screen-content-after': () => [
+            "nav-screen-content-after": () => [
                 h(NolebaseEnhancedReadabilitiesScreenMenu),
             ],
         });
     },
     enhanceApp({ app }) {
-        app.component('chat-panel', ChatPanel);
-        app.component('chat-message', ChatMessage);
-        app.component('sponsors', Sponsors);
+        app.component("chat-panel", ChatPanel);
+        app.component("chat-message", ChatMessage);
+        app.component("sponsors", Sponsors);
 
         enhanceAppWithTabs(app);
 
@@ -76,8 +77,8 @@ export default {
          * https://github.com/vuejs/vitepress/issues/1918
          */
 
-        app.component('AppContainer', AppContainer);
-        app.component('NolebaseUnlazyImg', NolebaseUnlazyImg);
+        app.component("AppContainer", AppContainer);
+        app.component("NolebaseUnlazyImg", NolebaseUnlazyImg);
 
         app.provide(NolebaseEnhancedReadabilitiesInjectionKey, {
             layoutSwitch: {
@@ -87,7 +88,7 @@ export default {
             spotlight: {
                 disableHelp: true,
                 defaultToggle: true,
-                hoverBlockColor: 'rgb(240 197 52 / 7%)',
+                hoverBlockColor: "rgb(240 197 52 / 7%)",
             },
         });
 
@@ -98,30 +99,31 @@ export default {
 
         app.use(NolebaseInlineLinkPreviewPlugin);
         app.use(NolebaseGitChangelogPlugin);
+        app.use(TwoslashFloatingVue);
         app.use(
             NolebasePagePropertiesPlugin<{
                 progress: number;
             }>(),
             {
                 properties: {
-                    'zh-CN': [
+                    "zh-CN": [
                         {
-                            key: 'wordCount',
-                            type: 'dynamic',
-                            title: '字数',
+                            key: "wordCount",
+                            type: "dynamic",
+                            title: "字数",
                             options: {
-                                type: 'wordsCount',
+                                type: "wordsCount",
                             },
                         },
                         {
-                            key: 'readingTime',
-                            type: 'dynamic',
-                            title: '阅读时间',
+                            key: "readingTime",
+                            type: "dynamic",
+                            title: "阅读时间",
                             options: {
-                                type: 'readingTime',
-                                dateFnsLocaleName: 'zhCN',
+                                type: "readingTime",
+                                dateFnsLocaleName: "zhCN",
                             },
-                        }
+                        },
                     ],
                 },
             }

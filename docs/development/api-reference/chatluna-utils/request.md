@@ -35,7 +35,7 @@ const ua = randomUA()
 
 建立一个 `fetch` 请求。
 
-> [!TIP] 注意
+> [!IMPORTANT] 注意
 > 如果 `proxy` 参数传递为 'null'(注意是纯文本的 `null`，不是 `null` 变量)，则不会使用代理。
 
 ### ws(url, init, proxy)
@@ -47,7 +47,7 @@ const ua = randomUA()
 
 建立一个 `ws` 请求。
 
-> [!TIP] 注意
+> [!IMPORTANT] 注意
 > 如果 `proxy` 参数传递为 'null'(注意是纯文本的 `null`，不是 `null` 变量)，则不会使用代理。
 
 ### randomUA()

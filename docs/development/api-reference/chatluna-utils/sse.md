@@ -50,5 +50,5 @@ for await (const event of sseIterable(response)) {
 
 将 SSE 响应转换为原始数据的异步迭代器。当 `cacheCount` 大于 0 时，将累积指定数量的原始数据后一次性产出。
 
-> [!TIP] 注意
+> [!IMPORTANT] 注意
 > `rawSeeAsIterable` 返回的是未经解析的原始 SSE 数据流，而 `sseIterable` 返回的是经过解析的事件数据。

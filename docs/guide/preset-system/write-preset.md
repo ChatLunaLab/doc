@@ -106,7 +106,6 @@ prompts:
 该属性接收一个支持 [ChatLuna 渲染模板](template.md) 的字符串模板，在运行时 ChatLuna 会渲染此模板，将渲染后的消息传递给模型。
 
 ```yaml
-# 应当这样做！
 format_user_prompt: "用户{user}说: {prompt}"
 ```
 
@@ -129,7 +128,6 @@ ChatLuna 预设系统使用花括号 `{}` 进行变量插值和函数调用。
 完整的语法规则和控制流语句（条件判断、循环等）请参见 [渲染模板](template.md) 文档。
 
 ```yaml
-# 应当这样做！字符串参数需要加引号
 content: "你好，{name}！今天是 {date}"
 content: "{random('优秀', '良好', '及格')}"
 content: "{concat('用户', name, '说：', prompt)}"

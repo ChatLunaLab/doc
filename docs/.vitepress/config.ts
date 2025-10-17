@@ -46,7 +46,10 @@ export default defineConfig({
         },
 
         socialLinks: [
-            { icon: "github", link: "https://github.com/ChatLunaLab/chatluna" },
+            {
+                icon: "github",
+                link: "https://github.com/ChatLunaLab/chatluna",
+            },
         ],
         footer: {
             message: "在 CC-BY-SA-4.0 许可下发布",
@@ -106,19 +109,14 @@ export default defineConfig({
 
             md.use(InlineLinkPreviewElementTransform);
         },
-        codeTransformers: [transformerTwoslash() as any],
         image: {
             lazyLoading: true,
         },
+        codeTransformers: [transformerTwoslash()],
+        // Explicitly load these languages for types hightlighting
+        languages: ["js", "jsx", "ts", "tsx"],
     },
     vite: {
-        css: {
-            preprocessorOptions: {
-                scss: {
-                    api: "modern-compiler", // or "modern"
-                },
-            },
-        },
         ssr: {
             noExternal: ["@nolebase/*", "vue-demi", "@unlazy/*"],
         },
