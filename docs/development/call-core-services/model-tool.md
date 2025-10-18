@@ -1,89 +1,111 @@
 # 模型工具
 
-ChatLuna 也能动态的注册和使用 [`Tool`](https://js.langchain.com/docs/concepts/tools/)。
+ChatLuna 支持动态注册和使用 [Tool](https://js.langchain.com/docs/concepts/tools/)。
 
 ## 基础用法
 
-从 `PlatformService` 中获取 `ChatLunaTool` 实例：
+从 `PlatformService` 中获取 `ChatLunaTool` 实例:
 
-```typescript
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { Context, Schema } from 'koishi'
+
+const ctx = new Context()
+
+// ---cut---
 import type {} from "koishi-plugin-chatluna/services/chat";
 
 const chatlunaTool = ctx.chatluna.platform.getTool('web-search')
+//      ^?
 ```
 
-返回的是一个如下的实例：
+<br>
 
-```typescript
-import { ChatLunaChatModel, ChatHubBaseEmbeddings } from 'koishi-plugin-chatluna/llm-core/platform/model'
+返回的是一个 `ChatLunaTool` 实例，其定义如下:
+
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+// @noErrors
+import { Context, Schema } from 'koishi'
+const ctx = new Context()
+import type {} from "koishi-plugin-chatluna/services/chat";
+import { ChatLunaBaseEmbeddings } from 'koishi-plugin-chatluna/llm-core/platform/model'
+import { StructuredTool } from '@langchain/core/tools'
+import { BaseMessage } from '@langchain/core/messages'
 import { Session } from 'koishi'
 
+// ---cut---
 interface CreateToolParams {
-    model: ChatLunaChatModel
-    embeddings: ChatHubBaseEmbeddings
-    conversationId?: string
-    preset?: string
-    userId?: string
+    embeddings: ChatLunaBaseEmbeddings
 }
 
 interface ChatLunaTool {
-    createTool: (
-        params: CreateToolParams,
-        session?: Session
-    ) => Promise<StructuredTool>
+    createTool: (params: CreateToolParams) => StructuredTool
     selector: (history: BaseMessage[]) => boolean
     authorization?: (session: Session) => boolean
-    alwaysRecreate?: boolean
+    name?: string
+    id?: string
 }
 ```
 
 其中:
 
-- `createTool` 方法用于创建一个 `StructuredTool` 实例。
-- `selector` 方法用于判断当前的对话是否需要使用该工具。
-- `authorization` 方法用于判断当前的会话是否需要使用该工具。
-- `alwaysRecreate` 方法用于判断是否每次都重新创建工具。如果调用的工具需要 `session`，则设置为 `true`。
+- `createTool` 方法用于创建一个 `StructuredTool` 实例
+- `selector` 方法用于判断当前的对话历史是否需要使用该工具
+- `authorization` 方法用于判断当前的会话是否有权限使用该工具
+- `name` 为工具的名称
+- `id` 为工具的唯一标识
 
-每个 `ChatLunaTool` 所需要传递的参数都不同，具体需要参考你使用的工具。
+创建工具时，需要传递 `embeddings` 参数。该参数用于工具在需要文本向量化时使用。
 
-大部分情况下，你只需要传递 `model` 和 `embeddings` 参数。`model` 参数用于工具需要大语言模型调用场景时使用的模型，`embeddings` 参数用于工具需要文本向量化时使用的 Embeddings。
+创建 `web-search` 工具的示例:
 
-其余的参数一般只在 ChatLuna 内部使用，请自行研究。
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { Context, Schema } from 'koishi'
 
-于是，我们就可以这样创建一个 `web-search` 工具：
+const ctx = new Context()
 
-```typescript
+// ---cut---
 import type {} from "koishi-plugin-chatluna/services/chat";
 
-// platform, model
-const model = ctx.chatluna.createChatModel("openai", "gpt-4o-mini")
-const embeddings = ctx.chatluna.createEmbeddings("openai", "text-embedding-3-small")
+const embeddingsRef = await ctx.chatluna.createEmbeddings("openai/text-embedding-3-small")
 const chatlunaTool = ctx.chatluna.platform.getTool('web-search')
 
-const tool = await chatlunaTool.createTool({ model, embeddings })
+const tool = chatlunaTool.createTool({ embeddings: embeddingsRef.value })
 
-console.log(await tool.invoke("OpenAI 最近新闻"))
+const result = await tool.invoke("OpenAI 最近新闻")
 ```
+
+<br>
 
 ## 获取可用的工具
 
-从 `PlatformService` 中获取可用的工具列表：
+从 `PlatformService` 中获取可用的工具列表:
 
-```typescript
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { Context, Schema } from 'koishi'
+
+const ctx = new Context()
+
+// ---cut---
 import type {} from "koishi-plugin-chatluna/services/chat";
 
-const tools = ctx.chatluna.platform.getTools()
-
-// ['web-search', ...]
+const toolsRef = ctx.chatluna.platform.getTools()
+const tools = toolsRef.value
+//    ^?
 ```
 
 ## 常用工具的用法
 
-`ChatLunaTool` 的 `createTool` 方法返回的是一个 [`StructuredTool`](https://js.langchain.com/docs/concepts/tools/#structured-tools) 实例。
+`ChatLunaTool` 的 `createTool` 方法返回的是一个 [StructuredTool](https://js.langchain.com/docs/concepts/tools/#structured-tools) 实例。
 
-但不同的工具需要不同的参数，`StructuredTool` 在调用时的具体传参需要参考你使用的工具。
-
-这里我们介绍几个常用工具的用法。
+不同的工具在调用时需要不同的参数。这里介绍几个常用工具的用法。
 
 ### web-search
 
@@ -91,28 +113,33 @@ const tools = ctx.chatluna.platform.getTools()
 
 直接调用即可，传入的参数即为搜索的关键词。
 
-```typescript
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { Context, Schema } from 'koishi'
+
+const ctx = new Context()
+
+// ---cut---
 import type {} from "koishi-plugin-chatluna/services/chat";
 
-// platform, model
-const model = ctx.chatluna.createChatModel("openai", "gpt-4o-mini")
-const embeddings = ctx.chatluna.createEmbeddings("openai", "text-embedding-3-small")
+const embeddingsRef = await ctx.chatluna.createEmbeddings("openai/text-embedding-3-small")
 const chatlunaTool = ctx.chatluna.platform.getTool('web-search')
 
-const tool = await chatlunaTool.createTool({ model, embeddings })
+const tool = chatlunaTool.createTool({ embeddings: embeddingsRef.value })
 
-console.log(await tool.invoke("OpenAI 最近新闻"))
+const result = await tool.invoke("OpenAI 最近新闻")
 ```
 
 ### web-browser
 
 `web-browser` 工具基于 `puppeteer` 实现，用于在浏览器中打开网页并进行交互。
 
-使用时需要按照特定格式传入参数 `action` 和 `params`，以及 `url`。
+使用时需要按照特定格式传入参数 `action`、`params` 和 `url`。
 
-支持的操作包括：
+支持的操作包括:
 
-- `open [url]`: 打开一个网页（必须作为第一个操作）
+- `open [url]`: 打开一个网页 (必须作为第一个操作)
 - `summarize [search_text?]`: 简单总结当前页面内容，可选择性地指定搜索文本
 - `text [search_text?]`: 获取当前页面的文本内容，可选择性地指定搜索文本
 - `select [selector]`: 使用选择器获取特定 div 的内容
@@ -120,32 +147,36 @@ console.log(await tool.invoke("OpenAI 最近新闻"))
 - `get-html`: 获取当前页面的 HTML 内容
 - `get-structured-urls`: 获取当前页面的结构化 URL 列表
 
-使用示例：
+使用示例:
 
-```typescript
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { Context, Schema } from 'koishi'
+
+const ctx = new Context()
+
+// ---cut---
 import type {} from "koishi-plugin-chatluna/services/chat";
 
-const model = ctx.chatluna.createChatModel("openai", "gpt-4o-mini")
-const embeddings = ctx.chatluna.createEmbeddings("openai", "text-embedding-3-small")
+const embeddingsRef = await ctx.chatluna.createEmbeddings("openai/text-embedding-3-small")
 const chatlunaTool = ctx.chatluna.platform.getTool('web-browser')
 
-const tool = await chatlunaTool.createTool({ model, embeddings })
+const tool = chatlunaTool.createTool({ embeddings: embeddingsRef.value })
 
-
-console.log(await tool.invoke({
+const openResult = await tool.invoke({
     action: "open",
     url: "https://example.com"
-}))
+})
 
-console.log(await tool.invoke({
+const summaryResult = await tool.invoke({
     action: "summarize",
     url: "https://example.com"
-}))
+})
 
-
-console.log(await tool.invoke({ 
+const selectResult = await tool.invoke({
     action: "select",
     params: "main-content",
     url: "https://example.com"
-}))
+})
 ```

@@ -37,4 +37,6 @@ ctx.effect(() => dispose)
   - `element`: 当前的 [消息元素对象](https://koishi.chat/zh-CN/api/message/elements.html)
   - `message`: 当前的 [ChatLuna 消息对象](../api-reference/middleware/message)
 
-返回值 `() => void` 用于清理资源。建议使用 `ctx.effect(() => dispose)` 确保资源被正确释放。
+返回值 `() => void` 用于清理资源。
+
+建议使用 `ctx.effect(() => dispose)` 确保资源被正确释放。

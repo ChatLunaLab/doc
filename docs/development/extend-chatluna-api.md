@@ -14,24 +14,30 @@ ChatLuna 支持 Agent 模式，允许其他插件定义 [工具](https://js.lang
 
 现在，你就可以注册一个 Tool 到 ChatLuna 了。下面是一个简单的示例：
 
-```typescript
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+
 import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
 import { Tool } from '@langchain/core/tools'
 import {
     fuzzyQuery,
     getMessageContent
 } from 'koishi-plugin-chatluna/utils/string'
+import { ChatLunaToolRunnable } from 'koishi-plugin-chatluna/llm-core/platform/types'
+import { Context, Schema } from 'koishi'
 
-export function apply(ctx: Context) {
+export function apply(ctx: Context, config: Config) {
+    // 必须创建一个 ChatLuna 插件实例
     const plugin = new ChatLunaPlugin(ctx, config, 'plugin-echo', false)
 
     ctx.on('ready', async () => {
-        plugin.registerToService()
         registerTools(ctx, plugin)
     })
 }
 
 function registerTools(ctx: Context, plugin: ChatLunaPlugin) {
+    // 注册工具
     plugin.registerTool('echo', {
         selector(history) {
             return history.some((item) => fuzzyQuery(
@@ -43,10 +49,8 @@ function registerTools(ctx: Context, plugin: ChatLunaPlugin) {
                 ]
             ))
         },
-        alwaysRecreate: true,
-
-        async createTool(params, session) {
-            return new EchoTool(session)
+        createTool(params) {
+            return new EchoTool()
         }
     })
 }
@@ -54,34 +58,36 @@ function registerTools(ctx: Context, plugin: ChatLunaPlugin) {
 export class EchoTool extends Tool {
     name = 'echo'
 
-    constructor(
-        public session: Session,
-    ) {
+    constructor() {
         super({})
     }
 
-    /** @ignore */
-    async _call(input: string) {
+    async _call(input: string, _,  config: ChatLunaToolRunnable) {
         try {
-            await this.session.send(input)
+            const session = config.configurable.session
+
+            await session.send(input)
 
             return `Successfully call echo with result ${input}`
         } catch (e) {
-            return `Echo with input ${input} execution failed, because ${e.message}`
+            return `Echo with input ${input} execution failed, because ${e['message']}`
         }
     }
 
     description = `This tool echoes the input. Call this tool when the user needs to say something.`
 }
 
+interface Config extends ChatLunaPlugin.Config {}
 
 ```
 
-上面的代码注册了一个名为 `echo` 的 Tool。当聊天记录符合 `selector` 的匹配条件时，会调用 `createTool` 方法创建一个 `EchoTool` 实例。
+上面的代码注册了一个名为 `echo` 的 Tool。
+
+当聊天记录符合 `selector` 的匹配条件时，会调用 `createTool` 方法创建一个 `EchoTool` 实例。
 
 更详细的工具注册方法，请参考 [模型工具](./development/connect-to-core-services/model-tool)。
 
-此时模型则可以选择调用 `EchoTool` 来回复用户。
+注册完成后，模型在需要的时候会调用 `EchoTool` 来回复用户。
 
 ## 测试
 

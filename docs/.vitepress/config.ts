@@ -114,7 +114,7 @@ export default defineConfig({
         },
         codeTransformers: [transformerTwoslash()],
         // Explicitly load these languages for types hightlighting
-        languages: ["js", "jsx", "ts", "tsx"],
+        languages: ["js", "jsx", "ts", "tsx", 'bash', 'shell', 'lua'],
     },
     vite: {
         ssr: {
@@ -521,6 +521,10 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                 {
                     text: "模型工具",
                     link: "/development/call-core-services/model-tool",
+                },
+                {
+                    text: "Agent",
+                    link: "/development/call-core-services/agent",
                 },
             ],
         },
