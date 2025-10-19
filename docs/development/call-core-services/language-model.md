@@ -16,11 +16,11 @@ const ctx = new Context()
 // ---cut---
 import type {} from "koishi-plugin-chatluna/services/chat";
 
-const model = await ctx.chatluna.createChatModel("openai/gpt-5-nano")
+const modelRef = await ctx.chatluna.createChatModel("openai/gpt-5-nano")
 //      ^?
 
 
-const message = await model.value?.invoke("你好，世界！")
+const message = await modelRef.value?.invoke("你好，世界！")
 console.log(message)
     //          ^?
  
@@ -31,7 +31,6 @@ console.log(message)
 > 自 ChatLuna 1.3.0 开始，ChatLuna 开始深度整合 vue 的响应式系统。如果返回的值为 `ComputedRef<T>`，则代表此值是可以根据其他配置改动进行变化的。
 >
 > 请先创建这个值并保存到类或者其他地方里面，在需要的时候调用 `ref.value` 来获取真正的值。
-
 > [!WARNING] 警告
 > 响应式获取的 `value` 可能会 `undefined`。
 > 如果返回空值，则说明当前获取的模型或者其他值不存在。你需要提取判断并告知用户，需要的模型或者其他参数不存在。
@@ -39,6 +38,76 @@ console.log(message)
 `ChatLunaChatModel` 继承自 [`BaseChatModel`](https://v03.api.js.langchain.com/classes/_langchain_core.language_models_chat_models.BaseChatModel.html)。
 
 你可以直接使用 `BaseChatModel` 的所有方法，并和 LangChain 的其他 API 无缝衔接。
+
+## 传入消息列表与多模态
+
+`ChatLunaChatModel` 也可以传入消息列表：
+
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { Context, Schema } from 'koishi'
+
+const ctx = new Context()
+
+// ---cut---
+import type {} from "koishi-plugin-chatluna/services/chat"
+import { HumanMessage, SystemMessage } from "@langchain/core/messages"
+
+const modelRef = await ctx.chatluna.createChatModel("openai/gpt-5-nano")
+
+const messages = [
+    new SystemMessage("You are a helpful assistant."),
+    new HumanMessage("你好，世界！")
+]
+
+const message = await modelRef.value?.invoke(messages)
+console.log(message)
+    //          ^?
+ 
+
+```
+
+并且支持多模态消息（目前仅支持图片，还需确保使用的模型支持多模态输入）:
+
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { Context, Schema } from 'koishi'
+
+const ctx = new Context()
+
+// ---cut---
+import type {} from "koishi-plugin-chatluna/services/chat"
+import { HumanMessage, SystemMessage } from "@langchain/core/messages"
+
+const modelRef = await ctx.chatluna.createChatModel("openai/gpt-5-nano")
+
+const messages = [
+    new SystemMessage("You are a helpful assistant."),
+    new HumanMessage({
+        content: [
+            {
+                type: "image_url",
+                image_url: {
+                    // 也支持 base64 编码的图片
+                    url: "https://example.com/image.png"
+                }
+            },
+            {
+                type: "text",
+                content: "图片上的内容是什么？"
+            }
+        ]
+    })
+]
+
+const message = await modelRef.value?.invoke(messages)
+console.log(message)
+    //          ^?
+ 
+
+```
 
 ## 获取可用的模型
 
