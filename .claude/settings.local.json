@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//g/projects/koishi_projects/koishi-new/external/chatluna/packages/extension-long-memory/src/layers/hippo/**)",
+      "Read(//g/projects/koishi_projects/koishi-new/external/chatluna/packages/extension-long-memory/src/utils/**)",
+      "Read(//g/projects/koishi_projects/koishi-new/external/chatluna-knowledge/src/plugins/**)",
+      "Read(//g/projects/koishi_projects/koishi-new/external/chatluna-character/src/**)",
+      "Read(//g/projects/koishi_projects/koishi-new/external/chatluna/packages/core/src/llm-core/platform/**)",
+      "Read(//g/projects/koishi_projects/koishi-new/external/chatluna/packages/core/src/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
