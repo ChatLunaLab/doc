@@ -144,15 +144,29 @@ yarn create chatluna-plugin
 import { Context, Schema } from 'koishi'
 import type { ChatLunaService } from "koishi-plugin-chatluna/services/chat"
 import { getMessageContent } from 'koishi-plugin-chatluna/utils/string'
+import { ChatLunaChatModel } from 'koishi-plugin-chatluna/llm-core/platform/model'
+import { ComputedRef } from 'koishi-plugin-chatluna'
 
 export function apply(ctx: Context) {
+
+    // 缓存 modelRef 避免昂贵的重新创建
+    let modelRef: ComputedRef<ChatLunaChatModel>
+
+    ctx.on('ready', async () => { 
+        modelRef = await ctx.chatluna.createChatModel("openai/gpt-5-nano")
+    })
+
     ctx.command('example')
         .action(async ({ session }) => {
-        // 创建一个 ChatLunaModel 实例
-        const model = await ctx.chatluna.createChatModel("openai/gpt-5-nano")
+        // 获取一个 ChatLunaChatModel 实例
+        const model = modelRef?.value
+
+        if (!model) {
+            return '模型实例未初始化或者不存在。'
+        }
     
         // 发送消息并获取回复
-        const message = await model.value.invoke("你好，世界！")
+        const message = await model.invoke(session.content)
         return getMessageContent(message.content)
     })
 }
@@ -178,6 +192,8 @@ import { modelSchema } from 'koishi-plugin-chatluna/utils/schema'
 import type {} from "koishi-plugin-chatluna/services/chat"
 import { getMessageContent } from 'koishi-plugin-chatluna/utils/string'
 import { Context, Schema } from 'koishi'
+import { ChatLunaChatModel } from 'koishi-plugin-chatluna/llm-core/platform/model'
+import { ComputedRef } from 'koishi-plugin-chatluna'
 
 export interface Config {
     model: string
@@ -190,13 +206,23 @@ export const Config: Schema<Config> = Schema.object({
 export function apply(ctx: Context, config: Config) {
     modelSchema(ctx)
 
+    let modelRef: ComputedRef<ChatLunaChatModel>
+
+    ctx.on('ready', async () => { 
+        modelRef = await ctx.chatluna.createChatModel(config.model || ctx.chatluna.config.defaultModel)
+    })
+
     ctx.command('example')
         .action(async ({ session }) => {
-        // 创建一个 ChatLunaModel 实例
-        const model = await ctx.chatluna.createChatModel("openai/gpt-5-nano")
+         // 获取一个 ChatLunaChatModel 实例
+        const model = modelRef?.value
+
+        if (!model) {
+            return '模型实例未初始化或者不存在。'
+        }
     
         // 发送消息并获取回复
-        const message = await model.value.invoke("你好，世界！")
+        const message = await model.invoke(session.content)
         return getMessageContent(message.content)
     })
 }
