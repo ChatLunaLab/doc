@@ -220,8 +220,6 @@ export interface MilvusVectorStoreInput
 
 <br>
 
-### 包装类的关键功能
-
 包装类需要实现以下关键方法：
 
 1. `addDocuments`: 添加文档时，为每个文档生成唯一 ID 并存储在 metadata 中
@@ -241,6 +239,7 @@ export interface MilvusVectorStoreInput
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
+// @noErrors
 import { Context, Schema, Logger } from 'koishi'
 import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
 
@@ -400,31 +399,29 @@ function sanitizeMilvusName(name: string) {
 
 <br>
 
-### 注册流程说明
-
 注册向量数据库时，需要完成以下步骤：
 
 1. 获取嵌入模型和唯一标识: 从 `params` 中获取 `embeddings` 和 `key`
-2. 创建 DataBaseDocstore: 用于持久化存储文档内容
+2. 创建 `DataBaseDocstore`: 用于持久化存储文档内容
 3. 初始化向量存储: 创建 LangChain 的向量存储实例
 4. 定义重建索引函数: `createCollection` 函数负责在集合损坏或嵌入维度变化时重建索引
 5. 初始化检查: 测试向量存储是否正常工作
 6. 创建包装实例: 使用自定义的包装类包装向量存储
 
-> [!TIP]
+> [!TIP] 提示
 > `DataBaseDocstore` 会持久化存储所有文档的内容。当向量数据库集合损坏或嵌入模型维度发生变化时，可以从 `DataBaseDocstore` 恢复所有文档并重新索引。
 
 ### 重新索引
 
-你需要手动检查以下的情况：
+你需要在实现的代码内手动检查以下的情况：
 
 - 嵌入模型的维度发生变化
 - 向量数据库的配置发生变化
 
-当检测到这些情况时，你需要手动掉之前实现的重建索引函数。
+当检测到这些情况时，你需要手动调用之前实现的重建索引函数。
 
 注意，重建索引时，你需要从 `DataBaseDocstore` 中读取所有已保存的文档，使用新的嵌入模型重新生成向量并存储。
 
 ## 资源参考
 
-请参考 ChatLuna 官方的向量数据库服务插件 [chatluna-vector-store](https://github.com/ChatLunaLab/chatluna/blob/v1-dev/packages/vector-store-service)。
+请参考 ChatLuna 官方的向量数据库服务插件 [chatluna-vector-store](https://github.com/ChatLunaLab/chatluna/blob/v1-dev/packages/vector-store-service)，获取更多实现样例。

@@ -14,40 +14,7 @@ ChatLuna 也提供 API，来接入其他的嵌入模型。
 
 将 `src/client.ts` 中的基类从 `PlatformModelClient` 改为 `PlatformModelAndEmbeddingsClient`：
 
-```ts twoslash
-// @noImplicitAny: false
-import type {} from 'koishi-plugin-chatluna'
-import {
-    PlatformModelAndEmbeddingsClient
-} from 'koishi-plugin-chatluna/llm-core/platform/client'
-import { ClientConfig } from 'koishi-plugin-chatluna/llm-core/platform/config'
-import {
-    ChatHubBaseEmbeddings,
-    ChatLunaChatModel,
-    ChatLunaEmbeddings
-} from 'koishi-plugin-chatluna/llm-core/platform/model'
-import {
-    ModelInfo,
-    ModelType
-} from 'koishi-plugin-chatluna/llm-core/platform/types'
-import { Context } from 'koishi'
-import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
-import {
-    ChatLunaError,
-    ChatLunaErrorCode
-} from 'koishi-plugin-chatluna/utils/error'
-
-interface Config {
-    maxContextRatio: number
-    frequencyPenalty: number
-    presencePenalty: number
-    timeout: number
-    temperature: number
-    maxRetries: number
-}
-
-class YourPlatformRequester {}
-// ---cut---
+```ts
 export class YourPlatformClient extends PlatformModelAndEmbeddingsClient<ClientConfig> {
     platform = 'yourplatform'
 
@@ -91,7 +58,7 @@ export class YourPlatformClient extends PlatformModelAndEmbeddingsClient<ClientC
 
     protected _createModel(
         model: string
-    ): ChatLunaChatModel | ChatHubBaseEmbeddings {
+    ): ChatLunaChatModel | ChatLunaBaseEmbeddings {
         const info = this._modelInfos[model]
 
         if (info == null) {
@@ -131,34 +98,7 @@ export class YourPlatformClient extends PlatformModelAndEmbeddingsClient<ClientC
 
 在 `src/requester.ts` 中实现 `EmbeddingsRequester` 接口：
 
-```ts twoslash
-// @noImplicitAny: false
-import type {} from 'koishi-plugin-chatluna'
-import {
-    ModelRequester,
-    ModelRequestParams,
-    EmbeddingsRequester,
-    EmbeddingsRequestParams
-} from 'koishi-plugin-chatluna/llm-core/platform/api'
-import {
-    ClientConfig,
-    ClientConfigPool
-} from 'koishi-plugin-chatluna/llm-core/platform/config'
-import * as fetchType from 'undici/types/fetch'
-import { ChatGenerationChunk } from '@langchain/core/outputs'
-import {
-    ChatLunaError,
-    ChatLunaErrorCode
-} from 'koishi-plugin-chatluna/utils/error'
-import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
-import { Context, Logger } from 'koishi'
-
-interface Config {
-    maxRetries: number
-}
-
-const logger = {} as Logger
-// ---cut---
+```ts
 export class YourPlatformRequester
     extends ModelRequester
     implements EmbeddingsRequester {
@@ -254,6 +194,7 @@ export class YourPlatformRequester
 #### 输入处理
 
 `embeddings` 方法的 `params.input` 可以是：
+
 - 单个字符串：`"hello world"`
 - 字符串数组：`["hello", "world"]`
 
@@ -262,31 +203,17 @@ export class YourPlatformRequester
 #### 返回值
 
 根据输入类型返回不同格式：
+
 - 如果输入是单个字符串，返回 `number[]`（一维向量）
+
 - 如果输入是字符串数组，返回 `number[][]`（向量矩阵）
 
 #### 示例响应处理
 
 以 Gemini 为例：
 
-```ts twoslash
-// @noImplicitAny: false
-import type {} from 'koishi-plugin-chatluna'
-import { EmbeddingsRequestParams, EmbeddingsRequester } from 'koishi-plugin-chatluna/llm-core/platform/api'
-import {
-    ChatLunaError,
-    ChatLunaErrorCode
-} from 'koishi-plugin-chatluna/utils/error'
-import { Logger } from 'koishi'
-
-const logger = {} as Logger
-
-class GeminiRequester implements EmbeddingsRequester {
-    private async _post(url: string, data: any): Promise<Response> {
-        return {} as Response
-    }
-// ---cut---
-async embeddings(
+```ts
+function embeddings(
     params: EmbeddingsRequestParams
 ): Promise<number[] | number[][]> {
     if (typeof params.input === 'string') {
@@ -332,40 +259,13 @@ async embeddings(
         throw new ChatLunaError(ChatLunaErrorCode.API_REQUEST_FAILED, error)
     }
 }
-// ---cut-after---
-}
 ```
 
 ## 仅支持 Embeddings 的平台
 
 如果你的平台只提供嵌入模型（不支持大语言模型），可以使用 `PlatformEmbeddingsClient`：
 
-```ts twoslash
-// @noImplicitAny: false
-import type {} from 'koishi-plugin-chatluna'
-import { PlatformEmbeddingsClient } from 'koishi-plugin-chatluna/llm-core/platform/client'
-import { ClientConfig } from 'koishi-plugin-chatluna/llm-core/platform/config'
-import {
-    ChatHubBaseEmbeddings,
-    ChatLunaEmbeddings
-} from 'koishi-plugin-chatluna/llm-core/platform/model'
-import {
-    ModelInfo,
-    ModelType
-} from 'koishi-plugin-chatluna/llm-core/platform/types'
-import { Context } from 'koishi'
-import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
-import {
-    ChatLunaError,
-    ChatLunaErrorCode
-} from 'koishi-plugin-chatluna/utils/error'
-
-interface Config {
-    maxRetries: number
-}
-
-class YourEmbeddingsRequester {}
-// ---cut---
+```ts
 export class YourEmbeddingsClient extends PlatformEmbeddingsClient<ClientConfig> {
     platform = 'yourplatform'
 
@@ -402,7 +302,7 @@ export class YourEmbeddingsClient extends PlatformEmbeddingsClient<ClientConfig>
         })
     }
 
-    protected _createModel(model: string): ChatHubBaseEmbeddings {
+    protected _createModel(model: string): ChatLunaBaseEmbeddings {
         const info = this._modelInfos[model]
 
         if (info == null) {

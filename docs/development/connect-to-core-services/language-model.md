@@ -44,12 +44,16 @@ yarn create chatluna-plugin
 
 模板默认实现了 OpenAI ChatCompletion API 格式，包含以下文件：
 
-- `src/index.ts` - 插件入口和配置
-- `src/client.ts` - 平台客户端实现
-- `src/requester.ts` - API 请求处理
-- `src/types.ts` - 类型定义
-- `src/utils.ts` - 工具函数
-- `src/locales/` - 国际化文件
+```
+koishi-plugin-chatluna-adapter-example/
+├── src/
+│   ├── index.ts      # 插件入口和配置
+│   ├── client.ts     # 平台客户端实现
+│   ├── requester.ts  # API 请求处理
+│   ├── types.ts      # 类型定义
+│   ├── utils.ts      # 工具函数
+│   └── locales/      # 国际化文件
+```
 
 ## 实现核心功能
 
@@ -61,6 +65,7 @@ yarn create chatluna-plugin
 
 ```ts twoslash
 // @noImplicitAny: false
+// @noErrors
 import type {} from 'koishi-plugin-chatluna'
 import { ModelInfo, ModelType } from 'koishi-plugin-chatluna/llm-core/platform/types'
 
@@ -99,6 +104,7 @@ async refreshModels(): Promise<ModelInfo[]> {
 
 ```ts twoslash
 // @noImplicitAny: false
+// @noErrors
 import type {} from 'koishi-plugin-chatluna'
 import * as fetchType from 'undici/types/fetch'
 import { ClientConfig, ClientConfigPool } from 'koishi-plugin-chatluna/llm-core/platform/config'
@@ -143,6 +149,7 @@ private _post(url: string, data: any, params: fetchType.RequestInit = {}) {
 
 ```ts twoslash
 // @noImplicitAny: false
+// @noErrors
 import type {} from 'koishi-plugin-chatluna'
 import { ModelRequestParams, ModelRequester } from 'koishi-plugin-chatluna/llm-core/platform/api'
 import { ChatGenerationChunk } from '@langchain/core/outputs'
@@ -223,6 +230,7 @@ async *completionStreamInternal(
 
 ```ts twoslash
 // @noImplicitAny: false
+// @noErrors
 import type {} from 'koishi-plugin-chatluna'
 import { ClientConfig } from 'koishi-plugin-chatluna/llm-core/platform/config'
 
@@ -248,6 +256,7 @@ private _buildHeaders() {
 
 ```ts twoslash
 // @noImplicitAny: false
+// @noErrors
 // ---cut-before---
 export interface YourPlatformMessage {
     role: 'user' | 'assistant' | 'system'
@@ -268,6 +277,7 @@ export interface YourPlatformRequest {
 
 ```ts twoslash
 // @noImplicitAny: false
+// @noErrors
 import type {} from 'koishi-plugin-chatluna'
 import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
 import { Schema } from 'koishi'
@@ -303,14 +313,16 @@ export const Config: Schema<Config> = Schema.intersect([
 
 同时记得更新 `src/locales/` 下的国际化文件。
 
-## 配置说明
+### 配置说明
 
 模板中的配置已经继承了 `ChatLunaPlugin.Config`，自动提供以下功能：
 
-- 负载均衡：`apiKeys` 支持多个 API Key 配置，ChatLuna 会自动进行负载均衡
-- 并发控制：`chatConcurrentMaxSize` 可以控制同一个模型的最大并发请求数
-- 重试机制：`maxRetries` 负责控制控制失败重试次数
-- 超时设置：`timeout` 可以控制请求 API 的最大超时时间
+| 功能 | 配置项 | 说明 |
+|------|--------|------|
+| 负载均衡 | `apiKeys` | 支持多个 API Key 配置，ChatLuna 会自动进行负载均衡 |
+| 并发控制 | `chatConcurrentMaxSize` | 控制同一个模型的最大并发请求数 |
+| 重试机制 | `maxRetries` | 控制失败重试次数 |
+| 超时设置 | `timeout` | 控制请求 API 的最大超时时间 |
 
 ## 测试适配器
 
@@ -334,9 +346,9 @@ export const Config: Schema<Config> = Schema.intersect([
 
 如果你的平台同时支持 embeddings 模型，可以：
 
-1. 将 `client.ts` 中的基类改为 `PlatformModelAndEmbeddingsClient`
-2. 实现 `EmbeddingsRequester` 接口
-3. 在 `refreshModels()` 中添加 embeddings 模型
+1. 将 `client.ts` 中的基类改为 `PlatformModelAndEmbeddingsClient`。
+2. 实现 `EmbeddingsRequester` 接口。
+3. 在 `refreshModels()` 中添加 embeddings 模型。
 
 参考 [嵌入模型](./embedding-model.md) 文档了解详情。
 
@@ -344,9 +356,9 @@ export const Config: Schema<Config> = Schema.intersect([
 
 如果你的平台支持工具调用：
 
-- 在 `requester.ts` 中正确处理 `tools` 参数
-- 在 `utils.ts` 中正确格式化工具定义
-- 处理工具调用的响应
+1. 在 `requester.ts` 中正确处理 `tools` 参数，传递给你的 API 上游。
+2. 在 `utils.ts` 中正确格式化工具定义。
+3. 处理 API 返回的工具调用响应。
 
 如果不支持，可以在请求中忽略 `tools` 参数。
 
