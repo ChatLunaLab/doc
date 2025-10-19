@@ -6,7 +6,11 @@
       "Read(//g/projects/koishi_projects/koishi-new/external/chatluna-knowledge/src/plugins/**)",
       "Read(//g/projects/koishi_projects/koishi-new/external/chatluna-character/src/**)",
       "Read(//g/projects/koishi_projects/koishi-new/external/chatluna/packages/core/src/llm-core/platform/**)",
-      "Read(//g/projects/koishi_projects/koishi-new/external/chatluna/packages/core/src/**)"
+      "Read(//g/projects/koishi_projects/koishi-new/external/chatluna/packages/core/src/**)",
+      "Read(//g/projects/koishi_projects/koishi-new/external/chatluna-actions/src/service/**)",
+      "Read(//g/projects/koishi_projects/koishi-new/external/create-chatluna-plugin/resources/template_adapter/**)",
+      "Read(//g/projects/koishi_projects/koishi-new/external/create-chatluna-plugin/src/**)",
+      "Read(//g/projects/koishi_projects/koishi-new/external/chatluna/packages/service-vector-store/src/**)"
     ],
     "deny": [],
     "ask": []
