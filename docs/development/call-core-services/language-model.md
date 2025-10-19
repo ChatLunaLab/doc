@@ -20,7 +20,7 @@ const model = await ctx.chatluna.createChatModel("openai/gpt-5-nano")
 //      ^?
 
 
-const message = await model.value.invoke("你好，世界！")
+const message = await model.value?.invoke("你好，世界！")
 console.log(message)
     //          ^?
  
@@ -31,6 +31,10 @@ console.log(message)
 > 自 ChatLuna 1.3.0 开始，ChatLuna 开始深度整合 vue 的响应式系统。如果返回的值为 `ComputedRef<T>`，则代表此值是可以根据其他配置改动进行变化的。
 >
 > 请先创建这个值并保存到类或者其他地方里面，在需要的时候调用 `ref.value` 来获取真正的值。
+
+> [!WARNING] 警告
+> 响应式获取的 `value` 可能会 `undefined`。
+> 如果返回空值，则说明当前获取的模型或者其他值不存在。你需要提取判断并告知用户，需要的模型或者其他参数不存在。
 
 `ChatLunaChatModel` 继承自 [`BaseChatModel`](https://v03.api.js.langchain.com/classes/_langchain_core.language_models_chat_models.BaseChatModel.html)。
 
