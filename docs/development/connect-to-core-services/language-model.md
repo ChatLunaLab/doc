@@ -2,41 +2,284 @@
 
 ChatLuna 也提供 API，来接入其他的模型适配器。
 
-## 注册插件
+## 使用脚手架创建适配器
 
-所有需要接入功能到 ChatLuna 的插件，都得新建 `ChatLunaPlugin` 实例，并注册到 `ChatLuna` 服务中。
+我们强烈建议使用 ChatLuna 提供的脚手架来创建模型适配器插件，这将大大简化你的开发流程。
 
-```typescript
-import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
-import { Context, Schema } from 'koishi'
+### 创建适配器插件
 
-export function apply(ctx: Context, config: Config) {
-    const plugin = new ChatLunaPlugin(ctx, config, 'your-plugin-name')
+在你的 Koishi 项目根目录下运行：
 
-    ctx.on('ready', async () => {
-        // 在 ready 事件中注册到 ChatLuna 服务
-        plugin.registerToService()
+::: code-group
 
-        // 继续...
-    })
-}
-
+```bash [npm]
+npm init chatluna-plugin@latest
 ```
 
-## 配置 Schema
+```bash [yarn]
+yarn create chatluna-plugin
+```
 
-每个模型适配器都应该有自己的 Schema，可以配置模型名称、API Key 等参数。
+:::
 
-并继承 `ChatLunaPlugin.Config` 接口。
+在提示中选择 **ChatLuna 适配器** 模板：
 
-```typescript
+```shell
+检测到工作区目录: G:\projects\koishi_projects\koishi-dev
+? 选择模板类型: » - Use arrow-keys. Return to submit.
+    ChatLuna 插件（完全基于 ChatLuna）
+    Koishi 插件（部分功能需要 ChatLuna）
+>   ChatLuna 适配器
+```
+
+然后输入你的适配器名称（不包含 `koishi-plugin-chatluna-adapter-` 前缀）：
+
+```shell
+? 适配器名称: » example
+```
+
+脚手架会自动创建一个名为 `koishi-plugin-chatluna-adapter-example` 的插件，其中已经包含了完整的模板代码。
+
+### 模板说明
+
+模板默认实现了 OpenAI ChatCompletion API 格式，包含以下文件：
+
+- `src/index.ts` - 插件入口和配置
+- `src/client.ts` - 平台客户端实现
+- `src/requester.ts` - API 请求处理
+- `src/types.ts` - 类型定义
+- `src/utils.ts` - 工具函数
+- `src/locales/` - 国际化文件
+
+## 实现核心功能
+
+使用脚手架创建的模板已经包含了大部分代码，你只需要实现以下核心部分：
+
+### 1. 配置模型列表
+
+在 `src/client.ts` 的 `refreshModels()` 方法中配置你的平台支持的模型：
+
+```ts twoslash
+// @noImplicitAny: false
+import type {} from 'koishi-plugin-chatluna'
+import { ModelInfo, ModelType } from 'koishi-plugin-chatluna/llm-core/platform/types'
+
+class YourPlatformClient {
+// ---cut---
+async refreshModels(): Promise<ModelInfo[]> {
+    // 替换为你的平台实际支持的模型
+    const rawModels = [
+        ['gpt-4', 8192],
+        ['gpt-3.5-turbo', 4096],
+        // 添加更多模型...
+    ] as [string, number][]
+
+    return rawModels.map(([model, maxTokens]) => {
+        return {
+            name: model,
+            type: ModelType.llm,
+            capabilities: [],
+            supportMode: ['all'],
+            maxTokens
+        } as ModelInfo
+    })
+}
+// ---cut-after---
+}
+```
+
+你可以选择以下实现方式：
+
+- 硬编码模型列表（如上所示）
+- 通过 `Requester` 调取 API 动态的获取模型列表
+
+### 2. 配置 API 端点
+
+在 `src/requester.ts` 的 `_post()` 方法中设置你的 API 端点：
+
+```ts twoslash
+// @noImplicitAny: false
+import type {} from 'koishi-plugin-chatluna'
+import * as fetchType from 'undici/types/fetch'
+import { ClientConfig, ClientConfigPool } from 'koishi-plugin-chatluna/llm-core/platform/config'
 import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
-import { Context, Schema } from 'koishi'
+import { Context } from 'koishi'
 
+interface Config {
+    apiEndpoint: string
+}
+
+class YourPlatformRequester {
+    constructor(
+        private _ctx: Context,
+        private _configPool: ClientConfigPool<ClientConfig>,
+        private _pluginConfig: Config,
+        private _plugin: ChatLunaPlugin
+    ) {}
+
+    private _config: ClientConfig = {} as ClientConfig
+    private _buildHeaders() { return {} }
+// ---cut---
+private _post(url: string, data: any, params: fetchType.RequestInit = {}) {
+    const body = JSON.stringify(data)
+
+    // 替换为你的平台的 API 基础 URL
+    const apiEndpoint = this._pluginConfig.apiEndpoint || 'https://api.yourplatform.com'
+
+    return this._plugin.fetch(`${apiEndpoint}/${url}`, {
+        body,
+        headers: this._buildHeaders(),
+        method: 'POST',
+        ...params
+    })
+}
+// ---cut-after---
+}
+```
+
+### 3. 调整请求格式（可选）
+
+如果你的平台 API 格式与 OpenAI 不完全兼容，需要修改 `src/requester.ts` 中的 `completionStreamInternal()` 方法：
+
+```ts twoslash
+// @noImplicitAny: false
+import type {} from 'koishi-plugin-chatluna'
+import { ModelRequestParams, ModelRequester } from 'koishi-plugin-chatluna/llm-core/platform/api'
+import { ChatGenerationChunk } from '@langchain/core/outputs'
+import { ClientConfig, ClientConfigPool } from 'koishi-plugin-chatluna/llm-core/platform/config'
+import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
+import { ChatLunaError, ChatLunaErrorCode } from 'koishi-plugin-chatluna/utils/error'
+import { Context } from 'koishi'
+import * as fetchType from 'undici/types/fetch'
+
+interface YourPlatformMessage {
+    role: string
+    content: string
+}
+
+function langchainMessageToYourPlatformMessage(input: any): YourPlatformMessage[] {
+    return []
+}
+
+interface Config {}
+
+class YourPlatformRequester extends ModelRequester {
+    constructor(
+        ctx: Context,
+        _configPool: ClientConfigPool<ClientConfig>,
+        public _pluginConfig: Config,
+        _plugin: ChatLunaPlugin
+    ) {
+        super(ctx, _configPool, _pluginConfig, _plugin)
+    }
+
+    private _post(url: string, data: any, params: fetchType.RequestInit = {}) {
+        return this._plugin.fetch(`https://api.yourplatform.com/${url}`, {
+            body: JSON.stringify(data),
+            method: 'POST',
+            ...params
+        })
+    }
+// ---cut---
+async *completionStreamInternal(
+    params: ModelRequestParams
+): AsyncGenerator<ChatGenerationChunk> {
+    await this.init()
+
+    const messagesMapped = langchainMessageToYourPlatformMessage(
+        params.input
+    )
+
+    try {
+        const response = await this._post(
+            'your/api/path',  // 修改为你的 API 路径
+            {
+                messages: messagesMapped,
+                stream: true,
+                // 根据你的平台调整参数
+                temperature: params.temperature,
+                // ...其他参数
+            },
+            {
+                signal: params.signal
+            }
+        )
+
+        // 处理流式响应...
+    } catch (e) {
+        if (e instanceof ChatLunaError) {
+            throw e
+        }
+        throw new ChatLunaError(ChatLunaErrorCode.API_REQUEST_FAILED, e)
+    }
+}
+// ---cut-after---
+}
+```
+
+### 4. 修改认证方式（可选）
+
+如果需要不同的认证方式，可以修改 `src/requester.ts` 的 `_buildHeaders()` 方法：
+
+```ts twoslash
+// @noImplicitAny: false
+import type {} from 'koishi-plugin-chatluna'
+import { ClientConfig } from 'koishi-plugin-chatluna/llm-core/platform/config'
+
+class YourPlatformRequester {
+    private _config: ClientConfig = {} as ClientConfig
+// ---cut---
+private _buildHeaders() {
+    return {
+        'Content-Type': 'application/json',
+        // 根据你的平台修改认证头
+        'Authorization': `Bearer ${this._config.value.apiKey}`,
+        // 或使用其他认证方式
+        // 'X-API-Key': this._config.value.apiKey,
+    }
+}
+// ---cut-after---
+}
+```
+
+### 5. 更新类型定义（可选）
+
+如果你的平台使用不同的消息格式，需要修改 `src/types.ts`：
+
+```ts twoslash
+// @noImplicitAny: false
+// ---cut-before---
+export interface YourPlatformMessage {
+    role: 'user' | 'assistant' | 'system'
+    content: string
+    // 添加平台特定的字段
+}
+
+export interface YourPlatformRequest {
+    messages: YourPlatformMessage[]
+    temperature?: number
+    // 添加其他请求字段
+}
+```
+
+### 6. 更新配置文件
+
+根据你的平台需求，在 `src/index.ts` 中添加额外的配置项：
+
+```ts twoslash
+// @noImplicitAny: false
+import type {} from 'koishi-plugin-chatluna'
+import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
+import { Schema } from 'koishi'
+// ---cut---
 export interface Config extends ChatLunaPlugin.Config {
-    apiKeys: [string, string][]
-    maxTokens: number
+    apiKeys: [string, boolean][]
+    apiEndpoint: string
+    maxContextRatio: number
     temperature: number
+    presencePenalty: number
+    frequencyPenalty: number
+    // 添加你的自定义配置
 }
 
 export const Config: Schema<Config> = Schema.intersect([
@@ -44,458 +287,74 @@ export const Config: Schema<Config> = Schema.intersect([
     Schema.object({
         apiKeys: Schema.array(
             Schema.tuple([
-                Schema.string().role('secret'),
-                Schema.string().default(
-                    'https://generativelanguage.googleapis.com/v1beta'
-                )
+                Schema.string().role('secret').default(''),
+                Schema.boolean().default(true)
             ])
-        ).default([['', 'https://generativelanguage.googleapis.com/v1beta']])
+        )
+            .default([[]])
+            .role('table'),
+        apiEndpoint: Schema.string()
+            .default('https://api.yourplatform.com')
+            .role('link')
     }),
-    Schema.object({
-        maxTokens: Schema.number().min(16).max(2097000).step(16).default(8064),
-        temperature: Schema.percent().min(0).max(2).step(0.1).default(0.8)
-    })
-]) as any
+    // ...其他配置
+]) as Schema<Config>
 ```
 
-上面的 Schema 中，`apiKeys` 是 API Key 的配置，用于不同 API 的配置。
+同时记得更新 `src/locales/` 下的国际化文件。
 
-ChatLuna 自带负载均衡配置的支持，因此需要支持多个 API Key 的配置。
+## 配置说明
 
-`maxTokens` 和 `temperature` 是模型适配器的参数，用于配置模型的具体请求参数。
+模板中的配置已经继承了 `ChatLunaPlugin.Config`，自动提供以下功能：
 
-### 解析 ClientConfig
+- 负载均衡：`apiKeys` 支持多个 API Key 配置，ChatLuna 会自动进行负载均衡
+- 并发控制：`chatConcurrentMaxSize` 可以控制同一个模型的最大并发请求数
+- 重试机制：`maxRetries` 负责控制控制失败重试次数
+- 超时设置：`timeout` 可以控制请求 API 的最大超时时间
 
-在 ChatLuna 中，对于模型适配器，都需要一套 `ClientConfig`，也就是平台配置，其的接口定义如下：
+## 测试适配器
 
-```ts
-export interface ClientConfig {
-    apiKey: string;
-    platform: PlatformClientNames;
-    maxRetries: number;
-    concurrentMaxSize: number;
-    apiEndpoint?: string;
-    timeout: number;
-    chatLimit: Computed<Awaitable<number>>;
-}
-```
+完成实现后，在你的 Koishi 项目中测试：
 
-导入 `ClientConfig` 类型，并新建一个 `ChatLunaPlugin` 实例。其中两个泛型，第一个为当前插件的 Schema 配置接口，第二个为 `ClientConfig` 或其他的子类型。
+1. 构建项目：
 
-传入构建参数的三个值，第一个为当前插件的 `Context`，第二个为当前插件的 Schema 配置实例，在后面可用于解析 `ClientConfig`。第三个为当前的平台名，这也是识别不同平台的关键参数。
+   ```bash
+   yarn build
+   ```
 
-`ClientConfig` 默认已经提供了 apiKey 等字段，我们无需继承该接口，直接使用即可。
+2. 在 Koishi 控制台中添加并启用你的适配器插件
 
-```typescript
-import { ChatLunaPlugin, ClientConfig } from 'koishi-plugin-chatluna/services/chat'
-import { Context, Schema } from 'koishi'
-
-
-export function apply(ctx: Context, config: Config) {
-    const plugin = new ChatLunaPlugin(ctx, config, 'your-plugin-name')
-    
-    // 如果不扩展自己的 ClientConfig，则可以省略泛型
-    // const plugin = new ChatLunaPlugin<Config, ClientConfig>(ctx, config, 'your-plugin-name')
-
-    ctx.on('ready', async () => {
-        // 在 ready 事件中注册到 ChatLuna 服务
-        plugin.registerToService()
-
-        // 继续...
-    })
-}
-```
-
-我们需要将 `Config` 里的请求参数，解析到 `ClientConfig` 中。
-
-```typescript
-ctx.on('ready', async () => {
-    // 在 ready 事件中注册到 ChatLuna 服务
-    plugin.registerToService()
-
-    // 解析 ClientConfig
-    await plugin.parseConfig((config) => 
-        config.apiKeys.map((apiKey) => {
-            return { 
-                apiKey, 
-                // 平台名是唯一标识，不能重复
-                platform: 'test', 
-                chatLimit: config.chatTimeLimit, 
-                timeout: config.timeout, 
-                maxRetries: config.maxRetries, 
-                concurrentMaxSize: config.chatConcurrentMaxSize, 
-            } 
-        }) 
-    ) 
-})
-```
-
-注意：`platform` 是唯一标识，不能重复。下面需要使用 `platform` 参数的地方，都应该是这个唯一标识。
-
-## 实现 PlatformClient
-
-在 ChatLuna 的模型适配器中， `Client` 即指 `BasePlatformClient` 及其子类。
-
-ChatLuna 根据模型的不同用途，提供了几种 `Client`:
-
-- `PlatformModelClient`: 用于和语言模型进行交互的 `Client`,可创建 `ChatLunaChatModel`，用于语言模型交互。
-- `PlatformEmbeddingsClient`: 用于和嵌入模型进行交互的 `Client`,可创建 `ChatHubBaseEmbeddings`，用于嵌入模型交互。
-- `PlatformModelAndEmbeddingsClient`: 前面两者的组合，可创建 `ChatHubBaseEmbeddings` 和 `ChatLunaChatModel`。
-
-如只接入大语言模型，只需继承 `PlatformModelClient` 即可。
-
-以 `OpenAIClient` 为例：
-
-```typescript
-import { Context } from "koishi";
-import { PlatformModelClient } from "koishi-plugin-chatluna/llm-core/platform/client";
-import { ClientConfig } from "koishi-plugin-chatluna/llm-core/platform/config";
-import { ChatLunaChatModel } from "koishi-plugin-chatluna/llm-core/platform/model";
-import { ModelInfo } from "koishi-plugin-chatluna/llm-core/platform/types";
-import { Config } from ".";
-
-export class OpenAIClient extends PlatformModelClient<ClientConfig> {
-    platform = 'openai'
-
-    private _requester: OpenAIRequester
-
-    private _models: Record<string, ModelInfo>
-
-    constructor(
-        ctx: Context,
-        private _config: Config,
-        clientConfig: ClientConfig,
-        plugin: ChatLunaPlugin
-    ) {
-        super(ctx, clientConfig)
-
-        this._requester = new OpenAIRequester(clientConfig, plugin)
-    }
-
-    async init(): Promise<void> {
-        await this.getModels()
-    }
-
-    async refreshModels(): Promise<ModelInfo[]> {
-        try {
-            const rawModels = await this._requester.getModels()
-
-            return rawModels
-                .filter(
-                    (model) =>
-                        model.includes('gpt') ||
-                        model.includes('text-embedding')
-                )
-                .filter(
-                    (model) =>
-                        !(model.includes('instruct') || model.includes('0301'))
-                )
-                .map((model) => {
-                    return {
-                        name: model,
-                        type: model.includes('gpt')
-                            ? ModelType.llm
-                            : ModelType.embeddings,
-                        functionCall: true,
-                        supportMode: ['all']
-                    }
-                })
-        } catch (e) {
-            throw new ChatLunaError(ChatLunaErrorCode.MODEL_INIT_ERROR, e)
-        }
-    }
-
-    async getModels(): Promise<ModelInfo[]> {
-        if (this._models) {
-            return Object.values(this._models)
-        }
-
-        const models = await this.refreshModels()
-
-        this._models = {}
-
-        for (const model of models) {
-            this._models[model.name] = model
-        }
-    }
-
-    protected _createModel(
-        model: string
-    ): ChatLunaChatModel {
-        const info = this._models[model]
-
-        if (info == null) {
-            throw new ChatLunaError(ChatLunaErrorCode.MODEL_NOT_FOUND)
-        }
-
-        
-        return new ChatLunaChatModel({
-                modelInfo: info,
-                requester: this._requester,
-                model,
-                maxTokenLimit: this._config.maxTokens,
-                frequencyPenalty: this._config.frequencyPenalty,
-                presencePenalty: this._config.presencePenalty,
-                timeout: this._config.timeout,
-                temperature: this._config.temperature,
-                maxRetries: this._config.maxRetries,
-                llmType: 'openai'
-        })
-    }
-}
-
-```
-
-可以看到，`PlatformModelClient` 需要实现 `init` , `getModels` , `refreshModels` 和 `_createModel` 方法。
-
-- `init` 方法用于 `PlatformModelClient` 的初始化，通常直接调用 `getModels` 方法获取模型信息。
-- `getModels` 方法用于获取模型信息，如果有缓存，则直接返回缓存，否则调用 `refreshModels` 方法获取模型信息。
-- `refreshModels` 方法用于刷新模型信息，通常调用模型提供商的 API 获取模型信息。
-- `_createModel` 方法用于创建 `ChatLunaChatModel` 实例。
-
-注意 `_createModel`中， `ChatLunaChatModel` 需要一个 `requester` 参数。这个 `requester` 就是真正实现模型请求的类。
-
-## 实现 Requester
-
-`Requester` 用于实现模型请求，通常需要继承 `BaseRequester` 类。
-
-让我们继续以 `OpenAIRequester` 为例：
-
-```typescript
-
-export class OpenAIRequester
-    extends ModelRequester
-{
-    constructor(
-        private _config: ClientConfig,
-        private _plugin: ChatLunaPlugin
-    ) {
-        super()
-    }
-
-    async *completionStream(
-        params: ModelRequestParams
-    ): AsyncGenerator<ChatGenerationChunk> {
-        ...
-    }
-
-
-    async getModels(): Promise<string[]> {
-       ...
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private _post(url: string, data: any, params: fetchType.RequestInit = {}) {
-        const requestUrl = this._concatUrl(url)
-
-        for (const key in data) {
-            if (data[key] === undefined) {
-                delete data[key]
-            }
-        }
-
-        const body = JSON.stringify(data)
-
-        // console.log('POST', requestUrl, body)
-
-        return this._plugin.fetch(requestUrl, {
-            body,
-            headers: this._buildHeaders(),
-            method: 'POST',
-            ...params
-        })
-    }
-
-    private _get(url: string) {
-        const requestUrl = this._concatUrl(url)
-
-        return this._plugin.fetch(requestUrl, {
-            method: 'GET',
-            headers: this._buildHeaders()
-        })
-    }
-
-    private _buildHeaders() {
-        return {
-            Authorization: `Bearer ${this._config.apiKey}`,
-            'Content-Type': 'application/json'
-        }
-    }
-
-    private _concatUrl(url: string): string {
-        const apiEndPoint = this._config.apiEndpoint
-
-        // match the apiEndPoint ends with '/v1' or '/v1/' using regex
-        if (!apiEndPoint.match(/\/v1\/?$/)) {
-            if (apiEndPoint.endsWith('/')) {
-                return apiEndPoint + 'v1/' + url
-            }
-
-            return apiEndPoint + '/v1/' + url
-        }
-
-        if (apiEndPoint.endsWith('/')) {
-            return apiEndPoint + url
-        }
-
-        return apiEndPoint + '/' + url
-    }
-
-    async init(): Promise<void> {}
-
-    async dispose(): Promise<void> {}
-}
-
-```
-
-> [!NOTE]
-> 当需要网络请求时，请使用 `plugin.fetch` 或 `plugin.ws` 方法。
-> 这可以让用户自行配置代理
-
-通常只需要实现 `completionStream` 方法，其他方法可以继承 `BaseRequester` 类。
-
-- `getModels` 需要实现获取模型信息的方法，返回的是可用的模型列表数组。
-- `completionStream` 方法用于实现流式响应，通常调用模型提供商的 API 获取流式响应。
-
-下面是一个完全的 `completionStream` 实现（以 Ollama 为例）：
-
-```typescript
-import { sse } from 'koishi-plugin-chatluna/utils/sse'
-import { readableStreamToAsyncIterable } from 'koishi-plugin-chatluna/utils/stream'
-
-async *completionStream(
-    params: ModelRequestParams
-): AsyncGenerator<ChatGenerationChunk> {
-    try {
-        const response = await this._post(
-        'api/chat',
-        {
-            model: params.model,
-            messages: langchainMessageToOllamaMessage(params.input),
-            options: {
-                temperature: params.temperature,
-                // top_k: params.n,
-                top_p: params.topP,
-                stop: typeof params.stop === 'string'
-                        ? params.stop
-                        : params.stop?.[0]
-            },
-            stream: true
-        } satisfies OllamaRequest,
-        {
-            signal: params.signal
-        })
-
-        const stream = new TransformStream<string, OllamaDeltaResponse>()
-
-        const iterable = readableStreamToAsyncIterable<OllamaDeltaResponse>(
-            stream.readable
-        )
-
-        const writable = stream.writable.getWriter()
-
-        let buffer = ''
-        await sse(
-            response,
-            async (rawData) => {
-                buffer += rawData
-
-                const parts = buffer.split('\n')
-
-                buffer = parts.pop() ?? ''
-
-                for (const part of parts) {
-                    try {
-                        writable.write(JSON.parse(part))
-                    } catch (error) {
-                            console.warn('invalid json: ', part)
-                        }
-                    }
-                },
-            0
-        )
-
-        let content = ''
-
-        for await (const chunk of iterable) {
-            try {
-                content += chunk.message.content
-
-                const generationChunk = new ChatGenerationChunk({
-                    message: new AIMessageChunk(content),
-                    text: content
-                })
-
-                yield generationChunk
-
-                if (chunk.done) {
-                    return
-                }
-            } catch (e) {
-                throw new ChatLunaError(
-                    ChatLunaErrorCode.API_REQUEST_FAILED,
-                    new Error(
-                        'error when calling ollama completion, Result: ' +
-                                chunk
-                        )
-                    )
-                }
-        }
-    } catch (e) {
-        if (e instanceof ChatLunaError) {
-            throw e
-        } else {
-            throw new ChatLunaError(ChatLunaErrorCode.API_REQUEST_FAILED, e)
-        }
-    }
-}
-```
-
-一般的 `completionStream` 实现，需要经过几个步骤：
-
-1. 构建请求，需要将 `langchain` 里的 `BaseMessage` 转换为模型提供商的请求格式。
-2. 调用模型提供商的 API 获取流式响应。
-3. 将流式响应转换为 `ChatGenerationChunk` 实例。
-
-## 实例化 Client
-
-最后，我们需要将创建 `Client` 的函数，注册到 `ChatLuna` 服务中：
-
-```typescript
-ctx.on('ready', async () => {
-    // 在 ready 事件中注册到 ChatLuna 服务
-    plugin.registerToService()
-
-    // 解析 ClientConfig
-    await plugin.parseConfig((config) => 
-        config.apiKeys.map((apiKey) => {
-            return { 
-                apiKey, 
-                // 平台名是唯一标识，不能重复
-                platform: 'test', 
-                chatLimit: config.chatTimeLimit, 
-                timeout: config.timeout, 
-                maxRetries: config.maxRetries, 
-                concurrentMaxSize: config.chatConcurrentMaxSize, 
-            } 
-        }) 
-    ) 
-
-      plugin.registerClient(
-            (_, clientConfig) =>
-                // 在此处创建 Client 实例
-                new TestClient(ctx, config, clientConfig, plugin)
-        )
-
-    // 初始化所有 Client
-    await plugin.initClients()
-})
-```
+3. 进入插件面板，配置 API Key 和其他参数
+
+4. 测试模型调用
+
+## 可选功能
+
+### 支持 Embeddings 模型
+
+如果你的平台同时支持 embeddings 模型，可以：
+
+1. 将 `client.ts` 中的基类改为 `PlatformModelAndEmbeddingsClient`
+2. 实现 `EmbeddingsRequester` 接口
+3. 在 `refreshModels()` 中添加 embeddings 模型
+
+参考 [嵌入模型](./embedding-model.md) 文档了解详情。
+
+### 支持工具调用（Tool Calling）
+
+如果你的平台支持工具调用：
+
+- 在 `requester.ts` 中正确处理 `tools` 参数
+- 在 `utils.ts` 中正确格式化工具定义
+- 处理工具调用的响应
+
+如果不支持，可以在请求中忽略 `tools` 参数。
 
 ## 其他资源
 
-我们推荐你阅读 `ChatLuna` 上已有的模型适配器，了解更具体的实现。
+我们推荐你参考 `ChatLuna` 上已有的模型适配器，了解更具体的实现：
 
 - [OpenAI](https://github.com/ChatLunaLab/chatluna/tree/v1-dev/packages/openai-adapter/src)
 - [Gemini](https://github.com/ChatLunaLab/chatluna/tree/v1-dev/packages/gemini-adapter/src)
 - [Ollama](https://github.com/ChatLunaLab/chatluna/tree/v1-dev/packages/ollama-adapter/src)
+- [Wenxin](https://github.com/ChatLunaLab/chatluna/tree/v1-dev/packages/wenxin-adapter/src)

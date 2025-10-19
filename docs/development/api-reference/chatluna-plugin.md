@@ -21,48 +21,54 @@ export class ChatLunaPlugin<
 - **platformName**: `PlatformClientNames` 平台名称
 - **createConfigPool**: `boolean` 是否创建配置池（默认为 `true`）
 
+构造函数会在上下文 `ready` 时自动安装插件，并在上下文销毁时自动卸载，无需额外调用注册方法。
+
 ### parseConfig()
 
 - **f**: `(config: T) => R[]` 配置解析函数
-- 返回值: `Promise<void>`
+- 返回值: `void`
 
 解析插件配置并添加到配置池中。
 
 ```typescript
-await plugin.parseConfig(config => [{
+plugin.parseConfig(config => [{
   apiKey: config.apiKey,
   baseURL: config.baseURL
 }])
 ```
 
-### initClients()
+### initClient()
 
 - 返回值: `Promise<void>`
 
-初始化平台客户端。该方法会：
-
-1. 注册配置池
-2. 创建所有客户端
-3. 更新支持的模型列表
-
-### registerToService()
-
-注册插件到 ChatLuna 服务中。通常在插件初始化时调用。
+初始化当前平台的客户端。如果创建过程中发生错误会回滚安装流程并抛出异常。
 
 ### dispose()
 
 销毁插件，清理所有注册的资源。
 
+### supportedModels
+
+- 返回值: `readonly string[]`
+
+获取当前插件可用的模型名称列表，形式为 `platform/model`。
+
+### platformConfigPool
+
+- 返回值: `ClientConfigPool<R>`
+
+访问插件的配置池，可用于自定义负载均衡策略或读取已解析的配置。
+
 ### registerClient()
 
-- **func**: `(ctx: Context, config: R) => BasePlatformClient` 客户端创建函数
+- **func**: `() => BasePlatformClient` 客户端创建函数
 - **platformName**: `string` 平台名称（可选，默认为插件的 platformName）
 - 返回值: `void`
 
 注册一个平台客户端。
 
 ```typescript
-plugin.registerClient((ctx, config) => new MyPlatformClient(ctx, config))
+plugin.registerClient(() => new MyPlatformClient(ctx, plugin.platformConfigPool))
 ```
 
 ### registerVectorStore()
@@ -85,10 +91,18 @@ plugin.registerClient((ctx, config) => new MyPlatformClient(ctx, config))
 
 - **name**: `string` 对话链名称
 - **description**: `Dict<string>` 多语言描述
-- **func**: `(params: CreateChatLunaLLMChainParams) => Promise<ChatLunaLLMChainWrapper>` 对话链创建函数
+- **func**: `(params: CreateChatLunaLLMChainParams) => ChatLunaLLMChainWrapper` 对话链创建函数
 - 返回值: `void`
 
 注册一个对话链提供者。
+
+### registerRenderer()
+
+- **name**: `string` 渲染器名称
+- **renderer**: `(ctx: Context, config: Config) => Renderer` 渲染器工厂函数
+- 返回值: `void`
+
+注册一个响应渲染器。
 
 ### fetch()
 

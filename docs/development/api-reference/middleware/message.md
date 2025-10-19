@@ -6,13 +6,14 @@ ChatLuna 提供了在消息处理过程中的几个消息类型声明。用于�
 
 ```typescript
 export interface Message {
-    content: string
+    content: MessageContent
+
     conversationId?: string
+
     name?: string
+
     additional_kwargs?: Record<string, any>
-    /**
-     * @deprecated
-     */
+
     additionalReplyMessages?: Message[]
 }
 
@@ -20,9 +21,9 @@ export interface Message {
 
 ### content
 
-- **类型**: `string`
+- **类型**: `MessageContent`
 
-消息内容。
+消息内容，类型来源于 [LangChain Message](https://api.python.langchain.com/en/latest/schema/langchain_core.messages.base.BaseMessage.html)。通常为字符串或由 `type`/`text` 等字段组成的内容数组。
 
 ### conversationId
 
@@ -46,10 +47,7 @@ export interface Message {
 
 - **类型**: `Message[] | undefined`
 
-附加消息回复。
-
-> [!WARNING]
-> 该属性已弃用，即将被删除。
+附加消息回复，将在消息转换后一同返回。
 
 ## 接口：RenderMessage
 

@@ -8,23 +8,57 @@ ChatLuna 是在 Koishi 下的插件。Koishi 作为一个聊天机器人框架�
 
 在 `messageTransformer` 中添加消息转换器即可：
 
-```typescript
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
+import { Context, Schema } from 'koishi'
+import { Message } from 'koishi-plugin-chatluna'
+import { MessageContent, MessageContentComplex } from '@langchain/core/messages'
+
+// ---cut-start---
+const ctx = new Context()
+// ---cut-end---
+
 const dispose = ctx.chatluna.messageTransformer.intercept(
     'at',
     async (session, element, message) => {
         const name = element.attrs['name']
         const id = element.attrs['id']
 
-        if (name && id !== session.bot.selfId) {
-            message.content += `[at:${name}:${id}]`
+        if (id !== session.bot.selfId) {
+            addMessageContent(
+                message,
+                `<at ${name != null ? `name="${name}"` : ''} id="${id}"/>`
+            )
         }
     }
 )   
 
 ctx.effect(() => dispose)
+
+
+function addMessageContent(message: Message, content: MessageContent) {
+    if (typeof message.content === 'string' && typeof content === 'string') {
+        message.content += content
+        return
+    }
+
+    message.content = [
+        ...(typeof message.content === 'string'
+            ? [{ type: 'text', text: message.content }]
+            : message.content),
+        ...(typeof content === 'string'
+            ? [{ type: 'text', text: content }]
+            : content)
+    ]
+}
+
 ```
 
-在大部分情况下，将消息元素转换为文本，添加到 `message.content` 中即可。
+需要注意的是，`message.content` 的类型为 `string | MessageContentComplex`。我们需要判断类型并具体处理。
+
+一般直接参考上面的 `addMessageContent` 函数处理即可。
 
 ## API 参考
 

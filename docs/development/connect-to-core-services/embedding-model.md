@@ -2,263 +2,122 @@
 
 ChatLuna 也提供 API，来接入其他的嵌入模型。
 
-## 注册插件
+## 使用脚手架创建适配器
 
-所有需要接入功能到 ChatLuna 的插件，都得新建 `ChatLunaPlugin` 实例，并注册到 `ChatLuna` 服务中。
+我们强烈建议使用 ChatLuna 提供的脚手架来创建模型适配器插件。如果你还没有创建适配器项目，请先参考 [大语言模型](./language-model.md#使用脚手架创建适配器) 文档创建适配器项目。
 
-```typescript
-import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
-import { Context, Schema } from 'koishi'
+## 实现 Embeddings 支持
 
-export function apply(ctx: Context, config: Config) {
-    const plugin = new ChatLunaPlugin(ctx, config, 'your-plugin-name')
+如果你的平台同时支持大语言模型和嵌入模型，推荐在同一个适配器中实现两者。
 
-    ctx.on('ready', async () => {
-        // 在 ready 事件中注册到 ChatLuna 服务
-        plugin.registerToService()
+### 1. 修改客户端基类
 
-        // 继续...
-    })
-}
+将 `src/client.ts` 中的基类从 `PlatformModelClient` 改为 `PlatformModelAndEmbeddingsClient`：
 
-```
-
-## 配置 Schema
-
-每个模型适配器都应该有自己的 Schema，可以配置模型名称、API Key 等参数。
-
-并继承 `ChatLunaPlugin.Config` 接口。
-
-```typescript
-import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
-import { Context, Schema } from 'koishi'
-
-export interface Config extends ChatLunaPlugin.Config {
-    apiKeys: [string, string][]
-    maxTokens: number
-    temperature: number
-}
-
-export const Config: Schema<Config> = Schema.intersect([
-    ChatLunaPlugin.Config,
-    Schema.object({
-        apiKeys: Schema.array(
-            Schema.tuple([
-                Schema.string().role('secret'),
-                Schema.string().default(
-                    'https://generativelanguage.googleapis.com/v1beta'
-                )
-            ])
-        ).default([['', 'https://generativelanguage.googleapis.com/v1beta']])
-    }),
-    Schema.object({
-        maxTokens: Schema.number().min(16).max(2097000).step(16).default(8064),
-        temperature: Schema.percent().min(0).max(2).step(0.1).default(0.8)
-    })
-]) as any
-```
-
-上面的 Schema 中，`apiKeys` 是 API Key 的配置，用于不同 API 的配置。
-
-ChatLuna 自带负载均衡配置的支持，因此需要支持多个 API Key 的配置。
-
-`maxTokens` 和 `temperature` 是模型适配器的参数，用于配置模型的具体请求参数。
-
-### 解析 ClientConfig
-
-在 ChatLuna 中，对于模型适配器，都需要一套 `ClientConfig`，也就是平台配置，其的接口定义如下：
-
-```ts
-export interface ClientConfig {
-    apiKey: string;
-    platform: PlatformClientNames;
-    maxRetries: number;
-    concurrentMaxSize: number;
-    apiEndpoint?: string;
-    timeout: number;
-    chatLimit: Computed<Awaitable<number>>;
-}
-```
-
-导入 `ClientConfig` 类型，并新建一个 `ChatLunaPlugin` 实例。其中两个泛型，第一个为当前插件的 Schema 配置接口，第二个为 `ClientConfig` 或其他的子类型。
-
-传入构建参数的三个值，第一个为当前插件的 `Context`，第二个为当前插件的 Schema 配置实例，在后面可用于解析 `ClientConfig`。第三个为当前的平台名，这也是识别不同平台的关键参数。
-
-`ClientConfig` 默认已经提供了 apiKey 等字段，我们无需继承该接口，直接使用即可。
-
-```typescript
-import { ChatLunaPlugin, ClientConfig } from 'koishi-plugin-chatluna/services/chat'
-import { Context, Schema } from 'koishi'
-
-
-export function apply(ctx: Context, config: Config) {
-    const plugin = new ChatLunaPlugin(ctx, config, 'your-plugin-name')
-    
-    // 如果不扩展自己的 ClientConfig，则可以省略泛型
-    // const plugin = new ChatLunaPlugin<Config, ClientConfig>(ctx, config, 'your-plugin-name')
-
-    ctx.on('ready', async () => {
-        // 在 ready 事件中注册到 ChatLuna 服务
-        plugin.registerToService()
-
-        // 继续...
-    })
-}
-```
-
-我们需要将 `Config` 里的请求参数，解析到 `ClientConfig` 中。
-
-```typescript
-ctx.on('ready', async () => {
-    // 在 ready 事件中注册到 ChatLuna 服务
-    plugin.registerToService()
-
-    // 解析 ClientConfig
-    await plugin.parseConfig((config) => 
-        config.apiKeys.map((apiKey) => {
-            return { 
-                apiKey, 
-                // 平台名是唯一标识，不能重复
-                platform: 'test', 
-                chatLimit: config.chatTimeLimit, 
-                timeout: config.timeout, 
-                maxRetries: config.maxRetries, 
-                concurrentMaxSize: config.chatConcurrentMaxSize, 
-            } 
-        }) 
-    ) 
-})
-```
-
-注意：`platform` 是唯一标识，不能重复。下面需要使用 `platform` 参数的地方，都应该是这个唯一标识。
-
-## 实现 PlatformClient
-
-在 ChatLuna 的模型适配器中， `Client` 即指 `BasePlatformClient` 及其子类。
-
-ChatLuna 根据模型的不同用途，提供了几种 `Client`:
-
-- `PlatformModelClient`: 用于和语言模型进行交互的 `Client`,可创建 `ChatLunaChatModel`，用于语言模型交互。
-- `PlatformEmbeddingsClient`: 用于和嵌入模型进行交互的 `Client`,可创建 `ChatHubBaseEmbeddings`，用于嵌入模型交互。
-- `PlatformModelAndEmbeddingsClient`: 前面两者的组合，可创建 `ChatHubBaseEmbeddings` 和 `ChatLunaChatModel`。
-
-如需接入嵌入模型，则需要继承 `PlatformEmbeddingsClient`。
-
-但在大部分平台下，同时支持大语言模型和嵌入模型，因此推荐继承 `PlatformModelAndEmbeddingsClient`。
-
-以 `GeminiClient` 为例：
-
-```typescript
-import { Context } from "koishi";
-import { PlatformModelClient } from "koishi-plugin-chatluna/llm-core/platform/client";
-import { ClientConfig } from "koishi-plugin-chatluna/llm-core/platform/config";
+```ts twoslash
+// @noImplicitAny: false
+import type {} from 'koishi-plugin-chatluna'
+import {
+    PlatformModelAndEmbeddingsClient
+} from 'koishi-plugin-chatluna/llm-core/platform/client'
+import { ClientConfig } from 'koishi-plugin-chatluna/llm-core/platform/config'
 import {
     ChatHubBaseEmbeddings,
     ChatLunaChatModel,
     ChatLunaEmbeddings
 } from 'koishi-plugin-chatluna/llm-core/platform/model'
-import { ModelInfo } from "koishi-plugin-chatluna/llm-core/platform/types";
-import { Config } from ".";
+import {
+    ModelInfo,
+    ModelType
+} from 'koishi-plugin-chatluna/llm-core/platform/types'
+import { Context } from 'koishi'
+import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
+import {
+    ChatLunaError,
+    ChatLunaErrorCode
+} from 'koishi-plugin-chatluna/utils/error'
 
-export class GeminiClient extends PlatformModelAndEmbeddingsClient {
-    platform = 'gemini'
+interface Config {
+    maxContextRatio: number
+    frequencyPenalty: number
+    presencePenalty: number
+    timeout: number
+    temperature: number
+    maxRetries: number
+}
 
-    private _requester: GeminiRequester
+class YourPlatformRequester {}
+// ---cut---
+export class YourPlatformClient extends PlatformModelAndEmbeddingsClient<ClientConfig> {
+    platform = 'yourplatform'
 
-    private _models: Record<string, ModelInfo>
+    private _requester: YourPlatformRequester
 
     constructor(
         ctx: Context,
         private _config: Config,
-        clientConfig: ClientConfig,
-        plugin: ChatLunaPlugin
+        public plugin: ChatLunaPlugin
     ) {
-        super(ctx, clientConfig)
+        super(ctx, plugin.platformConfigPool)
 
-        this._requester = new GeminiRequester(clientConfig, plugin)
-    }
-
-    async init(): Promise<void> {
-        await this.getModels()
+        this._requester = new YourPlatformRequester(
+            ctx,
+            plugin.platformConfigPool,
+            _config,
+            plugin
+        )
     }
 
     async refreshModels(): Promise<ModelInfo[]> {
-        try {
-            const rawModels = await this._requester.getModels()
+        const rawModels = [
+            // 语言模型
+            ['gpt-4', 8192, ModelType.llm],
+            ['gpt-3.5-turbo', 4096, ModelType.llm],
+            // 嵌入模型
+            ['text-embedding-3', 8192, ModelType.embeddings],
+            ['text-embedding-small', 8192, ModelType.embeddings],
+        ] as [string, number, ModelType][]
 
-            if (!rawModels.length) {
-                throw new ChatLunaError(
-                    ChatLunaErrorCode.MODEL_INIT_ERROR,
-                    new Error('No model found')
-                )
-            }
-
-            return rawModels
-                .map((model) => model.replace('models/', ''))
-                .map((model) => {
-                    return {
-                        name: model,
-                        maxTokens: ((model) => {
-                            if (model.includes('gemini-1.5-pro')) {
-                                return 1048576
-                            }
-                            if (model.includes('gemini-1.5-flash')) {
-                                return 2097152
-                            }
-                            if (model.includes('gemini-1.0-pro')) {
-                                return 30720
-                            }
-                            return 30720
-                        })(model),
-                        type: model.includes('embedding')
-                            ? ModelType.embeddings
-                            : ModelType.llm,
-                        functionCall: !model.includes('vision'),
-                        supportMode: ['all']
-                    }
-                })
-        } catch (e) {
-            throw new ChatLunaError(ChatLunaErrorCode.MODEL_INIT_ERROR, e)
-        }
-    }
-
-    async getModels(): Promise<ModelInfo[]> {
-        if (this._models) {
-            return Object.values(this._models)
-        }
-
-        const models = await this.refreshModels()
-
-        this._models = {}
-
-        for (const model of models) {
-            this._models[model.name] = model
-        }
+        return rawModels.map(([model, maxTokens, type]) => {
+            return {
+                name: model,
+                type,
+                capabilities: [],
+                supportMode: ['all'],
+                maxTokens
+            } as ModelInfo
+        })
     }
 
     protected _createModel(
         model: string
     ): ChatLunaChatModel | ChatHubBaseEmbeddings {
-        const info = this._models[model]
+        const info = this._modelInfos[model]
 
         if (info == null) {
             throw new ChatLunaError(ChatLunaErrorCode.MODEL_NOT_FOUND)
         }
 
+        // 根据模型类型创建不同的实例
         if (info.type === ModelType.llm) {
             return new ChatLunaChatModel({
                 modelInfo: info,
                 requester: this._requester,
                 model,
                 modelMaxContextSize: info.maxTokens,
-                maxTokenLimit: this._config.maxTokens,
+                maxTokenLimit: Math.floor(
+                    (info.maxTokens || 100_000) * this._config.maxContextRatio
+                ),
+                frequencyPenalty: this._config.frequencyPenalty,
+                presencePenalty: this._config.presencePenalty,
                 timeout: this._config.timeout,
                 temperature: this._config.temperature,
                 maxRetries: this._config.maxRetries,
-                llmType: 'gemini'
+                llmType: 'yourplatform'
             })
         }
 
+        // 创建 Embeddings 模型实例
         return new ChatLunaEmbeddings({
             client: this._requester,
             model,
@@ -266,69 +125,110 @@ export class GeminiClient extends PlatformModelAndEmbeddingsClient {
         })
     }
 }
-
 ```
 
-可以看到，`Client` 需要实现 `init` , `getModels` , `refreshModels` 和 `_createModel` 方法。
+### 2. 实现 EmbeddingsRequester 接口
 
-- `init` 方法用于 `PlatformModelClient` 的初始化，通常直接调用 `getModels` 方法获取模型信息。
-- `getModels` 方法用于获取模型信息，如果有缓存，则直接返回缓存，否则调用 `refreshModels` 方法获取模型信息。
-- `refreshModels` 方法用于刷新模型信息，通常调用模型提供商的 API 获取模型信息。
-- `_createModel` 方法用于创建 `ChatLunaChatModel` 或 `ChatLunaEmbeddings` 实例。
+在 `src/requester.ts` 中实现 `EmbeddingsRequester` 接口：
 
-注意 `_createModel`中， `ChatLunaChatModel` 和 `ChatLunaEmbeddings` 都需要一个 `requester` 参数。这个 `requester` 就是真正实现模型请求的类。
+```ts twoslash
+// @noImplicitAny: false
+import type {} from 'koishi-plugin-chatluna'
+import {
+    ModelRequester,
+    ModelRequestParams,
+    EmbeddingsRequester,
+    EmbeddingsRequestParams
+} from 'koishi-plugin-chatluna/llm-core/platform/api'
+import {
+    ClientConfig,
+    ClientConfigPool
+} from 'koishi-plugin-chatluna/llm-core/platform/config'
+import * as fetchType from 'undici/types/fetch'
+import { ChatGenerationChunk } from '@langchain/core/outputs'
+import {
+    ChatLunaError,
+    ChatLunaErrorCode
+} from 'koishi-plugin-chatluna/utils/error'
+import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
+import { Context, Logger } from 'koishi'
 
-## 实现 Requester
+interface Config {
+    maxRetries: number
+}
 
-`Requester` 用于实现模型请求，通常需要继承 `ModelRequester` 类。
+const logger = {} as Logger
+// ---cut---
+export class YourPlatformRequester
+    extends ModelRequester
+    implements EmbeddingsRequester {
 
-如果需要实现嵌入模型请求，则需要实现 `EmbeddingsRequester` 接口。
-
-让我们继续以 `GeminiRequester` 为例：
-
-```typescript
-
-export class GeminiRequester
-    extends ModelRequester implements EmbeddingsRequester
-{
     constructor(
-        private _config: ClientConfig,
-        private _plugin: ChatLunaPlugin
+        ctx: Context,
+        _configPool: ClientConfigPool<ClientConfig>,
+        public _pluginConfig: Config,
+        _plugin: ChatLunaPlugin
     ) {
-        super()
+        super(ctx, _configPool, _pluginConfig, _plugin)
     }
 
-    async *completionStream(
-        params: ModelRequestParams
-    ): AsyncGenerator<ChatGenerationChunk> {
-        ...
-    }
-
-
-    async getModels(): Promise<string[]> {
-       ...
-    }
+    // ... 其他方法（如 completionStreamInternal）
 
     async embeddings(
         params: EmbeddingsRequestParams
     ): Promise<number[] | number[][]> {
-       ...
-    }
+        await this.init()
 
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private _post(url: string, data: any, params: fetchType.RequestInit = {}) {
-        const requestUrl = this._concatUrl(url)
-
-        for (const key in data) {
-            if (data[key] === undefined) {
-                delete data[key]
-            }
+        // 将单个字符串转换为数组
+        if (typeof params.input === 'string') {
+            params.input = [params.input]
         }
 
-        const body = JSON.stringify(data)
+        try {
+            const response = await this._post(
+                'embeddings',  // API 路径
+                {
+                    input: params.input,
+                    model: params.model
+                },
+                {
+                    signal: params.signal
+                }
+            )
 
-        return this._plugin.fetch(requestUrl, {
+            const data = await response.text()
+            const result = JSON.parse(data)
+
+            // 根据你的 API 响应格式调整
+            if (result.data && result.data.length > 0) {
+                return result.data.map((item: any) => item.embedding)
+            }
+
+            throw new Error(
+                'error when calling embeddings, Result: ' +
+                JSON.stringify(result)
+            )
+        } catch (e) {
+            if (e instanceof ChatLunaError) {
+                throw e
+            }
+
+            const error = new Error(
+                'error when calling embeddings: ' + e.message
+            )
+            error.stack = e.stack
+            error.cause = e.cause
+            logger.debug(e)
+
+            throw new ChatLunaError(ChatLunaErrorCode.API_REQUEST_FAILED, error)
+        }
+    }
+
+    private _post(url: string, data: any, params: fetchType.RequestInit = {}) {
+        const body = JSON.stringify(data)
+        const apiEndpoint = this._config.value.apiEndpoint || 'https://api.yourplatform.com'
+
+        return this._plugin.fetch(`${apiEndpoint}/${url}`, {
             body,
             headers: this._buildHeaders(),
             method: 'POST',
@@ -336,59 +236,59 @@ export class GeminiRequester
         })
     }
 
-    private _get(url: string) {
-        const requestUrl = this._concatUrl(url)
-
-        return this._plugin.fetch(requestUrl, {
-            method: 'GET',
-            headers: this._buildHeaders()
-        })
-    }
-
-    private _concatUrl(url: string) {
-        const apiEndPoint = this._config.apiEndpoint
-
-        // match the apiEndPoint ends with '/v1' or '/v1/' using regex
-
-        if (apiEndPoint.endsWith('/')) {
-            return apiEndPoint + url + `?key=${this._config.apiKey}`
-        }
-
-        return apiEndPoint + '/' + url + `?key=${this._config.apiKey}`
-    }
-
     private _buildHeaders() {
         return {
-            /*  Authorization: `Bearer ${this._config.apiKey}`, */
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this._config.value.apiKey}`
         }
     }
 
-    async init(): Promise<void> {}
-
-    async dispose(): Promise<void> {}
+    get logger() {
+        return logger
+    }
 }
-
 ```
 
-> [!NOTE]
-> 当需要网络请求时，请使用 `plugin.fetch` 或 `plugin.ws` 方法。
-> 这可以让用户自行配置代理
+### 3. 实现要点
 
-对于嵌入模型，通常只需要实现 `embeddings` 方法。
+#### 输入处理
 
-- `getModels` 需要实现获取模型信息的方法，返回的是可用的模型列表数组。
-- `embeddings` 方法用于实现嵌入模型请求。
+`embeddings` 方法的 `params.input` 可以是：
+- 单个字符串：`"hello world"`
+- 字符串数组：`["hello", "world"]`
 
-下面是一个完全的 `embeddings` 实现（以 Gemini 为例）：
+你需要统一处理这两种情况。
 
-```typescript
+#### 返回值
+
+根据输入类型返回不同格式：
+- 如果输入是单个字符串，返回 `number[]`（一维向量）
+- 如果输入是字符串数组，返回 `number[][]`（向量矩阵）
+
+#### 示例响应处理
+
+以 Gemini 为例：
+
+```ts twoslash
+// @noImplicitAny: false
+import type {} from 'koishi-plugin-chatluna'
+import { EmbeddingsRequestParams, EmbeddingsRequester } from 'koishi-plugin-chatluna/llm-core/platform/api'
+import {
+    ChatLunaError,
+    ChatLunaErrorCode
+} from 'koishi-plugin-chatluna/utils/error'
+import { Logger } from 'koishi'
+
+const logger = {} as Logger
+
+class GeminiRequester implements EmbeddingsRequester {
+    private async _post(url: string, data: any): Promise<Response> {
+        return {} as Response
+    }
+// ---cut---
 async embeddings(
     params: EmbeddingsRequestParams
 ): Promise<number[] | number[][]> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let data: CreateEmbeddingResponse | string
-
     if (typeof params.input === 'string') {
         params.input = [params.input]
     }
@@ -401,37 +301,30 @@ async embeddings(
                     return {
                         model: `models/${params.model}`,
                         content: {
-                            parts: [
-                                {
-                                    text: input
-                                }
-                            ]
+                            parts: [{ text: input }]
                         }
                     }
                 })
             }
         )
 
-        data = await response.text()
+        const data = await response.text()
+        const result = JSON.parse(data)
 
-        data = JSON.parse(data) as CreateEmbeddingResponse
-
-        if (data.embeddings && data.embeddings.length > 0) {
-            return data.embeddings.map((embedding) => {
+        if (result.embeddings && result.embeddings.length > 0) {
+            return result.embeddings.map((embedding) => {
                 return embedding.values
             })
         }
 
         throw new Error(
             'error when calling gemini embeddings, Result: ' +
-            JSON.stringify(data)
+            JSON.stringify(result)
         )
     } catch (e) {
         const error = new Error(
-            'error when calling gemini embeddings, Result: ' +
-                JSON.stringify(data)
+            'error when calling gemini embeddings, Result: ' + e.message
         )
-
         error.stack = e.stack
         error.cause = e.cause
         logger.debug(e)
@@ -439,56 +332,125 @@ async embeddings(
         throw new ChatLunaError(ChatLunaErrorCode.API_REQUEST_FAILED, error)
     }
 }
+// ---cut-after---
+}
 ```
 
-一般的 `embeddings` 实现，需要经过几个步骤：
+## 仅支持 Embeddings 的平台
 
-1. 构建请求
-2. 调用模型提供商的 API 获取响应。
-3. 将响应转换为 `number[] | number[][]` 格式。
+如果你的平台只提供嵌入模型（不支持大语言模型），可以使用 `PlatformEmbeddingsClient`：
 
-   如果 input 只为单个字符串，返回 `number[]` 向量。
-   如果 input 为多个字符串，返回 `number[][]` 矩阵。
+```ts twoslash
+// @noImplicitAny: false
+import type {} from 'koishi-plugin-chatluna'
+import { PlatformEmbeddingsClient } from 'koishi-plugin-chatluna/llm-core/platform/client'
+import { ClientConfig } from 'koishi-plugin-chatluna/llm-core/platform/config'
+import {
+    ChatHubBaseEmbeddings,
+    ChatLunaEmbeddings
+} from 'koishi-plugin-chatluna/llm-core/platform/model'
+import {
+    ModelInfo,
+    ModelType
+} from 'koishi-plugin-chatluna/llm-core/platform/types'
+import { Context } from 'koishi'
+import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
+import {
+    ChatLunaError,
+    ChatLunaErrorCode
+} from 'koishi-plugin-chatluna/utils/error'
 
-## 实例化 Client
+interface Config {
+    maxRetries: number
+}
 
-最后，我们需要将创建 `Client` 的函数，注册到 `ChatLuna` 服务中：
+class YourEmbeddingsRequester {}
+// ---cut---
+export class YourEmbeddingsClient extends PlatformEmbeddingsClient<ClientConfig> {
+    platform = 'yourplatform'
 
-```typescript
-ctx.on('ready', async () => {
-    // 在 ready 事件中注册到 ChatLuna 服务
-    plugin.registerToService()
+    private _requester: YourEmbeddingsRequester
 
-    // 解析 ClientConfig
-    await plugin.parseConfig((config) => 
-        config.apiKeys.map((apiKey) => {
-            return { 
-                apiKey, 
-                // 平台名是唯一标识，不能重复
-                platform: 'test', 
-                chatLimit: config.chatTimeLimit, 
-                timeout: config.timeout, 
-                maxRetries: config.maxRetries, 
-                concurrentMaxSize: config.chatConcurrentMaxSize, 
-            } 
-        }) 
-    ) 
-
-      plugin.registerClient(
-            (_, clientConfig) =>
-                // 在此处创建 Client 实例
-                new TestClient(ctx, config, clientConfig, plugin)
+    constructor(
+        ctx: Context,
+        private _config: Config,
+        public plugin: ChatLunaPlugin
+    ) {
+        super(ctx, plugin.platformConfigPool)
+        this._requester = new YourEmbeddingsRequester(
+            ctx,
+            plugin.platformConfigPool,
+            _config,
+            plugin
         )
+    }
 
-    // 初始化所有 Client
-    await plugin.initClients()
-})
+    async refreshModels(): Promise<ModelInfo[]> {
+        const rawModels = [
+            ['embedding-model-1', 8192],
+            ['embedding-model-2', 4096],
+        ] as [string, number][]
+
+        return rawModels.map(([model, maxTokens]) => {
+            return {
+                name: model,
+                type: ModelType.embeddings,
+                capabilities: [],
+                supportMode: ['all'],
+                maxTokens
+            } as ModelInfo
+        })
+    }
+
+    protected _createModel(model: string): ChatHubBaseEmbeddings {
+        const info = this._modelInfos[model]
+
+        if (info == null) {
+            throw new ChatLunaError(ChatLunaErrorCode.MODEL_NOT_FOUND)
+        }
+
+        return new ChatLunaEmbeddings({
+            client: this._requester,
+            model,
+            maxRetries: this._config.maxRetries
+        })
+    }
+}
+```
+
+## 测试 Embeddings
+
+完成实现后，可以通过以下方式测试：
+
+1. 在 Koishi 控制台中启用你的适配器
+
+2. 配置 API Key 和 embeddings 模型
+
+3. 使用 ChatLuna 的嵌入模型 API 进行测试：
+
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import type {} from 'koishi-plugin-chatluna/services/chat'
+import { Context } from 'koishi'
+
+const ctx = {} as Context
+// ---cut---
+const embeddingsRef = await ctx.chatluna.createEmbeddings("yourplatform/embedding-model")
+const embeddings = embeddingsRef.value
+
+// 测试单个文本
+const vector = await embeddings.embedQuery("hello world")
+console.log(vector)  // 应该输出一个数字数组
+
+// 测试多个文本
+const vectors = await embeddings.embedDocuments(["hello", "world"])
+console.log(vectors)  // 应该输出一个二维数组
 ```
 
 ## 其他资源
 
-我们推荐你阅读 `ChatLuna` 上已有的模型适配器，了解更具体的实现。
+我们推荐你参考 `ChatLuna` 上已有的实现了 embeddings 的适配器：
 
-- [OpenAI](https://github.com/ChatLunaLab/chatluna/tree/v1-dev/packages/openai-adapter/src)
 - [Gemini](https://github.com/ChatLunaLab/chatluna/tree/v1-dev/packages/gemini-adapter/src)
-- [Ollama](https://github.com/ChatLunaLab/chatluna/tree/v1-dev/packages/ollama-adapter/src)
+- [OpenAI](https://github.com/ChatLunaLab/chatluna/tree/v1-dev/packages/openai-adapter/src)

@@ -1,6 +1,6 @@
 # 消息渲染
 
-LLM 的默认输出都是文本。但在 Koishi 中，可以发送多种类型的消息元素（图片，语音等）。
+LLM 的默认输出是文本。但在 Koishi 中，可以发送多种类型的消息元素（图片，语音等）。
 
 为了让用户能够自由的选择消息元素的渲染方式，ChatLuna 提供了一个消息渲染 API，将这些文本渲染为 Koishi 的消息元素。
 
@@ -8,21 +8,23 @@ LLM 的默认输出都是文本。但在 Koishi 中，可以发送多种类型�
 
 所有需要接入功能到 ChatLuna 的插件，都得新建 `ChatLunaPlugin` 实例，并注册到 `ChatLuna` 服务中。
 
-```typescript
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
 import { ChatLunaPlugin } from 'koishi-plugin-chatluna/services/chat'
 import { Context, Schema } from 'koishi'
+
+// ---cut-start---
+export interface Config extends ChatLunaPlugin.Config {}
+// ---cut-end---
 
 export function apply(ctx: Context, config: Config) {
     const plugin = new ChatLunaPlugin(ctx, config, 'your-plugin-name', false)
 
     ctx.on('ready', async () => {
-        // 在 ready 事件中注册到 ChatLuna 服务
-        plugin.registerToService()
-
         // 继续...
     })
 }
-
 ```
 
 > [!NOTE]
@@ -33,13 +35,16 @@ export function apply(ctx: Context, config: Config) {
 
 继承 `Renderer` 类，实现你自己的消息渲染逻辑。
 
-```typescript
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
 import {
     Message,
     Renderer,
     RenderMessage,
     RenderOptions
 } from 'koishi-plugin-chatluna'
+import { transformMessageContentToElements } from 'koishi-plugin-chatluna/utils/string'
 import { h, Schema } from 'koishi'
 
 export class RawRenderer extends Renderer {
@@ -47,16 +52,23 @@ export class RawRenderer extends Renderer {
         message: Message,
         options: RenderOptions
     ): Promise<RenderMessage> {
+        if (typeof message.content === 'string') {
+            return {
+                element: h.text(message.content)
+            }
+        }
+
         return {
-            element: h.text(message.content)
+            element: transformMessageContentToElements(message.content)
         }
     }
 
-    schema = Schema.const('raw').i18n({
+    schema: Schema<string, string> = Schema.const('raw').i18n({
         'zh-CN': '原始输出',
         'en-US': 'Raw text'
-    })
+    }) as Schema<string, string>
 }
+
 
 ```
 
@@ -75,8 +87,6 @@ export class RawRenderer extends Renderer {
 
 ```typescript
 ctx.on('ready', async () => {
-    // 在 ready 事件中注册到 ChatLuna 服务
-    plugin.registerToService()
 
     ctx.effect(() =>
         ctx.chatluna.renderer.addRenderer('raw', (_) => {

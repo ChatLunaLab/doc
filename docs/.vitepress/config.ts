@@ -526,6 +526,10 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                     text: "Agent",
                     link: "/development/call-core-services/agent",
                 },
+                {
+                    text: "预设",
+                    link: "/development/call-core-services/preset",
+                },
             ],
         },
         {
@@ -601,6 +605,10 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                         {
                             text: "消息渲染器 (Message Renderer)",
                             link: "/development/api-reference/middleware/message-renderer",
+                        },
+                        {
+                            text: "Prompt 渲染服务 (Prompt Renderer)",
+                            link: "/development/api-reference/middleware/prompt-renderer",
                         },
                         {
                             text: "消息转换器 (Message Transformer)",

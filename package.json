@@ -8,6 +8,7 @@
     "author": "dingyi222666 <dingyi222666@foxmail.com>",
     "type": "module",
     "devDependencies": {
+        "@langchain/community": "^1.0.0",
         "@nolebase/markdown-it-bi-directional-links": "^2.18.2",
         "@nolebase/vitepress-plugin-enhanced-mark": "^2.18.2",
         "@nolebase/vitepress-plugin-enhanced-readabilities": "^2.18.2",

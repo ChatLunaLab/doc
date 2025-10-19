@@ -1,6 +1,6 @@
 # Requester
 
-ChatLuna 提供了模型请求器，用于请求模型。
+模型请求器用于向不同平台发送模型推理或向量嵌入请求，并提供统一的参数定义与工具方法。
 
 ## 接口：BaseRequestParams
 
@@ -12,27 +12,11 @@ export interface BaseRequestParams {
 }
 ```
 
-### timeout
-
-- **类型**: `number | undefined`
-
-请求超时时间。
-
-### signal
-
-- **类型**: `AbortSignal | undefined`
-
-用于取消请求的信号。
-
-### model
-
-- **类型**: `string | undefined`
-
-要使用的模型名称。
+- **timeout**: 请求超时时间（毫秒）。
+- **signal**: 用于取消请求的 `AbortSignal`。
+- **model**: 指定的模型名称。
 
 ## 接口：ModelRequestParams
-
-继承自 `BaseRequestParams`。
 
 ```typescript
 export interface ModelRequestParams extends BaseRequestParams {
@@ -48,84 +32,13 @@ export interface ModelRequestParams extends BaseRequestParams {
     input: BaseMessage[]
     id?: string
     tools?: StructuredTool[]
+    variables?: Record<string, any>
 }
 ```
 
-### temperature
-
-- **类型**: `number | undefined`
-
-采样温度。
-
-### maxTokens
-
-- **类型**: `number | undefined`
-
-生成的最大令牌数。设置为 -1 时将在提示和模型最大上下文大小的限制下返回尽可能多的令牌。
-
-### topP
-
-- **类型**: `number | undefined`
-
-每一步要考虑的令牌的总概率质量。
-
-### frequencyPenalty
-
-- **类型**: `number | undefined`
-
-根据频率对重复的令牌进行惩罚。
-
-### presencePenalty
-
-- **类型**: `number | undefined`
-
-对重复的令牌进行惩罚。
-
-### n
-
-- **类型**: `number | undefined`
-
-为每个提示生成的完成数。
-
-### logitBias
-
-- **类型**: `Record<string, number> | undefined`
-
-用于调整特定令牌生成概率的字典。
-
-### user
-
-- **类型**: `string | undefined`
-
-代表最终用户的唯一字符串标识符，可帮助监控和检测滥用。
-
-### stop
-
-- **类型**: `string[] | string | undefined`
-
-生成时使用的停止词列表。
-
-### input
-
-- **类型**: `BaseMessage[]`
-
-用于模型完成的输入消息。
-
-### id
-
-- **类型**: `string | undefined`
-
-请求的唯一标识符。
-
-### tools
-
-- **类型**: `StructuredTool[] | undefined`
-
-可用的工具列表。
+在基础参数的基础上扩展了对话生成常用的采样、停止词、工具调用等配置，`input` 为必填的消息数组。`variables` 可在请求前传递额外的上下文变量。
 
 ## 接口：EmbeddingsRequestParams
-
-继承自 `BaseRequestParams`。
 
 ```typescript
 export interface EmbeddingsRequestParams extends BaseRequestParams {
@@ -133,11 +46,7 @@ export interface EmbeddingsRequestParams extends BaseRequestParams {
 }
 ```
 
-### input
-
-- **类型**: `string | string[]`
-
-要嵌入的输入文本。
+嵌入请求的输入既可以是单条文本，也可以是文本数组。
 
 ## 接口：BaseRequester
 
@@ -145,28 +54,74 @@ export interface EmbeddingsRequestParams extends BaseRequestParams {
 export interface BaseRequester {
     init(): Promise<void>
     dispose(): Promise<void>
+    logger: Logger
 }
 ```
 
-基础请求器接口。
+所有请求器都会暴露 Koishi 的 `Logger`，可用于输出调试信息。
 
 ## 抽象类：ModelRequester
 
-实现了 `BaseRequester` 接口。
+`ModelRequester` 实现了 `BaseRequester` 并封装了通用的错误重试、HTTP 请求与结果聚合逻辑。
 
 ### modelRequester.completion()
 
 - **params**: [`ModelRequestParams`](#接口modelrequestparams)
 - 返回值: `Promise<ChatGeneration>`
 
-执行模型完成请求。
+调用 `completionStream()` 并将流式结果聚合为最终的 `ChatGeneration`。
 
 ### modelRequester.completionStream()
 
 - **params**: [`ModelRequestParams`](#接口modelrequestparams)
 - 返回值: `AsyncGenerator<ChatGenerationChunk>`
 
-执行流式模型完成请求。
+生成模型的流式响应。实现类需要覆写 `completionStreamInternal()` 以提供具体的请求逻辑。
+
+### modelRequester.init()
+
+- 返回值: `Promise<void>`
+
+初始化请求器，默认实现为空，可在子类中扩展。
+
+### modelRequester.dispose()
+
+- **model**: `string | undefined`
+- **id**: `string | undefined`
+- 返回值: `Promise<void>`
+
+释放请求器资源，默认实现为空。
+
+### modelRequester.post()
+
+- **url**: `string`
+- **data**: `any`
+- **params**: `RequestInit`
+- 返回值: `Promise<Response>`
+
+向当前平台发送 POST 请求，会自动补齐认证头并清理 `undefined` 字段。
+
+### modelRequester.get()
+
+- **url**: `string`
+- **headers**: `Record<string, string> | undefined`
+- **params**: `RequestInit`
+- 返回值: `Promise<Response>`
+
+发送 GET 请求并附加默认请求头。
+
+### modelRequester.buildHeaders()
+
+- 返回值: `Record<string, string>`
+
+根据当前配置生成默认的 HTTP 头部信息。
+
+### modelRequester.concatUrl()
+
+- **url**: `string`
+- 返回值: `string`
+
+将相对地址拼接到平台配置的 `apiEndpoint`，自动补足 `/v1/` 前缀及斜杠。
 
 ## 接口：EmbeddingsRequester
 
@@ -176,11 +131,4 @@ export interface EmbeddingsRequester {
 }
 ```
 
-嵌入请求器接口。
-
-### embeddingsRequester.embeddings()
-
-- **params**: [`EmbeddingsRequestParams`](#接口embeddingsrequestparams)
-- 返回值: `Promise<number[] | number[][]>`
-
-执行嵌入请求。
+嵌入请求器需要实现 `embeddings()` 方法，以返回单条或批量的向量结果。

@@ -1,106 +1,133 @@
-# 预设
+# 预设模板
 
-ChatLuna 内置了一套预设的 API，可以使用这些 API 来使用 ChatLuna 的预设。
+ChatLuna 通过预设模板（Preset）来定义对话的初始 prompt、LoreBook、作者注等信息。
 
-## API
-
-### formatPresetTemplateString(template, variables)
+## 函数：loadPreset()
 
 ```typescript
-import { formatPresetTemplateString } from 'koishi-plugin-chatluna/llm-core/preset'
-
-const template = `{user} 说：{message}`
-const formatted = formatPresetTemplateString(template, { user: 'Alice', message: 'Hello, world!' })
-```
-
-- **template**: `string` 预设模板字符串
-- **variables**: `Record<string, string>` 变量对象
-- 返回值: `string` 格式化后的预设模板字符串
-
-将预设模板字符串中的变量替换为实际值。
-
-### formatMessages(messages, variables)
-
-```typescript
-import { formatPresetTemplate } from 'koishi-plugin-chatluna/llm-core/preset'
-import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages'
-
-const messages = [
-    new SystemMessage('Hello, world!'),
-    new HumanMessage('{user} 说：{message}')
-]
-
-const formatted = formatMessages(messages, { user: 'Alice', message: 'Hello, world!' })
-```
-
-- **messages**: `BaseMessage[]` 消息数组
-- **variables**: `Record<string, string>` 变量对象
-- 返回值: `BaseMessage[]` 格式化后的消息数组
-
-将 LangChain 的消息数组中的变量替换为实际值。
-
-### loadPreset(preset)
-
-```typescript
-import { loadPreset } from 'koishi-plugin-chatluna/llm-core/preset'
+import { loadPreset } from 'koishi-plugin-chatluna/llm-core/prompt'
 
 const rawPreset = `...`
-
-const preset = await loadPreset(rawPreset)
+const preset = loadPreset(rawPreset)
 ```
 
-- **preset**: `string` 预设名称
-- 返回值: `PresetTemplate` 预设对象
+- **rawText**: `string` 预设的原始 YAML/文本内容
+- 返回值: [`PresetTemplate`](#接口presettemplate)
 
-从预设字符串中加载预设。
+将原始文本解析为 `PresetTemplate`。解析失败时会抛出异常并记录日志。
 
-### formatPresetTemplate(preset, variables)
+## 接口：PresetTemplate
 
 ```typescript
-import { formatPresetTemplate } from 'koishi-plugin-chatluna/llm-core/preset'
-
-const preset = await loadPreset(rawPreset)
-const formatted = formatPresetTemplate(preset, { user: 'Alice', message: 'Hello, world!' })
+export interface PresetTemplate {
+    version?: string
+    triggerKeyword: string[]
+    rawText: string
+    messages: BaseMessage[]
+    formatUserPromptString?: string
+    path?: string
+    loreBooks?: {
+        scanDepth?: number
+        items: RoleBook[]
+        tokenLimit?: number
+        recursiveScan?: boolean
+        maxRecursionDepth?: number
+        insertPosition?:
+            | 'before_char_defs'
+            | 'after_char_defs'
+            | 'before_example_messages'
+            | 'after_example_messages'
+    }
+    authorsNote?: AuthorsNote
+    knowledge?: KnowledgeConfig
+    config: {
+        maxOutputToken?: number
+        longMemoryPrompt?: string
+        loreBooksPrompt?: string
+        longMemoryExtractPrompt?: string
+        longMemoryNewQuestionPrompt?: string
+        postHandler?: PostHandler
+        reActInstruction?: string
+    }
+}
 ```
 
-- **preset**: `PresetTemplate` 预设对象
-- **variables**: `Record<string, string>` 变量对象
-- 返回值: `BaseMessage[]` 格式化后的消息数组
+- **triggerKeyword**: 激活预设的关键字列表。
+- **messages**: LangChain `BaseMessage` 组成的提示消息数组。
+- **loreBooks**: 可选的 LoreBook 配置，包含关键字映射和扫描策略。
+- **authorsNote**: 作者注信息，会在对话中按设定频率插入。
+- **knowledge**: 关联的知识库配置。
+- **config**: 预设的附加配置，包含输出上限、记忆相关提示等。
 
-将预设模板中的变量替换为传入的变量对象。
+## 类：PresetService
 
-返回值是 LangChain 的消息数组。
+`PresetService` 负责维护本地预设文件，可通过 `ctx.chatluna.preset` 获取实例。
 
-### 类: PresetService
+### preset.loadPreset()
 
-`PresetService` 类用于管理预设。
+- **file**: `string` 预设文件路径
+- 返回值: `Promise<void>`
 
-可以通过 `ctx.chatluna.preset` 访问到该类的实例。
+加载指定路径的预设文件并加入内存列表，若重复加载则会忽略。
 
-#### preset.loadAllPreset()
+### preset.loadAllPreset()
 
 - 返回值: `Promise<void>`
 
-从预设的默认路径中加载所有预设。
+扫描预设目录（默认 `data/chathub/presets`）下的 `.txt` 或 `.yml` 文件并全部加载。
 
-#### preset.getPreset()
+### preset.watchPreset()
 
-- **triggerKeyword**: `string` 加载预设的关键字
-- **loadForDisk**: `boolean` 是否从磁盘加载，默认为 `false`
-- **throwError**: `boolean` 是否在出错时抛出异常，默认为 `true`
-- 返回值: `Promise<PresetTemplate>` 预设对象
-
-从关键词中获取预设。
-
-#### preset.addPreset()
-
-- **preset**: `PresetTemplate` 预设对象
 - 返回值: `void`
 
-添加预设到预设服务。（内存中）
+监听预设目录文件变动，自动同步新增、修改与删除。
 
-#### preset.getAllPreset()
+### preset.init()
 
-- 返回值: `string[]` 所有预设的关键字
+- 返回值: `Promise<void>`
 
-获取所有预设的关键字。
+初始化预设服务，等价于依次调用 `loadAllPreset()` 与 `watchPreset()`。
+
+### preset.getPreset()
+
+- **triggerKeyword**: `string` 关键字
+- **throwError**: `boolean` 出错时是否抛出异常，默认 `true`
+- 返回值: `ComputedRef<PresetTemplate | undefined>`
+
+按照关键字查找预设，返回响应式的 `ComputedRef`。未找到且允许静默时返回 `undefined`。
+
+### preset.getDefaultPreset()
+
+- 返回值: `ComputedRef<PresetTemplate>`
+
+返回默认预设。若存在 `triggerKeyword` 包含 `sydney` 的预设则优先使用，否则返回列表中的第一个预设，若数据为空会抛出错误。
+
+### preset.getAllPreset()
+
+- **concatKeyword**: `boolean` 是否将关键字拼接成单个字符串，默认 `true`
+- 返回值: `ComputedRef<string[]>`
+
+以响应式数组形式返回所有已加载的预设关键字。
+
+### preset.addPreset()
+
+- **preset**: [`PresetTemplate`](#接口presettemplate)
+- 返回值: `void`
+
+将预设加入内存列表并更新 Koishi Schema，若关键字或路径重复则忽略。
+
+### preset.resetDefaultPreset()
+
+- 返回值: `Promise<void>`
+
+将内置默认预设复制到 `data/chathub/presets` 目录，用于恢复初始状态。
+
+### preset.resolvePresetDir()
+
+- 返回值: `string`
+
+返回当前使用的预设目录绝对路径。
+
+## 事件
+
+预设目录发生变化时，`PresetService` 会自动更新内存中的预设列表并刷新 Koishi Schema 中的 `preset` 枚举项。

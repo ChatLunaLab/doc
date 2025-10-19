@@ -4,12 +4,12 @@ ChatLuna 服务是整个系统的核心，用于管理插件、对话、模型�
 
 ## 类：ChatLunaService
 
-### chatluna.registerPlugin()
+### chatluna.installPlugin()
 
 - **plugin**: `ChatLunaPlugin` 要注册的插件
 - 返回值: `Promise<void>`
 
-注册一个 ChatLuna 插件。如果插件已注册则会抛出错误。
+安装一个 ChatLuna 插件。如果同名插件已存在会抛出错误。插件通常会在构造函数中自动调用该方法。
 
 ### chatluna.awaitLoadPlatform()
 
@@ -19,18 +19,17 @@ ChatLuna 服务是整个系统的核心，用于管理插件、对话、模型�
 
 等待平台加载完成。如果超时会抛出错误。
 
-### chatluna.unregisterPlugin()
+### chatluna.uninstallPlugin()
 
 - **plugin**: `ChatLunaPlugin | string` 插件实例或平台名称
-- **withError**: `boolean` 是否在插件不存在时抛出错误，默认为 true
 - 返回值: `void`
 
-注销一个 ChatLuna 插件。
+卸载一个 ChatLuna 插件。如果插件未安装将被忽略。
 
 ### chatluna.getPlugin()
 
 - **platformName**: `string` 平台名称
-- 返回值: `ChatLunaPlugin`
+- 返回值: `ChatLunaPlugin | undefined`
 
 获取指定平台名称的插件。
 
@@ -44,17 +43,17 @@ ChatLuna 服务是整个系统的核心，用于管理插件、对话、模型�
 - **variables**: `Record<string, any>` 变量对象，默认为空对象
 - **postHandler**: `PostHandler` 后处理函数（可选）
 - **requestId**: `string` 请求 ID，默认自动生成
-- 返回值: `Promise<void>`
+- 返回值: `Promise<Message>`
 
-发起一个对话请求。
+发起一个对话请求，返回最终回复消息。部分模型会附带 `additionalReplyMessages` 用于展示思考过程等扩展内容。
 
 ### chatluna.stopChat()
 
 - **room**: `ConversationRoom` 对话房间
 - **requestId**: `string` 请求 ID
-- 返回值: `Promise<void>`
+- 返回值: `Promise<boolean | undefined>`
 
-停止指定请求 ID 的对话。
+尝试停止指定请求 ID 的对话。当没有找到对应请求时返回 `false`，如果会话尚未创建则返回 `undefined`。
 
 ### chatluna.clearChatHistory()
 
@@ -66,25 +65,25 @@ ChatLuna 服务是整个系统的核心，用于管理插件、对话、模型�
 ### chatluna.clearCache()
 
 - **room**: `ConversationRoom` 对话房间
-- 返回值: `Promise<void>`
+- 返回值: `Promise<boolean>`
 
-清除指定房间的缓存。
+清除指定房间的缓存并同步触发 `chatluna/clear-chat-history` 事件。返回值表示是否成功移除缓存的聊天接口。
 
 ### chatluna.createChatModel()
 
 - **platformName**: `string` 平台名称
 - **model**: `string` 模型名称
-- 返回值: `Promise<ChatLunaChatModel>`
+- 返回值: `Promise<ComputedRef<ChatLunaChatModel | undefined>>`
 
-创建一个聊天模型实例。
+创建一个聊天模型的计算引用。也支持直接传入 `platform/model` 组合字符串。
 
 ### chatluna.createEmbeddings()
 
 - **platformName**: `string` 平台名称
 - **modelName**: `string` 模型名称
-- 返回值: `Promise<ChatHubBaseEmbeddings>`
+- 返回值: `Promise<ComputedRef<Embeddings | undefined>>`
 
-创建一个嵌入模型实例。
+创建一个嵌入模型的计算引用。若模型不可用会回退为空嵌入实现。
 
 ### 属性
 
@@ -129,3 +128,10 @@ ChatLuna 服务是整个系统的核心，用于管理插件、对话、模型�
 - **只读**
 
 默认渲染器实例。
+
+#### chatluna.promptRenderer
+
+- **类型**: `ChatLunaPromptRenderService`
+- **只读**
+
+提示词渲染服务实例。
