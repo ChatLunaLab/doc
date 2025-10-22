@@ -25,6 +25,11 @@
 
 确保你已经配置好了 [嵌入模型](../configure-embedding-model/introduction.md) 和 [向量数据库](../configure-vector-database/introduction.md)。
 
+::: tip 提示
+将长期记忆的全部引擎设置为 `Basic` 引擎，则不需要配置嵌入模型和向量数据库。
+:::
+
+
 配置完成后，前往 Koishi 控制面板，启用长期记忆插件即可。
 
 开启后还需要设置长期记忆的 [提取模型](../useful-configurations.md#longmemoryextractmodel)。
