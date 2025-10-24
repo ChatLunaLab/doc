@@ -1,6 +1,6 @@
 # MCP 协议客户端 （MCP Client）
 
-MCP 协议是 Model Context Protocol 的缩写，是 LangChain 提供的一种协议，用于在不同的模型之间传递上下文。
+MCP 协议是 Model Context Protocol 的缩写，用于在不同的模型之间传递上下文。
 
 此插件为 ChatLuna 的 Agent 模式提供了 MCP 协议支持。
 
@@ -249,6 +249,13 @@ MCP 服务器的 JSON 配置。支持与 Claude Desktop 和 Cursor 相同的配�
         "API_KEY": "your-api-key"
       },
       "cwd": "/path/to/working/directory"
+    },
+    "server-name2": {
+      "url": "https://mcp.jina.ai/sse",
+      "headers": {
+        "Authorization": "Bearer KEY"
+      },
+      "timeout": 120,
     }
   }
 }
@@ -260,7 +267,8 @@ MCP 服务器的 JSON 配置。支持与 Claude Desktop 和 Cursor 相同的配�
 * `args`: 命令参数数组
 * `env`: 环境变量对象（可选）
 * `cwd`: 当前工作目录（可选）
-* `url`: MCP 服务器的 URL（用于 HTTP 类型的服务器，可选）
+* `url`: MCP 服务器的 URL（用于 HTTP 或者 SSE 类型的服务器，可选）
+* `timeout`: 调用此服务器下所有工具的超时时间，按秒计算，默认 60。
 
 ### tools
 
@@ -274,3 +282,4 @@ MCP 服务器的 JSON 配置。支持与 Claude Desktop 和 Cursor 相同的配�
 * `name`: 注册到 ChatLuna 的工具名称
 * `enabled`: 是否启用此工具（默认为 `true`）
 * `selector`: 消息内容选择器数组，用于限制工具在特定场景下的使用（默认为空数组）
+* `timeout`: 调用此工具的超时时间，按秒计算，默认 60。可以覆盖上面的服务器级别的超时时间。
