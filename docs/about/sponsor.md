@@ -38,6 +38,11 @@ const thinks = [
         name: "飞@^O^",
         url: "#飞@^O^",
     },
+     {
+        img: "https://q1.qlogo.cn/g?b=qq&nk=291260072&s=0",
+        name: "咩咩",
+        url: "#咩咩",
+    },
     {
         img: "https://pic1.afdiancdn.com/user/979158d0e7d211ec95c152540025c377/avatar/d5573d81cfda4cc36f4cda19a264b02c_w640_h640_s16.jpeg?imageView2/1/w/120/h/120",
         name: "LingLambda",
