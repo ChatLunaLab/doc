@@ -53,6 +53,7 @@ const thinks = [
         name: "不爱电用户_CQAX",
         url: "#不爱电用户_CQAX",
     },
+   
     {
         img: "https://pic1.afdiancdn.com/user/8e969caa21fb11ed882552540025c377/avatar/521ff1ff9ce371778c3edcb2d374bc2f_w1440_h1440_s130.jpeg?imageView2/1/w/120/h/120",
         name: "Cook Sleep",
@@ -68,6 +69,31 @@ const thinks = [
         url: "#爱发电用户_ba642",
         img: "https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/"
     },
+    {
+       img: "https://q1.qlogo.cn/g?b=qq&nk=2019451078&s=0",
+       name: "QJAG",
+       url: "#QJAG",
+   },
+   {
+      img: "https://q1.qlogo.cn/g?b=qq&nk=1627333583&s=0",
+      name: "我的车在哪",
+      url: "#我的车在哪",
+  },
+  {
+     img: "https://q1.qlogo.cn/g?b=qq&nk=1761713639&s=0",
+     name: "カナリア",
+     url: "#カナリア",
+ },
+ {
+    img: "https://q1.qlogo.cn/g?b=qq&nk=2657455842&s=0",
+    name: "ch-03",
+    url: "#ch-03",
+},
+{
+   img: "https://q1.qlogo.cn/g?b=qq&nk=2284603810&s=0",
+   name: "清",
+   url: "#清",
+},
     {
         img: "https://pic1.afdiancdn.com/user/6cec4d5aaf5611eda22e52540025c377/avatar/142700cc6b59c77aac5ee7490b0cc036_w1080_h1080_s43.jpeg?imageView2/1/w/120/h/120",
         name: "Mirage",
