@@ -61,6 +61,16 @@ ChatLuna 需要 `database` 服务，用于存储会话信息等持久化数据�
 
 ## 配置主插件
 
+::: tip 推荐先尝试伪装插件
+当你做到这一步时，已经具备使用伪装插件的基础了。
+
+如果你希望获得更灵活、更加拟人的群聊体验（伪装插件暂不支持私聊），推荐先尝试 `chatluna-character`（伪装群友）插件。
+
+该插件支持基于预设进行细粒度行为控制，具备自主发送消息等能力，更适合需要角色扮演、群聊风格拟人化的场景。
+
+文档链接：[伪装群友（Character）](/ecosystem/other/character)。
+:::
+
 进入主插件配置页面，以下是一些重要的配置项，其他配置项可在 [配置项](/guide/useful-configurations) 了解到：
 
 - [`defaultChatMode`](./useful-configurations.md#defaultchatmode)：默认的聊天模式。支持聊天模式，Agent 模式，浏览模式。
