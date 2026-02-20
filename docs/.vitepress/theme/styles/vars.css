@@ -34,10 +34,10 @@
 }
 
 .dark {
-    --vp-c-sky-1: #a39dff;
-    --vp-c-sky-2: #c4c0ff;
-    --vp-c-sky-3: #e5e3ff;
-    --vp-c-sky-soft: rgba(196, 192, 255, 0.3);
+    --vp-c-sky-1: #8f89e8;
+    --vp-c-sky-2: #7b74d9;
+    --vp-c-sky-3: #6760c8;
+    --vp-c-sky-soft: rgba(143, 137, 232, 0.22);
 }
 
 /**
