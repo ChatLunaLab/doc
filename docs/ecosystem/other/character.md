@@ -461,7 +461,7 @@ input 会把最近群聊的聊天记录和状态等信息作为格式化输入�
 * `toolCalling`: 是否启用工具调用功能
 * `image`: 是否允许输入图片
 * `imageInputMaxCount`: 最大的输入图片数量
-* `imageInputMaxSize`: 最大的输入图片大小（KB）
+* `imageInputMaxSize`: 最大的输入图片大小（MB）
 * `coolDownTime`: 冷却发言时间（秒）
 * `typingTime`: 模拟打字时的间隔（毫秒）
 * `largeTextSize`: 大文本消息的判断阈值（每段分句的字符数）
