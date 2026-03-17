@@ -141,7 +141,7 @@ const thinks = [
 
 ChatLuna 是一个开源项目，在开发过程中，我们也收到了很多用户的赞助和鼓励，非常感谢这些用户的支持，让 ChatLuna 能走的更远。
 
-[爱发电](https://afdian.com/a/dingyi222666)
+[爱发电](https://ifdian.net/a/dingyi222666)
 
 > 以下排名不分先后
 
