@@ -523,7 +523,7 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
                     link: "/development/call-core-services/model-tool",
                 },
                 {
-                    text: "Agent",
+                    text: "Agent 与 Sub-Agent",
                     link: "/development/call-core-services/agent",
                 },
                 {

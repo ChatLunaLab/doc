@@ -1,247 +1,322 @@
-# Agent
+# Agent 与 Sub-Agent
 
-ChatLuna 提供了 Agent 的简易框架，可以让模型自主选择和调用工具。
+ChatLuna 现在提供了一套更高层的 Agent API。
 
-## 创建 Agent Executor
+推荐优先使用 `ctx.chatluna.createAgent(...)` 创建 Agent，再通过 `generate()`、`stream()`、`asTool()` 和 `createTaskTool()` 组合主 Agent、Sub-Agent 与任务委派能力。
 
-使用 `createAgentExecutor` 函数创建 Agent 执行器:
+## 创建 Agent
 
-```ts twoslash
-// @noImplicitAny: false
-// @strictNullChecks: false
-import { Context, Schema } from 'koishi'
+最常见的入口是 `ctx.chatluna.createAgent()`。
 
-const ctx = new Context()
-
-// ---cut---
+```ts
 import type {} from "koishi-plugin-chatluna/services/chat";
-import { createAgentExecutor, createToolsRef } from 'koishi-plugin-chatluna/llm-core/agent'
-import { ChatLunaChatPrompt } from 'koishi-plugin-chatluna/llm-core/chain/prompt'
-import type { ChatLunaTool } from 'koishi-plugin-chatluna/llm-core/platform/types'
-import { computed } from 'koishi-plugin-chatluna'
 
-const modelRef = await ctx.chatluna.createChatModel("openai/gpt-5-nano")
-const embeddingsRef = await ctx.chatluna.createEmbeddings("openai/text-embedding-3-small")
-
-const enabledTools = ['web-search', 'web-browser']
-const toolsRef = computed(() => 
-    enabledTools.map(
-        (toolName) => ctx.chatluna.platform.getTool(toolName) satisfies ChatLunaTool
-    )     
-)
-
-const toolsRefCreated = createToolsRef({
-    tools: toolsRef,
-    embeddings: embeddingsRef.value
-})
-
-const prompt = new ChatLunaChatPrompt({
-    preset: ctx.chatluna.preset.getPreset('sydney'),
-    tokenCounter: (text) => modelRef.value.getNumTokens(text),
-    promptRenderService: ctx.chatluna.promptRenderer,
-    sendTokenLimit: modelRef.value.getModelMaxContextSize()
-})
-
-const executorRef = createAgentExecutor({
-    llm: modelRef,
-    tools: toolsRefCreated.tools,
-    prompt: prompt,
-    agentMode: 'tool-calling',
-    returnIntermediateSteps: true,
-    handleParsingErrors: true
-})
+const agent = await ctx.chatluna.createAgent({
+  name: "researcher",
+  description: "一个负责搜索和整理资料的 Agent",
+  model: "openai/gpt-5-nano",
+  embeddings: "openai/text-embedding-3-small",
+  tools: ["web-search", "web-browser"],
+  preset: "sydney",
+  mode: "tool-calling",
+  maxSteps: 8,
+  handleParsingErrors: true,
+});
 ```
 
 <br>
 
-`createAgentExecutor` 接受以下参数:
+平时最常用的几个参数：
 
-- `llm`: 语言模型的计算引用
-- `tools`: 工具列表的计算引用
-- `prompt`: 聊天提示词对象
-- `agentMode`: Agent 模式，可选 `'tool-calling'` 或 `'react'`
-- `returnIntermediateSteps`: 是否返回中间步骤
-- `handleParsingErrors`: 是否处理解析错误
-- `instructions`: ReAct 模式下的额外指令 (可选)
+- `model`: 必填，通常直接写 `platform/model`
+- `tools`: 可选，传工具名数组即可
+- `preset` 或 `system`: 二选一；想复用预设就传 `preset`，想快速写一个 Agent 就直接传 `system`
+- `mode`: 可选，默认 `tool-calling`
+- `maxSteps`: 可选，限制最多调用多少轮工具
+
+其他像 `handleParsingErrors`、`instructions`、`toolMask` 这些参数，通常只在更复杂的插件装配里才需要。
 
 ## 调用 Agent
 
-创建 Agent Executor 后，可以通过 `invoke` 方法调用:
+创建完成后，直接使用 `generate()` 即可。
 
-```ts twoslash
-// @noImplicitAny: false
-// @strictNullChecks: false
-// @noErrors
-import { Context, Schema } from 'koishi'
-import { HumanMessage, AIMessageChunk } from '@langchain/core/messages'
-import { createAgentExecutor, createToolsRef } from 'koishi-plugin-chatluna/llm-core/agent'
+```ts
+const result = await agent.generate({
+  prompt: "搜索 OpenAI 最近一周的重要新闻，并整理成 3 条摘要",
+  session,
+  conversationId: "conversation-id",
+  history: [],
+  variables: {
+    topic: "OpenAI",
+  },
+});
 
-const ctx = new Context()
-let executor: ReturnType<typeof createAgentExecutor>
-
-// ---cut---
-const response = await executor.value.invoke({
-    input: new HumanMessage("搜索 OpenAI 的最新新闻"),
-    chat_history: [],
-    variables: {}
-})
-
-const message = new AIMessage(response['output'])
-
+console.log(result.output);
+console.log(result.message);
 ```
 
-<br>
+返回结果包含：
 
-调用后返回的结果包含:
+- `output`: 最终文本输出
+- `message`: 最终消息对象
+- `intermediateSteps`: 当创建 Agent 时设置了 `returnIntermediateSteps: true` 才会返回
 
-- `output`: Agent 的最终输出
-- `intermediateSteps`: 中间步骤 (如果 `returnIntermediateSteps` 为 `true`)
+## 流式调用
 
-## Agent 模式
+`stream()` 会返回一个更适合前端或 CLI 的对象：
 
-ChatLuna 支持两种 Agent 模式:
+- `text`: 文本增量流
+- `steps`: Agent 事件流
+- `result`: 最终结果 Promise
 
-### tool-calling 模式
+```ts
+const stream = await agent.stream({
+  prompt: "帮我总结这个仓库最近的变更",
+  session,
+  conversationId: "conversation-id",
+  onStep(event) {
+    if (event.type === "tool-call") {
+      console.log(
+        "call tool:",
+        event.actions.map((item) => item.tool),
+      );
+    }
+  },
+});
 
-使用模型的原生工具调用能力，适用于支持 Tool Calling 的模型 (如 GPT-5, Claude 等)。
+for await (const chunk of stream.text) {
+  process.stdout.write(chunk);
+}
 
-```ts twoslash
-// @noImplicitAny: false
-// @strictNullChecks: false
-// @noErrors
-import { createAgentExecutor } from 'koishi-plugin-chatluna/llm-core/agent'
-
-const modelRef = await ctx.chatluna.createChatModel("openai/gpt-5-nano")
-const embeddingsRef = await ctx.chatluna.createEmbeddings("openai/text-embedding-3-small")
-
-const enabledTools = ['web-search', 'web-browser']
-const toolsRef = computed(() => 
-    enabledTools.map(
-        (toolName) => ctx.chatluna.platform.getTool(toolName) satisfies ChatLunaTool
-    )     
-)
-
-const toolsRefCreated = createToolsRef({
-    tools: toolsRef,
-    embeddings: embeddingsRef.value
-})
-
-const prompt = new ChatLunaChatPrompt({
-    preset: ctx.chatluna.preset.getPreset('sydney'),
-    tokenCounter: (text) => modelRef.value.getNumTokens(text),
-    promptRenderService: ctx.chatluna.promptRenderer,
-    sendTokenLimit: modelRef.value.getModelMaxContextSize()
-})
-
-// ---cut---
-const executorToolCallingRef = createAgentExecutor({
-    llm: modelRef,
-    tools: toolsRefCreated.tools,
-    prompt,
-    agentMode: 'tool-calling',
-    returnIntermediateSteps: true
-})
+const result = await stream.result;
+console.log(result.output);
 ```
 
-### react 模式
+如果你只想监听而不消费流，也可以直接使用：
 
-使用 ReAct (Reasoning and Acting) 模式，通过提示词引导模型进行推理和行动。
-
-适用于不支持原生工具调用的模型。
-
-```ts twoslash
-// @noImplicitAny: false
-// @strictNullChecks: false
-// @noErrors
-import { createAgentExecutor } from 'koishi-plugin-chatluna/llm-core/agent'
-import { computed } from 'koishi-plugin-chatluna'
-
-const modelRef = await ctx.chatluna.createChatModel("openai/gpt-5-nano")
-const embeddingsRef = await ctx.chatluna.createEmbeddings("openai/text-embedding-3-small")
-
-const enabledTools = ['web-search', 'web-browser']
-const toolsRef = computed(() => 
-    enabledTools.map(
-        (toolName) => ctx.chatluna.platform.getTool(toolName) satisfies ChatLunaTool
-    )     
-)
-
-const toolsRefCreated = createToolsRef({
-    tools: toolsRef,
-    embeddings: embeddingsRef.value
-})
-
-const prompt = new ChatLunaChatPrompt({
-    preset: ctx.chatluna.preset.getPreset('sydney'),
-    tokenCounter: (text) => modelRef.value.getNumTokens(text),
-    promptRenderService: ctx.chatluna.promptRenderer,
-    sendTokenLimit: modelRef.value.getModelMaxContextSize()
-})
-
-// ---cut---
-const executorReactRef = createAgentExecutor({
-    llm: modelRef,
-    tools: toolsRefCreated.tools,
-    prompt,
-    agentMode: 'react',
-    handleParsingErrors: true,
-    instructions: computed(() => undefined)
-})
+```ts
+await agent.generate({
+  prompt: "写一个简短总结",
+  session,
+  onToken(token) {
+    process.stdout.write(token);
+  },
+  onStep(event) {
+    console.log(event.type);
+  },
+});
 ```
 
-## 创建工具引用
+## Agent 作为工具
 
-使用 `createToolsRef` 函数创建响应式的工具引用。
+`agent.asTool()` 可以把一个 Agent 直接包装成 LangChain `StructuredTool`。
 
-工具引用配合 Agent 执行器的引用，可以实现工具的动态选择和 Agent 执行器的动态重建。
+这种方式适合一次性交接：主 Agent 把某个任务完整交给子 Agent，然后拿回最终结果。
 
-```ts twoslash
-// @noImplicitAny: false
-// @strictNullChecks: false
-import { Context, Schema } from 'koishi'
+```ts
+const explore = await ctx.chatluna.createAgent({
+  name: "explore",
+  description: "搜索代码库并总结结构",
+  model: "openai/gpt-5-nano",
+  tools: ["read", "grep", "glob"],
+  system: "你是一个擅长阅读代码库的子 Agent。",
+});
 
-const ctx = new Context()
-let session: Session
+const main = await ctx.chatluna.createAgent({
+  name: "main",
+  model: "openai/gpt-5",
+  tools: ["web-search"],
+  system: "你是主 Agent，负责根据任务选择合适的工具。",
+});
 
-// ---cut---
-import type {} from "koishi-plugin-chatluna/services/chat";
-import { createToolsRef } from 'koishi-plugin-chatluna/llm-core/agent'
-import { computed } from 'koishi-plugin-chatluna'
-import type { ChatLunaTool } from 'koishi-plugin-chatluna/llm-core/platform/types'
-import { HumanMessage } from '@langchain/core/messages'
-
-import { Session } from 'koishi'
-
-const embeddingsRef = await ctx.chatluna.createEmbeddings("openai/text-embedding-3-small")
-
-// 创建指定工具的引用
-/* const toolsRef = computed(() => {
-    const searchTool = ctx.chatluna.platform.getTool('web-search')
-    const browserTool = ctx.chatluna.platform.getTool('web-browser')
-    return [searchTool, browserTool]
-}) */
-
-// 创建全部工具的引用
-const toolsNameRef = await ctx.chatluna.platform.getTools()
-const toolsRef = computed(() => {
-    return toolsNameRef.value.map((toolName) => {
-        return ctx.chatluna.platform.getTool(toolName) satisfies ChatLunaTool
-    })
-})
-
-const toolsRefCreated = createToolsRef({
-    tools: toolsRef,
-    embeddings: embeddingsRef.value
-})
-
-
-const messages = [new HumanMessage("你好")]
-
-toolsRefCreated.update(session, messages)
+const delegateTool = explore.asTool({
+  name: "explore_repo",
+  description: "将代码库探索任务委派给 explore Agent",
+});
 ```
 
-<br>
+如果你希望主 Agent 直接能调用这个工具，通常会在创建主 Agent 前先把它注册成平台工具，或在你自己的装配层中一起构造工具列表。
 
-`createToolsRef` 会根据工具的 `selector` 和 `authorization` 方法，自动筛选出当前对话历史下可用的工具。
+## 主 Agent + Sub-Agent
 
-调用 `update` 方法可以更新工具列表。
+推荐的心智模型是：
+
+- 主 Agent 也是 Agent
+- Sub-Agent 也是 Agent
+- 一次性交接用 `asTool()`
+- 长任务、多轮跟进、后台继续执行用 `createTaskTool()`
+
+也就是说，主 Agent 和 Sub-Agent 的区别主要在“如何被调用”，而不是底层实现不同。
+
+## 任务工具与 Sub-Agent 教程
+
+当你希望：
+
+- 主 Agent 把工作交给某个专门 Agent
+- 任务可以后台运行
+- 之后还能 `status` / `list` / `message` / `resume`
+
+就应该使用 `createTaskTool()`。
+
+```ts
+import {
+  createTaskTool,
+  renderAvailableAgents,
+} from "koishi-plugin-chatluna/llm-core/agent";
+
+const planner = await ctx.chatluna.createAgent({
+  name: "planner",
+  description: "拆解任务并输出执行计划",
+  model: "openai/gpt-5-nano",
+  tools: ["web-search"],
+  system: "你负责把任务拆解成简洁可执行的步骤。",
+});
+
+const researcher = await ctx.chatluna.createAgent({
+  name: "researcher",
+  description: "负责联网搜索和资料整理",
+  model: "openai/gpt-5-nano",
+  tools: ["web-search", "web-browser"],
+  system: "你负责收集资料并给出结构化结论。",
+});
+
+const taskRuntime = createTaskTool({
+  list() {
+    return [
+      {
+        id: planner.id,
+        name: planner.name,
+        description: planner.description,
+      },
+      {
+        id: researcher.id,
+        name: researcher.name,
+        description: researcher.description,
+      },
+    ];
+  },
+  async get(name) {
+    if (name === planner.name) {
+      return { agent: planner };
+    }
+
+    if (name === researcher.name) {
+      return { agent: researcher };
+    }
+  },
+  async refresh() {
+    console.log("task state updated");
+  },
+});
+
+const taskTool = taskRuntime.createTool();
+```
+
+如果你希望主 Agent 直接通过工具调用这些 Sub-Agent，通常会先把 `task` 工具注册到平台，再在主 Agent 里启用它：
+
+```ts
+ctx.chatluna.platform.registerTool("task", {
+  description: taskRuntime.buildToolDescription(),
+  selector: () => true,
+  createTool: () => taskRuntime.createTool(),
+});
+
+const main = await ctx.chatluna.createAgent({
+  name: "main",
+  model: "openai/gpt-5",
+  tools: ["web-search", "task"],
+  system: "你是主 Agent，必要时把任务委派给更适合的子 Agent。",
+});
+```
+
+`createTaskTool()` 创建出的工具默认支持以下动作：
+
+- `run`: 启动或续跑一个任务
+- `status`: 查看某个任务状态
+- `list`: 查看当前对话下的任务列表
+- `message`: 给后台任务继续发送消息
+
+后台模式示例：
+
+```ts
+const result = await taskRuntime.runTask(
+  {
+    action: "run",
+    agent: "researcher",
+    prompt: "搜索 Anthropic 最近发布的模型更新，并整理成中文摘要",
+    background: true,
+  },
+  {
+    configurable: {
+      session,
+      conversationId: "conversation-id",
+      source: "chatluna",
+      model: modelRef.value,
+    },
+  } as any,
+);
+
+console.log(result);
+```
+
+后续你可以继续：
+
+```ts
+await taskRuntime.runTask({ action: "list" }, runConfig);
+await taskRuntime.runTask({ action: "status", id: "task-id" }, runConfig);
+await taskRuntime.runTask(
+  { action: "message", id: "task-id", message: "补充关注安全公告" },
+  runConfig,
+);
+await taskRuntime.runTask(
+  { action: "run", id: "task-id", prompt: "继续整理成周报格式" },
+  runConfig,
+);
+```
+
+## 在系统提示词中注入可用 Sub-Agent
+
+如果你需要把可委派的子 Agent 列表注入到系统提示词里，可以使用 `renderAvailableAgents()`：
+
+```ts
+const msg = renderAvailableAgents([
+  {
+    id: planner.id,
+    name: planner.name,
+    description: planner.description,
+  },
+  {
+    id: researcher.id,
+    name: researcher.name,
+    description: researcher.description,
+  },
+]);
+
+console.log(msg.content);
+```
+
+这和 extension-agent 里展示 `<available_sub_agents>` 的方式是一致的。
+
+## 何时用 asTool，何时用 task
+
+### 使用 `asTool()` 的场景
+
+- 只需要一次性交接
+- 子 Agent 执行完成后直接返回结果
+- 不需要后台运行和任务状态管理
+
+### 使用 `createTaskTool()` 的场景
+
+- 子 Agent 任务可能比较长
+- 希望后台继续执行
+- 之后还要继续查看状态、补发消息、恢复执行
+
+## 底层 API
+
+如果你需要完全控制 Prompt、工具筛选、Runnable 组合方式，底层 API 仍然可用：
+
+- `createAgentRunner()`
+- `createToolsRef()`
+- `createAgentConfig()`
+
+不过对于大部分插件开发场景，建议优先使用高层的 `ctx.chatluna.createAgent()`。
