@@ -160,10 +160,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chatluna/shared-prompt-renderer@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "@chatluna/shared-prompt-renderer@npm:1.0.3"
-  checksum: 10c0/e78cbfa75dc92ebc341982e90d743f53e74cb383f3de30a1301be8bfa2ff6062c31bfefa13f26edc378e59dca8fa2b54a0d33069dac6fb7fd33e26871ec47efe
+"@chatluna/shared-prompt-renderer@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "@chatluna/shared-prompt-renderer@npm:1.0.5"
+  checksum: 10c0/27ff62e6e295a45a2df1e159b3c30f587cd1856a86dfcde050bd1fcaa5d3bd1f021ae947faa9b317dff2b7fdbf65534144db56170057b7f797092b4927a53b59
   languageName: node
   linkType: hard
 
@@ -1176,23 +1176,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/core@npm:0.3.62":
-  version: 0.3.62
-  resolution: "@langchain/core@npm:0.3.62"
+"@langchain/core@npm:^0.3.80":
+  version: 0.3.80
+  resolution: "@langchain/core@npm:0.3.80"
   dependencies:
     "@cfworker/json-schema": "npm:^4.0.2"
     ansi-styles: "npm:^5.0.0"
     camelcase: "npm:6"
     decamelize: "npm:1.2.0"
     js-tiktoken: "npm:^1.0.12"
-    langsmith: "npm:^0.3.33"
+    langsmith: "npm:^0.3.67"
     mustache: "npm:^4.2.0"
     p-queue: "npm:^6.6.2"
     p-retry: "npm:4"
     uuid: "npm:^10.0.0"
     zod: "npm:^3.25.32"
     zod-to-json-schema: "npm:^3.22.3"
-  checksum: 10c0/ef6301bd4a3c068a1cb83e3226bb96d815aece1c035a638ac58e50008342bf6291e12c9f1a1f882dfd2693837ff1836e3c88f9b4b6802715f1aab011b52ba087
+  checksum: 10c0/c24a4641c11ddda77f89109800e59bdcd68b48f3dc0c485e6594e79ec494fc4b28e7c7b4013937e40e4edf12435dc09f7d5c0b3de5e63c8641fe81f6b17d7698
   languageName: node
   linkType: hard
 
@@ -3366,7 +3366,7 @@ __metadata:
     "@nolebase/vitepress-plugin-thumbnail-hash": "npm:^2.18.2"
     "@shikijs/vitepress-twoslash": "npm:^3.13.0"
     koishi: "npm:^4.18.9"
-    koishi-plugin-chatluna: "npm:^1.3.0-alpha.68"
+    koishi-plugin-chatluna: "npm:^1.3.36"
     markdown-it: "npm:^14.1.0"
     markdown-it-mathjax3: "npm:^5.2.0"
     markdown-it-task-lists: "npm:^2.1.1"
@@ -5184,12 +5184,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"koishi-plugin-chatluna@npm:^1.3.0-alpha.68":
-  version: 1.3.0-alpha.68
-  resolution: "koishi-plugin-chatluna@npm:1.3.0-alpha.68"
+"koishi-plugin-chatluna@npm:^1.3.36":
+  version: 1.3.36
+  resolution: "koishi-plugin-chatluna@npm:1.3.36"
   dependencies:
-    "@chatluna/shared-prompt-renderer": "npm:^1.0.3"
-    "@langchain/core": "npm:0.3.62"
+    "@chatluna/shared-prompt-renderer": "npm:^1.0.5"
+    "@langchain/core": "npm:^0.3.80"
     "@vue/reactivity": "npm:^3.6.0-alpha.2"
     decimal.js: "npm:^10.6.0"
     he: "npm:^1.2.0"
@@ -5207,11 +5207,11 @@ __metadata:
     zod-to-json-schema: "npm:^3.24.6"
   peerDependencies:
     koishi: ^4.18.9
-    koishi-plugin-chatluna-storage-service: ^0.0.11
+    koishi-plugin-chatluna-storage-service: ^1.0.6
   peerDependenciesMeta:
     koishi-plugin-chatluna-storage-service:
       optional: true
-  checksum: 10c0/710f86627bb86d79ecd97a9bf50e584099cca3f13c1fe8f26678158195b681f8f87e96422b2950676e34a1242d8bb52a674cfee6f55aa58b86ac91fbd61027eb
+  checksum: 10c0/1d33707555201499245487dec80cc6cdc19530fb0d64ad10f58fb7d279c1daf755574d51b0e7a75dbefe8afdcd4af49d0607d23709770f5b6a4666b6a7119527
   languageName: node
   linkType: hard
 
@@ -5252,7 +5252,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"langsmith@npm:^0.3.33, langsmith@npm:^0.3.64":
+"langsmith@npm:^0.3.64":
   version: 0.3.74
   resolution: "langsmith@npm:0.3.74"
   dependencies:
@@ -5278,6 +5278,34 @@ __metadata:
     openai:
       optional: true
   checksum: 10c0/b90faa2353045b11f71079caa079ae0dbce8d6c449a437413f0c8fdb7200979bf5256693d88895086abd072e035d4961bc5dbaee2387a2600817cdc53827ab4a
+  languageName: node
+  linkType: hard
+
+"langsmith@npm:^0.3.67":
+  version: 0.3.87
+  resolution: "langsmith@npm:0.3.87"
+  dependencies:
+    "@types/uuid": "npm:^10.0.0"
+    chalk: "npm:^4.1.2"
+    console-table-printer: "npm:^2.12.1"
+    p-queue: "npm:^6.6.2"
+    semver: "npm:^7.6.3"
+    uuid: "npm:^10.0.0"
+  peerDependencies:
+    "@opentelemetry/api": "*"
+    "@opentelemetry/exporter-trace-otlp-proto": "*"
+    "@opentelemetry/sdk-trace-base": "*"
+    openai: "*"
+  peerDependenciesMeta:
+    "@opentelemetry/api":
+      optional: true
+    "@opentelemetry/exporter-trace-otlp-proto":
+      optional: true
+    "@opentelemetry/sdk-trace-base":
+      optional: true
+    openai:
+      optional: true
+  checksum: 10c0/eb1ac6baea51063b881a9dc9a61d2d699bfc9b7aa3443865e575775abe084d94704344275958c94f4e1f03154103e9dd896cde7285797e4afb6af570da6db3b8
   languageName: node
   linkType: hard
 
