@@ -9,12 +9,17 @@ ChatLuna 提供了一套更高层的 Agent API，用于组装 Agent，甚至是�
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
+import { Context, Schema } from 'koishi'
+
+const ctx = new Context()
+
+// ---cut---
 import type {} from "koishi-plugin-chatluna/services/chat";
 
 const agent = await ctx.chatluna.createAgent({
   name: "researcher",
   description: "一个负责搜索和整理资料的 Agent",
-  model: "openai/gpt-5-nano",
+  model: "openai/gpt-5.4",
   embeddings: "openai/text-embedding-3-small",
   tools: ["web-search", "web-browser"],
   preset: "sydney",
@@ -40,7 +45,30 @@ const agent = await ctx.chatluna.createAgent({
 
 创建完成后，直接使用 `generate()` 即可。
 
-```ts
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { Context, Schema } from 'koishi'
+
+const ctx = new Context()
+
+
+import type {} from "koishi-plugin-chatluna/services/chat";
+
+const agent = await ctx.chatluna.createAgent({
+  name: "researcher",
+  description: "一个负责搜索和整理资料的 Agent",
+  model: "openai/gpt-5.4",
+  embeddings: "openai/text-embedding-3-small",
+  tools: ["web-search", "web-browser"],
+  preset: "sydney",
+  mode: "tool-calling",
+  maxSteps: 8,
+  handleParsingErrors: true,
+});
+
+// ---cut---
+
 const result = await agent.generate({
   prompt: "搜索 OpenAI 最近一周的重要新闻，并整理成 3 条摘要",
   session,
@@ -69,7 +97,29 @@ console.log(result.message);
 - `steps`: Agent 事件流
 - `result`: 最终结果 Promise
 
-```ts
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { Context, Schema } from 'koishi'
+
+const ctx = new Context()
+
+
+import type {} from "koishi-plugin-chatluna/services/chat";
+
+const agent = await ctx.chatluna.createAgent({
+  name: "researcher",
+  description: "一个负责搜索和整理资料的 Agent",
+  model: "openai/gpt-5.4",
+  embeddings: "openai/text-embedding-3-small",
+  tools: ["web-search", "web-browser"],
+  preset: "sydney",
+  mode: "tool-calling",
+  maxSteps: 8,
+  handleParsingErrors: true,
+});
+
+// ---cut---
 const stream = await agent.stream({
   prompt: "帮我总结这个仓库最近的变更",
   session,
@@ -94,7 +144,29 @@ console.log(result.output);
 
 如果你只想监听而不消费流，也可以直接使用：
 
-```ts
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { Context, Schema } from 'koishi'
+
+const ctx = new Context()
+
+
+import type {} from "koishi-plugin-chatluna/services/chat";
+
+const agent = await ctx.chatluna.createAgent({
+  name: "researcher",
+  description: "一个负责搜索和整理资料的 Agent",
+  model: "openai/gpt-5.4",
+  embeddings: "openai/text-embedding-3-small",
+  tools: ["web-search", "web-browser"],
+  preset: "sydney",
+  mode: "tool-calling",
+  maxSteps: 8,
+  handleParsingErrors: true,
+});
+
+// ---cut---
 await agent.generate({
   prompt: "写一个简短总结",
   session,
@@ -113,18 +185,28 @@ await agent.generate({
 
 这种方式更适合一次性交接：主 Agent 把某个任务完整交给子 Agent，然后拿回最终结果。
 
-```ts
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { Context, Schema } from 'koishi'
+
+const ctx = new Context()
+
+// ---cut---
+
+import type {} from "koishi-plugin-chatluna/services/chat";
+
 const explore = await ctx.chatluna.createAgent({
   name: "explore",
   description: "搜索代码库并总结结构",
-  model: "openai/gpt-5-nano",
+  model: "openai/gpt-5.4-mini",
   tools: ["read", "grep", "glob"],
   system: "你是一个擅长阅读代码库的子 Agent。",
 });
 
 const main = await ctx.chatluna.createAgent({
   name: "main",
-  model: "openai/gpt-5",
+  model: "openai/gpt-5.4",
   tools: ["web-search"],
   system: "你是主 Agent，负责根据任务选择合适的工具。",
 });
@@ -156,7 +238,15 @@ const delegateTool = explore.asTool({
 
 就应该使用 `createTaskTool()`。
 
-```ts
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { Context, Schema } from 'koishi'
+
+const ctx = new Context()
+
+// ---cut---
+import type {} from "koishi-plugin-chatluna/services/chat";
 import {
   createTaskTool,
   renderAvailableAgents,
@@ -212,7 +302,68 @@ const taskTool = taskRuntime.createTool();
 
 如果你希望主 Agent 直接通过工具调用这些 Sub-Agent，通常会先把 `task` 工具注册到平台，再在主 Agent 里启用它：
 
-```ts
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { Context, Schema } from 'koishi'
+
+const ctx = new Context()
+
+
+import type {} from "koishi-plugin-chatluna/services/chat";
+import {
+  createTaskTool,
+  renderAvailableAgents,
+} from "koishi-plugin-chatluna/llm-core/agent";
+
+const planner = await ctx.chatluna.createAgent({
+  name: "planner",
+  description: "拆解任务并输出执行计划",
+  model: "openai/gpt-5-nano",
+  tools: ["web-search"],
+  system: "你负责把任务拆解成简洁可执行的步骤。",
+});
+
+const researcher = await ctx.chatluna.createAgent({
+  name: "researcher",
+  description: "负责联网搜索和资料整理",
+  model: "openai/gpt-5-nano",
+  tools: ["web-search", "web-browser"],
+  system: "你负责收集资料并给出结构化结论。",
+});
+
+const taskRuntime = createTaskTool({
+  list() {
+    return [
+      {
+        id: planner.id,
+        name: planner.name,
+        description: planner.description,
+      },
+      {
+        id: researcher.id,
+        name: researcher.name,
+        description: researcher.description,
+      },
+    ];
+  },
+  async get(name) {
+    if (name === planner.name) {
+      return { agent: planner };
+    }
+
+    if (name === researcher.name) {
+      return { agent: researcher };
+    }
+  },
+  async refresh() {
+    console.log("task state updated");
+  },
+});
+
+// ---cut---
+const taskTool = taskRuntime.createTool();
+
 ctx.chatluna.platform.registerTool("task", {
   description: taskRuntime.buildToolDescription(),
   selector: () => true,
@@ -236,7 +387,66 @@ const main = await ctx.chatluna.createAgent({
 
 后台模式示例：
 
-```ts
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { Context, Schema } from 'koishi'
+
+const ctx = new Context()
+
+
+import type {} from "koishi-plugin-chatluna/services/chat";
+import {
+  createTaskTool,
+  renderAvailableAgents,
+} from "koishi-plugin-chatluna/llm-core/agent";
+
+const planner = await ctx.chatluna.createAgent({
+  name: "planner",
+  description: "拆解任务并输出执行计划",
+  model: "openai/gpt-5-nano",
+  tools: ["web-search"],
+  system: "你负责把任务拆解成简洁可执行的步骤。",
+});
+
+const researcher = await ctx.chatluna.createAgent({
+  name: "researcher",
+  description: "负责联网搜索和资料整理",
+  model: "openai/gpt-5-nano",
+  tools: ["web-search", "web-browser"],
+  system: "你负责收集资料并给出结构化结论。",
+});
+
+const taskRuntime = createTaskTool({
+  list() {
+    return [
+      {
+        id: planner.id,
+        name: planner.name,
+        description: planner.description,
+      },
+      {
+        id: researcher.id,
+        name: researcher.name,
+        description: researcher.description,
+      },
+    ];
+  },
+  async get(name) {
+    if (name === planner.name) {
+      return { agent: planner };
+    }
+
+    if (name === researcher.name) {
+      return { agent: researcher };
+    }
+  },
+  async refresh() {
+    console.log("task state updated");
+  },
+});
+
+// ---cut---
 const result = await taskRuntime.runTask(
   {
     action: "run",
@@ -259,7 +469,66 @@ console.log(result);
 
 后续你可以继续：
 
-```ts
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
+import { Context, Schema } from 'koishi'
+
+const ctx = new Context()
+
+
+import type {} from "koishi-plugin-chatluna/services/chat";
+import {
+  createTaskTool,
+  renderAvailableAgents,
+} from "koishi-plugin-chatluna/llm-core/agent";
+
+const planner = await ctx.chatluna.createAgent({
+  name: "planner",
+  description: "拆解任务并输出执行计划",
+  model: "openai/gpt-5-nano",
+  tools: ["web-search"],
+  system: "你负责把任务拆解成简洁可执行的步骤。",
+});
+
+const researcher = await ctx.chatluna.createAgent({
+  name: "researcher",
+  description: "负责联网搜索和资料整理",
+  model: "openai/gpt-5-nano",
+  tools: ["web-search", "web-browser"],
+  system: "你负责收集资料并给出结构化结论。",
+});
+
+const taskRuntime = createTaskTool({
+  list() {
+    return [
+      {
+        id: planner.id,
+        name: planner.name,
+        description: planner.description,
+      },
+      {
+        id: researcher.id,
+        name: researcher.name,
+        description: researcher.description,
+      },
+    ];
+  },
+  async get(name) {
+    if (name === planner.name) {
+      return { agent: planner };
+    }
+
+    if (name === researcher.name) {
+      return { agent: researcher };
+    }
+  },
+  async refresh() {
+    console.log("task state updated");
+  },
+});
+
+// ---cut---
 await taskRuntime.runTask({ action: "list" }, runConfig);
 await taskRuntime.runTask({ action: "status", id: "task-id" }, runConfig);
 await taskRuntime.runTask(
