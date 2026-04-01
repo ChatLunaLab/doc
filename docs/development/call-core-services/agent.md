@@ -48,10 +48,10 @@ const agent = await ctx.chatluna.createAgent({
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
-import { Context, Schema } from 'koishi'
+import { Context, Schema, type Session } from 'koishi'
 
 const ctx = new Context()
-
+const session = {} as Session
 
 import type {} from "koishi-plugin-chatluna/services/chat";
 
@@ -100,10 +100,10 @@ console.log(result.message);
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
-import { Context, Schema } from 'koishi'
+import { Context, Schema, type Session } from 'koishi'
 
 const ctx = new Context()
-
+const session = {} as Session
 
 import type {} from "koishi-plugin-chatluna/services/chat";
 
@@ -147,10 +147,10 @@ console.log(result.output);
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
-import { Context, Schema } from 'koishi'
+import { Context, Schema, type Session } from 'koishi'
 
 const ctx = new Context()
-
+const session = {} as Session
 
 import type {} from "koishi-plugin-chatluna/services/chat";
 
@@ -309,7 +309,6 @@ import { Context, Schema } from 'koishi'
 
 const ctx = new Context()
 
-
 import type {} from "koishi-plugin-chatluna/services/chat";
 import {
   createTaskTool,
@@ -390,9 +389,11 @@ const main = await ctx.chatluna.createAgent({
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
-import { Context, Schema } from 'koishi'
+import { Context, Schema, type Session } from 'koishi'
 
 const ctx = new Context()
+const session = {} as Session
+const modelRef = await ctx.chatluna.createChatModel("openai/gpt-5-nano")
 
 
 import type {} from "koishi-plugin-chatluna/services/chat";
@@ -400,6 +401,7 @@ import {
   createTaskTool,
   renderAvailableAgents,
 } from "koishi-plugin-chatluna/llm-core/agent";
+import type { ChatLunaToolRunnable } from "koishi-plugin-chatluna/llm-core/platform/types";
 
 const planner = await ctx.chatluna.createAgent({
   name: "planner",
@@ -447,6 +449,15 @@ const taskRuntime = createTaskTool({
 });
 
 // ---cut---
+const runConfig = {
+  configurable: {
+    session,
+    conversationId: "conversation-id",
+    source: "chatluna",
+    model: modelRef.value,
+  },
+} as ChatLunaToolRunnable;
+
 const result = await taskRuntime.runTask(
   {
     action: "run",
@@ -454,14 +465,7 @@ const result = await taskRuntime.runTask(
     prompt: "搜索 Anthropic 最近发布的模型更新，并整理成中文摘要",
     background: true,
   },
-  {
-    configurable: {
-      session,
-      conversationId: "conversation-id",
-      source: "chatluna",
-      model: modelRef.value,
-    },
-  } as any,
+  runConfig,
 );
 
 console.log(result);
@@ -472,16 +476,18 @@ console.log(result);
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
-import { Context, Schema } from 'koishi'
+import { Context, Schema, type Session } from 'koishi'
 
 const ctx = new Context()
-
+const session = {} as Session
+const modelRef = await ctx.chatluna.createChatModel("openai/gpt-5-nano")
 
 import type {} from "koishi-plugin-chatluna/services/chat";
 import {
   createTaskTool,
   renderAvailableAgents,
 } from "koishi-plugin-chatluna/llm-core/agent";
+import type { ChatLunaToolRunnable } from "koishi-plugin-chatluna/llm-core/platform/types";
 
 const planner = await ctx.chatluna.createAgent({
   name: "planner",
@@ -529,6 +535,15 @@ const taskRuntime = createTaskTool({
 });
 
 // ---cut---
+const runConfig = {
+  configurable: {
+    session,
+    conversationId: "conversation-id",
+    source: "chatluna",
+    model: modelRef.value,
+  },
+} as ChatLunaToolRunnable;
+
 await taskRuntime.runTask({ action: "list" }, runConfig);
 await taskRuntime.runTask({ action: "status", id: "task-id" }, runConfig);
 await taskRuntime.runTask(

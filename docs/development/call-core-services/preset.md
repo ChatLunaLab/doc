@@ -107,7 +107,8 @@ const prompt = computed(() => {
         preset: presetRef,
         tokenCounter: (text) => model.getNumTokens(text),
         sendTokenLimit: model.getModelMaxContextSize(),
-        promptRenderService: ctx.chatluna.promptRenderer
+        promptRenderService: ctx.chatluna.promptRenderer,
+        contextManager: ctx.chatluna.contextManager
     })
 })
 
@@ -122,6 +123,7 @@ const chain = computed(() => prompt.value.pipe(modelRef.value))
 - `tokenCounter`: Token 计数函数，用于计算文本的 Token 数量
 - `sendTokenLimit`: 发送消息的 Token 限制
 - `promptRenderService`: 提示词渲染服务
+- `contextManager`: 上下文管理服务，用于组装历史消息与上下文注入
 
 ## 创建简单的对话链
 
@@ -149,7 +151,8 @@ const prompt = computed(() => {
         preset: presetRef,
         tokenCounter: (text) => model.getNumTokens(text),
         sendTokenLimit: model.getModelMaxContextSize(),
-        promptRenderService: ctx.chatluna.promptRenderer
+        promptRenderService: ctx.chatluna.promptRenderer,
+        contextManager: ctx.chatluna.contextManager
     })
 })
 
@@ -214,7 +217,8 @@ const prompt = computed(() => {
         preset: presetRef,
         tokenCounter: (text) => model.getNumTokens(text),
         sendTokenLimit: model.getModelMaxContextSize(),
-        promptRenderService: ctx.chatluna.promptRenderer
+        promptRenderService: ctx.chatluna.promptRenderer,
+        contextManager: ctx.chatluna.contextManager
     })
 })
 
