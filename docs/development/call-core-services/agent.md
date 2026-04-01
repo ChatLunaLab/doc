@@ -1,14 +1,14 @@
 # Agent 与 Sub-Agent
 
-ChatLuna 现在提供了一套更高层的 Agent API。
-
-推荐优先使用 `ctx.chatluna.createAgent(...)` 创建 Agent，再通过 `generate()`、`stream()`、`asTool()` 和 `createTaskTool()` 组合主 Agent、Sub-Agent 与任务委派能力。
+ChatLuna 提供了一套更高层的 Agent API，用于组装 Agent，甚至是多 Agent 服务。
 
 ## 创建 Agent
 
-最常见的入口是 `ctx.chatluna.createAgent()`。
+使用 `ctx.chatluna.createAgent()` 来快速创建 Agent。
 
-```ts
+```ts twoslash
+// @noImplicitAny: false
+// @strictNullChecks: false
 import type {} from "koishi-plugin-chatluna/services/chat";
 
 const agent = await ctx.chatluna.createAgent({
@@ -26,11 +26,11 @@ const agent = await ctx.chatluna.createAgent({
 
 <br>
 
-平时最常用的几个参数：
+常用的参数：
 
 - `model`: 必填，通常直接写 `platform/model`
-- `tools`: 可选，传工具名数组即可
-- `preset` 或 `system`: 二选一；想复用预设就传 `preset`，想快速写一个 Agent 就直接传 `system`
+- `tools`: 可选，传工具名数组或 Langchain 的工具数组。不传数组则默认激活全部可用的工具。
+- `preset` 或 `system`: 二选一；想复用已有预设就传入 `preset`，想快速写一个 Agent 就直接传 `system`（用于指定 Agent 的 System Prompt）
 - `mode`: 可选，默认 `tool-calling`
 - `maxSteps`: 可选，限制最多调用多少轮工具
 
@@ -59,7 +59,7 @@ console.log(result.message);
 
 - `output`: 最终文本输出
 - `message`: 最终消息对象
-- `intermediateSteps`: 当创建 Agent 时设置了 `returnIntermediateSteps: true` 才会返回
+- `intermediateSteps`: 工具调用的步骤。创建 Agent 时设置了 `returnIntermediateSteps: true` 才会返回。
 
 ## 流式调用
 
@@ -111,7 +111,7 @@ await agent.generate({
 
 `agent.asTool()` 可以把一个 Agent 直接包装成 LangChain `StructuredTool`。
 
-这种方式适合一次性交接：主 Agent 把某个任务完整交给子 Agent，然后拿回最终结果。
+这种方式更适合一次性交接：主 Agent 把某个任务完整交给子 Agent，然后拿回最终结果。
 
 ```ts
 const explore = await ctx.chatluna.createAgent({
@@ -135,16 +135,15 @@ const delegateTool = explore.asTool({
 });
 ```
 
-如果你希望主 Agent 直接能调用这个工具，通常会在创建主 Agent 前先把它注册成平台工具，或在你自己的装配层中一起构造工具列表。
+如果你希望主 Agent 直接能调用这个工具，通常会在创建主 Agent 前先把它注册成平台工具，或在你自己的代码中构造工具列表。
 
 ## 主 Agent + Sub-Agent
 
-推荐的心智模型是：
+推荐的使用方式是：
 
-- 主 Agent 也是 Agent
-- Sub-Agent 也是 Agent
-- 一次性交接用 `asTool()`
-- 长任务、多轮跟进、后台继续执行用 `createTaskTool()`
+- 主 Agent 和 Sub-Agent 都 Agent
+- 使用 `asTool()` 做一次性交接和 `handoff`
+- 当需要长期执行任务、多轮对话跟进、后台执行时，采用 `createTaskTool()`
 
 也就是说，主 Agent 和 Sub-Agent 的区别主要在“如何被调用”，而不是底层实现不同。
 
@@ -152,9 +151,8 @@ const delegateTool = explore.asTool({
 
 当你希望：
 
-- 主 Agent 把工作交给某个专门 Agent
-- 任务可以后台运行
-- 之后还能 `status` / `list` / `message` / `resume`
+- 主 Agent 把工作交给某个专门 Agent，任务可以后台运行
+- 之后还能恢复对话
 
 就应该使用 `createTaskTool()`。
 
@@ -297,19 +295,19 @@ console.log(msg.content);
 
 这和 extension-agent 里展示 `<available_sub_agents>` 的方式是一致的。
 
-## 何时用 asTool，何时用 task
+## asTool 和 task 的场景
 
-### 使用 `asTool()` 的场景
+### 使用 `asTool()`
 
-- 只需要一次性交接
+- 只需要子 Agent 一次性交接
 - 子 Agent 执行完成后直接返回结果
-- 不需要后台运行和任务状态管理
+- 不需要复杂的后台运行和任务状态管理
 
-### 使用 `createTaskTool()` 的场景
+### 使用 `createTaskTool()` 
 
-- 子 Agent 任务可能比较长
+- 子 Agent 的任务可能比较长
 - 希望后台继续执行
-- 之后还要继续查看状态、补发消息、恢复执行
+- 后续还需要继续恢复执行
 
 ## 底层 API
 
