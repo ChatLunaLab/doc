@@ -14,12 +14,14 @@
 
 3. 查看下面的章节，了解如何切换预设。
 
-### 对于某个房间
+### 对于当前会话
 
-1. 使用 [`chatluna.preset.list`](../useful-commands.md#预设列表) 命令，查看你已经添加的预设。
-2. 使用 [`chatluna.room.set -p <preset>`](../useful-commands.md#设置预设) 命令，对当前你所在的房间切换为你想要使用的预设。
+1. 使用 `chatluna.preset.list` 查看已经添加的预设。
+2. 使用 `chatluna.use.preset <preset>` 把当前会话切换到你想使用的预设。
 
-### 对于模版克隆房间
+### 对于新建会话的默认值
 
-1. 执行一次 [`chatluna.preset.list`](../useful-commands.md#列出预设列表) 命令，查看你已经添加的预设。
-2. 前往 Koishi 控制台，找到 ChatLuna 的配置项，在 [`defaultPreset`](../useful-configurations.md#defaultpreset) 选项里选择你需要使用的预设即可。
+1. 执行一次 `chatluna.preset.list`，确认目标预设已经可用。
+2. 前往 Koishi 控制台，找到 ChatLuna 的配置项，在 [`defaultPreset`](../useful-configurations.md#defaultpreset) 中选择你需要的预设。
+
+这个默认值会用于后续自动创建的新会话，或你执行 `chatluna.new` 时创建的新会话。

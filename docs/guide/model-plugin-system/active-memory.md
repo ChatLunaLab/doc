@@ -18,22 +18,22 @@
 
 尝试和模型对话，让模型记住一些信息。
 <chat-panel>
-  <chat-message nickname="User">chatluna.chat.text 记住我的生日 1995.11.11</chat-message>
-  <chat-message nickname="Bot">
-   {<br>
-    &nbsp;&nbsp;tool: 'memory_save',<br>
-    &nbsp;&nbsp;arg: '{"input":"生日是1995年11月11日"}'<br>
-   }
-  </chat-message>
-  <chat-message nickname="Bot">你的生日是1995年11月11日。</chat-message>
-  <chat-message nickname="User">chatluna.room.clear</chat-message>
-  <chat-message nickname="Bot">已清除房间 User 的房间 的聊天记录。</chat-message>
-  <chat-message nickname="User">chatluna.chat.text 我的生日是什么时候</chat-message>
-  <chat-message nickname="Bot">
-   {<br>
-    &nbsp;&nbsp;tool: 'memory_search',<br>
-    &nbsp;&nbsp;arg: '{"input":"birthday"}'<br>
-   }
-  </chat-message>
-  <chat-message nickname="Bot">你的生日是1995年11月11日。</chat-message>
+<chat-message nickname="User">chatluna.chat.text 记住我的生日 1995.11.11</chat-message>
+<chat-message nickname="Bot">
+{<br>
+&nbsp;&nbsp;tool: 'memory_save',<br>
+&nbsp;&nbsp;arg: '{"input":"生日是1995年11月11日"}'<br>
+}
+</chat-message>
+<chat-message nickname="Bot">你的生日是1995年11月11日。</chat-message>
+<chat-message nickname="User">chatluna.new</chat-message>
+<chat-message nickname="Bot">已创建新会话，并切换到该会话。</chat-message>
+<chat-message nickname="User">chatluna.chat.text 我的生日是什么时候</chat-message>
+<chat-message nickname="Bot">
+{<br>
+&nbsp;&nbsp;tool: 'memory_search',<br>
+&nbsp;&nbsp;arg: '{"input":"birthday"}'<br>
+}
+</chat-message>
+<chat-message nickname="Bot">你的生日是1995年11月11日。</chat-message>
 </chat-panel>

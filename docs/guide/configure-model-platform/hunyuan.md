@@ -32,16 +32,16 @@
 
 在混元适配器的配置页面，点击运行按钮，如无误，你应该看不到任何错误 log，那即可转到 ChatLuna 的主插件页面。
 
-在主插件页面，下划到 [模版房间选项](../useful-configurations.md#模版房间选项)，查看 [defaultModel](../useful-configurations.md#defaultmodel) 的选项里是否含有混元模型，如果有，则说明混元适配器已经成功的运行。
+在主插件页面，查看 [defaultModel](../useful-configurations.md#defaultmodel) 的候选项里是否出现混元模型。如果有，说明混元适配器已经成功运行。
 
 ![alt text](../../public/images/image-10.png)
 
 但我们仍未完全确认混元适配器是否可用。
 
-因此我们需要新建一个房间，使用 `chatluna.room.create -m hunyuan/hunyuan-turbo -p chatgpt -n test-hunyuan-adapter` 指令来创建一个使用了混元适配器的房间。
+因此我们可以执行 `chatluna.new test-hunyuan-adapter -m hunyuan/hunyuan-turbo -p chatgpt`，创建一个使用混元适配器的新会话进行测试。
 
-新建房间后请尝试和模型对话。
+创建完成后，请尝试和模型对话。
 
 只要能正常对话，就说明你成功的连接到了混元 API。
 
-别忘了在测试完成后调用 `chatluna.room.delete test-hunyuan-adapter` 指令删除测试房间。
+测试完成后，如需清理该测试上下文，可以执行 `chatluna.delete test-hunyuan-adapter`。

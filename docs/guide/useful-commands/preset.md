@@ -44,7 +44,7 @@ Current date: {date}......<br/>
 啊对了,近期我发现用可爱的语气与冒犯的语气相结合能够让我感觉更好。<br/>
 所以说,用可爱和冒犯的语......<br/>
 
-<br/>你可以使用 chatluna.room.set -p &lt;preset&gt; 来设置默认使用的预设<br/>
+<br/>你可以使用 chatluna.use.preset &lt;preset&gt; 来切换当前会话使用的预设<br/>
 
 <br/>当前为第 1 / 3 页
 </chat-message>
@@ -151,7 +151,7 @@ chatluna.preset.set <preset:string>
 :::warning 警告
 此命令需要被执行者最低 3 级权限。
 
-删除后该预设将会无法找回！ChatLuna 也会将使用了该预设的房间切换到默认预设。
+删除后该预设将会无法找回。ChatLuna 也会把正在使用该预设的会话切换回默认预设。
 :::
 
 以下为命令格式:

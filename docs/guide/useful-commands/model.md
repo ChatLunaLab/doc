@@ -25,12 +25,12 @@ chatluna.model.test <model:string>
 
 以下为例子:
 <chat-panel>
-  <chat-message nickname="User">chatluna.model.test openai/gpt-4.1-nano</chat-message>
-  <chat-message nickname="Bot">模型 openai-like/gpt-4.1-nano 测试成功！<br/>
+<chat-message nickname="User">chatluna.model.test openai/gpt-4.1-nano</chat-message>
+<chat-message nickname="Bot">模型 openai-like/gpt-4.1-nano 测试成功！<br/>
 响应时间：2255ms<br/>
 示例回复：Hello! How can I assist you today?<br/>
-  </chat-message>
-</chat-panel>  
+</chat-message>
+</chat-panel>
 
 ## 列出大语言模型列表
 
@@ -64,7 +64,7 @@ zhipu/ChatGLM-Lite-32K<br/>
 wenxin/ERNIE-Bot<br/>
 wenxin/ERNIE-Bot-turbo<br/>
 
-<br/>你可以使用 chatluna.room.set -m &lt;model&gt; 来设置默认使用的模型<br/>
+<br/>你可以使用 chatluna.use.model &lt;model&gt; 来切换当前会话使用的模型<br/>
 
 <br/>当前为第 1 / 2 页
 </chat-message>
@@ -95,7 +95,7 @@ chatluna.model.search <keyword:string> -l <limit:number> -p <page:number>
 openai/gpt-4o-mini<br/>
 openai/gpt-4o-mini-2024-07-18<br/>
 
-<br/>你可以使用 chatluna.room.set -m &lt;model&gt; 来设置默认使用的模型<br/>
+<br/>你可以使用 chatluna.use.model &lt;model&gt; 来切换当前会话使用的模型<br/>
 
 <br/>当前为第 1 / 1 页
 </chat-message>

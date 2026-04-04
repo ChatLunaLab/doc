@@ -2,31 +2,30 @@
 
 对话是用户和 ChatLuna 交互的主要方式。
 
-用户通过输入文本或图片，触发 ChatLuna 的对话。
-
-ChatLuna 会根据用户的输入和当前用户所在的房间的信息，创建相应的模型并生成回复文本。最后发送给用户。
+默认情况下，这些命令都会作用在当前活跃会话上；如果你想明确指定目标，可以使用会话参数 `-c`。
 
 > [!TIP] 提示
-> ChatLuna 支持多种响应的模式，包括：At 响应，昵称响应，房间响应等。阅读 [配置项](../useful-configurations.md) 以了解更多。
+> ChatLuna 支持多种触发方式，例如 At 响应、昵称响应等。阅读 [配置项](../useful-configurations.md) 以了解更多。
 
 ## 直接对话
 
-基于用户当前使用的房间，直接进入对话。
-
-以下为命令格式:
+向当前会话发送一条消息。
 
 ```powershell
-chatluna.chat.text -r <room:string> <message:text>
+chatluna.chat <message:text> -c <conversation:string> -p <preset:string> -t <type:string>
 ```
 
 以下为命令的可选参数:
 
-- `-r,room`: 指定对话的房间，默认为用户在当前环境里使用的房间。可键入房间名或房间 ID。
+- `message`：要发送的消息内容
+- `-c,--conversation`：指定目标会话；不传时使用当前活跃会话
+- `-p,--preset`：指定目标预设通道
+- `-t,--type`：指定输出模式
 
 以下为例子:
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.chat.text Hello,GPT</chat-message>
+  <chat-message nickname="User">chatluna.chat Hello,GPT</chat-message>
   <chat-message nickname="Bot">
     Hello! How can I assist you today?
   </chat-message>
@@ -34,26 +33,21 @@ chatluna.chat.text -r <room:string> <message:text>
 
 ## 语音回复对话
 
-与上面的聊天命令类似。
-
-不同的是，ChatLuna 会尝试调用 [vits](https://github.com/initialencounter/mykoishi/blob/master/Plugins/Tool/vits/readme.md) 服务。
-把模型生成的内容渲染成语音后发送。
-
-以下为命令格式:
+和普通对话类似，但会把模型回复渲染为语音后发送。
 
 ```powershell
-chatluna.chat.voice -s <speakerId:number> -r <room:string> <message:text>
+chatluna.voice <message:text> -c <conversation:string> -s <speakerId:number>
 ```
 
 以下为可选参数:
 
-- `-r,--room`: 指定对话的房间，默认为用户在当前环境里使用的房间，可为房间名或房间 ID。
-- `-s,--speaker`: 指定使用 vits 服务的目标音色 ID。
+- `-c,--conversation`：指定目标会话。不传时使用当前活跃会话
+- `-s,--speaker`：指定使用 vits 服务的目标音色 ID
 
 以下为例子:
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.chat.voice Hello,GPT</chat-message>
+  <chat-message nickname="User">chatluna.voice Hello,GPT</chat-message>
   <chat-message nickname="Bot">
     [假装是一条语音消息]
   </chat-message>
@@ -61,22 +55,20 @@ chatluna.chat.voice -s <speakerId:number> -r <room:string> <message:text>
 
 ## 停止对话
 
-如果你遇到模型长时间未响应或者其他问题，可以调用此指令，手动停止对话。
+如果模型长时间未响应，可以手动中断当前会话中的正在进行请求。
 
 以下为命令格式:
 
 ```powershell
-chatluna.chat.stop -r <room:string>
+chatluna.stop -c <conversation:string>
 ```
 
-以下为可选参数:
-
-- `-r,--room`: 指定对话的房间，默认为用户在当前环境里使用的房间，可为房间名或房间 ID。
+- `-c,--conversation`：指定要停止的目标会话；不传时使用当前活跃会话
 
 以下为例子:
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.chat.stop</chat-message>
+  <chat-message nickname="User">chatluna.stop</chat-message>
   <chat-message nickname="Bot">
     已成功停止当前对话。
   </chat-message>
@@ -84,28 +76,26 @@ chatluna.chat.stop -r <room:string>
 
 ## 回滚对话
 
-用于重新生成房间的最新一条的回复消息。
+用于删除当前会话里最近几轮对话，并重新生成最新一轮回复。
 
 :::tip 提示
-请求错误后，最新的聊天消息并没有保存。调用此命令，将重新生成上一次请求成功后模型的回复消息。
+请求报错后，最近一次失败请求通常不会写入历史。此时调用回滚命令，一般会基于上一次请求成功后的用户消息重新生成回复。
 :::
 
-以下为命令格式:
-
 ```powershell
-chatluna.chat.rollback -r <room:string> -i <rounds:string> [content:text]
+chatluna.rollback [content:text] -c <conversation:string> -i <rounds:string>
 ```
 
 以下为可选参数:
 
-- `-r,--room`: 指定对话的房间，默认为用户在当前环境里使用的房间。可为房间名或房间 ID。
-- `content`: 指定需要回滚的聊天消息内容。这将作为回滚时用户的消息内容。(不是模型的回复，是用户的消息)
-- `-i,--rounds`: 指定需要回滚的轮数。
+- `content`：可选，覆盖回滚后重新发送的用户消息内容
+- `-c,--conversation`：指定目标会话；不传时使用当前活跃会话
+- `-i`：指定需要回滚的轮数
 
 以下为例子:
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.chat.rollback 你好</chat-message>
+  <chat-message nickname="User">chatluna.rollback 你好</chat-message>
   <chat-message nickname="Bot">
     [假装是模型生成的消息]
   </chat-message>
@@ -113,12 +103,6 @@ chatluna.chat.rollback -r <room:string> -i <rounds:string> [content:text]
 
 ## 清空上下文
 
-如果你需要清空当前房间的上下文，可以使用此命令。
+如果你想开始一段新对话，请使用 [`chatluna.new`](./conversation.md#创建新会话)。
 
-以下为命令格式:
-
-```powershell
-chatluna.chat.clear [room:text]
-```
-
-请参考 [清除聊天记录](./room.md#清除聊天记录)。
+对于 `chatluna.clear`，它只是 `chatluna.new` 的别名，效果和 `chatluna.new` 一致。

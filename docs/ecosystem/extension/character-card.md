@@ -36,8 +36,8 @@
 
 - 选择为 `memory` 时，角色卡会被加载到内存中，可以进行动态加载。
 
-- 选择为 `file` 时，角色卡会被转换为 ChatLuna 的预设文件，并存储在 `<koishi 数据目录>/data/chathub/preset` 目录下。
-  
+- 选择为 `file` 时，角色卡会被转换为 ChatLuna 的预设文件，并存储在 `<koishi 数据目录>/data/chathub/presets` 目录下。
+
   需要重启 ChatLuna 才能加载最新转换的角色卡。
 
 #### jailbreak
