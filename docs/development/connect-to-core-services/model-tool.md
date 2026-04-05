@@ -165,3 +165,157 @@ export function apply(ctx: Context, config: Config) {
       - `session` - 当前会话对象
     - 返回：`Tool` 实例
     - 用途：创建并返回工具的实例
+  - `meta`: 工具元数据（推荐填写）
+    - `source`: 工具来源
+      - 常见值：`core`、`extension`、`mcp`、`action`
+    - `group`: 工具所属分组
+      - 如：`search`、`plugin-common`
+    - `tags`: 工具标签列表
+      - 用于分类、筛选和展示
+    - `defaultAvailability`: 工具的默认可用性配置
+      - `enabled`: 是否默认启用
+      - `main`: 是否在主聊天模式中默认可用
+      - `chatluna`: 是否在 ChatLuna 主能力中默认可用
+      - `characterScope`: 是否在伪装插件中默认可用
+        - `all`: 群聊和私聊都默认可用
+        - `group`: 仅群聊默认可用
+        - `private`: 仅私聊默认可用
+        - `none`: 默认不在伪装插件中启用
+
+### 工具元数据
+
+当前 ChatLuna 的工具注册，通常都会补充 `meta` 字段。虽然它不是强制项，但推荐在开发插件时始终填写，便于工具系统、配置界面和其他上层功能正确识别工具来源、分组与默认启用范围。
+
+示例：
+
+```ts
+plugin.registerTool('web_search', {
+    description: SEARCH_TOOL_DESCRIPTION,
+    selector() {
+        return true
+    },
+    createTool(params) {
+        return new SearchTool(...)
+    },
+    meta: {
+        source: 'extension',
+        group: 'search',
+        tags: ['search', 'web'],
+        defaultAvailability: {
+            enabled: true,
+            main: true,
+            chatluna: true,
+            characterScope: 'all'
+        }
+    }
+})
+```
+
+如果你的工具是为伪装插件的回复流程服务的，建议你明确设置 `characterScope`，避免工具默认暴露到不合适的会话范围。
+
+## 为伪装插件的回复工具挂载自定义字段
+
+[chatluna-character](../../ecosystem/other/character.md) 伪装插件支持一种实验性的「工具调用回复」模式。在该模式下，模型不再通过 XML 块输出回复内容，而是通过调用一个名为 `character_reply` 的工具来完成状态更新、消息发送、触发条件设置等操作。
+
+外部插件可以通过 `ctx.chatluna_character.registerReplyToolField()` 方法，向 `character_reply` 工具注册额外的自定义参数字段。
+
+> [!TIP] 最佳实践
+> 建议只在此处注册与消息交互有关的能力，如：戳一戳、撤回消息等，因为它们几乎不需要模型查看工具返回的结果，并且更适合在模型完成消息回复时一起操作。
+
+当模型调用 `character_reply` 时，伪装插件会自动将这些自定义字段连同内置字段一起传递给模型，并在工具被调用时执行对应的回调。
+
+### CharacterReplyToolField 接口
+
+注册的字段需要符合 `CharacterReplyToolField` 接口：
+
+```ts
+interface CharacterReplyToolField {
+    /** 字段名称，将作为 character_reply 工具的参数名 */
+    name: string
+
+    /** JSON Schema，描述该字段的类型与结构 */
+    schema: Record<string, unknown>
+
+    /**
+     * 可用性检查（可选）。
+     * 返回 false 时，该字段不会出现在工具参数中，也不会被调用。
+     */
+    isAvailable?: (
+        ctx: Context,
+        session: Session,
+        config: Config | GuildConfig | PrivateConfig
+    ) => boolean
+
+    /**
+     * 工具被调用时的回调。
+     * 当模型在调用 character_reply 时传入了该字段的值，此回调会被执行。
+     */
+    invoke?: (
+        ctx: Context,
+        session: Session,
+        value: unknown,
+        config: Config | GuildConfig | PrivateConfig
+    ) => Promise<void> | void
+
+    /**
+     * 渲染回调。
+     * 将工具调用的结果转换为 XML 字符串，插入到 <action> 块中。
+     * 用于将工具调用的输出回写到对话历史中，以便模型在后续轮次中看到之前的操作。
+     */
+    render?: (
+        ctx: Context,
+        session: Session,
+        value: unknown,
+        config: Config | GuildConfig | PrivateConfig
+    ) => string | string[] | undefined
+}
+```
+
+### 注册字段
+
+调用 `ctx.chatluna_character.registerReplyToolField()` 注册字段。该方法返回一个注销函数，调用后可移除已注册的字段。
+
+```ts
+import { Context } from 'koishi'
+import type {} from 'koishi-plugin-chatluna-character'
+
+export function apply(ctx: Context) {
+    // 注册一个自定义字段
+    const dispose = ctx.chatluna_character.registerReplyToolField({
+        name: 'poke',
+
+        schema: {
+            type: 'string',
+            description: 'Platform user ID to poke.'
+        },
+
+        // 仅在非私聊的 OneBot 平台上可用
+        isAvailable(ctx, session) {
+            return !session.isDirect && session.platform === 'onebot'
+        },
+
+        // 模型调用 character_reply 并传入 poke 字段时执行
+        async invoke(ctx, session, value) {
+            if (typeof value !== 'string') return
+            // 执行戳一戳操作……
+        },
+
+        // 将工具调用结果渲染为 XML，写入对话历史
+        render(ctx, session, value) {
+            if (typeof value !== 'string') return undefined
+            return `<poke user_id="${value}" />`
+        }
+    })
+
+    // 插件卸载时自动注销
+    ctx.on('dispose', dispose)
+}
+```
+
+### 工作流程
+
+注册的字段会参与以下流程：
+
+1. **构建工具参数**：伪装插件在创建 `character_reply` 工具时，遍历所有已注册字段，对通过 `isAvailable` 检查的字段，将其 `schema` 添加到工具的参数定义中。
+2. **执行回调**：当模型调用 `character_reply` 并传入了某个自定义字段的值时，伪装插件会调用该字段的 `invoke` 回调。
+3. **渲染到历史**：在将工具调用结果写入对话历史时，伪装插件会调用每个字段的 `render` 回调，将返回的 XML 字符串插入到 `<action>` 块中，使模型在后续轮次中可以看到之前的操作记录。
