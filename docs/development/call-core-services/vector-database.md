@@ -83,10 +83,7 @@ interface CreateVectorStoreParams {
 
 ## 获取可用的向量数据库
 
-`PlatformService` 提供了 `getVectorStoreRetrievers` 方法来获取当前平台下所有可用的向量数据库。
-
-> [!TIP] 提示
-> `getVectorStoreRetrievers` 方法即将被弃用，请使用 `getVectorStores` 方法来替代。
+当前应直接读取 `ctx.chatluna.platform.vectorStores`。
 
 ```ts twoslash
 // @noImplicitAny: false

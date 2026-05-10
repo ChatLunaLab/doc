@@ -1,64 +1,84 @@
 # 消息转换器
 
-## 类型: MessageTransformFunction
+`MessageTransformer` 负责把 Koishi 的消息元素转换为 ChatLuna 的 `Message`。
 
-```typescript
+## 类型：MessageTransformFunction
+
+```ts
 export type MessageTransformFunction = (
-    session: Session,
-    element: h,
-    message: Message,
-    model?: string
+  session: Session,
+  element: h,
+  message: Message,
+  model?: string,
 ) => Promise<boolean | void>
 ```
 
-具体的消息转换器函数。
+返回 `false` 表示继续向子元素或后续转换器传递。
 
-- **session**: [`Session`](https://koishi.chat/zh-CN/api/session.html) 会话对象
-- **element**: [`h`](https://koishi.chat/zh-CN/api/context.html#h) Koishi 元素
-- **message**: [`Message`](./message.md#接口message) 消息对象
-- **model**: `string | undefined` 当前使用的模型名称
+## 类型：BeforeMessageTransformFunction
 
-返回值为 `false` 则会让消息继续传递转换。
+```ts
+export type BeforeMessageTransformFunction = (
+  session: Session,
+  elements: h[],
+  message: Message,
+  model?: string,
+  options?: MessageTransformOptions,
+) => Promise<void>
+```
 
-## 类: MessageTransformer
+## 接口：MessageTransformOptions
 
-`MessageTransformer` 类实现了消息转换器的聚合。
+```ts
+export interface MessageTransformOptions {
+  quote: boolean
+  includeQuoteReply: boolean
+}
+```
 
-可以通过 `ctx.chatluna.messageTransformer` 访问到该类的实例。
+## 类：MessageTransformer
+
+可以通过 `ctx.chatluna.messageTransformer` 获取实例。
+
+### messageTransformer.before()
+
+- **transformFunction**: `BeforeMessageTransformFunction`
+- **priority**: `number`
+- 返回值: `() => void`
+
+注册一个前置转换钩子，在正式处理元素前执行。
 
 ### messageTransformer.intercept()
 
-- **type**: `string` 转换器指定的元素类型
-- **transformer**: [`MessageTransformFunction`](#类型-messagetransformfunction) 消息转换器函数
-- **priority**: `number` 优先级，数值越小越先执行，默认 `0`
+- **type**: `string`
+- **transformer**: `MessageTransformFunction`
+- **priority**: `number`
+- 返回值: `() => void`
 
-添加一个消息转换器，并按照优先级顺序执行。返回值为注销该转换器的卸载函数。
+注册某种 Koishi 元素类型的转换器。
 
 ### messageTransformer.transform()
 
-- **session**: [`Session`](https://koishi.chat/zh-CN/api/session.html) 会话对象
-- **elements**: [`h[]`](https://koishi.chat/zh-CN/api/context.html#h) Koishi 元素
-- **model**: `string` 当前使用的模型名称
-- **message**: [`Message`](./message.md#接口message) 消息对象，可选，默认将使用会话信息初始化
-- **options**: `{ quote?: boolean; includeQuoteReply?: boolean }` 额外配置
+- **session**: `Session`
+- **elements**: `h[]`
+- **model**: `string`
+- **message**: `Message | undefined`
+- **options**: `MessageTransformOptions | undefined`
+- 返回值: `Promise<Message>`
 
-将 Koishi 元素转换并合并进给定的 `Message` 对象中，返回转换后的消息。
-
-> [!TIP]
-> 当前支持的 `options` 字段包括：
->
-> - `quote`: `boolean` 是否处于引用处理阶段。
-> - `includeQuoteReply`: `boolean` 处理非引用消息时是否合并引用消息内容。
+把元素数组转换并合并到消息对象中。`message.content` 可以是字符串或多模态内容数组。
 
 ### messageTransformer.replace()
 
-- **type**: `string` 转换器指定的元素类型
-- **transformer**: [`MessageTransformFunction`](#类型-messagetransformfunction) 新的转换器函数
+- **type**: `string`
+- **transformer**: `MessageTransformFunction`
+- 返回值: `() => void`
 
-替换指定类型的转换器，实现热替换。返回值为注销替换后转换器的卸载函数。`type === 'text'` 时不允许调用。
+替换指定元素类型的转换器。`text` 类型不可替换。
 
 ### messageTransformer.has()
 
-- **type**: `string` 转换器指定的元素类型
+- **type**: `string`
+- 返回值: `boolean`
 
-判断是否已注册对应类型的转换器，返回 `boolean`。
+判断某种元素类型是否有已注册转换器。

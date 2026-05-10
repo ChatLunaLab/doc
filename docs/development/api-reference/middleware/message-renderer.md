@@ -1,92 +1,87 @@
 # 消息渲染器
 
-消息渲染器用于将消息渲染为 Koishi 元素。
+消息渲染器负责把 ChatLuna `Message` 渲染为 Koishi 元素。
 
 ## 类：Renderer
 
-```typescript
+```ts
 export abstract class Renderer {
-    constructor(protected readonly ctx: Context) {}
+  constructor(protected readonly ctx: Context) {}
 
-    abstract render(
-        message: Message,
-        options: RenderOptions
-    ): Promise<RenderMessage>
+  abstract render(message: Message, options: RenderOptions): Promise<RenderMessage>
 
-    abstract schema: Schema<string, string>
+  abstract schema: Schema<string, string>
 }
-
 ```
 
-`Renderer` 类是一个抽象类，需要通过继承来实现。
-
-## renderer.render()
-
-- **message**: [`Message`](./message.md#接口message) 消息对象
-- **options**: `RenderOptions` 渲染选项
-
-将消息渲染为 Koishi 元素。
-
-## renderer.schema
-
-- **类型**: [`Schema<string, string>`](https://koishi.chat/zh-CN/api/schema.html)
-
-渲染器的 Schema 声明。
+继承 `Renderer` 即可实现自定义输出模式。
 
 ## 接口：RenderOptions
 
-```typescript
+```ts
 export interface RenderOptions {
-    voice?: {
-        speakerId?: number
-    }
-    split?: boolean
-    type: RenderType
+  voice?: {
+    speakerId?: number
+  }
+  split?: boolean
+  type: RenderType
+  session?: Session
 }
 ```
 
-渲染时的一些选项。
+- `voice.speakerId`: 语音输出使用的发言人 ID。
+- `split`: 是否分割消息。
+- `type`: 渲染类型。
+- `session`: 当前 Koishi 会话。
 
-### options.voice.speakerId
+## 类型：RenderType
 
-- **类型**: `number | undefined`
+```ts
+export type RenderType = 'raw' | 'voice' | 'text' | 'image' | 'mixed'
+```
 
-语音合成时的发言人 ID。
+## 类：DefaultRenderer
 
-### options.split
-
-- **类型**: `boolean`
-
-是否需要分割消息为多个元素。
-
-### options.type
-
-- **类型**: `RenderType | string`
-
-渲染类型。
-
-## 类: DefaultRenderer
-
-`DefaultRenderer` 是 `Renderer` 的聚合实现，可以添加多个渲染器。
-
-可以使用 `ctx.chatluna.renderer` 获取实例。
-
-### chatluna.renderer.addRenderer()
-
-- **type**: `string` 渲染器类型
-- **renderer**: `(ctx: Context, config: Config) => Renderer` 渲染器构造函数
-
-添加一个渲染器。
-
-### chatluna.renderer.removeRenderer()
-
-- **type**: `string` 渲染器类型
-
-删除一个渲染器。
+`DefaultRenderer` 是渲染器聚合服务，可以通过 `ctx.chatluna.renderer` 获取。
 
 ### chatluna.renderer.render()
 
-- **message**: [`Message`](./message.md#接口message) 消息对象
-- **options**: [`RenderOptions`](#接口renderoptions) 渲染选项
+- **message**: `Message`
+- **options**: `RenderOptions`
+- 返回值: `Promise<RenderMessage[]>`
 
-渲染 ChatLuna 消息为 Koishi 元素。
+渲染 ChatLuna 消息。返回数组是因为 `additionalReplyMessages` 会被渲染为额外转发消息。
+
+### chatluna.renderer.addRenderer()
+
+- **type**: `string`
+- **renderer**: `(ctx: Context, config: Config) => Renderer`
+- 返回值: `() => void`
+
+添加渲染器并刷新 `output-mode` Schema。
+
+### chatluna.renderer.removeRenderer()
+
+- **type**: `string`
+- 返回值: `void`
+
+删除渲染器并刷新 Schema。
+
+### chatluna.renderer.getRenderer()
+
+- **type**: `string`
+- 返回值: `Renderer | undefined`
+
+获取已注册渲染器。
+
+### chatluna.renderer.updateSchema()
+
+- 返回值: `void`
+
+手动刷新 `output-mode` Schema。
+
+### chatluna.renderer.rendererTypeList
+
+- **类型**: `string[]`
+
+当前已注册渲染器类型列表。

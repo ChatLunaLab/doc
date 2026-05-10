@@ -84,7 +84,6 @@ async refreshModels(): Promise<ModelInfo[]> {
             name: model,
             type: ModelType.llm,
             capabilities: [],
-            supportMode: ['all'],
             maxTokens
         } as ModelInfo
     })
@@ -323,6 +322,40 @@ export const Config: Schema<Config> = Schema.intersect([
 | 并发控制 | `chatConcurrentMaxSize` | 控制同一个模型的最大并发请求数 |
 | 重试机制 | `maxRetries` | 控制失败重试次数 |
 | 超时设置 | `timeout` | 控制请求 API 的最大超时时间 |
+
+## 文件和多模态输入
+
+如果平台支持把文件以内联数据方式发送给模型，可以在客户端中覆盖 `getFileHandlingConfig()`。
+
+```ts
+import { PlatformModelClient } from 'koishi-plugin-chatluna/llm-core/platform/client'
+import type { FileHandlingConfig } from 'koishi-plugin-chatluna/llm-core/platform/types'
+
+export class YourPlatformClient extends PlatformModelClient<ClientConfig> {
+  platform = 'yourplatform'
+
+  getFileHandlingConfig(): FileHandlingConfig | null {
+    return {
+      supportedMimeTypes: new Set([
+        'image/png',
+        'image/jpeg',
+        'application/pdf',
+      ]),
+      maxTotalSizeBytes: 50 * 1024 * 1024,
+      maxFileSizeBytes: 20 * 1024 * 1024,
+      maxFileSizeBytesOverrides: {
+        'application/pdf': 50 * 1024 * 1024,
+      },
+    }
+  }
+}
+```
+
+同时在 `ModelInfo.capabilities` 中声明对应能力，例如 `ModelCapabilities.ImageInput`、`ModelCapabilities.AudioInput`、`ModelCapabilities.VideoInput`、`ModelCapabilities.FileInput`。
+
+## Reranker 支持
+
+如果平台还提供重排序模型，请参考 [接入 Reranker 模型](./reranker-model.md)。
 
 ## 测试适配器
 

@@ -1,129 +1,157 @@
 # ChatLuna 插件
 
-ChatLuna 提供了一个基础类，用于结合 ChatLuna 开发插件。
+`ChatLunaPlugin` 是开发 ChatLuna 扩展、模型适配器、向量数据库、工具和渲染器时使用的基础类。
 
 ## 类：ChatLunaPlugin
 
-```typescript
+```ts
 export class ChatLunaPlugin<
-    R extends ClientConfig = ClientConfig,
-    T extends ChatLunaPlugin.Config = ChatLunaPlugin.Config
+  R extends ClientConfig = ClientConfig,
+  T extends ChatLunaPlugin.Config = ChatLunaPlugin.Config,
 >
 ```
 
-- **R**: 继承自 `ClientConfig` 的客户端配置类型
-- **T**: 继承自 `ChatLunaPlugin.Config` 的插件配置类型
+- **R**: 继承自 `ClientConfig` 的客户端配置类型。
+- **T**: 继承自 `ChatLunaPlugin.Config` 的插件配置类型。
 
-### new ChatLunaPlugin(ctx, config, platformName, createConfigPool)
+### new ChatLunaPlugin()
 
-- **ctx**: `Context` Koishi 上下文
-- **config**: `T` 插件配置
-- **platformName**: `PlatformClientNames` 平台名称
-- **createConfigPool**: `boolean` 是否创建配置池（默认为 `true`）
+- **ctx**: `Context`
+- **config**: `T`
+- **platformName**: `PlatformClientNames`
+- **createConfigPool**: `boolean`，默认 `true`
 
-构造函数会在上下文 `ready` 时自动安装插件，并在上下文销毁时自动卸载，无需额外调用注册方法。
+构造函数会在 `ready` 时自动安装插件，在 `dispose` 时自动卸载插件。
 
-### parseConfig()
+如果你只是扩展工具、渲染器或消息能力，不需要注册模型平台适配器时，请将 `createConfigPool` 设为 `false`。
 
-- **f**: `(config: T) => R[]` 配置解析函数
-- 返回值: `void`
-
-解析插件配置并添加到配置池中。
-
-```typescript
-plugin.parseConfig(config => [{
-  apiKey: config.apiKey,
-  baseURL: config.baseURL
-}])
+```ts
+const plugin = new ChatLunaPlugin(ctx, config, "my-extension", false);
 ```
 
-### initClient()
+### plugin.parseConfig()
+
+- **f**: `(config: T) => R[]`
+- 返回值: `void`
+
+解析插件配置并加入 `platformConfigPool`。
+
+```ts
+plugin.parseConfig((config) =>
+  config.apiKeys.map(([apiKey]) => ({
+    apiKey,
+    apiEndpoint: config.apiEndpoint,
+  })),
+);
+```
+
+### plugin.initClient()
 
 - 返回值: `Promise<void>`
 
-初始化当前平台的客户端。如果创建过程中发生错误会回滚安装流程并抛出异常。
+创建并刷新当前平台客户端。初始化失败时会卸载插件并取消当前 scope。
 
-### dispose()
+### plugin.supportedModels
 
-销毁插件，清理所有注册的资源。
+- **类型**: `readonly string[]`
 
-### supportedModels
+当前插件已加载的语言模型完整名称，格式为 `platform/model`。
 
-- 返回值: `readonly string[]`
+### plugin.platformConfigPool
 
-获取当前插件可用的模型名称列表，形式为 `platform/model`。
+- **类型**: `ClientConfigPool<R>`
 
-### platformConfigPool
+平台配置池，用于负载均衡、失败标记和读取平台配置。
 
-- 返回值: `ClientConfigPool<R>`
+### plugin.registerToService()
 
-访问插件的配置池，可用于自定义负载均衡策略或读取已解析的配置。
+已废弃。当前插件会自动安装，不需要也不应该再手动调用该方法。
 
-### registerClient()
+### plugin.registerClient()
 
-- **func**: `() => BasePlatformClient` 客户端创建函数
-- **platformName**: `string` 平台名称（可选，默认为插件的 platformName）
+- **func**: `() => BasePlatformClient`
+- **platformName**: `string`，默认当前插件平台名
 - 返回值: `void`
 
-注册一个平台客户端。
+注册平台客户端工厂。实际 disposer 会交给 `ctx.effect()` 管理。
 
-```typescript
-plugin.registerClient(() => new MyPlatformClient(ctx, plugin.platformConfigPool))
+```ts
+plugin.registerClient(
+  () => new MyPlatformClient(ctx, plugin.platformConfigPool),
+);
 ```
 
-### registerVectorStore()
+### plugin.registerVectorStore()
 
-- **name**: `string` 向量存储名称
-- **func**: `CreateVectorStoreFunction` 向量存储创建函数
+- **name**: `string`
+- **func**: `CreateVectorStoreFunction`
 - 返回值: `void`
 
-注册一个向量存储。
+注册向量数据库创建函数。
 
-### registerTool()
+### plugin.registerTool()
 
-- **name**: `string` 工具名称
-- **tool**: `ChatLunaTool` 工具实例
+- **name**: `string`
+- **tool**: `ChatLunaTool`
 - 返回值: `void`
 
-注册一个工具。
+注册 Agent 工具。
 
-### registerChatChainProvider()
+### plugin.registerChatChainProvider()
 
-- **name**: `string` 对话链名称
-- **description**: `Dict<string>` 多语言描述
-- **func**: `(params: CreateChatLunaLLMChainParams) => ChatLunaLLMChainWrapper` 对话链创建函数
+- **name**: `string`
+- **description**: `Dict<string>`
+- **func**: `(params: CreateChatLunaLLMChainParams) => ChatLunaLLMChainWrapper`
 - 返回值: `void`
 
-注册一个对话链提供者。
+注册聊天链提供者。
 
-### registerRenderer()
+### plugin.registerRenderer()
 
-- **name**: `string` 渲染器名称
-- **renderer**: `(ctx: Context, config: Config) => Renderer` 渲染器工厂函数
+- **name**: `string`
+- **renderer**: `(ctx: Context, config: Config) => Renderer`
 - 返回值: `void`
 
-注册一个响应渲染器。
+注册回复渲染器。
 
-### fetch()
+### plugin.fetch()
 
-- **info**: `RequestInfo` 请求信息
-- **init**: `RequestInit` 请求配置（可选）
+- **info**: `RequestInfo`
+- **init**: `RequestInit | undefined`
+- **proxy**: `string | undefined`
 - 返回值: `Promise<Response>`
 
-根据插件配置的代理模式发送 HTTP 请求。
+按插件配置代理模式发送 HTTP 请求。
 
-支持三种代理模式：
+显式传入 `proxy` 时会覆盖插件代理模式。
 
-- `system`: 使用系统代理
-- `off`: 不使用代理
-- `on`: 使用指定代理地址
+传入字符串 `'null'` 表示本次请求不走代理。
 
-### ws()
+### plugin.ws()
 
-- **url**: `string` WebSocket 地址
-- **options**: `ClientOptions | ClientRequestArgs` 连接选项（可选）
+- **url**: `string`
+- **options**: `ClientOptions | ClientRequestArgs | undefined`
 - 返回值: `WebSocket`
 
-根据插件配置的代理模式创建 WebSocket 连接。
+按插件配置代理模式创建 WebSocket 连接。
 
-支持与 fetch 相同的代理模式。
+## 命名空间：ChatLunaPlugin.Config
+
+适配器插件配置通常继承 `ChatLunaPlugin.Config`。
+
+```ts
+export interface Config extends ChatLunaPlugin.Config {
+  apiKeys: [string, boolean][];
+  apiEndpoint: string;
+}
+```
+
+内置字段：
+
+- `chatConcurrentMaxSize?: number`
+- `chatTimeLimit?: Computed<Awaitable<number>>`
+- `timeout?: number`
+- `configMode: string`
+- `maxRetries: number`
+- `proxyMode: string`
+- `proxyAddress: string`

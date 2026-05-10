@@ -85,7 +85,7 @@ interface Config extends ChatLunaPlugin.Config {}
 
 当聊天记录符合 `selector` 的匹配条件时，会调用 `createTool` 方法创建一个 `EchoTool` 实例。
 
-更详细的工具注册方法，请参考 [模型工具](./development/connect-to-core-services/model-tool)。
+更详细的工具注册方法，请参考 [模型工具](./connect-to-core-services/model-tool)。
 
 注册完成后，模型在需要的时候会调用 `EchoTool` 来回复用户。
 

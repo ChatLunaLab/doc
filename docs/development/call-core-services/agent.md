@@ -1,19 +1,20 @@
 # Agent 与 Sub-Agent
 
-ChatLuna 提供了一套更高层的 Agent API，用于组装 Agent，甚至是多 Agent 服务。
+ChatLuna 的高层 Agent API 都通过 `ctx.chatluna.createAgent()` 来用。你可以创建单个 Agent，也可以组合多个子 Agent 协同工作。
 
 ## 创建 Agent
 
-使用 `ctx.chatluna.createAgent()` 来快速创建 Agent。
+用 `ctx.chatluna.createAgent()` 就能创建一个 Agent：
 
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
-import { Context, Schema } from 'koishi'
+import { Context } from "koishi";
 
-const ctx = new Context()
+const ctx = new Context();
 
-// ---cut---
+// ---
+
 import type {} from "koishi-plugin-chatluna/services/chat";
 
 const agent = await ctx.chatluna.createAgent({
@@ -29,29 +30,26 @@ const agent = await ctx.chatluna.createAgent({
 });
 ```
 
-<br>
+常用参数说明：
 
-常用的参数：
-
-- `model`: 必填，通常直接写 `platform/model`
-- `tools`: 可选，传工具名数组或 Langchain 的工具数组。不传数组则默认激活全部可用的工具。
-- `preset` 或 `system`: 二选一；想复用已有预设就传入 `preset`，想快速写一个 Agent 就直接传 `system`（用于指定 Agent 的 System Prompt）
-- `mode`: 可选，默认 `tool-calling`
-- `maxSteps`: 可选，限制最多调用多少轮工具
-
-其他像 `handleParsingErrors`、`instructions`、`toolMask` 这些参数，通常只在更复杂的插件装配里才需要。
+- `model`（**必填**）：字符串，格式为 `平台/模型`，比如 `'openai/gpt-5.4'`。
+- `tools`：可选。传一个工具名数组或 LangChain 工具数组；不传时默认激活所有可用工具。
+- `preset` 或 `system`：二选一。用已有预设就传 `preset`，想自定义系统提示词就传 `system`。
+- `mode`：可选，默认是 `'tool-calling'`。
+- `maxSteps`：可选，限制最多调用多少轮工具。
+- `handleParsingErrors`、`instructions`、`toolMask` 等参数一般只在更复杂的插件中才会用到。
 
 ## 调用 Agent
 
-创建完成后，直接使用 `generate()` 即可。
+创建 Agent 之后，调用 `generate()` 就能生成回复：
 
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
-import { Context, Schema, type Session } from 'koishi'
+import { Context, type Session } from "koishi";
 
-const ctx = new Context()
-const session = {} as Session
+const ctx = new Context();
+const session = {} as Session;
 
 import type {} from "koishi-plugin-chatluna/services/chat";
 
@@ -67,7 +65,7 @@ const agent = await ctx.chatluna.createAgent({
   handleParsingErrors: true,
 });
 
-// ---cut---
+// ---
 
 const result = await agent.generate({
   prompt: "搜索 OpenAI 最近一周的重要新闻，并整理成 3 条摘要",
@@ -83,27 +81,27 @@ console.log(result.output);
 console.log(result.message);
 ```
 
-返回结果包含：
+返回值：
 
-- `output`: 最终文本输出
-- `message`: 最终消息对象
-- `intermediateSteps`: 工具调用的步骤。创建 Agent 时设置了 `returnIntermediateSteps: true` 才会返回。
+- `output`：最终的文本输出。
+- `message`：LangChain 消息对象。
+- `intermediateSteps`：只在创建 Agent 时设置了 `returnIntermediateSteps: true` 才会返回，包含中间步骤的详细信息。
 
 ## 流式调用
 
-`stream()` 会返回一个更适合前端或 CLI 的对象：
+`stream()` 会返回一个流对象，方便前端或命令行边读边处理。流对象有三个属性：
 
-- `text`: 文本增量流
-- `steps`: Agent 事件流
-- `result`: 最终结果 Promise
+- `text`：文本增量流（异步可迭代）。
+- `steps`：Agent 事件流，比如可以监听到工具调用事件。
+- `result`：一个 Promise，等整个生成结束后得到最终结果。
 
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
-import { Context, Schema, type Session } from 'koishi'
+import { Context, type Session } from "koishi";
 
-const ctx = new Context()
-const session = {} as Session
+const ctx = new Context();
+const session = {} as Session;
 
 import type {} from "koishi-plugin-chatluna/services/chat";
 
@@ -119,7 +117,8 @@ const agent = await ctx.chatluna.createAgent({
   handleParsingErrors: true,
 });
 
-// ---cut---
+// ---
+
 const stream = await agent.stream({
   prompt: "帮我总结这个仓库最近的变更",
   session,
@@ -142,15 +141,15 @@ const result = await stream.result;
 console.log(result.output);
 ```
 
-如果你只想监听而不消费流，也可以直接使用：
+如果你只想监听事件而不手动消费流，也可以在 `generate()` 里传入回调：
 
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
-import { Context, Schema, type Session } from 'koishi'
+import { Context, type Session } from "koishi";
 
-const ctx = new Context()
-const session = {} as Session
+const ctx = new Context();
+const session = {} as Session;
 
 import type {} from "koishi-plugin-chatluna/services/chat";
 
@@ -166,7 +165,8 @@ const agent = await ctx.chatluna.createAgent({
   handleParsingErrors: true,
 });
 
-// ---cut---
+// ---
+
 await agent.generate({
   prompt: "写一个简短总结",
   session,
@@ -179,20 +179,25 @@ await agent.generate({
 });
 ```
 
-## Agent 作为工具
+## 任务交接与后台任务
 
-`agent.asTool()` 可以把一个 Agent 直接包装成 LangChain `StructuredTool`。
+主 Agent 和子 Agent 本质上没有区别，差别只在于调用方式。有两种方式把任务委派给子 Agent：
 
-这种方式更适合一次性交接：主 Agent 把某个任务完整交给子 Agent，然后拿回最终结果。
+- `asTool()`：把子 Agent 包装成一个普通的工具，任务一次性完成，直接拿结果。
+- `createTaskTool()`：把任务放到后台跑，支持跨轮继续、恢复和追加消息。
+
+## 包装成工具
+
+`agent.asTool()` 会返回一个 LangChain `StructuredTool`，其他 Agent 可以像调函数一样调用它。
 
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
-import { Context, Schema } from 'koishi'
+import { Context } from "koishi";
 
-const ctx = new Context()
+const ctx = new Context();
 
-// ---cut---
+// ---
 
 import type {} from "koishi-plugin-chatluna/services/chat";
 
@@ -217,35 +222,26 @@ const delegateTool = explore.asTool({
 });
 ```
 
-如果你希望主 Agent 直接能调用这个工具，通常会在创建主 Agent 前先把它注册成平台工具，或在你自己的代码中构造工具列表。
+如果主 Agent 要直接调用这个工具，应该在创建主 Agent 前把它注册为平台工具，或者手动放入工具列表。
 
-## 主 Agent + Sub-Agent
+## 创建任务工具
 
-推荐的使用方式是：
+任务需要后台执行或恢复时，用 `createTaskTool()`。它返回的工具支持四个动作：
 
-- 主 Agent 和 Sub-Agent 都 Agent
-- 使用 `asTool()` 做一次性交接和 `handoff`
-- 当需要长期执行任务、多轮对话跟进、后台执行时，采用 `createTaskTool()`
-
-也就是说，主 Agent 和 Sub-Agent 的区别主要在“如何被调用”，而不是底层实现不同。
-
-## 任务工具与 Sub-Agent 教程
-
-当你希望：
-
-- 主 Agent 把工作交给某个专门 Agent，任务可以后台运行
-- 之后还能恢复对话
-
-就应该使用 `createTaskTool()`。
+- `run`：启动或继续执行任务。
+- `status`：查看任务状态。
+- `list`：列出当前对话下的所有任务。
+- `message`：给后台任务发送追加消息。
 
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
-import { Context, Schema } from 'koishi'
+import { Context } from "koishi";
 
-const ctx = new Context()
+const ctx = new Context();
 
-// ---cut---
+// ---
+
 import type {} from "koishi-plugin-chatluna/services/chat";
 import {
   createTaskTool,
@@ -300,14 +296,18 @@ const taskRuntime = createTaskTool({
 const taskTool = taskRuntime.createTool();
 ```
 
-如果你希望主 Agent 直接通过工具调用这些 Sub-Agent，通常会先把 `task` 工具注册到平台，再在主 Agent 里启用它：
+## 注册任务工具并组装主 Agent
+
+要让主 Agent 能通过工具调用这些子 Agent，先把任务工具注册到平台，然后在创建主 Agent 时启用它：
 
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
-import { Context, Schema } from 'koishi'
+import { Context } from "koishi";
 
-const ctx = new Context()
+const ctx = new Context();
+
+// ---
 
 import type {} from "koishi-plugin-chatluna/services/chat";
 import {
@@ -360,7 +360,8 @@ const taskRuntime = createTaskTool({
   },
 });
 
-// ---cut---
+// ---
+
 const taskTool = taskRuntime.createTool();
 
 ctx.chatluna.platform.registerTool("task", {
@@ -377,24 +378,20 @@ const main = await ctx.chatluna.createAgent({
 });
 ```
 
-`createTaskTool()` 创建出的工具默认支持以下动作：
+## 后台任务示例
 
-- `run`: 启动或续跑一个任务
-- `status`: 查看某个任务状态
-- `list`: 查看当前对话下的任务列表
-- `message`: 给后台任务继续发送消息
-
-后台模式示例：
+下面演示通过 `createTaskTool()` 启动一个后台任务：
 
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
-import { Context, Schema, type Session } from 'koishi'
+import { Context, type Session } from "koishi";
 
-const ctx = new Context()
-const session = {} as Session
-const modelRef = await ctx.chatluna.createChatModel("openai/gpt-5-nano")
+const ctx = new Context();
+const session = {} as Session;
+const modelRef = await ctx.chatluna.createChatModel("openai/gpt-5-nano");
 
+// ---
 
 import type {} from "koishi-plugin-chatluna/services/chat";
 import {
@@ -448,7 +445,8 @@ const taskRuntime = createTaskTool({
   },
 });
 
-// ---cut---
+// ---
+
 const runConfig = {
   configurable: {
     session,
@@ -471,16 +469,18 @@ const result = await taskRuntime.runTask(
 console.log(result);
 ```
 
-后续你可以继续：
+启动之后，随时可以查询状态、恢复任务或继续发送消息：
 
 ```ts twoslash
 // @noImplicitAny: false
 // @strictNullChecks: false
-import { Context, Schema, type Session } from 'koishi'
+import { Context, type Session } from "koishi";
 
-const ctx = new Context()
-const session = {} as Session
-const modelRef = await ctx.chatluna.createChatModel("openai/gpt-5-nano")
+const ctx = new Context();
+const session = {} as Session;
+const modelRef = await ctx.chatluna.createChatModel("openai/gpt-5-nano");
+
+// ---
 
 import type {} from "koishi-plugin-chatluna/services/chat";
 import {
@@ -534,7 +534,8 @@ const taskRuntime = createTaskTool({
   },
 });
 
-// ---cut---
+// ---
+
 const runConfig = {
   configurable: {
     session,
@@ -556,9 +557,9 @@ await taskRuntime.runTask(
 );
 ```
 
-## 在系统提示词中注入可用 Sub-Agent
+## 在系统提示词中注入可用子 Agent
 
-如果你需要把可委派的子 Agent 列表注入到系统提示词里，可以使用 `renderAvailableAgents()`：
+用 `renderAvailableAgents()` 可以把可委派的子 Agent 列表转成提示词片段，方便注入到系统提示词里：
 
 ```ts
 const msg = renderAvailableAgents([
@@ -577,28 +578,19 @@ const msg = renderAvailableAgents([
 console.log(msg.content);
 ```
 
-这和 extension-agent 里展示 `<available_sub_agents>` 的方式是一致的。
+生成的内容和插件在 `<available_sub_agents>` 区域展示的格式一致。
 
-## asTool 和 task 的场景
+## 选择 `asTool` 还是 `createTaskTool`
 
-### 使用 `asTool()`
-
-- 只需要子 Agent 一次性交接
-- 子 Agent 执行完成后直接返回结果
-- 不需要复杂的后台运行和任务状态管理
-
-### 使用 `createTaskTool()` 
-
-- 子 Agent 的任务可能比较长
-- 希望后台继续执行
-- 后续还需要继续恢复执行
+- **用 `asTool()` 的情况**：一次性交接，任务完成就应该返回结果，不需要后台执行或事后恢复。
+- **用 `createTaskTool()` 的情况**：任务耗时较长、需要在后台持续运行，或者后续还要追加输入、恢复上下文。
 
 ## 底层 API
 
-如果你需要完全控制 Prompt、工具筛选、Runnable 组合方式，底层 API 仍然可用：
+如果你想自己控制 Prompt、工具筛选和 Runnable 的组合方式，可以直接用底层 API：
 
 - `createAgentRunner()`
 - `createToolsRef()`
 - `createAgentConfig()`
 
-不过对于大部分插件开发场景，建议优先使用高层的 `ctx.chatluna.createAgent()`。
+不过绝大多数插件开发场景，直接用 `ctx.chatluna.createAgent()` 就足够了。

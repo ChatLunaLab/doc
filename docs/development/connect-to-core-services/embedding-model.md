@@ -50,7 +50,6 @@ export class YourPlatformClient extends PlatformModelAndEmbeddingsClient<ClientC
                 name: model,
                 type,
                 capabilities: [],
-                supportMode: ['all'],
                 maxTokens
             } as ModelInfo
         })
@@ -296,7 +295,6 @@ export class YourEmbeddingsClient extends PlatformEmbeddingsClient<ClientConfig>
                 name: model,
                 type: ModelType.embeddings,
                 capabilities: [],
-                supportMode: ['all'],
                 maxTokens
             } as ModelInfo
         })
@@ -317,6 +315,12 @@ export class YourEmbeddingsClient extends PlatformEmbeddingsClient<ClientConfig>
     }
 }
 ```
+
+## 同时支持 Reranker
+
+如果平台同时支持语言模型、嵌入模型和 reranker，可以使用 `PlatformModelEmbeddingsAndRerankerClient`。只支持 reranker 的平台则使用 `PlatformRerankerClient`。
+
+Reranker 的接入方式见 [Reranker 模型](./reranker-model.md)。
 
 ## 测试 Embeddings
 

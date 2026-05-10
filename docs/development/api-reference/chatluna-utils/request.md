@@ -1,56 +1,53 @@
 # 请求工具
 
-ChatLuna 基于 `fetch` 和 `ws` 封装了请求工具，添加了代理支持。
+ChatLuna 基于 `undici.fetch` 和 `ws` 封装了带代理支持的请求工具。
 
-默认情况下，代理会被设置为 [这里](../../../guide/useful-configurations.md#proxyaddress) 的配置。
+建议模型适配器优先使用 `ChatLunaPlugin.fetch()` 和 `ChatLunaPlugin.ws()`。
 
-> [!TIP] 提示
-> 我们更推荐模型适配器的实现者使用 `ChatLunaPlugin` 提供的 `fetch` 和 `ws` 方法。
-> 参考 [ChatLunaPlugin](../chatluna-plugin.md)。
+## FormData
 
-## 基础用法
+`koishi-plugin-chatluna/utils/request` 会重新导出 `undici` 的 `FormData`。
 
-```typescript
-import { chatLunaFetch, ws, randomUA } from 'koishi-plugin-chatluna/utils/request'
+## globalProxyAddress
 
-const response = await chatLunaFetch('https://api.example.com/data', {
-    method: 'GET',
-}, "http://localhost:7890")
+- **类型**: `string | null`
 
-const wsClient = ws('wss://api.example.com/ws', {
-    withCredentials: true,
-}, "http://localhost:7890")
+当前全局代理地址。
 
-const ua = randomUA()
-```
+## setGlobalProxyAddress()
 
-## API
+- **address**: `string`
+- 返回值: `void`
 
-### chatLunaFetch(url, init, proxy)
+设置全局代理地址。支持 `http://`、`https://`、`socks://`、`socks4://`、`socks5://` 等代理协议。
 
-- **url**: `string` 请求 URL
-- **init**: `RequestInit` 请求配置
-- **proxy**: `string?` 代理地址
+## chatLunaFetch()
+
+- **info**: `RequestInfo`
+- **init**: `RequestInit | undefined`
+- **proxyAddress**: `string | undefined`
 - 返回值: `Promise<Response>`
 
-建立一个 `fetch` 请求。
+发送 HTTP 请求。`proxyAddress` 默认使用 `globalProxyAddress`。传入字符串 `'null'` 表示本次请求不使用代理。
 
-> [!IMPORTANT] 注意
-> 如果 `proxy` 参数传递为 'null'(注意是纯文本的 `null`，不是 `null` 变量)，则不会使用代理。
+```ts
+const response = await chatLunaFetch(
+  "https://api.example.com/data",
+  { method: "GET" },
+  "http://127.0.0.1:7890",
+);
+```
 
-### ws(url, init, proxy)
+## ws()
 
-- **url**: `string` 请求 URL
-- **init**: `WebSocketConstructorInit` 请求配置
-- **proxy**: `string?` 代理地址
+- **url**: `string`
+- **options**: `ClientOptions | ClientRequestArgs | undefined`
+- **proxyAddress**: `string | undefined`
 - 返回值: `WebSocket`
 
-建立一个 `ws` 请求。
+创建 WebSocket 连接。`proxyAddress` 的语义与 `chatLunaFetch()` 相同。
 
-> [!IMPORTANT] 注意
-> 如果 `proxy` 参数传递为 'null'(注意是纯文本的 `null`，不是 `null` 变量)，则不会使用代理。
-
-### randomUA()
+## randomUA()
 
 - 返回值: `string`
 

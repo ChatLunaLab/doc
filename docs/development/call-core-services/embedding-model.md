@@ -70,10 +70,11 @@ type PureModelType = Prettify<typeof ModelType>
 
 <br><br><br><br><br><br>
 
-目前支持的模型类型有:
+目前支持的模型类型有：
 
 - `llm`:大语言模型
-- `embedding`:嵌入模型
+- `embeddings`: 嵌入模型
+- `reranker`: 重排序模型
 - `all`:所有模型
 
 ## 从用户配置中创建

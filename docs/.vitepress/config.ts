@@ -509,6 +509,10 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
           link: "/development/call-core-services/embedding-model",
         },
         {
+          text: "Reranker 模型",
+          link: "/development/call-core-services/reranker-model",
+        },
+        {
           text: "向量数据库",
           link: "/development/call-core-services/vector-database",
         },
@@ -536,6 +540,10 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
         {
           text: "嵌入模型",
           link: "/development/connect-to-core-services/embedding-model",
+        },
+        {
+          text: "Reranker 模型",
+          link: "/development/connect-to-core-services/reranker-model",
         },
         {
           text: "向量数据库",
@@ -571,6 +579,14 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
           link: "/development/api-reference/chatluna-events",
         },
         {
+          text: "会话服务 (Conversation Service)",
+          link: "/development/api-reference/conversation-service",
+        },
+        {
+          text: "会话运行时 (Conversation Runtime)",
+          link: "/development/api-reference/conversation-runtime",
+        },
+        {
           text: "ChatLuna 大语言模型核心",
           collapsed: true,
           items: [
@@ -583,8 +599,24 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
               link: "/development/api-reference/llm-core/platform-service",
             },
             {
+              text: "平台客户端 (Platform Client)",
+              link: "/development/api-reference/llm-core/platform-client",
+            },
+            {
               text: "模型请求器 (Requester)",
               link: "/development/api-reference/llm-core/requester",
+            },
+            {
+              text: "Reranker",
+              link: "/development/api-reference/llm-core/reranker",
+            },
+            {
+              text: "Agent",
+              link: "/development/api-reference/llm-core/agent",
+            },
+            {
+              text: "上下文管理 (Context Manager)",
+              link: "/development/api-reference/llm-core/context-manager",
             },
           ],
         },
@@ -630,6 +662,18 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
               text: "错误 (Error)",
               link: "/development/api-reference/chatluna-utils/error",
             },
+            {
+              text: "Schema 工具",
+              link: "/development/api-reference/chatluna-utils/schema",
+            },
+            {
+              text: "运行时工具",
+              link: "/development/api-reference/chatluna-utils/runtime",
+            },
+            {
+              text: "内容与消息工具",
+              link: "/development/api-reference/chatluna-utils/content",
+            },
           ],
         },
       ],
@@ -659,8 +703,8 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
           link: "/ecosystem/plugin/long-term-memory",
         },
         {
-          text: "MCP 协议客户端 (MCP Client)",
-          link: "/ecosystem/plugin/mcp-client",
+          text: "Agent 扩展框架 (Extension Agent)",
+          link: "/ecosystem/plugin/extension-agent",
         },
         {
           text: "图片服务 (Image Service)",

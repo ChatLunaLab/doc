@@ -75,7 +75,7 @@ export class RawRenderer extends Renderer {
 `render` 方法接收两个参数：
 
 - `message`: 当前的 [ChatLuna 消息对象](../api-reference/middleware/message)
-- `options`: 当前的 [渲染选项](../api-reference/middleware/message-renderer')
+- `options`: 当前的 [渲染选项](../api-reference/middleware/message-renderer)
 
 返回值 `RenderMessage` 包含一个 `element` 属性，用于指定渲染后的消息元素。
 
@@ -83,7 +83,7 @@ export class RawRenderer extends Renderer {
 
 ## 注册 Renderer
 
-在 `ready` 事件中，调用 `renderer` 服务的 `addRenderer` 方法注册消息渲染器。
+在 `ready` 事件中，调用 `ChatLunaPlugin.registerRenderer()` 或 `renderer.addRenderer()` 注册消息渲染器。
 
 ```typescript
 ctx.on('ready', async () => {
@@ -94,4 +94,10 @@ ctx.on('ready', async () => {
         })
     )
 })
+```
+
+如果你已经创建了 `ChatLunaPlugin` 实例，推荐使用插件方法管理生命周期：
+
+```ts
+plugin.registerRenderer('raw', (ctx) => new RawRenderer(ctx))
 ```

@@ -69,7 +69,7 @@ console.log(message)
 
 ```
 
-并且支持多模态消息（目前仅支持图片，还需确保使用的模型支持多模态输入）:
+并且支持多模态消息。实际可用内容取决于模型声明的 `ModelCapabilities`，常见能力包括图片、音频、视频和文件输入。下面是图片输入示例：
 
 ```ts twoslash
 // @noImplicitAny: false
@@ -156,7 +156,8 @@ type PureModelType = Prettify<typeof ModelType>
 目前支持的模型类型有：
 
 - `llm`：大语言模型
-- `embedding`：嵌入模型
+- `embeddings`：嵌入模型
+- `reranker`：重排序模型
 - `all`：所有模型
 
 <br>
@@ -213,3 +214,14 @@ interface ModelInfo {
 
 type PureCapabilities = Prettify<typeof ModelCapabilities>
 ```
+
+常见能力枚举包括：
+
+- `TextInput`: 文本输入。
+- `ToolCall`: 工具调用。
+- `ImageInput`: 图片输入。
+- `Thinking`: 思考内容输出。
+- `ImageGeneration`: 图片生成。
+- `AudioInput`: 音频输入。
+- `VideoInput`: 视频输入。
+- `FileInput`: 文件输入。

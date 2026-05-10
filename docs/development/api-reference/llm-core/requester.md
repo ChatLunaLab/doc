@@ -1,88 +1,103 @@
 # Requester
 
-模型请求器用于向不同平台发送模型推理或向量嵌入请求，并提供统一的参数定义与工具方法。
+Requester 用于封装模型、嵌入和 reranker 的底层 API 请求。适配器通常继承 `ModelRequester`，并按需要实现 `EmbeddingsRequester` 或 `RerankerRequester`。
 
 ## 接口：BaseRequestParams
 
-```typescript
+```ts
 export interface BaseRequestParams {
-    timeout?: number
-    signal?: AbortSignal
-    model?: string
+  timeout?: number
+  signal?: AbortSignal
+  model?: string
 }
 ```
 
-- **timeout**: 请求超时时间（毫秒）。
-- **signal**: 用于取消请求的 `AbortSignal`。
-- **model**: 指定的模型名称。
+- `timeout`: 请求超时时间，单位毫秒。
+- `signal`: 用于取消请求的 `AbortSignal`。
+- `model`: 模型名称。
 
 ## 接口：ModelRequestParams
 
-```typescript
+```ts
 export interface ModelRequestParams extends BaseRequestParams {
-    temperature?: number
-    maxTokens?: number
-    topP?: number
-    frequencyPenalty?: number
-    presencePenalty?: number
-    n?: number
-    logitBias?: Record<string, number>
-    user?: string
-    stop?: string[] | string
-    input: BaseMessage[]
-    id?: string
-    tools?: StructuredTool[]
-    variables?: Record<string, any>
+  temperature?: number
+  maxTokens?: number
+  topP?: number
+  frequencyPenalty?: number
+  presencePenalty?: number
+  n?: number
+  logitBias?: Record<string, number>
+  user?: string
+  stop?: string[] | string
+  input: BaseMessage[]
+  id?: string
+  tools?: StructuredTool[]
+  variables?: Record<string, any>
+  overrideRequestParams?: Record<string, any>
 }
 ```
 
-在基础参数的基础上扩展了对话生成常用的采样、停止词、工具调用等配置，`input` 为必填的消息数组。`variables` 可在请求前传递额外的上下文变量。
+`overrideRequestParams` 用于在单次请求中透传平台特定参数。
 
 ## 接口：EmbeddingsRequestParams
 
-```typescript
+```ts
 export interface EmbeddingsRequestParams extends BaseRequestParams {
-    input: string | string[]
+  input: string | string[]
 }
 ```
 
-嵌入请求的输入既可以是单条文本，也可以是文本数组。
+## 接口：RerankerRequestParams
+
+```ts
+export interface RerankerRequestParams extends BaseRequestParams {
+  query: string
+  documents: string[]
+  topN?: number
+  maxChunksPerDoc?: number
+}
+```
 
 ## 接口：BaseRequester
 
-```typescript
+```ts
 export interface BaseRequester {
-    init(): Promise<void>
-    dispose(): Promise<void>
-    logger: Logger
+  init(): Promise<void>
+  dispose(): Promise<void>
+  logger: Logger
 }
 ```
 
-所有请求器都会暴露 Koishi 的 `Logger`，可用于输出调试信息。
-
 ## 抽象类：ModelRequester
 
-`ModelRequester` 实现了 `BaseRequester` 并封装了通用的错误重试、HTTP 请求与结果聚合逻辑。
+`ModelRequester` 实现了通用的配置刷新、错误计数、HTTP 请求和流式结果聚合逻辑。
 
 ### modelRequester.completion()
 
-- **params**: [`ModelRequestParams`](#接口modelrequestparams)
+- **params**: `ModelRequestParams`
 - 返回值: `Promise<ChatGeneration>`
 
-调用 `completionStream()` 并将流式结果聚合为最终的 `ChatGeneration`。
+调用 `completionStream()` 并聚合最终结果。
 
 ### modelRequester.completionStream()
 
-- **params**: [`ModelRequestParams`](#接口modelrequestparams)
+- **params**: `ModelRequestParams`
 - 返回值: `AsyncGenerator<ChatGenerationChunk>`
 
-生成模型的流式响应。实现类需要覆写 `completionStreamInternal()` 以提供具体的请求逻辑。
+流式生成结果。子类需要实现 `completionStreamInternal()`。
+
+### modelRequester.completionStreamInternal()
+
+- **params**: `ModelRequestParams`
+- 返回值: `AsyncGenerator<ChatGenerationChunk>`
+
+具体平台请求逻辑。
 
 ### modelRequester.init()
 
 - 返回值: `Promise<void>`
 
-初始化请求器，默认实现为空，可在子类中扩展。
+初始化请求器，默认实现为空。
 
 ### modelRequester.dispose()
 
@@ -99,7 +114,7 @@ export interface BaseRequester {
 - **params**: `RequestInit`
 - 返回值: `Promise<Response>`
 
-向当前平台发送 POST 请求，会自动补齐认证头并清理 `undefined` 字段。
+向当前平台发送 POST 请求，自动附加默认 headers 并清理 `undefined` 字段。
 
 ### modelRequester.get()
 
@@ -108,27 +123,42 @@ export interface BaseRequester {
 - **params**: `RequestInit`
 - 返回值: `Promise<Response>`
 
-发送 GET 请求并附加默认请求头。
+向当前平台发送 GET 请求。
 
 ### modelRequester.buildHeaders()
 
 - 返回值: `Record<string, string>`
 
-根据当前配置生成默认的 HTTP 头部信息。
+生成默认请求头。默认使用 Bearer Token，可在子类覆盖。
 
 ### modelRequester.concatUrl()
 
 - **url**: `string`
 - 返回值: `string`
 
-将相对地址拼接到平台配置的 `apiEndpoint`，自动补足 `/v1/` 前缀及斜杠。
+把相对路径拼接到当前配置的 `apiEndpoint` 后面。该方法只处理斜杠，不会自动添加 `/v1`。
 
 ## 接口：EmbeddingsRequester
 
-```typescript
+```ts
 export interface EmbeddingsRequester {
-    embeddings(params: EmbeddingsRequestParams): Promise<number[] | number[][]>
+  embeddings(params: EmbeddingsRequestParams): Promise<number[] | number[][]>
 }
 ```
 
-嵌入请求器需要实现 `embeddings()` 方法，以返回单条或批量的向量结果。
+## 接口：RerankerRequester
+
+```ts
+export interface RerankerRequester {
+  rerank(params: RerankerRequestParams): Promise<RerankerResult[]>
+}
+```
+
+## 接口：RerankerResult
+
+```ts
+export interface RerankerResult {
+  index: number
+  relevanceScore: number
+}
+```

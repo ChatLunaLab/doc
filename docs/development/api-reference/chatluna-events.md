@@ -3,145 +3,276 @@
 > [!TIP] 提示
 > 参见 [Koishi 事件](https://koishi.chat/zh-CN/guide/basic/events.html)
 
-ChatLuna 也提供一些事件，用于监听和处理一些复杂的功能。
+ChatLuna 使用 Koishi 事件总线暴露会话、模型、工具、向量数据库和聊天生命周期变化。
 
 ## 通用事件
 
-ChatLuna 的通用会话事件。
+### 事件：`chatluna/before-check-sender`
 
-### 事件：chatluna/before-check-sender
+- **session**: `Session`
+- **返回值**: `boolean`
+- **触发方式**: `serial`
 
-- **session**: `Session` 会话
-- **返回值**: `boolean` 是否继续处理
-- **触发方式**: serial
+在 ChatLuna 处理会话前触发。返回 `true` 表示跳过后续处理。
 
-在 ChatLuna 处理会话之前，触发该事件。
+### 事件：`chatluna/check-passive-trigger`
 
-当返回值为 `true`，ChatLuna 将不会处理该会话。
+- **session**: `Session`
+- **content**: `string`
+- **返回值**: `boolean`
+- **触发方式**: `serial`
+
+用于判断被动触发消息是否应该继续进入 ChatLuna。
 
 ## 聊天事件
 
-ChatLuna 的聊天流程事件。
+### 事件：`chatluna/before-chat`
 
-### 事件：chatluna/before-chat
+- **conversationId**: `string`
+- **message**: `HumanMessage`
+- **promptVariables**: `ChainValues`
+- **chatInterface**: `ChatInterface`
+- **session**: `Session`
+- **触发方式**: `parallel`
 
-- **conversationId**: `string` 会话 ID
-- **message**: `HumanMessage` 用户发送的消息
-- **promptVariables**: `ChainValues` 当前可用的提示词变量
-- **chatInterface**: `ChatInterface` 当前聊天接口实例
-- **session**: `Session` 会话
-- **触发方式**: parallel
+在调用模型前触发，可用于修改变量、注入上下文或提前打断流程。
 
-在开始调用模型之前触发，可用于检查输入、动态修改提示词变量、注入提示词或提前拦截聊天流程。
+### 事件：`chatluna/after-chat`
 
-### 事件：chatluna/after-chat
+- **conversationId**: `string`
+- **sourceMessage**: `HumanMessage`
+- **responseMessage**: `AIMessage`
+- **promptVariables**: `ChainValues`
+- **chatInterface**: `ChatInterface`
+- **session**: `Session`
+- **触发方式**: `parallel`
 
-- **conversationId**: `string` 会话 ID
-- **sourceMessage**: `HumanMessage` 原始用户消息
-- **responseMessage**: `AIMessage` 模型返回的消息
-- **promptVariables**: `ChainValues` 调用时携带的提示词变量，包含 `chatCount` 等信息
-- **chatInterface**: `ChatInterface` 当前聊天接口实例
-- **session**: `Session` 会话
-- **触发方式**: parallel
+在模型返回后触发。
 
-在模型生成回复后触发，可用于对回复进行记录、二次处理或推送至其他系统。
+### 事件：`chatluna/clear-chat-history`
 
-### 事件：chatluna/clear-chat-history
+- **conversationId**: `string`
+- **chatInterface**: `ChatInterface`
+- **触发方式**: `parallel`
 
-- **conversationId**: `string` 会话 ID
-- **chatInterface**: `ChatInterface` 当前聊天接口实例
-- **触发方式**: parallel
+当会话历史被清空时触发。
 
-当会话历史被清空时触发，方便同步清理缓存、外部存储或关联上下文。
+### 事件：`chatluna/after-chat-error`
 
-### 事件：chatluna/after-chat-error
+- **error**: `Error`
+- **conversationId**: `string`
+- **sourceMessage**: `HumanMessage`
+- **promptVariables**: `ChainValues`
+- **chatInterface**: `ChatInterface`
+- **chain**: `ChatLunaLLMChainWrapper | undefined`
+- **requestId**: `string`
+- **触发方式**: `parallel`
 
-- **error**: `Error` 对话过程中捕获的异常对象
-- **conversationId**: `string` 会话 ID
-- **sourceMessage**: `HumanMessage` 原始用户消息
-- **promptVariables**: `ChainValues` 调用时的提示词变量
-- **chatInterface**: `ChatInterface` 当前聊天接口实例
-- **chain**: `ChatLunaLLMChainWrapper` 触发错误的链路实例（可选）
-- **触发方式**: parallel
+聊天流程异常时触发。
 
-当聊天流程出现异常时触发，可用于日志上报、兜底回复或通知维护者。
+### 事件：`chatluna/before-conversation-create`
+
+- **conversation**: `ConversationRecord`
+- **bindingKey**: `string`
+- **触发方式**: `parallel`
+
+在创建会话前触发，可用于修改会话数据或阻止创建。
+
+### 事件：`chatluna/after-conversation-create`
+
+- **conversation**: `ConversationRecord`
+- **bindingKey**: `string`
+- **触发方式**: `parallel`
+
+会话创建完成后触发。
+
+### 事件：`chatluna/before-conversation-switch`
+
+- **bindingKey**: `string`
+- **conversation**: `ConversationRecord`
+- **previousConversation**: `ConversationRecord | null | undefined`
+- **触发方式**: `parallel`
+
+切换会话前触发，可用于阻止切换或执行清理操作。
+
+### 事件：`chatluna/after-conversation-switch`
+
+- **bindingKey**: `string`
+- **conversation**: `ConversationRecord`
+- **previousConversation**: `ConversationRecord | null | undefined`
+- **触发方式**: `parallel`
+
+会话切换完成后触发。
+
+### 事件：`chatluna/after-binding-update`
+
+- **binding**: `BindingRecord`
+- **previousConversationId**: `string | null | undefined`
+- **触发方式**: `parallel`
+
+绑定关系更新后触发。
+
+### 事件：`chatluna/after-constraint-update`
+
+- **constraint**: `ConstraintRecord`
+- **触发方式**: `parallel`
+
+约束条件更新后触发。
+
+### 事件：`chatluna/before-conversation-archive`
+
+- **conversation**: `ConversationRecord`
+- **触发方式**: `parallel`
+
+会话归档前触发。
+
+### 事件：`chatluna/after-conversation-archive`
+
+- **conversation**: `ConversationRecord`
+- **archive**: `ArchiveRecord`
+- **path**: `string`
+- **触发方式**: `parallel`
+
+会话归档完成后触发。
+
+### 事件：`chatluna/before-conversation-restore`
+
+- **conversation**: `ConversationRecord`
+- **archive**: `ArchiveRecord`
+- **触发方式**: `parallel`
+
+会话恢复前触发。
+
+### 事件：`chatluna/after-conversation-restore`
+
+- **conversation**: `ConversationRecord`
+- **archive**: `ArchiveRecord`
+- **触发方式**: `parallel`
+
+会话恢复完成后触发。
+
+### 事件：`chatluna/before-conversation-delete`
+
+- **conversation**: `ConversationRecord`
+- **触发方式**: `parallel`
+
+会话删除前触发。
+
+### 事件：`chatluna/after-conversation-delete`
+
+- **conversation**: `ConversationRecord`
+- **触发方式**: `parallel`
+
+会话删除完成后触发。
+
+### 事件：`chatluna/before-conversation-clear-history`
+
+- **conversation**: `ConversationRecord`
+- **chatInterface**: `ChatInterface`
+- **触发方式**: `parallel`
+
+会话历史清空前触发。
+
+### 事件：`chatluna/after-conversation-clear-history`
+
+- **conversation**: `ConversationRecord`
+- **chatInterface**: `ChatInterface`
+- **触发方式**: `parallel`
+
+会话历史清空完成后触发。
+
+### 事件：`chatluna/before-conversation-cache-clear`
+
+- **conversation**: `ConversationRecord`
+- **chatInterface**: `ChatInterface | undefined`
+- **触发方式**: `parallel`
+
+会话缓存清空前触发。
+
+### 事件：`chatluna/after-conversation-cache-clear`
+
+- **conversation**: `ConversationRecord`
+- **触发方式**: `parallel`
+
+会话缓存清空完成后触发。
+
+### 事件：`chatluna/conversation-compressed`
+
+- **conversation**: `ConversationRecord`
+- **result**: `CompressContextResult`
+- **触发方式**: `parallel`
+
+会话上下文压缩完成后触发。
 
 ## 生命周期事件
 
-ChatLuna 的生命周期事件，监听某些模型或者工具的变化。
+### 事件：`chatluna/chat-chain-added`
 
-### 事件：chatluna/chat-chain-added
+- **service**: `PlatformService`
+- **chain**: `ChatLunaChainInfo`
+- **触发方式**: `emit`
 
-- **service**: `PlatformService` 平台服务
-- **chain**: `ChatLunaChainInfo` 聊天链信息
-- **触发方式**: emit
+### 事件：`chatluna/chat-chain-removed`
 
-当一个聊天链（聊天模式）被添加时，触发该事件。
+- **service**: `PlatformService`
+- **chain**: `ChatLunaChainInfo`
+- **触发方式**: `emit`
 
-### 事件：chatluna/chat-chain-removed
+### 事件：`chatluna/tool-updated`
 
-- **service**: `PlatformService` 平台服务
-- **chain**: `ChatLunaChainInfo` 聊天链信息
-- **触发方式**: emit
+- **service**: `PlatformService`
+- **触发方式**: `emit`
 
-当一个聊天链（聊天模式）被移除时，触发该事件。
+### 事件：`chatluna/model-added`
 
-### 事件：chatluna/tool-updated
+- **service**: `PlatformService`
+- **platform**: `PlatformClientNames`
+- **client**: `BasePlatformClient | BasePlatformClient[]`
+- **触发方式**: `emit`
 
-- **service**: `PlatformService` 平台服务
-- **触发方式**: emit
+### 事件：`chatluna/model-removed`
 
-当有工具被添加或移除时，触发该事件。
+- **service**: `PlatformService`
+- **platform**: `PlatformClientNames`
+- **client**: `BasePlatformClient | BasePlatformClient[]`
+- **触发方式**: `emit`
 
-### 事件：chatluna/model-added
+### 事件：`chatluna/embeddings-added`
 
-- **service**: `PlatformService` 平台服务
-- **platform**: `PlatformClientNames` 被添加的平台
-- **client**: `BasePlatformClient | BasePlatformClient[]` 被添加的平台 Client 实现
-- **触发方式**: emit
+- **service**: `PlatformService`
+- **platform**: `PlatformClientNames`
+- **client**: `BasePlatformClient | BasePlatformClient[]`
+- **触发方式**: `emit`
 
-当有模型（适配器）被添加时，触发该事件。
+### 事件：`chatluna/embeddings-removed`
 
-### 事件：chatluna/model-removed
+- **service**: `PlatformService`
+- **platform**: `PlatformClientNames`
+- **client**: `BasePlatformClient | BasePlatformClient[]`
+- **触发方式**: `emit`
 
-- **service**: `PlatformService` 平台服务
-- **platform**: `PlatformClientNames` 被移除的平台
-- **client**: `BasePlatformClient | BasePlatformClient[]` 被移除的平台 Client 实现
-- **触发方式**: emit
+### 事件：`chatluna/reranker-added`
 
-当有模型（适配器）被移除时，触发该事件。
+- **service**: `PlatformService`
+- **platform**: `PlatformClientNames`
+- **client**: `BasePlatformClient | BasePlatformClient[]`
+- **触发方式**: `emit`
 
-### 事件：chatluna/embeddings-added
+### 事件：`chatluna/reranker-removed`
 
-- **service**: `PlatformService` 平台服务
-- **platform**: `PlatformClientNames` 被添加的平台
-- **client**: `BasePlatformClient | BasePlatformClient[]` 被添加的平台 Client 实现
-- **触发方式**: emit
+- **service**: `PlatformService`
+- **platform**: `PlatformClientNames`
+- **client**: `BasePlatformClient`
+- **触发方式**: `emit`
 
-当有嵌入模型（适配器）被添加时，触发该事件。
+### 事件：`chatluna/vector-store-added`
 
-### 事件：chatluna/embeddings-removed
+- **service**: `PlatformService`
+- **name**: `string`
+- **触发方式**: `emit`
 
-- **service**: `PlatformService` 平台服务
-- **platform**: `PlatformClientNames` 被移除的平台
-- **client**: `BasePlatformClient | BasePlatformClient[]` 被移除的平台 Client 实现
-- **触发方式**: emit
+### 事件：`chatluna/vector-store-removed`
 
-当有嵌入模型（适配器）被移除时，触发该事件。
-
-### 事件：chatluna/vector-store-added
-
-- **service**: `PlatformService` 平台服务
-- **name**: `string` 向量存储数据名称
-- **触发方式**: emit
-
-当有向量存储数据库被添加时，触发该事件。
-
-### 事件：chatluna/vector-store-removed
-
-- **service**: `PlatformService` 平台服务
-- **name**: `string` 向量存储数据名称
-- **触发方式**: emit
-
-当有向量存储数据库被移除时，触发该事件。
-
+- **service**: `PlatformService`
+- **name**: `string`
+- **触发方式**: `emit`

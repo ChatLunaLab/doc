@@ -23,7 +23,7 @@
 :::tip 提示
 ChatLuna 主插件不内置可供 `agent` 模式使用的工具。
 
-一般需要安装 [`chatluna-plugin-common`](../../ecosystem/introduction.md) 或 [`chatluna-mcp-client`](../../ecosystem/plugin/mcp-client.md) 等插件来提供工具支持。
+一般需要安装 [`chatluna-plugin-common`](../../ecosystem/introduction.md) 或 [`chatluna-agent`](../../ecosystem/plugin/extension-agent.md) 等插件来提供工具支持。
 :::
 
 ### browsing

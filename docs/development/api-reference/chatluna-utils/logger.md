@@ -1,30 +1,39 @@
-# 日志 
+# 日志
 
-Koishi 本身已经自带了好用的日志工具。
+ChatLuna 对 Koishi `Logger` 做了轻量封装，用于统一调试开关和本地日志管理。
 
-ChatLuna 基于其简易的封装了一下，主要是为了支持 [isLog](../../../guide/useful-configurations.md#islog) 配置。
+## createLogger()
 
-这样当用户开启 `isLog` 配置时，`debug` 日志将会输出到 Koishi 日志中。
+- **ctx**: `Context`
+- **name**: `string`，默认 `chatluna`
+- 返回值: `Logger`
 
-## 基础用法
+创建或复用日志实例。
 
-```typescript
-import { createLogger } from 'koishi-plugin-chatluna/utils/logger'
+```ts
+import { createLogger } from "koishi-plugin-chatluna/utils/logger";
 
-const logger = createLogger(ctx, 'MyLogger')
+const logger = createLogger(ctx, "my-plugin");
 ```
 
-## API
+## setLoggerLevel()
 
-### createLogger(ctx, name)
+- **level**: `number`
+- 返回值: `void`
 
-- **ctx**: `Context` Koishi 的上下文
-- **name**: `string` 日志实例名称
+设置所有已创建 ChatLuna logger 的日志级别。
 
-创建一个日志实例。
+## clearLogger()
 
-### setLoggerLevel(level)
+- 返回值: `void`
 
-- **level**: `number` 日志级别
+清空内部 logger 缓存。主插件销毁时会调用。
 
-设置日志级别。
+## trackLogToLocal()
+
+- **tag**: `string`
+- **output**: `string`
+- **logger**: `Logger`
+- 返回值: `Promise<void>`
+
+异步把调试内容写入系统临时目录的 `chatluna/logs` 下，并清理 7 天前的旧日志。
