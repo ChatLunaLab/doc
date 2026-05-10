@@ -607,11 +607,11 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
               link: "/development/api-reference/llm-core/requester",
             },
             {
-              text: "Reranker",
+              text: "重排序 (Reranker)",
               link: "/development/api-reference/llm-core/reranker",
             },
             {
-              text: "Agent",
+              text: "代理 (Agent)",
               link: "/development/api-reference/llm-core/agent",
             },
             {
@@ -663,15 +663,15 @@ function sidebarDevelopment(): DefaultTheme.SidebarItem[] {
               link: "/development/api-reference/chatluna-utils/error",
             },
             {
-              text: "Schema 工具",
+              text: "Schema 工具 (Schema)",
               link: "/development/api-reference/chatluna-utils/schema",
             },
             {
-              text: "运行时工具",
+              text: "运行时工具 (Runtime)",
               link: "/development/api-reference/chatluna-utils/runtime",
             },
             {
-              text: "内容与消息工具",
+              text: "内容与消息工具 (Content)",
               link: "/development/api-reference/chatluna-utils/content",
             },
           ],
