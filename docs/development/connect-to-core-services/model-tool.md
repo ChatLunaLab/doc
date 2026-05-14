@@ -215,9 +215,9 @@ plugin.registerTool('web_search', {
 
 ## 为伪装插件的回复工具挂载自定义字段
 
-[chatluna-character](../../ecosystem/other/character.md) 伪装插件支持一种实验性的「工具调用回复」模式。在该模式下，模型不再通过 XML 块输出回复内容，而是通过调用一个名为 `character_reply` 的工具来完成状态更新、消息发送、触发条件设置等操作。
+[chatluna-character](../../ecosystem/other/character.md) 伪装插件支持一种实验性的「工具调用回复」模式。在该模式下，模型不再通过 XML 块输出回复内容，而是通过调用一个名为 `character_reply` 的工具来完成状态更新、消息发送、短期触发条件设置等操作。
 
-`character_reply` 的内置字段会受到当前会话配置影响。例如，关闭 `toolCallReplyThinkTag`、`toolCallReplyStatusTag`、`toolCallReplyNextReply`、`toolCallReplyWakeUpReply` 后，对应字段将不会出现在工具参数中，对应标签或触发器也不会再被渲染和处理。
+`character_reply` 的内置字段会受到当前会话配置影响。例如，关闭 `toolCallReplyThinkTag`、`toolCallReplyStatusTag`、`toolCallReplyNextReply` 后，对应字段将不会出现在工具参数中，对应标签或触发器也不会再被渲染和处理。`toolCallReplyWakeUpReply` 控制独立的 `wake_up_reply_*` 计划任务工具，不属于 `character_reply` 字段。
 
 外部插件可以通过 `ctx.chatluna_character.registerReplyToolField()` 方法，向 `character_reply` 工具注册额外的自定义参数字段。
 
