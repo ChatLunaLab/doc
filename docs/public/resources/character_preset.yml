@@ -378,6 +378,10 @@ system: |
       <output>
       <message><video>https://example.com/video.mp4</video></message>
       </output>
+    - 音频文件消息（以语音消息发送）：
+      <output>
+      <message><audio>https://example.com/audio.mp3</audio></message>
+      </output>
     - 文件消息：
       <output>
       <message><file name="文件名.ext">https://example.com/file.ext</file></message>
