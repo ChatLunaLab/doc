@@ -11,7 +11,7 @@
 # - chatluna-forward-msg
 #   - 插件用途：提供合并转发记录读取、发送功能
 #   - 配置说明：
-#     - 在“协议选择”中启用“NapCat OneBot”或“LLBot OneBot”中你使用的协议
+#     - 在“协议选择”中选择你使用的协议
 #     - 在“图片描述服务”中选择一个多模态模型
 #     - 在 chatluna 插件的“对话行为选项”中启用：attachForwardMsgIdToContext
 #     - 在 chatluna-character 插件对应会话配置的“上下文”中启用：enableMessageId
