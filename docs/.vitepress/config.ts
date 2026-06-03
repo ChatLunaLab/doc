@@ -457,6 +457,10 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
       text: "最佳实践",
       items: [
         {
+          text: "推荐插件",
+          link: "/guide/best-practice/character-recommended-plugins",
+        },
+        {
           text: "知识库客服 Bot",
           link: "/guide/best-practice/knowledge-base-and-customer-service-bot",
         },

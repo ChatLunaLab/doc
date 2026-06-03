@@ -1,93 +1,9 @@
-# 本文件最后更新时间：2026-06-01
+# 本文件最后更新时间：2026-06-03
 #
 # 使用须知：
-# 推荐使用以下插件，如有需要请自行安装，不要忘记在修改后点击右上角的“重载配置”按钮：
-#
-# - chatluna-long-memory
-#   - 插件用途：提供长期记忆功能
-#   - 配置说明：
-#     - 将所有“长期记忆引擎配置”改为“Basic”，“启用的记忆检索层”只勾选“群组层”
-#
-# - chatluna-forward-msg
-#   - 插件用途：提供合并转发记录读取、发送功能
-#   - 配置说明：
-#     - 在“协议选择”中选择你使用的协议
-#     - 在“图片描述服务”中选择一个多模态模型
-#     - 在 chatluna 插件的“对话行为选项”中启用：attachForwardMsgIdToContext
-#     - 在 chatluna-character 插件对应会话配置的“上下文”中启用：enableMessageId
-#
-# - chatluna-plugin-common
-#   - 插件用途：提供一些通用的工具，包括本预设中用到的群管工具
-#   - 配置说明：
-#     - 只启用“群管插件”，其他选项全部关闭
-#     - 在“群管插件配置”中配置好“允许使用群管功能的成员 ID 列表”（可以要求 Bot 使用群管功能的人）和“允许使用群管功能的群 ID 白名单”
-#
-# - chatluna-toolbox
-#   - 插件用途：提供戳一戳、贴表情、撤回消息等功能
-#   - 配置说明：
-#     - 在“原生工具”中启用“NapCat OneBot”或“LLBot OneBot”中你使用的协议
-#     - 在“XML 工具”中启用除了“enableBanXmlTool”之外的全部选项
-#     - 其他选项全部关闭
-#
-# - chatluna-storage-service（强烈建议安装）
-#   - 插件用途：提供文件存储服务，防止 QQ 图床链接过期
-#   - 配置说明：
-#     - 将“存储后端类型”改为“本地文件存储”
-#     - 将“Koishi 在公网或者局域网中的路径”改为你的环境中实际的路径，确保此路径可以被你的 Napcat 或 LLBot 正常访问。
-#       - Linux Docker 部署：
-#         - 若 Koishi 与你的 Napcat 或 LLBot 使用 Docker 部署在同一个容器中，请尝试保持默认地址“http://127.0.0.1:5140”，不要修改
-#         - 若 Koishi 与你的 Napcat 或 LLBot 使用 Docker 部署在不同容器中、但使用同一个 Docker 网桥时，可以填写“http://koishi:5140”，5140 为你的 Koishi 容器内端口
-#           - 如果不会，请尝试咨询 AI
-#           - 不建议使用容器在宿主机的内网 IP 连接，因为容器的内网 IP 可能会在重启后重新分配，导致原有连接断开
-#       - 其他部署：
-#          - 其他部署方案（如 Windows），请尝试保持默认地址“http://127.0.0.1:5140”，不要修改
-#
-# - chatluna-google-gemini-adapter（使用 Gemini 系列时推荐）
-#   - 插件用途：提供 Gemini 模型接入
-#   - 配置说明：
-#     - Gemini API 请求地址末尾需添加 /v1beta
-#
-# - chatluna-multimodal-service（使用 Gemini 或不支持图像输入的模型时推荐）
-#   - 插件用途：提供图像描述服务、图像及文件（含视频）读取/描述工具
-#   - 配置说明：
-#     - 若使用 Gemini，可以启用 enableImageReadTool、enableFileReadTool
-#     - 若使用不支持图像输入的模型（如 DeepSeek），可以启用 enableContextImageDescription、enableImageReadTool，并在图像描述服务设置中配置一个支持图像输入的模型以生成图像描述
-#
-# - chatluna-agent
-#   - 插件用途：提供丰富的 Agent 相关能力（Skill、子 Agent、沙盒终端等），可控制工具在任意会话中的权限、进行文件处理、使用子 Agent 节约时间与 token 开销
-#   - 配置说明：暂未撰写文档，并且缺乏一些好用的默认 Skill、Agent 示例，可以先等等
-#
-# - memesluna
-#   - 插件用途：提供表情包发送功能，建议自行准备一张“拒绝”类型的表情包
-#   - 配置说明：
-#     - 跟随指引即可
-#
-# - chatluna-llm-web-search
-#   - 插件用途：提供全网/X 平台搜索、URL 读取功能
-#   - 配置说明：
-#     - 跟随指引即可
-#
-# - chatluna-social-media-reader
-#   - 插件用途：提供 B 站、小红书视频/帖子读取功能
-#   - 配置说明：
-#     - 跟随指引即可
-#
-# - chatluna-google-reverse-image-search
-#   - 插件用途：提供高质量的以图搜图功能
-#   - 配置说明：
-#     - 跟随指引即可
-#
-# - chatluna-qweather
-#   - 插件用途：提供天气查询功能
-#   - 配置说明：
-#     - 跟随指引即可
-#
-# - 语音服务
-#   - 插件用途：提供 TTS 服务用于发送语音
-#   - 配置说明：
-#     - 语音服务请自行寻找合适的插件或尝试使用 media-luna
-#     - 如果无需使用，也可以直接删去 voice 相关描述
-#
+# 下面的文档中推荐了伪装插件所需的主要插件，本预设也使用了它们中的一部分，请在修改预设前查看并按需安装：
+# https://chatluna.chat/guide/best-practice/character-recommended-plugins.html
+# 
 # 重要提醒：
 # - 请在使用前自行修改其中的“CHARACTER”、“MASTER”、“USER”、“【记得改这里的ID！括号也要删掉！】”、“example.com”、“大部分群友的id及详细信息”等内容为你自己的
 # - 如果使用私聊，可复制一份本预设并删改部分信息
