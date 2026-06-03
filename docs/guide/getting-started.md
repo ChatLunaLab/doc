@@ -11,8 +11,8 @@ Koishi 是一个跨平台、可扩展、高性能的聊天机器人框架。Chat
 按照 [Koishi 官方文档](https://koishi.chat/zh-CN/) 来安装 Koishi。
 
 > [!TIP] 提示
-> 社区成员为 Windows 和 Linux 提供了一键安装脚本，该脚本可以一键自动安装 Koishi 以及 ChatLuna。
-> 项目地址：https://github.com/hxsyzl/chatluna-install-auto
+> 社区成员提供了 ChatLuna Koishi 模板项目，可用于快速搭建包含 Koishi 与 ChatLuna 基础配置的环境（含 Windows、Docker 版）。
+> 项目地址：https://github.com/CookSleep/chatluna-koishi-template
 
 ### 配置聊天平台
 
@@ -27,6 +27,9 @@ Koishi 是一个跨平台、可扩展、高性能的聊天机器人框架。Chat
 安装 ChatLuna 的必要前置依赖服务，ChatLuna 需要这些服务来提供基础功能。
 
 **请务必先在侧栏的“依赖管理”界面，点击“小火箭图标”，再点击“✓”，并点击确认以更新所有预装的插件！**
+
+> [!WARNING] 注意
+> 插件依赖安装后并不会直接生成配置，需要再次返回插件市场点击“修改”按钮，再点击“配置”以生成配置。这是 Koishi 的“预期行为”。
 
 #### 数据库服务
 
