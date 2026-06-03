@@ -12,7 +12,7 @@ Koishi 是一个跨平台、可扩展、高性能的聊天机器人框架。Chat
 
 > [!TIP] 提示
 > 社区成员提供了 ChatLuna Koishi 模板项目，可用于快速搭建包含 Koishi 与 ChatLuna 基础配置的环境（含 Windows、Docker 版）。
-> 如果你是初次使用 ChatLuna，强烈推荐你使用此项目进行部署和配置，这将大幅度降低使用门槛、节约你的时间。
+> 如果你是初次使用 ChatLuna，强烈推荐你使用此项目进行部署和配置，这将大幅降低使用门槛，节省你的时间。
 > 项目地址：https://github.com/CookSleep/chatluna-koishi-template
 
 ### 配置聊天平台
