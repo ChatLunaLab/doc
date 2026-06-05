@@ -1,6 +1,6 @@
 # 介绍
 
-[ChatLuna](https://github.com/ChatLunaLab/chatluna) 是基于 [LangChain](https://github.com/langchain-ai/langchainjs) 构建的 Koishi 大语言模型聊天插件。它可以统一接入 OpenAI、Google Gemini、Claude 以及生态中的其他模型适配器。
+[ChatLuna](https://github.com/ChatLunaLab/chatluna) 是基于 [LangChain](https://github.com/langchain-ai/langchainjs) 构建的 Koishi 大语言模型聊天插件。它可以统一接入 OpenAI、Google Gemini、Claude 以及生态中的其他模型适配器，并提供 Agent 能力支持。
 
 除了面向最终用户的聊天能力，ChatLuna 也向 Koishi 插件开发者暴露了可复用的模型服务接口。长期记忆、知识库、渲染器、Agent 工具等特性都是基于这套 API 扩展的。
 
@@ -11,7 +11,7 @@
 - 资源管理：支持全局冷却、并发限制和调用次数控制。
 - 多模态：支持图片多模态，并可渲染模型回复，支持文本、图片、语音等多种格式。
 - 上下文管理：支持默认的短期聊天记录保存。并可额外安装长期记忆或知识库插件，实现更复杂的知识管理。
-- 多种聊天模式：提供 chat、browsing 和 agent 三种模式。browsing 可以联网感知消息，agent 模式则可让模型调用各种工具。
+- Agent 模式：安装附加插件后，模型将拥有沙箱，skills 等能力，进行更复杂的操作。
 - 内容安全：支持 koishi 的 censor 服务，过滤不良内容
 
 ## 接下来阅读

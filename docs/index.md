@@ -25,7 +25,7 @@ features:
     details: 集成 Deepseek、OpenAI、Google Gemini、Anthropic Claude 等主流平台，并持续扩展更多平台。
   - icon: 🔗
     title: Agentic 能力
-    details: 使用 Agent 模式，可以让模型任意调用已有工具。支持 MCP，联网搜索，知识库等复杂工具。
+    details: Agent 模式下，可以让模型任意调用已有工具。支持 沙盒，MCP，联网搜索等复杂工具。
   - icon: 🎨
     title: 多模态与渲染输出
     details: 支持图片多模态，并可渲染模型回复，支持文本、图片、语音等多种格式。
