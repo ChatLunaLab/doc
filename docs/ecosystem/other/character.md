@@ -48,15 +48,25 @@
 
 **不同的预设中的指引有所不同，请仔细查看涉及到工具调用回复的部分，如 `chatluna-toolbox` 的配置说明。**
 
+你可以将上方的默认预设中的一种（及你的旧预设）发送给 AI，让它在遵循默认预设格式的情况下，为你生成新的预设（或修改旧预设）。
+
+> [!TIP] 清理上下文
+> 在调整预设，或是对模型回复不满意时，可以使用 `chatluna.character.clear` 命令来清空当前会话的上下文，重新开始对话，避免模型回复被过去的对话所干扰。
+>
+> 命令支持以下几种使用方式：
+> - 清理指定群聊上下文：`chatluna.character.clear group:123` 或 `chatluna.character.clear g:123`
+> - 清理指定私聊上下文：`chatluna.character.clear private:123` 或 `chatluna.character.clear p:123`
+> - 未指定会话类型时，默认清理该 ID 的群聊上下文：`chatluna.character.clear 123`
+
 整个预设被分为 `name`、`nick_name`、`input`、`system`、`status`、`mute_keyword` 六个核心字段。
 
 让我们一步步来理解这些配置项：
 
-**（如果你不打算深入研究或大幅度改写预设，可以忽视下方的所有内容）。**
+**（如果你不打算深入研究或大幅度改写预设，可以忽视下面的所有内容）**
 
 ### status
 
-status 即为角色的状态，包括心情、状态、记忆、动作。
+`status` 即为角色的状态，包括心情、状态、记忆、动作。
 在预设的 `status` 中，只是初始的角色状态，具体状态的填充和生成，还需要 `input` 中进行。
 
 ### mute_keyword
