@@ -457,7 +457,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
       text: "最佳实践",
       items: [
         {
-          text: "推荐插件",
+          text: "伪装推荐插件",
           link: "/guide/best-practice/character-recommended-plugins",
         },
         {
