@@ -173,18 +173,20 @@ chatluna.export [conversation:string] -p <preset:string>
 ## 压缩会话
 
 使用 `chatluna.compress` 对会话历史进行压缩，适用于 Infinite Context 场景。
+`chatluna.compact` 是它的别名。
 
 ```powershell
-chatluna.compress [conversation:string] -p <preset:string>
+chatluna.compress [instruction:text] -c <conversation:string> -p <preset:string>
 ```
 
 | 参数 | 说明 |
 | --- | --- |
-| `conversation` | 目标会话。不传时默认压缩当前会话 |
+| `instruction` | 可选，传给模型的额外压缩要求，例如删除 emoji、保留重点 |
+| `-c` | 目标会话。不传时默认压缩当前会话 |
 | `-p` | 在指定预设通道中解析目标 |
 
 <chat-panel>
-  <chat-message nickname="User">chatluna.compress</chat-message>
+  <chat-message nickname="User">chatluna.compact 删除 emoji，保留关键决策和待办</chat-message>
   <chat-message nickname="Bot">已执行历史压缩。</chat-message>
 </chat-panel>
 
