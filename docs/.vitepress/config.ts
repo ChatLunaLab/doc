@@ -711,8 +711,8 @@ function sidebarEcosystem(): DefaultTheme.SidebarItem[] {
           link: "/ecosystem/plugin/extension-agent",
         },
         {
-          text: "图片服务 (Image Service)",
-          link: "/ecosystem/plugin/image-service",
+          text: "多模态服务 (Multimodal Service)",
+          link: "/ecosystem/plugin/multimodal-service",
         },
       ],
     },

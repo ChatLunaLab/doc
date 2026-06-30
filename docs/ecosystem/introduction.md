@@ -16,7 +16,7 @@ ChatLuna 插件同时也是 Koishi 插件。
 - [koishi-plugin-chatluna-plugin-common](./plugin/common.md): ChatLuna Agent 模式的基础工具合集。提供文件浏览，画图等工具。
 - [koishi-plugin-chatluna-long-memory](./plugin/long-term-memory.md): ChatLuna 长期记忆插件。提供基于向量数据库的长期记忆能力。
 - [koishi-plugin-chatluna-agent](./plugin/extension-agent.md): ChatLuna Agent 扩展框架。提供 MCP、Skills、Computer、Sub-Agent、Trigger 和工具权限管理能力。
-- [koishi-plugin-chatluna-image-service](./plugin/image-service.md): ChatLuna 图片服务插件。为不支持图片多模态的模型提供多模态图片识别能力。
+- [koishi-plugin-chatluna-multimodal-service](./plugin/multimodal-service.md): ChatLuna 多模态服务插件。提供上下文图像/语音描述、GIF 处理与 `read_files` 文件读取工具。
 
 ## 回复渲染器
 
