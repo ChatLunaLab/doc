@@ -3486,7 +3486,7 @@ __metadata:
     "@nolebase/vitepress-plugin-thumbnail-hash": "npm:^2.18.2"
     "@shikijs/vitepress-twoslash": "npm:^4.0.2"
     koishi: "npm:^4.18.11"
-    koishi-plugin-chatluna: "npm:^1.4.0-alpha.13"
+    koishi-plugin-chatluna: "npm:^1.4.0-alpha.36"
     markdown-it: "npm:^14.1.1"
     markdown-it-mathjax3: "npm:^5.2.0"
     markdown-it-task-lists: "npm:^2.1.1"
@@ -5260,9 +5260,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"koishi-plugin-chatluna@npm:^1.4.0-alpha.13":
-  version: 1.4.0-alpha.13
-  resolution: "koishi-plugin-chatluna@npm:1.4.0-alpha.13"
+"koishi-plugin-chatluna@npm:^1.4.0-alpha.36":
+  version: 1.4.0-alpha.36
+  resolution: "koishi-plugin-chatluna@npm:1.4.0-alpha.36"
   dependencies:
     "@chatluna/shared-prompt-renderer": "npm:^1.0.5"
     "@langchain/core": "npm:^0.3.80"
@@ -5287,7 +5287,7 @@ __metadata:
   peerDependenciesMeta:
     koishi-plugin-chatluna-storage-service:
       optional: true
-  checksum: 10c0/6c62d932524980c438953b91d04d399accb6942d218fa5ce731a217d522f754a3fdc60d8e873d69a8c32f86c1a0c057885461d76c331b2d19f8b35dc1ec1d36d
+  checksum: 10c0/406ee81813945783effb3f89fbeae83285420ebc57d56ce5332b54d39c0811970c257797cc767f4e0796e10a6c45d94e4ada0782c30b1ef23ca46c3d2c891fd3
   languageName: node
   linkType: hard
 
