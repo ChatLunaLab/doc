@@ -24,6 +24,10 @@ yarn create chatluna-plugin
 
 :::
 
+::: tip 版本说明
+当前脚手架模板已同步到 ChatLuna core `1.4.0-alpha.36`。创建新插件或为已有插件添加 ChatLuna 能力时，会写入 `koishi-plugin-chatluna@^1.4.0-alpha.36`。
+:::
+
 执行后会进入一系列创建流程，基于提示即可：
 
 1. 插件名称

@@ -1,7 +1,7 @@
 # 总览
 
 ::: tip 提示
-当前开发文档按 ChatLuna core `1.4.0-alpha.12` 的公开 API 梳理。
+当前开发文档按 ChatLuna core `1.4.0-alpha.36` 的公开 API 梳理。
 
 如果某个页面示例使用了旧版包名或旧版 API，请优先以本节 API 参考和源码导出为准。
 :::
