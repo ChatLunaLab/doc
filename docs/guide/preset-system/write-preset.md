@@ -146,6 +146,7 @@ content: "{concat('用户', name, '说：', prompt)}"
 - `user` - 发送者昵称（仅在 `prompts` 中可用）
 - `user_id` - 发送者 ID（仅在 `prompts` 中可用）
 - `prompt` - 用户实际发送的内容（仅在 `format_user_prompt` 中可用）
+- `message_id` - 接收到消息的 ID
 - `is_group` - 是否在群聊环境中
 - `is_private` - 是否为私聊环境
 - `idle_duration` - 上次用户消息以来的时间范围，以人性化字符串表示（例如 "1 day, 2 hours"）
