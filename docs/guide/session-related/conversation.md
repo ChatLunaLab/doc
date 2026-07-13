@@ -19,7 +19,7 @@ ChatLuna 的核心概念是「会话」，不再是之前旧版本中的「房�
 使用 `chatluna.new` 可以创建一段新的上下文。
 
 :::tip 提示
-`chatluna.clear` 目前是 `chatluna.new` 的别名，不是清空当前会话了，而是新建一条会话，然后切换过去。
+`chatluna.clear` 目前是 `chatluna.new` 的别名，目前是新建一条会话再切换过去的。
 :::
 
 ## 路由
