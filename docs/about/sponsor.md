@@ -129,6 +129,15 @@ const thinks = [
         name:"爱发电用户_GPsK",
         url: "#爱发电用户_GPsK"
     },
+     {
+       img: "https://q1.qlogo.cn/g?b=qq&nk=2649406963&s=0",
+       name: "39c5bb",
+       url: "#39c5bb",
+   }, {
+       img: "https://q1.qlogo.cn/g?b=qq&nk=1790060255&s=0",
+       name: "橴湙",
+       url: "#橴湙",
+   },
     {
         img: "https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/w/120/h/120",
         name:"爱发电用户_2ad12",
