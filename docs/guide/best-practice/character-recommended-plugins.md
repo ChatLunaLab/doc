@@ -160,9 +160,9 @@ ChatLuna 主插件，提供对话系统核心功能。
 
 帮助你折叠不需要的 Koishi 侧栏图标。
 
-### logger-plus
+### logger-next
 
-更好的 Koishi 日志插件，提供日志暂停、筛选、向前滚动等功能。
+更好的 Koishi 日志插件，优化了日志性能,虚拟滚动,更好的滚动体验。
 
 ### without-assignee
 
