@@ -104,9 +104,15 @@ ChatLuna 主插件，提供对话系统核心功能。
 - 将所有"长期记忆引擎配置"改为 `Basic`
 - "启用的记忆检索层"只勾选"群组层"
 
-### memesluna
+### chatluna-memes
 
-提供表情包发送功能，建议自行准备一张“拒绝”类型的表情包以应对不友好的用户。
+提供表情包发送功能，由 memesluna 改名而来，首次启动时会自动迁移 memesluna 的数据。
+
+**推荐配置：**
+
+- 在控制台侧栏的 ChatLuna Memes 页面管理表情包，并在"配置"中开启 ChatLuna 注入
+- 预设中使用变量 `{chatluna_memes}`（原 `{memesluna}`）
+- 建议自行准备一张“拒绝”类型的表情包以应对不友好的用户
 
 ### chatluna-llm-web-search
 
