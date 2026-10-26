@@ -106,7 +106,7 @@ ChatLuna 主插件，提供对话系统核心功能。
 
 ### chatluna-memes
 
-提供表情包发送功能，由 memesluna 改名而来，首次启动时会自动迁移 memesluna 的数据。
+提供表情包发送功能，是 fork lumia1998/memesluna 后修改并独立发布的插件，首次启动时会自动迁移 memesluna 的数据。
 
 **推荐配置：**
 
