@@ -516,6 +516,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@iconify-json/ic@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "@iconify-json/ic@npm:1.2.4"
+  dependencies:
+    "@iconify/types": "npm:*"
+  checksum: 10c0/b0e4d01a1b259defb391412b263ac4adb80d7b87161a0aac1a14fa748ee6e805a855f3e5635d66beb896082d0a4ee160fb3365fdcc44f2cf54687e2585922fa4
+  languageName: node
+  linkType: hard
+
 "@iconify-json/icon-park-outline@npm:^1.2.2":
   version: 1.2.4
   resolution: "@iconify-json/icon-park-outline@npm:1.2.4"
@@ -3874,6 +3883,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "chatluna-doc@workspace:."
   dependencies:
+    "@iconify-json/ic": "npm:^1.2.4"
     "@langchain/community": "npm:^1.0.0"
     "@nolebase/markdown-it-bi-directional-links": "npm:^2.18.2"
     "@nolebase/vitepress-plugin-enhanced-mark": "npm:^2.18.2"
