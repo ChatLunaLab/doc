@@ -47,8 +47,6 @@ import "./styles/sponsor.css";
 import '@shikijs/vitepress-twoslash/style.css'
 import Sponsors from "./components/Sponsors.vue";
 
-import("@nolebase/vitepress-plugin-inline-link-preview/client");
-
 export default {
     extends: DefaultTheme,
     Layout: () => {

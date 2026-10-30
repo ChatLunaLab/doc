@@ -2,9 +2,9 @@
   "name": "chatluna-doc",
   "private": true,
   "version": "1.0.0",
-  "description": "ChatLuna 插件的官方文档",
+  "description": "ChatLuna v2 文档与 v1 归档",
   "main": "index.js",
-  "repository": "https://github.com/ChatHubLab/doc",
+  "repository": "https://github.com/ChatLunaLab/doc",
   "author": "dingyi222666 <dingyi222666@foxmail.com>",
   "type": "module",
   "devDependencies": {
@@ -35,9 +35,17 @@
   },
   "scripts": {
     "dev": "vitepress dev docs",
-    "build": "vitepress build docs",
+    "build": "node scripts/site.mjs build v2",
+    "build:v1": "node scripts/site.mjs build v1",
+    "build:all": "yarn build && yarn build:v1",
+    "dev:v1": "node scripts/site.mjs dev v1",
+    "preview:v1": "node scripts/site.mjs preview v1",
     "serve": "vitepress serve docs",
-    "preview": "vitepress preview docs"
+    "preview": "vitepress preview docs",
+    "lint": "node scripts/check-docs.mjs v2 && node scripts/check-docs.mjs v1",
+    "typecheck": "tsc --noEmit --incremental false --composite false",
+    "test:unit": "node --test tests/*.test.mjs",
+    "test:build": "node scripts/check-builds.mjs"
   },
   "packageManager": "yarn@4.14.1"
 }

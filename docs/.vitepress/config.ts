@@ -1,4 +1,6 @@
-import { defineConfig, DefaultTheme } from "vitepress";
+import { writeFile } from "node:fs/promises";
+import { join } from "node:path";
+import { defineConfig, type DefaultTheme } from "vitepress";
 import timelinePlugin from "vitepress-markdown-timeline";
 import { tabsMarkdownPlugin } from "vitepress-plugin-tabs";
 import math from "markdown-it-mathjax3";
@@ -16,16 +18,24 @@ import {
 import { ThumbnailHashImages } from "@nolebase/vitepress-plugin-thumbnail-hash/vite";
 import { transformerTwoslash } from "@shikijs/vitepress-twoslash";
 import { transformHeadMeta } from "@nolebase/vitepress-plugin-meta/vitepress";
+import unoConfig from "./uno.config";
+
+const legacy = process.env.CHATLUNA_DOCS_VERSION === "v1";
+const hostname = legacy ? "https://v1.chatluna.chat" : "https://chatluna.chat";
 
 export default defineConfig({
   lang: "zh-CN",
-  title: "ChatLuna",
+  title: legacy ? "ChatLuna v1" : "ChatLuna v2",
+  srcExclude: legacy ? ["index.md", "guide/**", "architecture/**", "development/**", "reference/**"] : ["v1/**"],
+  rewrites: legacy ? { "v1/:path*": ":path*" } : {},
+  outDir: legacy ? ".vitepress/dist-v1" : ".vitepress/dist",
+  cacheDir: legacy ? ".vitepress/cache-v1" : ".vitepress/cache",
   base: "/",
-  description: "ChatLuna",
-  ignoreDeadLinks: true,
+  description: legacy ? "ChatLuna v1 使用与开发文档" : "ChatLuna v2 安装、使用、架构与插件开发文档",
+  ignoreDeadLinks: false,
   lastUpdated: true,
   cleanUrls: false,
-  head: [["link", { rel: "icon", href: "logo.png" }]],
+  head: [["link", { rel: "icon", href: "/logo.png" }]],
 
   themeConfig: {
     outline: {
@@ -34,21 +44,28 @@ export default defineConfig({
     },
 
     nav: nav(),
-    sidebar: {
+    sidebar: legacy ? {
       "/guide/": sidebarGuide(),
       "/development/": sidebarDevelopment(),
       "/ecosystem/": sidebarEcosystem(),
       "/about/": about(),
+    } : {
+      "/guide/": sidebarV2Guide(),
+      "/architecture/": sidebarArchitecture(),
+      "/development/": sidebarV2Development(),
+      "/reference/": sidebarReference(),
     },
     editLink: {
-      pattern: "https://github.com/ChatLunaLab/doc/edit/main/docs/:path",
+      pattern: legacy
+        ? ({ relativePath }) => `https://github.com/ChatLunaLab/doc/edit/v2/docs/${relativePath.startsWith("v1/") ? "" : "v1/"}${relativePath}`
+        : "https://github.com/ChatLunaLab/doc/edit/v2/docs/:path",
       text: "在 GitHub 上编辑此页",
     },
 
     socialLinks: [
       {
         icon: "github",
-        link: "https://github.com/ChatLunaLab/chatluna",
+        link: legacy ? "https://github.com/ChatLunaLab/chatluna" : "https://github.com/ChatLunaLab/v2",
       },
     ],
     footer: {
@@ -84,8 +101,9 @@ export default defineConfig({
       },
     },
   },
-  sitemap: {
-    hostname: "https://chatluna.chat",
+  sitemap: { hostname },
+  async buildEnd(site) {
+    await writeFile(join(site.outDir, "CNAME"), new URL(hostname).hostname + "\n");
   },
   markdown: {
     theme: {
@@ -115,7 +133,7 @@ export default defineConfig({
       noExternal: ["@nolebase/*", "vue-demi", "@unlazy/*"],
     },
     plugins: [
-      UnoCSS(),
+      UnoCSS(unoConfig),
       ThumbnailHashImages(),
       GitChangelog({
         maxGitLogCount: 2000,
@@ -793,39 +811,71 @@ function about(): DefaultTheme.SidebarItem[] {
 }
 
 function nav(): DefaultTheme.NavItem[] {
+  if (legacy) return [
+    { text: "使用指南", link: "/guide/introduction" },
+    { text: "开发文档", link: "/development/introduction" },
+    { text: "插件生态", link: "/ecosystem/introduction" },
+    { text: "ChatLuna v2", link: "https://chatluna.chat" },
+  ];
   return [
-    {
-      text: "教程",
-      link: "/guide/introduction",
-      activeMatch: "/guide/",
-    },
-    {
-      text: "开发",
-      link: "/development/introduction",
-      activeMatch: "/development/",
-    },
-    {
-      text: "生态",
-      link: "/ecosystem/introduction",
-      activeMatch: "/ecosystem/",
-    },
-    {
-      text: "更多",
-      items: [
-        {
-          text: "参与讨论",
-          link: "/about/contact",
-        },
-        {
-          text: "赞助者",
-          link: "/about/sponsor",
-        },
-        {
-          text: "关于",
-          link: "/about/about",
-        },
-      ],
-      activeMatch: "/about/",
-    },
+    { text: "使用指南", link: "/guide/getting-started", activeMatch: "/guide/" },
+    { text: "架构", link: "/architecture/overview", activeMatch: "/architecture/" },
+    { text: "开发", link: "/development/plugins", activeMatch: "/development/" },
+    { text: "参考", link: "/reference/cli", activeMatch: "/reference/" },
+    { text: "ChatLuna v1", link: "https://v1.chatluna.chat" },
+  ];
+}
+
+function sidebarReference(): DefaultTheme.SidebarItem[] {
+  return [
+    { text: "命令行", link: "/reference/cli" },
+    { text: "配置与数据目录", link: "/reference/configuration" },
+    { text: "术语表", link: "/reference/glossary" },
+  ];
+}
+
+function sidebarV2Guide(): DefaultTheme.SidebarItem[] {
+  return [
+    { text: "开始使用", items: [
+      { text: "安装与启动", link: "/guide/getting-started" },
+      { text: "首次配置", link: "/guide/configuration" },
+      { text: "日常使用", link: "/guide/daily-use" },
+    ] },
+    { text: "能力", items: [
+      { text: "模型与提供商", link: "/guide/models" },
+      { text: "场景规则", link: "/guide/rules" },
+      { text: "预设与角色", link: "/guide/presets" },
+      { text: "长期记忆", link: "/guide/memory" },
+      { text: "工具、技能与 MCP", link: "/guide/capabilities" },
+      { text: "机器与工作区", link: "/guide/machines" },
+      { text: "子代理", link: "/guide/subagents" },
+      { text: "定时与后台任务", link: "/guide/automation" },
+      { text: "轨迹与用量", link: "/guide/observability" },
+      { text: "安全与权限", link: "/guide/security" },
+      { text: "排错与诊断", link: "/guide/troubleshooting" },
+      { text: "从 v1 迁移", link: "/guide/migration" },
+    ] },
+  ];
+}
+
+function sidebarArchitecture(): DefaultTheme.SidebarItem[] {
+  return [
+    { text: "架构总览", link: "/architecture/overview" },
+    { text: "会话、消息与分支", link: "/architecture/sessions" },
+    { text: "Agent 与执行循环", link: "/architecture/agents" },
+    { text: "模型与请求运行时", link: "/architecture/models" },
+    { text: "上下文与缓存", link: "/architecture/context-cache" },
+    { text: "插件、运行时与数据", link: "/architecture/extensions" },
+  ];
+}
+
+function sidebarV2Development(): DefaultTheme.SidebarItem[] {
+  return [
+    { text: "插件开发", link: "/development/plugins" },
+    { text: "工具开发", link: "/development/tools" },
+    { text: "提示词扩展", link: "/development/prompts" },
+    { text: "WebUI 扩展", link: "/development/webui" },
+    { text: "API 参考", link: "/development/api-reference" },
+    { text: "项目结构", link: "/development/repository" },
   ];
 }
