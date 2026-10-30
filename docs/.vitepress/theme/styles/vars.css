@@ -26,18 +26,19 @@
  *    custom containers.
  * -------------------------------------------------------------------------- */
 
+/* 中国传统色蓝系：青黛（深）/ 菘蓝（中）/ 青鸾（浅） */
 :root {
-    --vp-c-sky-1: #087e8b;
-    --vp-c-sky-2: #066a75;
-    --vp-c-sky-3: #055b65;
-    --vp-c-sky-soft: rgb(8 126 139 / 12%);
+    --vp-c-sky-1: #45465e;
+    --vp-c-sky-2: #6b798e;
+    --vp-c-sky-3: #9aa7b1;
+    --vp-c-sky-soft: rgb(107 121 142 / 16%);
 }
 
 .dark {
-    --vp-c-sky-1: #4db4bd;
-    --vp-c-sky-2: #3c9da7;
-    --vp-c-sky-3: #2c858f;
-    --vp-c-sky-soft: rgb(77 180 189 / 16%);
+    --vp-c-sky-1: #9aa7b1;
+    --vp-c-sky-2: #6b798e;
+    --vp-c-sky-3: #45465e;
+    --vp-c-sky-soft: rgb(154 167 177 / 18%);
 }
 
 /**
@@ -74,13 +75,32 @@
  * -------------------------------------------------------------------------- */
 
 :root {
-    --vp-home-hero-name-color: #17191c;
-    --vp-home-hero-name-background: none;
-    --vp-home-hero-image-filter: none;
+    --vp-home-hero-name-color: transparent;
+    --vp-home-hero-name-background: -webkit-linear-gradient(
+        0deg,
+        #45465e 10%,
+        #6b798e
+    );
 }
 
 .dark {
-    --vp-home-hero-name-color: #f4f6f7;
+    --vp-home-hero-name-background: -webkit-linear-gradient(
+        0deg,
+        #45465e 10%,
+        #9aa7b1
+    );
+}
+
+@media (min-width: 640px) {
+    :root {
+        --vp-home-hero-image-filter: blur(56px);
+    }
+}
+
+@media (min-width: 960px) {
+    :root {
+        --vp-home-hero-image-filter: blur(72px);
+    }
 }
 
 /**

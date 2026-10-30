@@ -29,7 +29,10 @@ if (version === undefined) {
     assert.ok(!location.pathname.startsWith('/v1/'), `Archive prefix in sitemap: ${location}`)
     assert.ok(existsSync(join(dir, decodeURIComponent(location.pathname))))
   }
-  const sitemapRoutes = new Set(locations.map(location => decodeURIComponent(location.pathname.slice(1))))
+  const sitemapRoutes = new Set(locations.map(location => {
+    const path = decodeURIComponent(location.pathname.slice(1))
+    return path.endsWith('/') ? `${path}index.html` : path
+  }))
   for (const route of routes.filter(route => route !== 'index.html')) assert.ok(sitemapRoutes.has(route), `Missing sitemap route: ${route}`)
   const hashmap = JSON.parse(readFileSync(join(dir, 'hashmap.json'), 'utf8'))
   assert.equal(Object.keys(hashmap).length, routes.length)
@@ -40,9 +43,12 @@ if (version === undefined) {
   assert.ok(indexFile, 'Missing local search index')
   const search = JSON.parse((await import(pathToFileURL(join(chunks, indexFile)).href)).default)
   assert.ok(search.documentCount > 0)
-  const searchRoutes = new Set(Object.values(search.documentIds).map(id => id.split('#')[0].slice(1)))
+  const searchRoutes = new Set(Object.values(search.documentIds).map(id => {
+    const path = id.split('#')[0].slice(1)
+    return path.endsWith('/') ? `${path}index.html` : path
+  }))
   for (const route of searchRoutes) assert.ok(routes.includes(route), `Foreign search route: ${route}`)
-  assert.ok(searchRoutes.has(version === 'v1' ? 'guide/introduction.html' : 'guide/getting-started.html'))
+  assert.ok(searchRoutes.has(version === 'v1' ? 'guide/introduction.html' : 'manual/introduction.html'))
   let references = 0
   const errors = []
   for (const [index, route] of routes.entries()) {
@@ -63,7 +69,7 @@ if (version === undefined) {
     assert.ok(existsSync(join(dir, 'guide/introduction.html')))
     assert.ok(!existsSync(join(dir, 'architecture/overview.html')))
   } else {
-    assert.ok(existsSync(join(dir, 'architecture/overview.html')))
+    assert.ok(existsSync(join(dir, 'architecture/index.html')))
     assert.ok(!existsSync(join(dir, 'ecosystem/introduction.html')))
   }
   console.log(`${version}: checked ${routes.length} HTML pages, ${references} local references, search, edit links, sitemap and CNAME.`)

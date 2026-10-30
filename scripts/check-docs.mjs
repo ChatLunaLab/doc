@@ -11,7 +11,7 @@ export function referenceTarget(reference, page) {
   if (!path) return
   const target = posix.normalize(path.startsWith('/') ? path.slice(1) : posix.join(posix.dirname(page), path))
   if (target.startsWith('../')) throw new Error(`Reference escapes the site: ${reference}`)
-  if (target === '.' || path.endsWith('/')) return `${target === '.' ? '' : `${target}/`}index.html`
+  if (target === '.' || path.endsWith('/')) return `${target === '.' ? '' : `${target.replace(/\/+$/, '')}/`}index.html`
   if (target.endsWith('.md')) return target.slice(0, -3) + '.html'
   return extname(target) ? target : `${target}.html`
 }

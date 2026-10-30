@@ -18,20 +18,23 @@ import {
 import { ThumbnailHashImages } from "@nolebase/vitepress-plugin-thumbnail-hash/vite";
 import { transformerTwoslash } from "@shikijs/vitepress-twoslash";
 import { transformHeadMeta } from "@nolebase/vitepress-plugin-meta/vitepress";
+import { withMermaid } from "vitepress-plugin-mermaid";
 import unoConfig from "./uno.config";
 
 const legacy = process.env.CHATLUNA_DOCS_VERSION === "v1";
 const hostname = legacy ? "https://v1.chatluna.chat" : "https://chatluna.chat";
 
-export default defineConfig({
+export default withMermaid(defineConfig({
   lang: "zh-CN",
   title: legacy ? "ChatLuna v1" : "ChatLuna v2",
-  srcExclude: legacy ? ["index.md", "guide/**", "architecture/**", "development/**", "reference/**"] : ["v1/**"],
+  srcExclude: legacy
+    ? ["index.md", "manual/**", "guide/**", "architecture/**", "api/**", "cookbook/**", "about/**", "development/**", "reference/**"]
+    : ["v1/**"],
   rewrites: legacy ? { "v1/:path*": ":path*" } : {},
   outDir: legacy ? ".vitepress/dist-v1" : ".vitepress/dist",
   cacheDir: legacy ? ".vitepress/cache-v1" : ".vitepress/cache",
   base: "/",
-  description: legacy ? "ChatLuna v1 使用与开发文档" : "ChatLuna v2 安装、使用、架构与插件开发文档",
+  description: legacy ? "ChatLuna v1 使用与开发文档" : "ChatLuna v2：为 IM 平台深度设计的 Agent Harness",
   ignoreDeadLinks: false,
   lastUpdated: true,
   cleanUrls: false,
@@ -50,10 +53,12 @@ export default defineConfig({
       "/ecosystem/": sidebarEcosystem(),
       "/about/": about(),
     } : {
-      "/guide/": sidebarV2Guide(),
+      "/manual/": sidebarManual(),
+      "/guide/": sidebarDevGuide(),
       "/architecture/": sidebarArchitecture(),
-      "/development/": sidebarV2Development(),
-      "/reference/": sidebarReference(),
+      "/api/": sidebarApi(),
+      "/cookbook/": sidebarCookbook(),
+      "/about/": sidebarV2About(),
     },
     editLink: {
       pattern: legacy
@@ -132,6 +137,10 @@ export default defineConfig({
     ssr: {
       noExternal: ["@nolebase/*", "vue-demi", "@unlazy/*"],
     },
+    optimizeDeps: {
+      // mermaid's elk chunk imports this CJS bundle via subpath; pre-bundle it
+      include: ["elkjs/lib/elk.bundled.js"],
+    },
     plugins: [
       UnoCSS(unoConfig),
       ThumbnailHashImages(),
@@ -160,7 +169,7 @@ export default defineConfig({
 
     return head;
   },
-});
+}));
 
 function sidebarGuide(): DefaultTheme.SidebarItem[] {
   return [
@@ -818,64 +827,122 @@ function nav(): DefaultTheme.NavItem[] {
     { text: "ChatLuna v2", link: "https://chatluna.chat" },
   ];
   return [
-    { text: "使用指南", link: "/guide/getting-started", activeMatch: "/guide/" },
-    { text: "架构", link: "/architecture/overview", activeMatch: "/architecture/" },
-    { text: "开发", link: "/development/plugins", activeMatch: "/development/" },
-    { text: "参考", link: "/reference/cli", activeMatch: "/reference/" },
+    { text: "使用手册", link: "/manual/introduction", activeMatch: "/manual/" },
+    { text: "开发指南", link: "/guide/", activeMatch: "/guide/" },
+    { text: "架构", link: "/architecture/", activeMatch: "/architecture/" },
+    { text: "API 参考", link: "/api/", activeMatch: "/api/" },
+    { text: "进阶", link: "/cookbook/", activeMatch: "/cookbook/" },
     { text: "ChatLuna v1", link: "https://v1.chatluna.chat" },
   ];
 }
 
-function sidebarReference(): DefaultTheme.SidebarItem[] {
+function sidebarManual(): DefaultTheme.SidebarItem[] {
   return [
-    { text: "命令行", link: "/reference/cli" },
-    { text: "配置与数据目录", link: "/reference/configuration" },
-    { text: "术语表", link: "/reference/glossary" },
+    { text: "介绍", link: "/manual/introduction" },
+    { text: "安装", collapsed: false, items: [
+      { text: "选择安装方式", link: "/manual/starter/" },
+      { text: "命令行（CLI）", link: "/manual/starter/cli" },
+      { text: "Docker 部署", link: "/manual/starter/docker" },
+      { text: "从源码运行", link: "/manual/starter/source" },
+    ] },
+    { text: "使用", collapsed: false, items: [
+      { text: "快速上手", link: "/manual/quickstart" },
+      { text: "认识 WebUI", link: "/manual/usage/webui" },
+      { text: "模型与提供商", link: "/manual/usage/models" },
+      { text: "角色与预设", link: "/manual/usage/characters" },
+      { text: "场景规则", link: "/manual/usage/rules" },
+      { text: "长期记忆", link: "/manual/usage/memory" },
+      { text: "工具、技能与 MCP", link: "/manual/usage/capabilities" },
+      { text: "机器与工作区", link: "/manual/usage/machines" },
+      { text: "子代理", link: "/manual/usage/subagents" },
+      { text: "定时与后台任务", link: "/manual/usage/automation" },
+      { text: "权限与安全", link: "/manual/usage/permissions" },
+      { text: "轨迹与用量", link: "/manual/usage/observability" },
+      { text: "接入聊天平台", link: "/manual/usage/adapters" },
+      { text: "指令一览", link: "/manual/usage/commands" },
+    ] },
+    { text: "配方", collapsed: false, items: [
+      { text: "多实例与多机器人", link: "/manual/recipe/instances" },
+      { text: "公网部署", link: "/manual/recipe/server" },
+    ] },
   ];
 }
 
-function sidebarV2Guide(): DefaultTheme.SidebarItem[] {
+function sidebarDevGuide(): DefaultTheme.SidebarItem[] {
   return [
-    { text: "开始使用", items: [
-      { text: "安装与启动", link: "/guide/getting-started" },
-      { text: "首次配置", link: "/guide/configuration" },
-      { text: "日常使用", link: "/guide/daily-use" },
+    { text: "总览", link: "/guide/" },
+    { text: "开发起步", collapsed: false, items: [
+      { text: "环境搭建", link: "/guide/develop/setup" },
+      { text: "配置文件", link: "/guide/develop/config" },
+      { text: "第一个插件", link: "/guide/develop/first-plugin" },
+      { text: "发布插件", link: "/guide/develop/publish" },
     ] },
-    { text: "能力", items: [
-      { text: "模型与提供商", link: "/guide/models" },
-      { text: "场景规则", link: "/guide/rules" },
-      { text: "预设与角色", link: "/guide/presets" },
-      { text: "长期记忆", link: "/guide/memory" },
-      { text: "工具、技能与 MCP", link: "/guide/capabilities" },
-      { text: "机器与工作区", link: "/guide/machines" },
-      { text: "子代理", link: "/guide/subagents" },
-      { text: "定时与后台任务", link: "/guide/automation" },
-      { text: "轨迹与用量", link: "/guide/observability" },
-      { text: "安全与权限", link: "/guide/security" },
-      { text: "排错与诊断", link: "/guide/troubleshooting" },
-      { text: "从 v1 迁移", link: "/guide/migration" },
+    { text: "框架基础", collapsed: false, items: [
+      { text: "插件与生命周期", link: "/guide/plugin/lifecycle" },
+      { text: "服务与依赖", link: "/guide/plugin/service" },
+      { text: "事件系统", link: "/guide/plugin/events" },
+      { text: "配置构型", link: "/guide/plugin/schema" },
+    ] },
+    { text: "能力扩展", collapsed: false, items: [
+      { text: "工具开发", link: "/guide/extend/tools" },
+      { text: "提示词分区", link: "/guide/extend/prompts" },
+      { text: "WebUI 扩展", link: "/guide/extend/webui" },
+      { text: "模型提供商", link: "/guide/extend/provider" },
     ] },
   ];
 }
 
 function sidebarArchitecture(): DefaultTheme.SidebarItem[] {
   return [
-    { text: "架构总览", link: "/architecture/overview" },
+    { text: "架构总览", link: "/architecture/" },
     { text: "会话、消息与分支", link: "/architecture/sessions" },
     { text: "Agent 与执行循环", link: "/architecture/agents" },
-    { text: "模型与请求运行时", link: "/architecture/models" },
+    { text: "模型与模态运行时", link: "/architecture/models" },
     { text: "上下文与缓存", link: "/architecture/context-cache" },
-    { text: "插件、运行时与数据", link: "/architecture/extensions" },
+    { text: "插件、服务与数据", link: "/architecture/extensions" },
   ];
 }
 
-function sidebarV2Development(): DefaultTheme.SidebarItem[] {
+function sidebarApi(): DefaultTheme.SidebarItem[] {
   return [
-    { text: "插件开发", link: "/development/plugins" },
-    { text: "工具开发", link: "/development/tools" },
-    { text: "提示词扩展", link: "/development/prompts" },
-    { text: "WebUI 扩展", link: "/development/webui" },
-    { text: "API 参考", link: "/development/api-reference" },
-    { text: "项目结构", link: "/development/repository" },
+    { text: "总览", link: "/api/" },
+    { text: "术语表", link: "/api/glossary" },
+    { text: "核心服务", collapsed: false, items: [
+      { text: "会话 (Conversations)", link: "/api/service/conversations" },
+      { text: "Agent", link: "/api/service/agent" },
+      { text: "模型 (Models)", link: "/api/service/models" },
+      { text: "工具 (Tools)", link: "/api/service/tools" },
+      { text: "权限 (Permissions)", link: "/api/service/permissions" },
+      { text: "预设 (Presets)", link: "/api/service/presets" },
+    ] },
+    { text: "Cordis 上下文", collapsed: false, items: [
+      { text: "上下文 (Context)", link: "/api/cordis/context" },
+      { text: "事件 (Events)", link: "/api/cordis/events" },
+      { text: "服务 (Service)", link: "/api/cordis/service" },
+      { text: "配置构型 (Schema)", link: "/api/cordis/schema" },
+    ] },
+    { text: "其他", collapsed: false, items: [
+      { text: "命令行", link: "/api/cli" },
+      { text: "配置与数据目录", link: "/api/configuration" },
+      { text: "HTTP API", link: "/api/http" },
+    ] },
+  ];
+}
+
+function sidebarCookbook(): DefaultTheme.SidebarItem[] {
+  return [
+    { text: "总览", link: "/cookbook/" },
+    { text: "排错与诊断", link: "/cookbook/troubleshooting" },
+    { text: "从 v1 迁移", link: "/cookbook/migration" },
+    { text: "公网部署与反代", link: "/cookbook/deployment" },
+  ];
+}
+
+function sidebarV2About(): DefaultTheme.SidebarItem[] {
+  return [
+    { text: "常见问题", link: "/about/faq" },
+    { text: "参与讨论", link: "/about/contact" },
+    { text: "赞助者", link: "/about/sponsor" },
+    { text: "关于 ChatLuna", link: "/about/about" },
   ];
 }

@@ -1,7 +1,7 @@
 ---
 layout: page
 title: ChatLuna v2
-description: 基于 Cordis 4 的可组合聊天与 Agent 框架。涵盖安装部署、使用配置、系统架构与插件开发文档。
+description: ChatLuna v2：为 IM 平台深度设计的 Agent Harness，基于 Cordis 4 构建。涵盖安装部署、使用配置、系统架构与插件开发文档。
 ---
 
 <script setup lang="ts">
@@ -13,8 +13,8 @@ import SessionLogDemo from './.vitepress/theme/components/SessionLogDemo.vue'
     <div class="hero-copy">
       <div class="hero-brand"><img src="/logo.png" alt="" width="44" height="44" /><span>ChatLuna v2 <small>Alpha</small></span></div>
       <h1 id="home-title">让对话自然发生，<br />让过程清楚可见。</h1>
-      <p class="hero-lead">基于 Cordis 4 构建的可组合聊天与 Agent 框架。连接聊天平台和模型，用预设、工具与技能构建自己的机器人，再从会话记录中检查它如何工作。</p>
-      <div class="hero-actions"><a class="action-primary" href="/guide/getting-started.html">安装与启动</a><a class="action-secondary" href="/architecture/overview.html">了解 v2 架构</a></div>
+      <p class="hero-lead">为 IM 平台深度设计的 Agent Harness，基于 Cordis 4 构建。连接聊天平台与模型，用预设、工具和技能构建自己的机器人，再从会话记录中检查它如何工作。</p>
+      <div class="hero-actions"><a class="action-primary" href="/manual/quickstart.html">即刻起步</a><a class="action-secondary" href="/manual/introduction.html">了解更多</a></div>
       <p class="hero-requirements">源码运行需 Node.js 24+ 与 Yarn 4，亦支持通过 Docker 部署。</p>
     </div>
     <SessionLogDemo />
@@ -23,25 +23,26 @@ import SessionLogDemo from './.vitepress/theme/components/SessionLogDemo.vue'
   <section class="entry-section" aria-labelledby="entry-title">
     <div class="section-heading"><h2 id="entry-title">按任务查阅文档</h2><a href="https://v1.chatluna.chat">正在使用 v1？查阅旧版文档</a></div>
     <div class="entry-list">
-      <a class="entry-row" href="/guide/configuration.html"><span class="entry-kind">部署与配置</span><span class="entry-copy"><strong>连接首个模型与聊天平台</strong><small>完成真实推理测试、适配器接入与主人身份绑定。</small></span></a>
-      <a class="entry-row" href="/guide/daily-use.html"><span class="entry-kind">使用指南</span><span class="entry-copy"><strong>业务场景与行为配置</strong><small>配置场景规则、角色伪装、长期记忆与可用能力边界。</small></span></a>
-      <a class="entry-row" href="/architecture/overview.html"><span class="entry-kind">架构说明</span><span class="entry-copy"><strong>理解对话执行全流程</strong><small>理清业务交互、会话日志记录、Agent 循环与单步模型调用的协作边界。</small></span></a>
-      <a class="entry-row" href="/development/plugins.html"><span class="entry-kind">开发教程</span><span class="entry-copy"><strong>编写自定义扩展插件</strong><small>从最小插件结构起步，扩展工具、提示词与管理页面。</small></span></a>
-      <a class="entry-row" href="/reference/configuration.html"><span class="entry-kind">参考与排错</span><span class="entry-copy"><strong>查阅命令、默认值与数据路径</strong><small>按配置来源、运行参数与失败边界排查定位问题。</small></span></a>
+      <a class="entry-row" href="/manual/quickstart.html"><span class="entry-kind">使用手册</span><span class="entry-copy"><strong>连接首个模型与聊天平台</strong><small>安装启动、完成推理测试、接入平台并绑定主人身份。</small></span></a>
+      <a class="entry-row" href="/manual/usage/webui.html"><span class="entry-kind">使用手册</span><span class="entry-copy"><strong>业务场景与行为配置</strong><small>配置场景规则、角色伪装、长期记忆与可用能力边界。</small></span></a>
+      <a class="entry-row" href="/architecture/"><span class="entry-kind">架构</span><span class="entry-copy"><strong>理解对话执行全流程</strong><small>理清会话日志、Agent 循环与单次模型调用的协作边界。</small></span></a>
+      <a class="entry-row" href="/guide/"><span class="entry-kind">开发指南</span><span class="entry-copy"><strong>编写自定义扩展插件</strong><small>从最小插件结构起步，扩展工具、提示词与管理页面。</small></span></a>
+      <a class="entry-row" href="/api/"><span class="entry-kind">API 参考</span><span class="entry-copy"><strong>查阅服务、命令与默认值</strong><small>按服务接口、运行参数与配置来源查找准确的定义。</small></span></a>
+      <a class="entry-row" href="/cookbook/"><span class="entry-kind">进阶</span><span class="entry-copy"><strong>排错、迁移与公网部署</strong><small>定位常见问题，从 v1 迁移，或将实例暴露到公网。</small></span></a>
     </div>
   </section>
 
   <section class="mechanisms" aria-label="框架的三个核心边界">
-    <article><h2>日志记录与上下文视图解耦</h2><p>消息、控制标记与摘要切点按序追加，模型上下文由记录构建；分叉保留原来的历史。</p><a href="/architecture/sessions.html">会话机制</a></article>
-    <article><h2>单步调用与执行循环解耦</h2><p>模型运行时负责一次调用，Agent 负责工具循环与输入调度。请求重建不调用模型，也不重新执行工具。</p><a href="/architecture/agents.html">Agent 执行</a></article>
-    <article><h2>能力提供与权限控制解耦</h2><p>插件负责注册工具与服务，权限系统独立判定调用许可；技能、MCP 服务与后台任务不会隐式提升授权。</p><a href="/guide/security.html">安全与权限</a></article>
+    <article><h2>日志与上下文解耦</h2><p>消息、控制标记与摘要切点按序追加；模型上下文由记录构建，分叉保留原历史。</p><a href="/architecture/sessions.html">会话机制</a></article>
+    <article><h2>单次调用与循环解耦</h2><p>模型运行时负责一次调用，Agent 负责工具循环与输入调度。请求重建不调用模型。</p><a href="/architecture/agents.html">Agent 执行</a></article>
+    <article><h2>能力与权限解耦</h2><p>插件注册工具与服务，权限系统独立判定调用许可；技能、MCP 与后台任务不隐式提权。</p><a href="/manual/usage/permissions.html">安全与权限</a></article>
   </section>
-  <aside class="home-help"><p>已有 v1 实例？建议先在隔离环境中测试验证 v2，确认无误后再切换平台连接。</p><a href="/guide/migration.html">阅读迁移指南</a><a href="/guide/troubleshooting.html">遇到问题时排错</a></aside>
+  <aside class="home-help"><p>已有 v1 实例？建议先在隔离环境中验证 v2，确认无误后再切换平台连接。</p><a href="/cookbook/migration.html">阅读迁移指南</a><a href="/cookbook/troubleshooting.html">遇到问题时排错</a></aside>
 </div>
 
 <style>
-.v2-home { --home-surface: #f4f6f7; --home-ink: #17191c; --home-muted: #536068; --home-primary: #087e8b; --home-primary-hover: #066a75; --home-on-primary: #fff; color: var(--home-ink); font-family: var(--vp-font-family-base); }
-.dark .v2-home { --home-surface: #202529; --home-ink: #edf2f4; --home-muted: #b5c0c5; --home-primary: #62c0c8; --home-primary-hover: #89d1d6; --home-on-primary: #14252a; }
+.v2-home { --home-surface: #f4f5f7; --home-ink: #1b1d24; --home-muted: #55606e; --home-primary: #45465e; --home-primary-hover: #6b798e; --home-accent: #9aa7b1; --home-on-primary: #fff; color: var(--home-ink); font-family: var(--vp-font-family-base); }
+.dark .v2-home { --home-surface: #1e2027; --home-ink: #e8ebf0; --home-muted: #9aa7b1; --home-primary: #9aa7b1; --home-primary-hover: #b8c2cb; --home-on-primary: #23242e; }
 .home-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(36px, 6vw, 84px); padding: 76px max(32px, calc((100% - 1152px) / 2)) 80px; background: var(--home-surface); }
 .hero-copy { min-width: 0; }
 .hero-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; font-size: 16px; font-weight: 600; }
