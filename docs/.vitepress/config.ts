@@ -869,6 +869,8 @@ function sidebarManual(): DefaultTheme.SidebarItem[] {
     { text: "配方", collapsed: false, items: [
       { text: "多实例与多机器人", link: "/manual/recipe/instances" },
       { text: "公网部署", link: "/manual/recipe/server" },
+      { text: "给每个群配一套", link: "/manual/recipe/group-presets" },
+      { text: "无控制台运行", link: "/manual/recipe/headless" },
     ] },
   ];
 }
@@ -900,11 +902,20 @@ function sidebarDevGuide(): DefaultTheme.SidebarItem[] {
 function sidebarArchitecture(): DefaultTheme.SidebarItem[] {
   return [
     { text: "架构总览", link: "/architecture/" },
-    { text: "会话、消息与分支", link: "/architecture/sessions" },
-    { text: "Agent 与执行循环", link: "/architecture/agents" },
-    { text: "模型与模态运行时", link: "/architecture/models" },
-    { text: "上下文与缓存", link: "/architecture/context-cache" },
-    { text: "插件、服务与数据", link: "/architecture/extensions" },
+    { text: "消息与路由", collapsed: false, items: [
+      { text: "路由与场景规则", link: "/architecture/routing" },
+      { text: "消息处理链路", link: "/architecture/chat-pipeline" },
+    ] },
+    { text: "会话与执行", collapsed: false, items: [
+      { text: "会话、消息与分支", link: "/architecture/sessions" },
+      { text: "会话与活跃 Agent", link: "/architecture/conversations" },
+      { text: "Agent 与执行循环", link: "/architecture/agents" },
+      { text: "上下文与缓存", link: "/architecture/context-cache" },
+    ] },
+    { text: "模型与扩展", collapsed: false, items: [
+      { text: "模型与模态运行时", link: "/architecture/models" },
+      { text: "插件、服务与数据", link: "/architecture/extensions" },
+    ] },
   ];
 }
 
