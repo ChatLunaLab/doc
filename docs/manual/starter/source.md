@@ -68,7 +68,7 @@ yarn chatluna dev .
 
 ### 清单查找与基准路径
 
-- **查找顺序**：框架默认按 `cordis.yml` → `chatluna.yml` 的顺序查找清单。你也可以执行 `chatluna start <url>` 显式指定清单文件路径。
+- **查找顺序**：目录里按 `cordis.yml`、`cordis.yaml`、`chatluna.yml`、`chatluna.yaml` 的顺序找入口清单。要启动别处的实例目录，用 `start` 的 `--dir` 选项指定路径。
 - **基准路径 (`baseUrl`)**：清单文件所在的物理目录即为 `baseUrl`。清单配置条目中的所有相对路径（例如 `./data/chatluna.db`）均以此目录为基准进行解析，与你在哪个目录下执行启动命令无关。
 
 ## 诊断配置

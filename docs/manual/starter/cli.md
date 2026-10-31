@@ -1,120 +1,110 @@
 # 命令行（CLI）
 
-全局启动器 `chatluna` 用于在你本机的 `~/.chatluna/instances/` 目录下创建并管理实例。你可以通过它在单台机器上运行一个或多个互相独立的 ChatLuna 实例。
+全局启动器 `chatluna` 负责在你本机的 `~/.chatluna/instances/` 下创建、运行与管理实例。它自己不加载插件，而是把每个实例交给一个守护进程（supervisor）托管，再由实例内部自带的 `@chatluna/cli` 完成诊断与导出。
 
-## 安装 CLI
-
-在终端中执行以下命令全局安装启动器：
+## 安装
 
 ```sh
 npm i -g chatluna
 ```
 
-运行 ChatLuna CLI 需要 Node.js 24 或更高版本。
+需要 Node.js 24 或更高版本。全局包名是 `chatluna`，实例内部的命令行是 `@chatluna/cli`，两者属于不同层级：前者管实例，后者在实例里执行诊断命令。
 
-::: tip
-全局启动器的包名是 `chatluna`，而实例内部运行的命令行是 `@chatluna/cli`，两者属于不同层级。安装时请认准 v2 发布版本，避免与历史同名工具冲突。
-:::
-
-## 创建并启动实例
-
-你可以通过 `create` 命令从模板初始化一个新实例，并使用 `start` 命令启动它：
+## 创建并启动
 
 ```sh
-# 从默认模板创建名为 demo 的实例
 chatluna create demo
-
-# 启动 demo 实例
 chatluna start demo
 ```
 
-- `chatluna create` 会在 `~/.chatluna/instances/demo` 路径下生成实例。默认使用 `@chatluna/boilerplate` 模板，你也可以指定 `github:owner/repo` 形式的私有模板。
-- `chatluna start` 会在进程守护程序 (Supervisor) 下启动该实例。Supervisor 负责运行健康检查 (Health Check)、崩溃重启以及安全模式 (Safe Mode)。
-- 如果直接运行不带参数的 `chatluna`，其行为等价于 `chatluna start`：在首次执行时，它会自动创建名为 `default` 的实例并启动。
+- `create` 默认从 `create-chatluna` 模板拉取骨架；拉取失败时退回内置骨架。也可以用 `--template` 指定 `npm 包名[@范围]` 或 `github:owner/repo[#ref]`，`--pm` 指定包管理器（npm、pnpm、yarn、bun）。
+- `start` 在守护进程下运行实例。直接执行不带参数的 `chatluna` 等同于 `start`：第一次执行会创建默认实例并启动。
+- 加 `--detach` 让守护进程转入后台，日志写到 `~/.chatluna/logs/<名字>.log`。
 
-实例启动后，在浏览器中打开 `http://127.0.0.1:5028` 即可进入 Web 控制台 (WebUI)。
-
-## 管理实例生命周期
-
-你可以使用以下命令查看当前所有实例的状态，或控制实例的运行状态：
-
-```sh
-# 列出全部实例
-chatluna list
-
-# 列出全部实例并展示各实例安装的插件
-chatluna list --plugins
-
-# 停止指定的实例
-chatluna stop demo
-
-# 重启指定的实例
-chatluna restart demo
-
-# 在后台启动实例
-chatluna start demo --detach
-```
+启动后日志里会打印带口令的登录地址，默认是 `http://127.0.0.1:5028`。
 
 ::: warning
-`--detach` 参数仅将当前实例进程放入后台执行，不会向操作系统注册开机自启服务（如 systemd）。如果需要在系统启动时自动运行实例，请自行配置对应的系统服务。
+`--detach` 只是把进程放到后台，不会注册开机自启。需要开机运行请自行配置 systemd、launchd 或容器编排。
 :::
 
-## 管理实例插件
-
-你可以通过 CLI 直接为指定实例安装、移除或链接插件 (Plugin)：
+## 查看与控制
 
 ```sh
-# 为当前实例安装插件
-chatluna add <插件名>
-
-# 从当前实例移除插件
-chatluna remove <插件名>
-
-# 将本地目录以符号链接形式接入实例作为插件（用于本地开发）
-chatluna link <路径>
-
-# 解除本地插件链接
-chatluna unlink <名字>
-
-# 在实例的 external/ 目录下脚手架一个新插件项目
-chatluna new plugin <名字>
+chatluna list
+chatluna list --plugins --instance demo
+chatluna stop demo
+chatluna restart demo
 ```
 
-## 诊断与导出数据
+`list` 显示每个实例的运行状态、版本与目录；加 `--plugins` 则列出某个实例解析后的依赖，链接进来的包会带上标记。`stop` 发送中止信号，`restart` 通知守护进程重启。
 
-诊断与导出命令由实例内部包含的 `@chatluna/cli` 负责解析执行：
+## 开发模式
 
 ```sh
-# 检查当前实例的组合清单与包契约（包含安全检查）
+chatluna dev ./my-instance
+```
+
+以开发模式运行某个目录：走 tsx 直接加载源码、开启热重载，并且不启用崩溃恢复与安全模式——开发时你应该看到真实的错误，而不是被自动兜底。
+
+## 插件管理
+
+```sh
+chatluna add @chatluna/tool-web-search
+chatluna remove @chatluna/tool-web-search
+chatluna link ../my-plugin
+chatluna unlink chatluna-plugin-my
+chatluna new plugin my --webui --service
+```
+
+- `add` / `remove` 调用实例自己的包管理器，直接改依赖。
+- `link` 把本地目录以符号链接方式接入实例，改完代码重启即生效；`unlink` 解除链接。
+- `new plugin` 在实例或项目的 `external/<名字>` 下生成插件骨架。常用选项：`--webui` 同时生成浏览器端与语言文件，`--service` 生成服务骨架，`--scope` 指定发布作用域。
+
+## 更新
+
+```sh
+chatluna update demo --dry-run
+chatluna update demo
+chatluna update --self
+chatluna update demo --plugins --to @chatluna/tool-web-search@1.2.3
+```
+
+更新会先拍配置快照、再升级、最后做健康检查，失败自动回滚。`--self` 只更新启动器，`--plugins` 只更新实例插件，`--to` 用于把某个包钉在指定版本，`--dry-run` 只打印计划。
+
+## 诊断与导出
+
+```sh
 chatluna doctor
-
-# 检查指定会话的不变量与数据完整性
 chatluna doctor session <会话id>
-
-# 检查模型提供商 (Provider) 的网络连通性（需要实例进程正在运行）
 chatluna doctor providers
-
-# 将指定会话的数据全量导出为 JSONL 文件
 chatluna export <会话id>
 ```
 
-::: tip
-读取会话的子命令（如 `doctor session` 和 `export`）支持完全离线工作。它们直接读取本地 SQLite 数据库文件，不依赖正在运行的实例进程。
-:::
+`doctor` 与 `export` 会把参数转交给实例内的 `@chatluna/cli`。读取会话的子命令直接读本地数据库，不需要实例在运行；`doctor providers` 需要实例在线才能测连通性。完整规则见[命令行诊断](/cookbook/cli)。
 
-## 修改全局配置
+## 修复与报告
 
-全局启动器的配置文件位于 `~/.chatluna/config.yml`。你可以通过设置 `CHATLUNA_HOME` 环境变量更改配置目录路径。
+```sh
+chatluna repair demo
+chatluna report demo
+```
 
-配置文件支持以下字段：
+`repair` 在实例启动失败时收集现场，给出一次本地 Agent 辅助修复的尝试；`report` 展示最近一次修复报告，可以直接作为问题草稿使用。
+
+## 全局配置
+
+启动器的配置在 `~/.chatluna/config.yml`，目录可以用环境变量 `CHATLUNA_HOME` 改变。
 
 | 配置键 | 说明 |
 | --- | --- |
-| `default` | 执行 `chatluna start` 未指定实例名称时默认选取的实例 |
-| `registry` | 执行安装与更新检查时使用的 npm registry 地址 |
-| `updateChannel` | 执行 `chatluna update` 时使用的发布通道 |
+| `default` | 不带名字执行 `start` 时默认选中的实例 |
+| `registry` | 安装与更新检查使用的 npm registry |
+| `updateChannel` | 默认模板使用的发布标签（`latest`、`next` 等） |
+| `update.check` | 是否在启动时检查更新 |
+| `repair.agents` / `repair.agent` | 修复流程可用的本地 Agent 与首选 Agent |
 
 ## 下一步
 
-- 前往[快速上手](../quickstart)完成实例的基本配置
-- 查看[命令行参考](/api/cli)获取全部子命令与参数列表
+- [快速上手](../quickstart) — 完成实例的首次配置
+- [命令行诊断](/cookbook/cli) — 每个诊断子命令检查什么
+- [命令行参考](/api/cli) — 全部子命令与参数
