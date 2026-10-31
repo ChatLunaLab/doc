@@ -858,6 +858,7 @@ function sidebarManual(): DefaultTheme.SidebarItem[] {
       { text: "工具", link: "/manual/usage/tools" },
       { text: "技能", link: "/manual/usage/skills" },
       { text: "MCP", link: "/manual/usage/mcp" },
+      { text: "插件与市场", link: "/manual/usage/plugins" },
       { text: "机器与工作区", link: "/manual/usage/machines" },
       { text: "子代理", link: "/manual/usage/subagents" },
       { text: "定时与后台任务", link: "/manual/usage/automation" },
@@ -939,8 +940,6 @@ function sidebarArchitecture(): DefaultTheme.SidebarItem[] {
       { text: "存储", link: "/architecture/storage" },
       { text: "控制台", link: "/architecture/webui" },
       { text: "接口与 SDK", link: "/architecture/api-sdk" },
-      { text: "市场与运行时", link: "/architecture/market-runtime" },
-      { text: "命令行", link: "/architecture/cli" },
     ] },
     { text: "模型与扩展", collapsed: false, items: [
       { text: "模型与模态运行时", link: "/architecture/models" },
@@ -979,6 +978,7 @@ function sidebarCookbook(): DefaultTheme.SidebarItem[] {
   return [
     { text: "总览", link: "/cookbook/" },
     { text: "排错与诊断", link: "/cookbook/troubleshooting" },
+    { text: "命令行诊断", link: "/cookbook/cli" },
     { text: "从 v1 迁移", link: "/cookbook/migration" },
     { text: "公网部署与反代", link: "/cookbook/deployment" },
   ];
