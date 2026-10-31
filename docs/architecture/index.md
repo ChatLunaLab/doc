@@ -1,133 +1,174 @@
 # 架构总览
 
-ChatLuna v2 是为即时通信（IM）平台深度设计的智能体装备层（Agent Harness），构建于 Cordis 4 控制反转容器之上。整个运行实例表现为一棵由清单（Manifest）装配而成的插件树（Plugin Tree）。消息内核、路由引擎、Agent 执行循环、模型运行时与工具生态等所有核心子系统，均以可替换插件的形式存在。
+ChatLuna v2 是运行在 Cordis 4 上的聊天机器人框架。系统接入 Satori 平台（兼容 QQ、OneBot 等协议实现），并自带开箱即用的独立 WebUI。
 
-本篇首先给出 ChatLuna v2 的运行时全景架构，随后跟踪一条消息在系统内的生命周期，最后梳理支撑整套体系的核心设计原则。
+整个运行时实例是一棵由声明式清单装配的插件树。默认入口配置为 `cordis.yml`，通过 include 引入 `chatluna.yml`；在 `chatluna.yml` 内部，使用 `isolate: { server: chatluna }` 将所有业务插件隔离在专属服务器实例（端口 5028）中运行，而官方 Cordis 控制台则独立驻留在 6140 端口。
 
-::: tip
-ChatLuna v2 的每个核心服务都挂载在 Cordis 的上下文对象（`ctx`）上。在开发或排查系统行为时，你可以直接通过对应的命名空间（如 `ctx.routing`、`ctx.sessions`）定位其底层状态。
-:::
+本文档所有架构定义均严格以源码实现为准，涵盖从消息接入、路由计算、核心循环到多端投递的完整链路。
 
-## 认识运行时架构
+## 运行时全景
 
-ChatLuna v2 的运行时可划分为接入与路由、对话内核以及投递管道三个部分：
+ChatLuna v2 的运行时架构清晰划分为三层：接入与路由层、对话内核层、渲染与投递层。
 
 ```mermaid
 flowchart TB
-    subgraph IM[IM 平台]
-        QQ[QQ / OneBot]
-        TG[Telegram]
-        DC[Discord]
-        WEB[WebUI]
+    subgraph Ingress ["接入与路由层"]
+        Adapter["适配器 (Satori / OneBot)"] --> ChatSvc["ctx.chat (去重/合并/激活/审核)"]
+        ChatSvc --> RoutingSvc["ctx.routing (路由解析)"]
+        RoutingSvc --> ConvSvc["ctx.conversations (会话头检索)"]
     end
 
-    subgraph Harness[ChatLuna Harness]
-        subgraph Inbound[接入与路由]
-            AD[适配器层<br/>adapter-* / Satori] --> CHAT[chat 管线<br/>censor · activation · merge · recall]
-            CHAT --> ROUTE[路由引擎<br/>ctx.routing 场景规则]
-            ROUTE --> CONV[会话索引<br/>ctx.conversations]
-        end
-
-        subgraph Kernel[对话内核]
-            CONV --> ENG[引擎<br/>character / agent / coding / setup]
-            ENG --> LOOP[Agent 循环<br/>ctx.agents · 默认 loop]
-            LOOP --> PROMPT[提示词分区<br/>ctx.prompt]
-            LOOP --> MODEL[模型运行时<br/>ctx.ai / ctx.chatluna.* verbs]
-            LOOP --> TOOLS[工具体系<br/>ctx.tools]
-            TOOLS --> CAP[能力]
-            CAP --> SK[技能 ctx.skills]
-            CAP --> MCP[MCP ctx.mcp]
-            CAP --> SUB[子代理 ctx.subagents]
-            CAP --> MAC[机器 ctx.computer]
-            TOOLS --> PERM[权限判定<br/>ctx.permissions]
-            LOOP --> SESS[会话日志<br/>ctx.sessions append-only]
-        end
-
-        subgraph Outbound[投递]
-            SESS --> RENDER[chat-render]
-            RENDER --> DELIVER[chat-deliver]
-        end
-
-        MODEL --> PROV[提供商<br/>ctx.chatluna_providers]
-        SESS --> TRACE[轨迹<br/>ctx.trace]
+    subgraph Kernel ["对话内核层 (Agent Loop)"]
+        ConvSvc --> AgentSvc["ctx.agents (Agent 调度与入队)"]
+        AgentSvc --> PromptSvc["ctx.prompt (分区与上下文组装)"]
+        PromptSvc --> AISvc["ctx.ai (模型调用与运行时)"]
+        AISvc --> CapabilityGate{"调用工具?"}
+        CapabilityGate -- 是 --> PermSvc["ctx.permissions (权限判定)"]
+        PermSvc --> CapSvc["能力提供者 (tools / skills / mcp / subagents / computer)"]
+        CapSvc --> SessionLog["ctx.sessions (append-only 日志追加)"]
+        CapabilityGate -- 否 --> SessionLog
+        SessionLog --> StepNext{"继续下一步?"}
+        StepNext -- 是 --> PromptSvc
+        StepNext -- 否 --> RenderSvc["ctx.chat_render (结果渲染)"]
     end
 
-    QQ & TG & DC & WEB --> AD
-    DELIVER --> AD
-    AD --> QQ & TG & DC & WEB
+    subgraph Egress ["投递层"]
+        RenderSvc --> DeliverSvc["ctx.chatluna_deliver (多端分发与投递)"]
+        DeliverSvc --> SatoriTarget["平台通道 / 用户终点"]
+    end
 ```
 
-各层职责划分如下：
+各层级核心职责与协作服务如下：
 
-1. **接入与路由 (Inbound & Routing)**：
-   - 适配器层（`adapter-*` 或 Satori）接收来自平台的原始消息并抽象为标准事件。
-   - `chat` 基础管线负责审查（censor）、激活判断（activation）、消息合并（merge）与撤回处理（recall）。
-   - 路由引擎（`ctx.routing`）依据预设的场景规则匹配目标配置，并通过 `ctx.conversations` 定位具体的会话上下文。
-2. **对话内核 (Kernel)**：
-   - 包含多种特定引擎（如 `character`、`agent`、`coding`、`setup`）。
-   - 由 `ctx.agents` 驱动执行循环（Loop），集成提示词分区管理（`ctx.prompt`）、统一模型运行时（`ctx.ai` / `ctx.chatluna.*` verbs）与工具调用体系（`ctx.tools`）。
-   - 工具体系汇总技能（`ctx.skills`）、MCP 协议（`ctx.mcp`）、子代理（`ctx.subagents`）及机器控制（`ctx.computer`）等能力，所有调用必须经过权限判定（`ctx.permissions`）。
-   - 所有执行状态写入追加式（append-only）的会话日志服务（`ctx.sessions`），并同步记录到轨迹追踪（`ctx.trace`）。
-3. **输出与投递 (Outbound & Delivery)**：
-   - 响应从 `ctx.sessions` 产出后，经由 `chat-render` 进行排版与富文本渲染，最后由 `chat-deliver` 调用对应适配器推回 IM 平台。
+- **接入与路由层**：由平台适配器捕获 Satori 事件并生成标准 Session。`ctx.chat` 执行消息去重、veto 拦截、激活判定与连发合并；`ctx.routing` 根据平台、机器人标识、群组与用户层级解析出对应的规则 binding；随后 `ctx.conversations` 基于会话键查找到活跃的会话头（session head）。
+- **对话内核层**：`ctx.agents` 将消息推入收件箱并驱动主循环。在每一步（step）中，`ctx.prompt` 组装提示词分区与环境状态；`ctx.ai` 经由 `ctx.chatluna_providers` 调度模型进行推理。若模型触发工具调用，必须先通过 `ctx.permissions` 裁定权限，随后分发至 `ctx.tools`、`ctx.skills`、`ctx.mcp`、`ctx.subagents` 或 `ctx.computer` 执行。每一步决策均由 `ctx.sessions` 实时追加日志并驱动下一轮迭代。
+- **渲染与投递层**：对话循环终结后，输出结果交给 `ctx.chat_render` 转换为目标格式，最后经由 `ctx.chatluna_deliver` 投递回原平台通道或流式推送到 WebUI。
 
-## 理解一次对话的处理流程
+## 一次消息的完整生命周期
 
-在 ChatLuna v2 中，平台发起的每轮交互均遵循标准的执行生命周期。以下时序图展示了一条消息从接入到投递的完整旅程：
+一次标准的用户消息处理过程分为 14 个确定性步骤：
+
+1. **事件捕获**：适配器（Satori 或 koishi-plugin-adapter-onebot）接收底层协议事件，封装为标准 Session。
+2. **去重与 veto**：`ctx.chat` 检查消息指纹，剔除重放事件，并允许上游插件通过 veto 钩子静默丢弃特定消息。
+3. **激活判定**：判定当前上下文是否命中响应条件（如 @机器人、特定前缀或私聊配置）。
+4. **连发合并**：缓冲队列在极短的时间窗口内合并同用户的连续输入，防止碎片化触发多次完整调用。
+5. **内容审核**：对最终合流的输入执行合规与敏感词校验。
+6. **路由解析**：`ctx.routing` 计算环境标签，匹配出最终生效的 binding 配置。
+7. **定位会话头**：`ctx.conversations` 通过会话键找到当前的 session head，并挂载或唤醒 live agent 实例。
+8. **入收件箱**：调用 `agent.receive` 将消息投入对应的 Agent 处理队列。
+9. **装配提示词与能力**：Agent 进入 `prepareStep`，`ctx.prompt` 装配各分区提示词、系统变量及 `ctx.tools` 暴露的可见工具描述。
+10. **模型调用**：`ctx.ai` 携带装配后的请求上下文向目标 provider 发起推理。
+11. **权限判定与工具执行**：模型若产生工具调用，执行流程被 `ctx.permissions` 拦截裁定，鉴权通过后由对应能力模块执行并收集输出。
+12. **日志追加**：每一步的模型输出、工具输入输出、mark 标记与快照均作为只追加事件记入 `ctx.sessions`。
+13. **判定终止**：检查是否达成结束条件（无进一步工具调用或达到最大步数），未达成则循环返回第 9 步继续执行。
+14. **渲染与投递**：`ctx.chat_render` 将最终回复内容排版，交由 `ctx.chatluna_deliver` 投递回用户。
 
 ```mermaid
 sequenceDiagram
-    participant P as 平台用户
-    participant A as 适配器
-    participant R as 路由
-    participant E as 引擎
-    participant L as Agent 循环
-    participant M as 模型
-    participant T as 工具
+    autonumber
+    actor User as 用户
+    participant Adapter as 适配器 (Satori)
+    participant Chat as ctx.chat
+    participant Routing as ctx.routing
+    participant Conv as ctx.conversations
+    participant Agent as ctx.agents
+    participant Prompt as ctx.prompt
+    participant AI as ctx.ai
+    participant Perm as ctx.permissions
+    participant Tools as 能力提供者
+    participant Session as ctx.sessions
+    participant Deliver as ctx.chat_render / deliver
 
-    P->>A: 发消息
-    A->>R: 标准事件
-    R->>R: 匹配场景规则 → engine/preset/model/permissions
-    R->>E: 挂载到会话 (conversations.open)
-    E->>L: agent.receive(message)
-    loop 每个 step
-        L->>L: 装配提示词 + 工具 schema
-        L->>M: 模型调用 (provider:model)
-        M-->>L: 流式回复 + 工具调用
-        L->>T: 执行工具 (权限判定)
-        T-->>L: 工具结果
+    User->>Adapter: 发送消息
+    Adapter->>Chat: 产生标准 Session
+    Chat->>Chat: 去重 / veto 校验 / 激活判定 / 连发合并 / 审核
+    Chat->>Routing: 解析路由规则
+    Routing-->>Chat: 返回 binding 规则
+    Chat->>Conv: 查询会话键对应会话
+    Conv-->>Chat: 返回 session head
+    Chat->>Agent: agent.receive(msg) 压入收件箱
+    loop Agent 内部执行步骤
+        Agent->>Prompt: prepareStep 装配提示词与可用工具
+        Prompt-->>Agent: 请求上下文 (Context)
+        Agent->>AI: 模型推理调用
+        AI-->>Agent: 返回响应 (Text / ToolCall)
+        opt 触发能力调用
+            Agent->>Perm: 校验调用权限
+            Perm-->>Agent: 判定允许
+            Agent->>Tools: 执行能力调用并取回结果
+            Tools-->>Agent: 返回能力执行结果
+        end
+        Agent->>Session: 追加步骤日志 (append-only)
     end
-    L-->>E: 产出回复
-    E->>A: 渲染并投递
-    A-->>P: 平台消息
+    Agent->>Deliver: 输出终态消息
+    Deliver->>Adapter: 格式化渲染并投递
+    Adapter->>User: 接收机器人响应
 ```
 
-你可以分步骤观察其处理逻辑：
+## 服务地图
 
-1. **场景解析与会话挂载**：适配器捕获事件后，路由引擎解析出当前会话对应的执行引擎、预设角色（Preset）、模型定位与执行权限，调用 `conversations.open` 挂载实例。
-2. **循环驱动 (Agent Loop)**：引擎调用 `agent.receive(message)` 触发循环。每一个单步（Step）中，循环体组装当前的提示词和工具的 JSON Schema，向指定提供商发起调用（格式如 `provider:model`）。
-3. **工具验证与执行**：模型返回流式回复或工具调用指令。当产生工具调用请求时，循环将其提交至 `ctx.tools`，经 `ctx.permissions` 校验合法性后执行，并将工具执行结果重新写回上下文。
-4. **日志持久化与投递**：每一个单步的「模型请求 → 工具调用 → 工具结果」都会直接追加至 `ctx.sessions`。循环结束后，产出最终内容交由渲染层分发。
+ChatLuna v2 核心逻辑完全解耦为独立注册的 Cordis 服务，主要服务分布如下：
 
-::: warning
-`ctx.sessions` 维护的是只允许追加（Append-Only）的操作日志。严禁绕过服务接口直接篡改底层持久化存储，否则会导致历史回放和上下文投影失败。
-:::
+| 服务名 | 所属包 | 核心职责 |
+| :--- | :--- | :--- |
+| `routing` | `@chatluna/routing` | 管理规则、谓词、目录、peers，执行路由解析与决策解释 |
+| `chat` | `@chatluna/chat` | 激活判定、收件、dispatch、会话绑定与基础命令分发 |
+| `conversations` | `@chatluna/conversations` | 维护会话键到 session head 的映射索引，维护 live agent 实例缓存 |
+| `sessions` | `@chatluna/session` | append-only 会话日志存储、分支追踪、切点管理 |
+| `agents` | `@chatluna/agent` | Agent 注册表、默认执行 loop 调度、中间件链与 prepareStep 编排 |
+| `engines` | `@chatluna/engine` | 引擎实现注册表与生命周期挂载 |
+| `prompt` | `@chatluna/prompt` | 提示词分区构建、动态模板变量插值与环境注入 |
+| `ai` | `@chatluna/ai-runtime` | 模型 provider 注册表、请求参数校验与模型调用流转发 |
+| `chatluna_providers` | `@chatluna/provider-registry` | provider 动态安装、启停与请求负载路由 |
+| `tools` | `@chatluna/tool` | 工具定义管理、五阶管线过滤与上下文可见性判定 |
+| `skills` | `@chatluna/skill` | 结构化技能目录管理与动态加载 |
+| `mcp` | `@chatluna/mcp` | Model Context Protocol 协议连接维护与外部工具桥接 |
+| `subagents` | `@chatluna/subagent` | 子代理 profile 与执行 backend 隔离调度 |
+| `computer` | `@chatluna/computer` | 执行机器实例注册与上下文安全绑定 |
+| `memory` | `@chatluna/memory` | 长期记忆存储后端管理、记忆检索与沉淀提取 |
+| `permissions` | `@chatluna/permission` | 细粒度权限等级划定、模式判定与敏感操作审批 |
+| `presets` | `@chatluna/preset` | 预设文件解析、kind 类型识别与 loader 实现 |
+| `trace` | `@chatluna/trace` | 请求因果 span 树构建与链路监控 |
+| `usage` | `@chatluna/trace-billing` | 令牌消耗与用量账本记账 |
+| `schedule` | `@chatluna/schedule` | 自动化定时触发任务调度器 |
+| `background` | `@chatluna/background` | 异步后台任务队列与脱机工作流托管 |
+| `schemas` | `@chatluna/ui-schema-registry` | 设置页与规则页表单的 UI Schema 注册中心 |
+| `chatluna_config` | `@chatluna/runtime-config` | 运行时配置读写事务与版本追踪 |
+| `chatluna_credentials` | `@chatluna/runtime-credentials` | 认证密钥与凭据的安全隔离存储 |
 
 ## 核心设计原则
 
-在扩展或定制 ChatLuna v2 时，请遵循以下核心原则：
+### 1. 日志唯一事实源
+在 ChatLuna v2 中，`ctx.sessions` 是严格只允许追加（append-only）的不可变日志。系统不存在物理删除逻辑，`cut` 操作属于软截断，仅通过生成 summary 替换 before 之前的历史消息，原始数据依旧完好留存；所有的提示词快照（prompt 快照）、预设选定（preset/selected）、请求上下文（request/context）、消息队列吞吐（input 入队/接纳/丢弃）及跳步行为（turn-skip）均作为不可变 `mark` 记录写入日志。
 
-- **一切皆是插件 (Everything as a Plugin)**：消息内核、路由分配、Agent 执行器与模型接入层完全建立在插件机制上。你可以通过清单整体替换任何一个系统，而无需侵入底层代码。
-- **日志是唯一事实源 (Single Source of Truth in Logs)**：模型所消费的上下文仅由 `ctx.sessions` 内的会话日志按规则投影计算而来，不存在独立维护的临时上下文字段。
-- **能力与权限解耦 (Capabilities Decoupled from Permissions)**：无论是内置技能、MCP 还是子代理，都仅作为能力提供者（Capability Provider）。任何具体工具的调用权限，均统一交由 `ctx.permissions` 进行独立策略断言。
-- **过程可重建 (Deterministic Reconstruction)**：任意历史轮次的上下文均可通过会话日志推导复现。在重建或审查请求时，无需重复调用模型接口或重放外部工具。
+### 2. 前缀缓存一等公民
+系统对模型调用成本做前置治理，系统提示词、全局工具声明列表与模型核心参数共同构成一个强约束的 epoch 缓存块。通过这种静态与稳定动态隔离的机制最大化提升前缀缓存命中率；开发者可直接在终端执行 `chatluna doctor cache` 命令，即时查看当前会话的 epoch 状态与历史作废原因。
+
+### 3. 一切皆插件
+系统自身无任何硬编码的专有模型或固化能力。工具（tools）、技能（skills）、MCP 连接器、平台协议适配器以及底层模型提供者（providers）均为符合 Cordis 标准的插拔式插件；所有 provider 均支持在运行时按需下载与动态热加载，杜绝框架级体积膨胀。
+
+### 4. 能力与权限解耦
+所有扩展组件仅需专注声明与提供能力，能力模块自身禁止内联授权逻辑。外部所有针对工具或系统调用的触发，必须统一由 `ctx.permissions` 服务在执行前完成权限等级、当前策略与会话模式的集中校验与审批。
+
+### 5. 可重建
+因为全链路执行状态与输入输出均持久化在 append-only 日志中，系统支持对任意历史 step 重新发起逆向构造。系统提供 `reconstructRequest` 机制，可以在不破坏当前会话树结构的前提下，完美重建任意历史节点的输入快照用于复现问题、分叉讨论或基准回归测试。
+
+## 文档地图
+
+深入了解各子系统的内部细节，请参阅：
+
+- [路由与解析规则](./routing) — 深入了解 `ctx.routing` 的规则目录、条件谓词与 peer 继承机制。
+- [对话流水线与中间件](./chat-pipeline) — 查看消息去重、合并、审核与 dispatch 的详细管线。
+- [日志与分支模型](./sessions) — 详细了解 append-only 日志存储结构、分支切换与软截断 `cut`。
+- [会话索引与状态管理](./conversations) — 探究会话键解析算法与 live agent 实例缓存机制。
+- [Agent 架构与执行循环](./agents) — 剖析 Agent 注册表、默认 loop 调度与 prepareStep 生命周期。
+- [模型接入与 Provider 机制](./models) — 掌握模型 provider 注册、运行时调度与热装卸管理。
+- [前缀缓存与诊断](./context-cache) — 掌握 prompt 结构对前缀缓存的影响及 doctor 命令排障实战。
+- [能力扩展体系](./extensions) — 学习如何为系统开发自定义工具、加载 MCP 协议或扩展技能。
 
 ## 下一步
 
-你可以继续阅读以下章节，深入了解各子系统的技术细节：
-
-- [会话、消息与分支](./sessions) — 了解追加式日志、cut/mark 机制与会话分支处理
-- [Agent 与执行循环](./agents) — 深入了解 step 与 turn 概念、收件箱（Inbox）与 receive 模式
-- [模型与模态运行时](./models) — 掌握提供商配置、7 模态支持与模型地址别名机制
-- [上下文与缓存](./context-cache) — 了解动态提示词分区、上下文变量与 KV 缓存体系
-- [插件、服务与数据](./extensions) — 掌握基于清单的装配机制、Cordis 服务依赖与持久化实践
+- **初次接入平台**：先阅读 [路由与解析规则](./routing)，理解消息进入框架后如何根据平台与群聊映射到具体的绑定配置。
+- **排查交互异常**：若发现消息未响应或激活异常，阅读 [对话流水线与中间件](./chat-pipeline) 排查 veto 拦截或连发合并逻辑。
+- **定制业务能力**：如果需要接入自有 API，直接进入 [能力扩展体系](./extensions) 了解工具与 MCP 接入规范。
+- **优化 API 消耗**：如果模型调用消耗超预期，阅读 [前缀缓存与诊断](./context-cache) 优化提示词结构以提高缓存命中率。
