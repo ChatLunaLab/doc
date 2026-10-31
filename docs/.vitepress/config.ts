@@ -998,7 +998,7 @@ function sidebarCookbook(): DefaultTheme.SidebarItem[] {
     { text: "排错与诊断", link: "/cookbook/troubleshooting" },
     { text: "命令行诊断", link: "/cookbook/cli" },
     { text: "从 v1 迁移", link: "/cookbook/migration" },
-    { text: "公网部署与反代", link: "/cookbook/deployment" },
+    { text: "反向代理与网络接入", link: "/cookbook/deployment" },
   ];
 }
 
