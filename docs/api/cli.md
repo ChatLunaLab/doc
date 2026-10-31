@@ -57,7 +57,7 @@ chatluna stop demo
 ### 运行限制与说明
 
 - 默认启动行为（未显式提供有效目录时）允许自动创建尚不存在的受管实例；但向命令传入任意不存在或未初始化的 `--dir` 路径，不会自动使其成为有效工程。
-- `chatluna dev` 必须在已有 `package.json` 与根清单的有效工程中执行。该命令遵循相同的清单解析规则，并在执行时激活 id 为 `dev` 的配置组。它不会自动寻找并不存在的 `cordis.dev.yml` 文件。
+- `chatluna dev` 必须在已有 `package.json` 与根清单的有效工程中执行。它用 tsx 直接加载源码并开启热重载，不启用崩溃恢复与安全模式。
 - `--detach` 仅代表当前进程放入后台执行，并不等同于注册了系统级开机自启服务（如 systemd 服务）。
 - Supervisor 的崩溃自动恢复机制仅负责拉起进程，不具备外围系统的事务回滚能力，无法恢复任意外部脚本的执行现场，也无法撤回已经发送到聊天平台的消息。
 
@@ -153,14 +153,17 @@ IM 聊天中的指令并非终端命令。平台实际生效的指令集合取�
 
 | 命令 | 别名 | 功能说明 |
 | --- | --- | --- |
-| `chatluna.status` | 无 | 查看当前会话的状态与上下文配置信息。 |
-| `chatluna.model [ref]` | 无 | 查看当前模型配置，或切换至指定的模型标识符。 |
-| `chatluna.session.fork` | 无 | 从当前会话当前节点创建并切入一个新分支。 |
-| `chatluna.stop` | `stop` | 强制终止当前正在进行的生成与推理。 |
-| `chatluna.new` | `new`, `clear` | 开启全新对话会话，原会话历史仍保留归档。 |
-| `chatluna.compact` | `compact` | 手动触发上下文压缩（需在已启用并配置对应压缩扩展时生效）。 |
-| `chatluna.bind <code>` | `bind` | 在平台私聊交互中，验证并认领向导生成的绑定码。 |
-| `chatluna.setup` | `setup` | 在主人权限私聊中，进入预设伪装访谈配置流程。 |
+| `chatluna.status` | 无 | 查看当前会话的状态、条目数与当前模型。 |
+| `chatluna.model [ref]` | 无 | 查看当前模型；传入 `provider/model` 切换模型。 |
+| `chatluna.session.fork` | 无 | 从当前会话创建分支，并把后续消息切到新会话。 |
+| `chatluna.stop` | `stop` | 中止当前正在生成的回复，保留待处理输入。 |
+| `chatluna.new` | `new`, `clear`, `chatluna.clear` | 开启新对话，旧会话完整保留。 |
+| `chatluna.compact` | `compact` | 手动压缩当前会话（需要压缩服务在场）。 |
+| `chatluna.bind <code>` | `bind` | 在平台私聊中认领向导生成的绑定码。 |
+| `chatluna.setup` | 无 | 在主人私聊中进入人设访谈流程。 |
+| `chatluna.schedule [action] [arg]` | 无 | 定时与关注任务：list / add / remove / pause / resume / fire。 |
+| `chatluna.undo` | 无 | 撤销最近一次文件修改；`--turn` 撤销本轮全部改动，`--force` 忽略哈希守卫。 |
+| `chatluna.routes` | 无 | 隐藏命令：列出当前活跃路由。 |
 
 ### 使用限制与注意点
 
