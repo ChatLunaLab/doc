@@ -939,6 +939,8 @@ function sidebarArchitecture(): DefaultTheme.SidebarItem[] {
       { text: "存储", link: "/architecture/storage" },
       { text: "控制台", link: "/architecture/webui" },
       { text: "接口与 SDK", link: "/architecture/api-sdk" },
+      { text: "市场与运行时", link: "/architecture/market-runtime" },
+      { text: "命令行", link: "/architecture/cli" },
     ] },
     { text: "模型与扩展", collapsed: false, items: [
       { text: "模型与模态运行时", link: "/architecture/models" },
