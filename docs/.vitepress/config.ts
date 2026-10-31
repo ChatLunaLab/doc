@@ -894,6 +894,11 @@ function sidebarDevGuide(): DefaultTheme.SidebarItem[] {
     { text: "能力扩展", collapsed: false, items: [
       { text: "工具开发", link: "/guide/extend/tools" },
       { text: "提示词分区", link: "/guide/extend/prompts" },
+      { text: "路由命名空间", link: "/guide/extend/routing" },
+      { text: "编写引擎", link: "/guide/extend/engines" },
+      { text: "编写适配器", link: "/guide/extend/adapters" },
+      { text: "数据与存储", link: "/guide/extend/storage" },
+      { text: "测试插件", link: "/guide/extend/testing" },
       { text: "WebUI 扩展", link: "/guide/extend/webui" },
       { text: "模型提供商", link: "/guide/extend/provider" },
     ] },
