@@ -934,6 +934,12 @@ function sidebarArchitecture(): DefaultTheme.SidebarItem[] {
       { text: "适配器", link: "/architecture/adapters" },
       { text: "轨迹与用量", link: "/architecture/trace-usage" },
     ] },
+    { text: "运行时", collapsed: false, items: [
+      { text: "启动与插件树", link: "/architecture/boot" },
+      { text: "存储", link: "/architecture/storage" },
+      { text: "控制台", link: "/architecture/webui" },
+      { text: "接口与 SDK", link: "/architecture/api-sdk" },
+    ] },
     { text: "模型与扩展", collapsed: false, items: [
       { text: "模型与模态运行时", link: "/architecture/models" },
       { text: "插件、服务与数据", link: "/architecture/extensions" },
