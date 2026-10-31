@@ -912,6 +912,11 @@ function sidebarArchitecture(): DefaultTheme.SidebarItem[] {
       { text: "Agent 与执行循环", link: "/architecture/agents" },
       { text: "上下文与缓存", link: "/architecture/context-cache" },
     ] },
+    { text: "引擎与提示词", collapsed: false, items: [
+      { text: "提示词装配", link: "/architecture/prompts" },
+      { text: "引擎", link: "/architecture/engine" },
+      { text: "角色系统", link: "/architecture/character" },
+    ] },
     { text: "模型与扩展", collapsed: false, items: [
       { text: "模型与模态运行时", link: "/architecture/models" },
       { text: "插件、服务与数据", link: "/architecture/extensions" },
