@@ -107,7 +107,7 @@ erDiagram
 1. **`chatluna_conversations` 表**
    - `key`：主键，会话键字符串；
    - `headSessionId`：当前会话指针所指向的 Session ID；
-   - `previousSessionId`：切换或重置前的上一个 Session ID，用于 `/undo` 或溯源；
+   - `previousSessionId`：上一次切换前的 head Session ID，仅用于溯源；不参与撤销或回退；
    - `peer`：对端标识（如群号、私聊通道）；
    - `createdAt`：索引初次建立时间；
    - `updatedAt`：最后切换头会话时间。
@@ -227,9 +227,9 @@ ChatLuna 不会在内存中永久保留所有 Agent 实例，而是借助 LRU �
 ### 互斥与回收策略
 
 - **唯一性约束**：同一会话键在内存中同时**只允许存在一个活跃 Agent**。当新请求尝试在新的 Session 上打开同一会话键时，旧 Session 上的 Agent 会被立即强制 `release`。
-- **主动释放 `release`**：显式调用 `release(key)` 将立即关闭 Agent，卸载挂载引擎并从活跃表注销。
+- **主动释放 `release(sessionId)`**：显式调用会立即关闭该 Session 上的 Agent，卸载挂载引擎并从活跃表注销。
 - **LRU 淘汰流程（`evictIfNeeded`）**：
-  当活跃 Agent 数量突破 `maxLiveSessions` 时，系统按照 `lastActiveAt` 升序扫描所有 owned 的实例，挑选最久未活跃且非 busy 状态的 Agent 执行安全关闭，回收内存上下文。
+  当活跃 Agent 数量超过 `maxLiveSessions` 时，系统按 `lastActiveAt` 升序扫描本次实例自己打开的（owned）实例，只关闭「空闲且距上次活动已超过 `idleEvictMs`」的 Agent；busy 或刚活动过的会被跳过，所以数量可能暂时高于上限。
 - **状态查询接口**：
   - `live(key)`：查询指定会话键对应的实时运行记录；
   - `session(sessionId)`：按物理 Session ID 检索 LiveRecord；
@@ -267,7 +267,7 @@ graph TD
 ```
 
 - **`reset(key, next)`**
-  重置会话。系统会先释放当前旧 head Session 上绑定的活跃 Agent，然后将会话键的 headSessionId 指向由 `next` 创建的新 Session。方法返回 `{ previous, current }`，记录切换前后的 Session ID。
+  重置会话。系统会先释放当前旧 head Session 上绑定的活跃 Agent，然后把该会话键的 head 指向 `next`。`next` 必须是调用方已经创建好的 Session——这个方法本身不创建会话。返回 `{ previous, current }`。
 - **`switch(key, to)`**
   直接将指定会话键的 headSessionId 切换至已存在的 `to` Session 上。**不创建新的分支节点**，不破坏原有两棵消息树。
 - **`fork(key, { at?, title? })`**

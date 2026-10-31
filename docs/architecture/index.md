@@ -41,7 +41,7 @@ flowchart TB
 各层级核心职责与协作服务如下：
 
 - **接入与路由层**：由平台适配器捕获 Satori 事件并生成标准 Session。`ctx.chat` 执行消息去重、veto 拦截、激活判定与连发合并；`ctx.routing` 根据平台、机器人标识、群组与用户层级解析出对应的规则 binding；随后 `ctx.conversations` 基于会话键查找到活跃的会话头（session head）。
-- **对话内核层**：`ctx.agents` 将消息推入收件箱并驱动主循环。在每一步（step）中，`ctx.prompt` 组装提示词分区与环境状态；`ctx.ai` 经由 `ctx.chatluna_providers` 调度模型进行推理。若模型触发工具调用，必须先通过 `ctx.permissions` 裁定权限，随后分发至 `ctx.tools`、`ctx.skills`、`ctx.mcp`、`ctx.subagents` 或 `ctx.computer` 执行。每一步决策均由 `ctx.sessions` 实时追加日志并驱动下一轮迭代。
+- **对话内核层**：`ctx.agents` 将消息推入收件箱并驱动主循环。在每一步（step）中，`ctx.prompt` 组装提示词分区与环境状态；`ctx.ai` 直接按「提供商:模型」地址发起推理，`ctx.chatluna_providers` 负责安装与配置这些提供商，而不是参与每一次派发。若模型触发工具调用，必须先通过 `ctx.permissions` 裁定权限，随后分发至 `ctx.tools`、`ctx.skills`、`ctx.mcp`、`ctx.subagents` 或 `ctx.computer` 执行。每一步决策均由 `ctx.sessions` 实时追加日志并驱动下一轮迭代。
 - **渲染与投递层**：对话循环终结后，输出结果交给 `ctx.chat_render` 转换为目标格式，最后经由 `ctx.chatluna_deliver` 投递回原平台通道或流式推送到 WebUI。
 
 ## 一次消息的完整生命周期
@@ -119,7 +119,7 @@ ChatLuna v2 核心逻辑完全解耦为独立注册的 Cordis 服务，主要服
 | `engines` | `@chatluna/engine` | 引擎实现注册表与生命周期挂载 |
 | `prompt` | `@chatluna/prompt` | 提示词分区构建、动态模板变量插值与环境注入 |
 | `ai` | `@chatluna/ai-runtime` | 模型 provider 注册表、请求参数校验与模型调用流转发 |
-| `chatluna_providers` | `@chatluna/provider-registry` | provider 动态安装、启停与请求负载路由 |
+| `chatluna_providers` | `@chatluna/provider-registry` | provider 的安装、启停与配置（请求由 `ctx.ai` 直接按地址派发） |
 | `tools` | `@chatluna/tool` | 工具定义管理、五阶管线过滤与上下文可见性判定 |
 | `skills` | `@chatluna/skill` | 结构化技能目录管理与动态加载 |
 | `mcp` | `@chatluna/mcp` | Model Context Protocol 协议连接维护与外部工具桥接 |

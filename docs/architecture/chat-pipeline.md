@@ -99,24 +99,24 @@ flowchart TD
 #### 2. activity 活跃度与兴趣判定
 面向群聊插话场景：
 - 综合统计最近消息频率、参与人数熵值、线索词（引用/包含机器人别名/兴趣词）、动量（momentum）及发言疲劳度。
-- 动态计算冲动值 `urge` 与动态阈值，触发最小间隔为 `30` 秒。
-- 当兴趣足够但未达到发话阈值时，可主动返回 `observe` 协助构建群聊背景记忆。
+- 动态计算冲动值 `urge` 与动态阈值，两次主动发言之间至少间隔 30 秒；被随机抽样拒绝的那一次同样消耗间隔，所以调低频率会按比例降低实际发言率。
+- 判定结果只有两种：`wake`（附带 `settle` 延迟）或不产生决策（记录一次 skip）。它不会主动返回 `observe`——是否记录由监听者按 `chat.observe` 配置决定。
 
 #### 3. judge 小模型智能裁决
 使用轻量级语言模型（LLM）进行智能插话判定：
 - **默认模型**：`@decide`。
-- **触发参数**：最小冲动阈值 `minUrge = 0.55`、最小调用间隔 `minInterval = 60` 秒、滑窗上下文 `window = 12`。
+- **触发参数**：最低插话把握 `minUrge = 0.55`、最小调用间隔 `minInterval = 60000` 毫秒、滑窗上下文 `window = 12`。
 - **预算控制**：每日调用上限 `dailyBudget = 200`，并发上限 `concurrency = 2`。
-- 判定结论会自动缓存到同一条消息；若判定需要观望后续话题，可通过 `wait` 延迟回复。
+- 判定结论按消息缓存；若判定需要观望后续话题，可通过 `wait`（毫秒）延迟回复。已有更高优先级的 `wake` 时不再询问。
 
 ### 静默观察机制（Observer）
 
 当判定结果为 `observe` 时，由 `chat.observe` 选项接管存储行为：
-- `mode`：`off` 或 `quiet`（默认）。在 `quiet` 模式下不触发模型生成，仅写入存储与日志。
+- `mode`：`off`（默认）或 `quiet`。`quiet` 模式只记录不回复；`off` 模式下判定为不唤醒的消息不会进入聊天记录。
 - `self`：默认 `true`，机器人自身发送的消息同样纳入观察。
-- `backfill.limit`：回填消息上限，默认 `30` 条。
-- `midTurn`：执行中插入粒度，支持 `step` 或 `turn`。
-- `store`：持久化单位，按 `message` 或 `turn`。
+- `backfill.limit`：回填消息上限，默认 `30` 条（伪装引擎默认 `40`）。
+- `midTurn`：执行中插入粒度，默认 `step`。
+- `store`：持久化单位，默认按 `message`。
 - `media`：富媒体保留配置，`perMessage` 默认 `9`，`attach` 默认 `4`（设为 `0` 关闭）。
 
 ## 连发合并
@@ -249,13 +249,13 @@ ChatLuna 通过 `chatluna-chat-recall` 插件监听底层适配器的消息变�
 
 | 事件名 | 触发时机与机制 | 参数 / 上下文 |
 | :--- | :--- | :--- |
-| `chatluna/before-message` | 平台消息最前置入口，早于去重检查 | `(session: Session)` |
-| `chatluna/before-chat-dispatch` | Waterfall 事件；返回 truthy 时阻止继续 dispatch | `this: Session` |
-| `chatluna/chat-dispatch` | 消息通过审核并完成所有准备，正式分发给 Agent 时触发 | `(session: Session, ctx: DispatchContext)` |
-| `chatluna/chat-activation-change` | 运行期动态修改聊天激活策略配置时触发 | `(target: string, config: ActivationConfig)` |
-| `chatluna/rules-change` | 路由规则或上下文规则树发生更新重载时触发 | `(scope: string)` |
-| `chatluna/deliver-sent` | 回复消息经由投递服务成功发送至目标平台后触发 | `(delivery: DeliveryResult)` |
-| `chatluna/after-censor` | 消息（入站或出站）完成审核并产出判定结论后触发 | `(result: CensorResult, session: Session)` |
+| `chatluna/before-message` | 入站文本进入上下文前触发；`bail` 型，返回字符串可改写文本，返回阻断标记则丢弃 | `(session: Session, text: string)` |
+| `chatluna/before-chat-dispatch` | 串行 waterfall；返回 truthy 时本次判定直接记为 `ignore`（veto） | `this: Session`，参数 `(session: Session)` |
+| `chatluna/chat-dispatch` | 判定完成、准备交给 Agent 时触发；只是通知，返回内容不被使用 | `(session: Session, result: { sessionId: string; decision: Decision })` |
+| `chatluna/chat-activation-change` | 注册或注销一个唤醒判定器时触发 | `({ id: string })` |
+| `chatluna/rules-change` | 路由规则树更新重载后触发 | `({ revision: number })` |
+| `chatluna/deliver-sent` | 回复成功发送到平台后触发 | `({ routeId, messageIds, content, own })` |
+| `chatluna/after-censor` | 入站或出站内容完成审核后触发 | `(session: Session, hit: CensorHit)` |
 
 ## 下一步
 

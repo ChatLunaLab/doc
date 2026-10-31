@@ -17,11 +17,11 @@
 | `createdAt` | `number` | 创建时间的时间戳（毫秒） |
 | `parent` | `string?` | 分支来源的父会话 ID（仅分支会话存在） |
 | `at` | `number?` | 分支切出时在父会话中的条目序号（仅分支会话存在） |
-| `delegationDepth` | `number` | 委派/分支嵌套深度，主会话为 `0`，派生分支递增 |
+| `delegationDepth` | `number` | 委派深度，主会话为 `0`；分支默认复制父会话的值，除非创建时显式指定 |
 | `title` | `string?` | 会话的可选展示标题 |
-| `origin` | `string?` | 会话创建来源元数据（例如平台或路由标识） |
+| `origin` | `JsonValue?` | 任意 JSON 来源元数据（例如平台、路由或子代理来源） |
 
-当从现有会话派生分支时，新会话的头部通过 `parent` 与 `at` 精确指向父会话及其切出点，同时 `delegationDepth` 在父会话基础上加 1，形成清晰的会话衍生树。
+当从现有会话派生分支时，新会话的头部通过 `parent` 与 `at` 精确指向父会话及其切出点。`delegationDepth` 不会自动递增——子代理在创建时会显式传入自己的深度，普通分支则沿用父会话的值。
 
 ## 条目模型
 
@@ -75,14 +75,14 @@ flowchart LR
 
 ### 写入机制与乐观锁
 
-1. **计算 expectedN**：写入前根据当前内存条目数确定下一个期望序号 `expectedN = entryList.length`。
-2. **底层存储校验**：通过 `store.put(sessionId, entry, expectedN)` 执行持久化。如果底层条目已发生变化，存储层拒绝写入并抛出：
+1. **计算 expectedN**：写入前根据当前内存条目数确定下一个期望序号 `expectedN`。
+2. **底层存储校验**：通过 `store.put(sessionId, expectedN, entries)` 批量持久化。如果底层条目已发生变化，存储层拒绝写入并抛出：
    ```ts
    throw new SessionConflictError(sessionId, expectedN, actualN)
    ```
 3. **内存串行队列**：在单个会话实例内部，所有写操作（`write`, `commit`, `mark`, `compact`）自动进入串行 Promise 队列，防止进程内并发乱序。
 4. **提交约束**：`commit` 方法只允许提交 `assistant` 消息，并在成功追加写入日志后立即清理内部草稿（draft）。
-5. **不变量校验（checkInvariants）**：在每次写入前后，系统校验条目不变量：
+5. **不变量检查（checkInvariants）**：这是一个诊断方法，供 doctor 与导出一类工具调用，而不是每次写入都执行。它检查：
    - 序号 `n` 必须从 `0` 开始严格连续单调递增，无空缺、无重复；
    - `cut.before` 必须为非负整数，且取值范围必须落在当前有效区间 `[0, n]`；
    - 条目载荷必须能够通过 JSON 安全序列化。
@@ -115,7 +115,7 @@ flowchart TD
 
 ### 投影计算规则
 
-- **`messages()` 投影**：从日志中检索最后一个 `cut` 条目。若存在 `cut`，则以 `cut.summary` 构造的首条消息作为历史摘要起点，随后拼接该 `cut` 之后出现的全部 `message` 条目；若不存在 `cut`，则返回日志中全部 `message` 条目。
+- **`messages()` 投影**：从日志中检索最后一个 `cut` 条目。若存在 `cut`，则以 `cut.summary` 里的消息作为历史起点，随后拼接该 `cut` 之后出现的全部 `message` 条目；若不存在 `cut`，则返回日志中全部 `message` 条目。
 - **投影缓存**：会话实例在内存中维护 `cachedAt` 标记。当且仅当 `cachedAt !== entryList.length` 时触发重新计算；遇到 `cut` 操作时强制使全量投影失效并重算。
 - **软截断语义**：`cut` 是软截断（Soft Truncation）。早于 `cut.before` 的原始条目仍然完整保留在只追加日志中，审计和回溯不会丢失任何信息。
 - **请求重建**：`reconstructRequest(atN)` 可根据指定点 `atN` 处的 `prompt` 标记与上下文快照，完整复原当时发送给大模型的实际请求载荷。
@@ -145,7 +145,7 @@ gitGraph
 - **头部属性**：
   - `parent`：设置为父会话 `sessionId`；
   - `at`：记录分叉时的切出序号；
-  - `delegationDepth`：父会话深度加 1。
+  - `delegationDepth`：默认复制父会话的值；需要更深时由调用方显式指定。
 - **命名规范**：若未显式指定新会话 ID，默认生成形如 `<parent>:branch:<8位hex>` 的格式（使用 UUID 前 8 位十六进制字符）。
 - **事件广播**：分支成功创建后，触发 `chatluna/session-branch` 事件，载荷为 `{ parent, session, at }`。
 
@@ -157,17 +157,17 @@ gitGraph
 
 ```ts
 interface CutEntryData {
-  before: number       // 截断生效点，处于 [0, n]
-  summary: string      // 对截断前历史的结构化文本摘要
-  reason: string       // 触发压缩的原因（如 token_limit, manual）
-  native?: unknown     // Provider 专属的原生压缩块（可能包含 unusable 状态）
+  before: number          // 截断生效点，处于 [0, n]
+  summary: ChatMessage[]  // 折叠旧历史得到的消息序列（通常是摘要消息）
+  reason: string          // 触发压缩的原因（如 token_limit, manual）
+  native?: unknown        // Provider 专属的原生压缩块（可能包含 unusable 状态）
   meta?: Record<string, unknown> // 额外诊断元数据
 }
 ```
 
 - **生效机制**：`compact` 同样作为一条日志条目通过 `write` 写入。
 - **Provider 原生压缩支持**：`native` 字段可保存大模型服务商原生生成的压缩缓存块，若该缓存失效或标记为 `unusable`，投影逻辑自动降级使用 `summary`。
-- **投影重定向**：写入 `cut` 之后，后续所有调用 `messages()` 的投影计算都将丢弃此前的离散条目，直接以 `summary` 作为基准点向后重组。
+- **投影重定向**：写入 `cut` 之后，后续所有调用 `messages()` 的投影计算都将丢弃此前的离散条目，直接以 `summary` 里的消息作为基准点向后重组。
 
 ## 存储契约
 
@@ -177,12 +177,12 @@ interface CutEntryData {
 
 ```ts
 interface SessionStore {
-  head(sessionId: string): Promise<SessionHeader | null>
-  read(sessionId: string, from?: number, to?: number): Promise<SessionEntry[]>
-  put(sessionId: string, entry: SessionEntry, expectedN: number): Promise<void>
-  create(header: SessionHeader, seedEntries?: SessionEntry[]): Promise<void>
-  list?(): Promise<SessionHeader[]>
-  delete?(sessionId: string): Promise<void>
+  head(id: SessionId): Promise<SessionHead | undefined>
+  read(id: SessionId, from?: number): Promise<readonly SessionEntry[]>
+  put(id: SessionId, expectedN: number, entries: readonly SessionEntry[]): Promise<void>
+  create(header: SessionHeader, entries?: readonly SessionEntry[]): Promise<void>
+  list?(options?: { parent?: SessionId; limit?: number }): Promise<readonly SessionHeader[]>
+  delete?(id: SessionId): Promise<boolean>
 }
 ```
 
@@ -197,7 +197,7 @@ interface SessionStore {
 `ctx.sessions` 对外暴露的主要管理方法如下：
 
 - **`open(sessionId)`**：若 `store.head` 存在，则读取其全部条目并返回会话实例；若不存在，则隐式调用 `create` 创建新会话。注意：**每次 `open` 返回的均是独立的会话快照实例**，进程内或进程间的并发写入冲突在调用 `store.put` 时暴露并解决。
-- **`create(options)`**：根据指定 `sessionId` 创建会话，支持通过 `seed` 预置初始条目。若传入带有 `parent` 的头部，系统会重新向 store 验证父级有效性。
+- **`create(id?, options)`**：创建会话。传入 `parent` 与 `at` 时会把父会话切点之前的条目复制过来；`delegationDepth`、`origin`、`title` 可以显式指定，否则沿用父会话。
 - **`branch(sessionId, at, options)`**：在指定序号处分叉并返回新会话实例。
 - **`list()`**：列出当前存储中的所有会话头部信息。
 - **`head(sessionId)`**：快速读取会话头部元数据而不加载条目日志。
