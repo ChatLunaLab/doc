@@ -924,9 +924,15 @@ function sidebarArchitecture(): DefaultTheme.SidebarItem[] {
       { text: "技能", link: "/architecture/skills" },
       { text: "MCP", link: "/architecture/mcp" },
       { text: "子代理", link: "/architecture/subagent" },
+      { text: "执行机器", link: "/architecture/computer" },
     ] },
     { text: "自动化", collapsed: false, items: [
       { text: "定时与后台任务", link: "/architecture/schedule-background" },
+    ] },
+    { text: "输出与观测", collapsed: false, items: [
+      { text: "渲染与投递", link: "/architecture/render-deliver" },
+      { text: "适配器", link: "/architecture/adapters" },
+      { text: "轨迹与用量", link: "/architecture/trace-usage" },
     ] },
     { text: "模型与扩展", collapsed: false, items: [
       { text: "模型与模态运行时", link: "/architecture/models" },
