@@ -29,7 +29,7 @@ flowchart TB
         CapabilityGate -- 否 --> SessionLog
         SessionLog --> StepNext{"继续下一步?"}
         StepNext -- 是 --> PromptSvc
-        StepNext -- 否 --> RenderSvc["ctx.chat_render (结果渲染)"]
+        StepNext -- 否 --> RenderSvc["ctx.chatluna_render (结果渲染)"]
     end
 
     subgraph Egress ["投递层"]
@@ -42,7 +42,7 @@ flowchart TB
 
 - **接入与路由层**：由平台适配器捕获 Satori 事件并生成标准 Session。`ctx.chat` 执行消息去重、veto 拦截、激活判定与连发合并；`ctx.routing` 根据平台、机器人标识、群组与用户层级解析出对应的规则 binding；随后 `ctx.conversations` 基于会话键查找到活跃的会话头（session head）。
 - **对话内核层**：`ctx.agents` 将消息推入收件箱并驱动主循环。在每一步（step）中，`ctx.prompt` 组装提示词分区与环境状态；`ctx.ai` 直接按「提供商:模型」地址发起推理，`ctx.chatluna_providers` 负责安装与配置这些提供商，而不是参与每一次派发。若模型触发工具调用，必须先通过 `ctx.permissions` 裁定权限，随后分发至 `ctx.tools`、`ctx.skills`、`ctx.mcp`、`ctx.subagents` 或 `ctx.computer` 执行。每一步决策均由 `ctx.sessions` 实时追加日志并驱动下一轮迭代。
-- **渲染与投递层**：对话循环终结后，输出结果交给 `ctx.chat_render` 转换为目标格式，最后经由 `ctx.chatluna_deliver` 投递回原平台通道或流式推送到 WebUI。
+- **渲染与投递层**：对话循环终结后，输出结果交给 `ctx.chatluna_render` 转换为目标格式，最后经由 `ctx.chatluna_deliver` 投递回原平台通道或流式推送到 WebUI。
 
 ## 一次消息的完整生命周期
 
@@ -61,7 +61,7 @@ flowchart TB
 11. **权限判定与工具执行**：模型若产生工具调用，执行流程被 `ctx.permissions` 拦截裁定，鉴权通过后由对应能力模块执行并收集输出。
 12. **日志追加**：每一步的模型输出、工具输入输出、mark 标记与快照均作为只追加事件记入 `ctx.sessions`。
 13. **判定终止**：检查是否达成结束条件（无进一步工具调用或达到最大步数），未达成则循环返回第 9 步继续执行。
-14. **渲染与投递**：`ctx.chat_render` 将最终回复内容排版，交由 `ctx.chatluna_deliver` 投递回用户。
+14. **渲染与投递**：`ctx.chatluna_render` 将最终回复内容排版，交由 `ctx.chatluna_deliver` 投递回用户。
 
 ```mermaid
 sequenceDiagram
@@ -77,7 +77,7 @@ sequenceDiagram
     participant Perm as ctx.permissions
     participant Tools as 能力提供者
     participant Session as ctx.sessions
-    participant Deliver as ctx.chat_render / deliver
+    participant Deliver as ctx.chatluna_render / ctx.chatluna_deliver
 
     User->>Adapter: 发送消息
     Adapter->>Chat: 产生标准 Session
@@ -130,6 +130,9 @@ ChatLuna v2 核心逻辑完全解耦为独立注册的 Cordis 服务，主要服
 | `presets` | `@chatluna/preset` | 预设文件解析、kind 类型识别与 loader 实现 |
 | `trace` | `@chatluna/trace` | 请求因果 span 树构建与链路监控 |
 | `usage` | `@chatluna/trace-billing` | 令牌消耗与用量账本记账 |
+| `telemetry` | `@chatluna/telemetry` | 运行指标计数与上报快照 |
+| `censor` | `@chatluna/chat-censor` | 输入审核：命中规则时拦截消息 |
+| `compaction` | `@chatluna/compaction-default` | 历史压缩执行与多级降级（契约在 `@chatluna/compaction`） |
 | `schedule` | `@chatluna/schedule` | 自动化定时触发任务调度器 |
 | `background` | `@chatluna/background` | 异步后台任务队列与脱机工作流托管 |
 | `schemas` | `@chatluna/ui-schema-registry` | 设置页与规则页表单的 UI Schema 注册中心 |
@@ -139,10 +142,10 @@ ChatLuna v2 核心逻辑完全解耦为独立注册的 Cordis 服务，主要服
 ## 核心设计原则
 
 ### 1. 日志唯一事实源
-在 ChatLuna v2 中，`ctx.sessions` 是严格只允许追加（append-only）的不可变日志。系统不存在物理删除逻辑，`cut` 操作属于软截断，仅通过生成 summary 替换 before 之前的历史消息，原始数据依旧完好留存；所有的提示词快照（prompt 快照）、预设选定（preset/selected）、请求上下文（request/context）、消息队列吞吐（input 入队/接纳/丢弃）及跳步行为（turn-skip）均作为不可变 `mark` 记录写入日志。
+在 ChatLuna v2 中，`ctx.sessions` 是只允许追加（append-only）的日志，条目不会被就地改写；删除会话是整条移除，而不是回写历史。`cut` 操作属于软截断，仅通过生成 summary 替换 before 之前的历史消息，原始数据依旧完好留存；所有的提示词快照（prompt 快照）、预设选定（preset/selected）、请求上下文（request/context）、消息队列吞吐（input 入队/接纳/丢弃）及跳步行为（turn-skip）均作为不可变 `mark` 记录写入日志。
 
 ### 2. 前缀缓存一等公民
-系统对模型调用成本做前置治理，系统提示词、全局工具声明列表与模型核心参数共同构成一个强约束的 epoch 缓存块。通过这种静态与稳定动态隔离的机制最大化提升前缀缓存命中率；开发者可直接在终端执行 `chatluna doctor cache` 命令，即时查看当前会话的 epoch 状态与历史作废原因。
+系统对模型调用成本做前置治理，系统提示词、全局工具声明列表与模型核心参数共同构成一个强约束的 epoch 缓存块。通过这种静态与稳定动态隔离的机制最大化提升前缀缓存命中率；开发者可以执行 `chatluna doctor cache <会话id>` 查看某个会话的构成与变化，定位是哪里让前缀失效。
 
 ### 3. 一切皆插件
 系统自身无任何硬编码的专有模型或固化能力。工具（tools）、技能（skills）、MCP 连接器、平台协议适配器以及底层模型提供者（providers）均为符合 Cordis 标准的插拔式插件；所有 provider 均支持在运行时按需下载与动态热加载，杜绝框架级体积膨胀。
