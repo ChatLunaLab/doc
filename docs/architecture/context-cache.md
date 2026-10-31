@@ -80,22 +80,13 @@ import type { Context } from '@chatluna/cordis'
 
 export function apply(ctx: Context) {
   // 1. 声明一个不可变变量（可用于 system 分区）
-  ctx.prompt.variable('agent_version', {
-    mutable: false,
-    value: () => 'v2.1.0'
-  })
+  ctx.prompt.variable({ name: 'agent_version', mutable: false }, () => 'v2.1.0')
 
   // 2. 声明一个动态变量（仅允许用于 context/input 分区）
-  ctx.prompt.variable('time', {
-    mutable: true,
-    value: () => new Date().toISOString()
-  })
+  ctx.prompt.variable({ name: 'clock', mutable: true }, () => new Date().toISOString())
 
-  // 3. 注册提示词代码块
-  ctx.prompt.block('env_status', {
-    zone: 'context',
-    content: '当前工作区网络状态正常。'
-  })
+  // 3. 注册提示词块
+  ctx.prompt.block({ id: 'env-status', zone: 'context', content: '当前工作区网络状态正常。' })
 }
 ```
 
@@ -185,7 +176,7 @@ ChatLuna 将压缩能力拆分为多个功能包：
 - **上下文阈值**：当前估算的上下文消耗达到目标模型最大窗口的 **80% (0.8)**。如果当前模型的最大窗口未知，系统将按照 **32000** 的备用窗口进行估算并记录警告日志（此估算基于启发式规则，非模型厂商官方 Tokenizer 精确值）。
 - **媒体引用上限**：当前可见历史中 `meta.attach` 包含的不重复资源引用数超过 **32 个**。你可以将配置参数设为 `maxImages=0` 来关闭此数量触发规则。
 
-如果压缩流程在同一活动会话中**连续两次出现错误**，系统将暂时跳过提前压缩，防止请求被死循环阻塞。当 Agent 实例重新回到空闲 (`idle`) 状态时，该错误计数器会被自动清零。跳过提前压缩后，随后的请求仍可能因实际超限而触发底层错误。
+如果压缩流程在同一个 Agent 上**连续两次出现错误**，系统将暂时跳过提前压缩，防止请求被死循环阻塞。当 Agent 实例重新回到空闲 (`idle`) 状态时，该错误计数器会被自动清零。跳过提前压缩后，随后的请求仍可能因实际超限而触发底层错误。
 
 ### 2. 溢出恢复 (Overflow Recovery)
 
