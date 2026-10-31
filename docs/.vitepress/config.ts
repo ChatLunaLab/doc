@@ -917,6 +917,17 @@ function sidebarArchitecture(): DefaultTheme.SidebarItem[] {
       { text: "引擎", link: "/architecture/engine" },
       { text: "角色系统", link: "/architecture/character" },
     ] },
+    { text: "能力与治理", collapsed: false, items: [
+      { text: "工具系统", link: "/architecture/tools" },
+      { text: "权限与审批", link: "/architecture/permissions" },
+      { text: "长期记忆", link: "/architecture/memory" },
+      { text: "技能", link: "/architecture/skills" },
+      { text: "MCP", link: "/architecture/mcp" },
+      { text: "子代理", link: "/architecture/subagent" },
+    ] },
+    { text: "自动化", collapsed: false, items: [
+      { text: "定时与后台任务", link: "/architecture/schedule-background" },
+    ] },
     { text: "模型与扩展", collapsed: false, items: [
       { text: "模型与模态运行时", link: "/architecture/models" },
       { text: "插件、服务与数据", link: "/architecture/extensions" },
