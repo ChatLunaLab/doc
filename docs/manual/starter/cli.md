@@ -14,7 +14,7 @@ npm i -g chatluna
 
 运行 ChatLuna 需要 Node.js 24 或更高版本。
 
-这里的全局包名为 `chatluna`，而实例内部自带的命令行是 `@chatluna/cli`。细心的小伙伴可能会发现两者的名称不同：全局的 `chatluna` 负责管理整机的所有实例，而 `@chatluna/cli` 负责在实例内部执行具体的诊断命令。安装完成后，终端便可以直接调用 `chatluna` 命令。
+这里的全局包名为 `chatluna`，而实例内部自带的命令行是 `@chatluna/cli`。全局的 `chatluna` 负责管理整机的所有实例，而 `@chatluna/cli` 负责在实例内部执行具体的诊断命令。安装完成后，终端便可以直接调用 `chatluna` 命令。
 
 ## 创建并启动
 

@@ -59,7 +59,7 @@ export class MyBot extends Bot<Context, { selfId?: string }> {
 
 ### 关键点
 
-细心的小伙伴可能会发现，上面的示例主要包含了这几个核心部分：
+上面的示例主要包含了这几个核心部分：
 
 - **`static name`**：插件的唯一标识名称。
 - **`static inject`**：声明插件的依赖服务，通常需要注入 `satori`。

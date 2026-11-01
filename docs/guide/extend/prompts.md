@@ -59,7 +59,7 @@ ctx.prompt.variable(
 )
 ```
 
-细心的小伙伴可能会发现，我们在声明变量时指定了 `zones` 与 `mutable`。为了保证提示词渲染的可控性与缓存效率，ChatLuna 施加了以下限制：
+我们在声明变量时指定了 `zones` 与 `mutable`。为了保证提示词渲染的可控性与缓存效率，ChatLuna 施加了以下限制：
 
 ::: warning
 - **可变变量禁止用于系统区**：若将 `mutable: true` 的可变变量注入到 `system` 分区，系统将在运行时抛出 `MutableVariableError`。包含动态变化的数据请放置在 `context` 或 `input` 分区。

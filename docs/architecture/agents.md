@@ -38,7 +38,7 @@ flowchart TD
 
 ## 投递输入与接纳时机
 
-向 Agent 发送消息可以使用 `agent.receive(message, { when })`。细心的小伙伴可能会注意到，该方法同步返回 `void`，**不返回**对应回答的 Promise。
+向 Agent 发送消息可以使用 `agent.receive(message, { when })`。该方法同步返回 `void`，**不返回**对应回答的 Promise。
 
 那么，投递的消息会在什么时候进入模型上下文呢？这取决于参数 `when` 的设置：
 
@@ -201,7 +201,7 @@ export function apply(ctx: Context) {
 
 引擎（Engine）本质上是挂载到 Agent Fiber 上下文中的标准 Cordis 插件，主要通过覆写 `assemble` 和 `flow` 等逻辑来重构行为。
 
-框架内置的常规 Agent、代码编写（Coding）以及独立的代号角色（Character）引擎具备不同的流程编排与提示词策略，但底层统一遵守会话提交、工具管线及 Fiber 生命周期规范。细心的小伙伴可能会发现，预设（Preset）具有 `kind` 限制与对应的引擎接纳规则，并非所有预设都能无缝混用于任意类型的引擎。
+框架内置的常规 Agent、代码编写（Coding）以及独立的代号角色（Character）引擎具备不同的流程编排与提示词策略，但底层统一遵守会话提交、工具管线及 Fiber 生命周期规范。预设（Preset）具有 `kind` 限制与对应的引擎接纳规则，并非所有预设都能无缝混用于任意类型的引擎。
 
 ## 常见排错与检查清单
 

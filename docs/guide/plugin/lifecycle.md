@@ -47,7 +47,7 @@ export function apply(ctx: Context, config: Config) {
 
 通过 `ctx.effect(fn)` 可以向当前 Fiber 绑定一个副作用处理函数。传入的 `fn` 会立即同步执行；当插件被卸载或重载时，框架将自动调用 `fn` 返回的清理函数 (Disposer)。
 
-细心的小伙伴可能会发现，框架内置的绝大部分注册方法（包括 `ctx.command`、`ctx.on`、定时器及 HTTP 路由注册）底层均已原生封装了 effect 机制。因此在卸载时它们都会被自动注销，无需手动清理。
+框架内置的绝大部分注册方法（包括 `ctx.command`、`ctx.on`、定时器及 HTTP 路由注册）底层均已原生封装了 effect 机制。因此在卸载时它们都会被自动注销，无需手动清理。
 
 当你需要管理外部持久资源（如网络连接、文件句柄）时，使用 `ctx.effect` 提供显式清理逻辑即可：
 

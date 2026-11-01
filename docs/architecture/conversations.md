@@ -110,7 +110,7 @@ erDiagram
 
 ### 数据表定义
 
-细心的小伙伴可能会发现，两张表分别承担了不同职责：`chatluna_conversations` 记录「指针当前指向哪里」，而 `chatluna_sessions` 则记录「会话节点本身的实体数据」。
+两张表分别承担了不同职责：`chatluna_conversations` 记录「指针当前指向哪里」，而 `chatluna_sessions` 则记录「会话节点本身的实体数据」。
 
 1. **`chatluna_conversations` 表**
    - `key`：主键，会话键字符串；

@@ -2,7 +2,7 @@
 
 ChatLuna v2 是运行在 Cordis 4 上的聊天机器人框架。它通过 Satori 平台接入各类聊天软件（原生兼容 QQ、OneBot 等协议实现），并自带开箱即用的独立 WebUI。
 
-在架构设计上，ChatLuna 的整个运行时实例本质上是一棵由声明式清单装配的插件树。系统的默认入口配置为 `cordis.yml`，并在此通过 include 引入 `chatluna.yml`。细心的小伙伴可能会发现，`chatluna.yml` 内部使用了 `isolate: { server: chatluna }`——它将所有业务插件隔离在端口 `5028` 的专属服务器实例中运行，而官方 Cordis 控制台则独立驻留在 `6140` 端口。
+在架构设计上，ChatLuna 的整个运行时实例本质上是一棵由声明式清单装配的插件树。系统的默认入口配置为 `cordis.yml`，并在此通过 include 引入 `chatluna.yml`。`chatluna.yml` 内部使用了 `isolate: { server: chatluna }`——它将所有业务插件隔离在端口 `5028` 的专属服务器实例中运行，而官方 Cordis 控制台则独立驻留在 `6140` 端口。
 
 本文档的所有架构定义均以源码实现为准，为你呈现从消息接入、路由计算、核心循环到多端投递的完整链路。
 

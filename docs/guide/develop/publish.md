@@ -30,7 +30,7 @@ my-plugin/
 
 命名时，建议包名采用 `@your-scope/chatluna-xxx` 或 `chatluna-xxx` 格式，方便用户在搜索时一眼认出这是 ChatLuna 的插件。
 
-细心的小伙伴可能会注意到，框架核心包被放在了 `peerDependencies` 而非 `dependencies` 中。这是因为宿主环境在运行时已经提供了框架核心，插件自身不应将框架代码重复打包进自身依赖，请务必将 `@chatluna/*` 相关的框架依赖写入 `peerDependencies`。
+框架核心包被放在了 `peerDependencies` 而非 `dependencies` 中。这是因为宿主环境在运行时已经提供了框架核心，插件自身不应将框架代码重复打包进自身依赖，请务必将 `@chatluna/*` 相关的框架依赖写入 `peerDependencies`。
 
 ## 编写插件入口
 

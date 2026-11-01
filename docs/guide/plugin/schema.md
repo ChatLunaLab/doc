@@ -30,7 +30,7 @@ const intersect = Schema.intersect([Schema.object({ a: str }), Schema.object({ b
 const obj = Schema.object({ key: Schema.string() }) // 对象
 ```
 
-细心的小伙伴可能会发现，除了常见的标量类型外，`Schema` 还支持声明数组、字典以及由多个结构拼合而成的联合与交叉类型。有了这些基础砖瓦，我们就能自由组合出更复杂的配置结构了。
+除了常见的标量类型外，`Schema` 还支持声明数组、字典以及由多个结构拼合而成的联合与交叉类型。有了这些基础砖瓦，我们就能自由组合出更复杂的配置结构了。
 
 ## 使用修饰器补充约束与元数据
 

@@ -41,7 +41,7 @@ export function apply(ctx: Context) {
 }
 ```
 
-细心的小伙伴可能会注意到代码中的 `inject` 属性。你可以借助 `inject` 显式声明插件所依赖的服务（Service）。只有当这些服务全部就绪后，框架才会执行 `apply` 函数，此时像 `ctx.tools` 这样的依赖对象才能安全可靠地被访问。
+代码中的 `inject` 属性值得留意。你可以借助 `inject` 显式声明插件所依赖的服务（Service）。只有当这些服务全部就绪后，框架才会执行 `apply` 函数，此时像 `ctx.tools` 这样的依赖对象才能安全可靠地被访问。
 
 ## 加载与验证插件
 

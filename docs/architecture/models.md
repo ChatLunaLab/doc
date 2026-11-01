@@ -37,7 +37,7 @@ flowchart TB
 | 易用动词 | `@chatluna/ai-runtime/ops` / `ctx.chatluna` | 提供 `ask`、`chat`、`extract` 及其他模态的便捷调用方法 |
 
 ::: tip
-细心的小伙伴可能会发现，`@chatluna/core` 仅提供了高阶动词的类型挂载点，实际执行逻辑是由 `@chatluna/ai-runtime/ops` 插件在加载时注入的。因此，上下文中存在 `ctx.chatluna` 对象并不意味着所有高阶动词均已就绪。
+`@chatluna/core` 仅提供了高阶动词的类型挂载点，实际执行逻辑是由 `@chatluna/ai-runtime/ops` 插件在加载时注入的。因此，上下文中存在 `ctx.chatluna` 对象并不意味着所有高阶动词均已就绪。
 :::
 
 在此基础上，运行时一共支持以下七种模态 (Modality)。不同提供商支持的模态各有不同，调用前请务必确认驱动能力：
