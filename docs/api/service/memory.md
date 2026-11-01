@@ -39,7 +39,7 @@
 | `listBackends()` | 列出后端 |
 | `backendId(presetId, conversationId?)` | 解析当前后端 |
 
-默认后端是 Markdown。需要注意的是，注册同名后端会抛出错误。
+内置后端 ID 为 `md`（Markdown 文件），也是默认值。注册同名后端会直接抛出错误；配置项 `backends` 可以把指定预设映射到其他后端存储。解析顺序是先看 `backends` 中的映射，再回落到会话自身的设置。
 
 ## 任务
 

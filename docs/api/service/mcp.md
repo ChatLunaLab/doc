@@ -1,41 +1,41 @@
 # MCP
 
-`ctx.mcp`（`@chatluna/mcp`）管理 MCP 服务器、连接状态与工具投影。
+`ctx.mcp`（由 `@chatluna/mcp` 提供）负责管理 MCP 服务器的生命周期、连接状态与工具投影。
 
 ## 服务器
 
-| 方法 | 作用 |
+| 方法 | 说明 |
 | --- | --- |
-| `registerServer(spec)` | 注册服务器（id 重复会抛错） |
-| `servers()` / `getServer(id)` | 读取配置 |
-| `listServers()` | 带状态的列表 |
-| `reconnect(id)` | 重新连接 |
-| `probe(spec, signal?)` | 试连并返回工具清单 |
+| `registerServer(spec)` | 注册服务器（若 `id` 重复将抛出错误） |
+| `servers()` / `getServer(id)` | 获取全部配置或指定 `id` 的配置 |
+| `listServers()` | 获取包含当前连接状态的服务器列表 |
+| `reconnect(id)` | 重新连接指定的服务器 |
+| `probe(spec, signal?)` | 测试连接并返回该服务器的工具清单 |
 
-服务器状态包括 `disabled`、`connecting`、`ready`、`unavailable` 等；失败原因记录在状态里。
+服务器状态包括 `disabled`、`connecting`、`ready` 与 `unavailable` 等；若连接失败，具体的失败原因会保存在状态对象中。
 
 ## 传输方式
 
-| 方法 | 作用 |
+| 方法 | 说明 |
 | --- | --- |
-| `registerTransport(type, handler)` | 注册 `stdio` 或 `http` 处理器 |
-| `transportsAvailable()` | 当前可用的传输方式 |
+| `registerTransport(type, handler)` | 注册 `stdio` 或 `http` 传输处理器 |
+| `transportsAvailable()` | 查询当前环境中可用的传输方式列表 |
 
-传输方式由其他插件提供；未安装对应传输时连接会失败。
+具体的传输方式由其他插件提供；若尝试连接时未安装对应的传输处理器，连接将会失败。
 
 ## 工具
 
-| 方法 | 作用 |
+| 方法 | 说明 |
 | --- | --- |
-| `listTools(id, signal?)` | 某服务器的工具 |
-| `listAllTools()` | 全部工具 |
-| `callTool(id, name, args, signal?)` | 直接调用 |
+| `listTools(id, signal?)` | 获取指定服务器提供的工具列表 |
+| `listAllTools()` | 获取全部服务器提供的工具列表 |
+| `callTool(id, name, args, signal?)` | 直接调用指定服务器的特定工具 |
 
-对外暴露给模型时统一加上 `mcp__<id>__<name>` 前缀；名称会清洗到 64 字符以内。
+工具对外暴露给模型时会统一添加 `mcp__<id>__<name>` 前缀；工具名称会自动清洗至 64 字符以内。
 
 ## 事件
 
-`mcp/servers-change` 在服务器增删或状态变化时触发；`chatluna/tool-change` 在工具集合变化时触发，用来让 Agent 刷新工具列表。
+`mcp/servers-change` 事件在服务器增删或状态变化时触发；`chatluna/tool-change` 事件在工具集合变化时触发，用于通知 Agent 及时刷新工具列表。
 
 ## 继续
 
