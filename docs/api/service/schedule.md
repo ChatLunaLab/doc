@@ -1,59 +1,67 @@
 # 定时任务与后台任务
 
-`ctx.schedule`（`@chatluna/schedule`）管理定时器、条件监视与唤醒；`ctx.background`（`@chatluna/background`）管理长任务的执行与通知。
+`ctx.schedule`（由 `@chatluna/schedule` 提供）负责管理定时器、条件监视与会话唤醒；`ctx.background`（由 `@chatluna/background` 提供）则负责长任务的托管执行与状态通知。
 
 ## 定时任务
 
-| 方法 | 作用 |
+你可以通过 `ctx.schedule` 创建与调度定时任务，支持单次执行、周期运行与按 key 去重覆写：
+
+| 方法 | 说明 |
 | --- | --- |
-| `create(input)` | 新建任务 |
-| `set(input & { key })` | 按 key 覆盖：同一会话同 key 只保留一个 |
-| `update(id, patch)` / `remove(id)` | 修改与删除 |
-| `cancel(id)` | 删除任务（`remove` 的别名） |
-| `list(filter?)` | 列出任务 |
-| `fire(id)` | 立即触发一次 |
-| `runsOf(id, limit?)` | 历史执行记录 |
-| `stats()` | 任务/监视/唤醒的计数 |
-| `scope(name, provider)` | 注册监视条件的作用域 |
+| `create(input)` | 创建新的定时任务 |
+| `set(input & { key })` | 按 key 覆写任务：同一会话下相同 key 仅保留一个 |
+| `update(id, patch)` / `remove(id)` | 修改或删除指定任务 |
+| `cancel(id)` | 取消指定任务（`remove` 的别名） |
+| `list(filter?)` | 列出符合条件的任务列表 |
+| `fire(id)` | 立即手动触发一次任务 |
+| `runsOf(id, limit?)` | 获取指定任务的历史执行记录 |
+| `stats()` | 获取任务、监视条件与唤醒统计数据 |
+| `scope(name, provider)` | 注册监视条件的作用域提供者 |
 
 ### 唤醒
 
-| 方法 | 作用 |
-| --- | --- |
-| `wakeup(target, input)` | 安排一次唤醒 |
-| `wakeupCount(key)` | 当前会话的唤醒数量 |
-| `firesToday(key)` | 今日已触发次数 |
+唤醒机制用于在满足预设时机时主动唤醒指定会话：
 
-`input` 支持 `after`、`at`、`when`、`expires`、`fallback`、`times`、`gap`、`reason`、`key`、`cancelOn`。`cancelOn: 'reply'` 表示用户一回复就取消。
+| 方法 | 说明 |
+| --- | --- |
+| `wakeup(target, input)` | 安排一次会话唤醒 |
+| `wakeupCount(key)` | 获取当前会话下指定 key 的唤醒任务数量 |
+| `firesToday(key)` | 获取指定 key 今日已触发的次数 |
+
+配置项 `input` 支持 `after`、`at`、`when`、`expires`、`fallback`、`times`、`gap`、`reason`、`key` 和 `cancelOn`。传入 `cancelOn: 'reply'` 表示一旦用户产生新的回复便自动取消该唤醒。
 
 ### 监视条件
 
-`when` 是谓词表达式；`checkSource(source)` 会分析它用到了时间、消息还是模型调用，据此决定检查频率。监视任务按 `messages` 从上次触发开始计数。
+通过 `when` 字段定义条件谓词表达式。`checkSource(source)` 会分析表达式中所依赖的来源（时间、消息或模型调用），据此自动确定轮询检查频率。监视任务的消息计数按 `messages` 从上次触发开始累计。
 
 ## 后台任务
 
-| 方法 | 作用 |
+对于无法在单一交互回合内同步完成的长耗时操作，可将其交给 `ctx.background` 托管：
+
+| 方法 | 说明 |
 | --- | --- |
-| `start(input)` | 启动一个后台任务 |
-| `adopt(work, input)` | 接管已在运行的工作 |
-| `get(id)` / `list({ owner? })` | 查询 |
-| `listFor(agent)` / `itemFor(id, agent)` | 面向 Agent 的视图 |
-| `consume(item)` / `touch(item)` | 标记已读与保活 |
-| `deliver(item)` | 主动投递结果 |
-| `prune()` | 清理过期任务 |
+| `start(input)` | 启动一个新的后台任务 |
+| `adopt(work, input)` | 接管已在运行中的异步工作 |
+| `get(id)` / `list({ owner? })` | 查询单个任务详情或列出任务列表 |
+| `listFor(agent)` / `itemFor(id, agent)` | 获取面向指定 Agent 的任务视图与条目 |
+| `consume(item)` / `touch(item)` | 标记任务已读状态与刷新心跳保活 |
+| `deliver(item)` | 主动将任务执行结果投递给目标 |
+| `prune()` | 清理已过期的历史后台任务 |
 
 ### BackgroundItem
 
-| 成员 | 作用 |
-| --- | --- |
-| `log(line)` / `write(chunk, stream)` | 追加输出 |
-| `setProgress(text)` | 更新进度 |
-| `finish(status, value, error?)` | 结束（`completed` / `failed` / `cancelled`） |
-| `cancel(reason?)` | 请求取消 |
-| `wait({ timeout? })` / `snapshot()` | 等待与快照 |
-| `read({ from?, stream? })` | 读取缓冲输出 |
+后台任务实例 `BackgroundItem` 提供了控制生命周期与同步输出的接口：
 
-结束后按配置的通知方式（唤醒、下一轮、静默）把结果交回会话。
+| 成员 | 说明 |
+| --- | --- |
+| `log(line)` / `write(chunk, stream)` | 追加单行日志或向指定数据流写入数据块 |
+| `setProgress(text)` | 更新当前任务执行进度描述 |
+| `finish(status, value, error?)` | 标记任务结束（支持 `completed`、`failed`、`cancelled`） |
+| `cancel(reason?)` | 向任务发送取消请求并记录原因 |
+| `wait({ timeout? })` / `snapshot()` | 等待任务结束或获取当前任务状态快照 |
+| `read({ from?, stream? })` | 读取任务缓冲区的输出日志或数据流 |
+
+任务执行结束后，系统会根据配置的通知策略（如唤醒、下一轮回复合并或静默记录）将结果回传给对应会话。
 
 ## 继续
 
