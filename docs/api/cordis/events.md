@@ -1,8 +1,10 @@
 # 事件 (Events)
 
-事件是扩展点的主要形态。`ctx.on` 监听、`ctx.emit` 触发，注册跟随 fiber 自动清理。
+事件是插件间解耦与功能扩展的主要形态。你可以使用 `ctx.on` 注册监听，使用 `ctx.emit` 触发广播；监听器的生命周期与当前 fiber 绑定，并在销毁时自动清理。
 
 ## 调度模式
+
+Cordis 提供了多种事件调度方式，以支持不同的执行流控制需求：
 
 | API | 语义 |
 | --- | --- |
@@ -12,11 +14,11 @@
 | `ctx.waterfall(event, carrier)` | 链式环绕，监听 `next()` 继续 |
 | `ctx.bail(event, ...args)` | 任一否决即停 |
 
-`waterfall` 的监听器签名是 `(carrier, next)`：改 `carrier` 再 `next()`，在 `next()` 前后做事。`bail` 的监听器返回否决即短路。
+其中 `waterfall` 的监听器签名是 `(carrier, next)`，支持在修改 `carrier` 后调用 `next()`，以实现前后环绕逻辑；`bail` 的监听器只要返回否决结果，便会立即短路并中断后续调用。
 
 ## 声明
 
-跨包事件用模块增强声明到事件表：
+对于跨包事件，建议通过 TypeScript 模块增强将其声明到事件表中，以获得类型推导支持：
 
 ```ts
 declare module 'cordis' {
@@ -26,9 +28,11 @@ declare module 'cordis' {
 }
 ```
 
-事件名约定小写 `domain/verb`。
+事件名通常约定采用小写的 `domain/verb` 格式。
 
 ## 常用事件域
+
+常见内置事件域的分类如下：
 
 - `chatluna/agent-*`：Agent 生命周期与工作
 - `chatluna/skill-change`、`chatluna/skill-check`：技能

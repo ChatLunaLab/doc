@@ -854,7 +854,7 @@ function sidebarManual(): DefaultTheme.SidebarItem[] {
       { text: "什么时候回复", link: "/manual/usage/activation" },
       { text: "群聊记录", link: "/manual/usage/groupchat" },
       { text: "长期记忆", link: "/manual/usage/memory" },
-      { text: "工具、技能与 MCP", link: "/manual/usage/capabilities" },
+      { text: "能力总览", link: "/manual/usage/capabilities" },
       { text: "工具", link: "/manual/usage/tools" },
       { text: "技能", link: "/manual/usage/skills" },
       { text: "MCP", link: "/manual/usage/mcp" },
