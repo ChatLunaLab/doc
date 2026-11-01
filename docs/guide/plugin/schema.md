@@ -4,14 +4,14 @@
 Cordis 模式（Schema）是插件 `Config` 的类型定义语言。它既负责运行时的配置项校验，也直接驱动 WebUI 表单界面的渲染。
 :::
 
-在 ChatLuna 插件开发中，你需要使用 `@chatluna/utils/cordis` 提供的 `Schema` 对象来声明插件的配置规范。编写良好的 Schema 能够同时提供类型推导、表单组件呈现和输入校验支持。
+在 ChatLuna 插件开发中，你需要使用 `@chatluna/schema` 提供的 `Schema` 对象来声明插件的配置规范。编写良好的 Schema 能够同时提供类型推导、表单组件呈现和输入校验支持。
 
 ## 声明基础类型
 
 你可以通过 `Schema` 的基础构造方法声明字段的底层数据类型：
 
 ```ts
-import { Schema } from '@chatluna/utils/cordis'
+import { Schema } from '@chatluna/schema'
 
 // 基础标量类型
 const str = Schema.string()          // 字符串
@@ -33,7 +33,7 @@ const obj = Schema.object({ key: Schema.string() }) // 对象
 声明字段类型后，你可以链式调用修饰器方法，为字段指定默认值、校验规则和表单说明：
 
 ```ts
-import { Schema } from '@chatluna/utils/cordis'
+import { Schema } from '@chatluna/schema'
 
 export const Config = Schema.object({
   prefix: Schema.string()
@@ -71,7 +71,7 @@ export const Config = Schema.object({
 当配置项较多时，可以通过嵌套 `Schema.object` 分组组织配置结构。通过在对象末尾链式调用 `.collapse()`，可以将其在表单中收拢为可折叠块：
 
 ```ts
-import { Schema } from '@chatluna/utils/cordis'
+import { Schema } from '@chatluna/schema'
 
 export const Config = Schema.object({
   server: Schema.object({

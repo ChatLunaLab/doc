@@ -9,9 +9,9 @@
 在 ChatLuna 中，工具是一个可以被模型调用并执行特定逻辑的单元。你可以通过 `@chatluna/tool` 导出的 `defineTool` 定义工具，并调用 `ctx.tools.define` 将其注册到上下文 (Context) 中：
 
 ```ts
-import type { Context } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
 import { defineTool } from '@chatluna/tool'
-import { Schema } from '@chatluna/utils/cordis'
+import { Schema } from '@chatluna/schema'
 
 export function apply(ctx: Context) {
   ctx.tools.define(defineTool({

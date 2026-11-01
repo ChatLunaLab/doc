@@ -17,7 +17,7 @@
 当清单中的插件条目被启用，且该插件通过 `inject` 声明的所有依赖服务 (Service) 均已就绪时，框架才会调用插件导出的 `apply` 函数：
 
 ```ts
-import type { Context } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
 
 export const name = 'my-plugin'
 export const inject = ['database']
@@ -46,7 +46,7 @@ export function apply(ctx: Context, config: Config) {
 当你需要管理外部持久资源（如网络连接、文件句柄）时，使用 `ctx.effect` 提供显式清理逻辑：
 
 ```ts
-import type { Context } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
 
 export function apply(ctx: Context) {
   ctx.effect(() => {
@@ -77,7 +77,7 @@ Fiber 的资源回收遵循严格的**自下而上**顺序：卸载一个插件�
 - **依赖挂载**：调用 `ctx.inject(deps, SubPlugin)`。仅当 `deps` 中声明的服务全部就绪时，子插件树才会被挂载；一旦声明的依赖服务出现失效或卸载，该子插件树会自动被卸载回收。
 
 ```ts
-import type { Context } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
 
 const SubPlugin = {
   name: 'sub-plugin',

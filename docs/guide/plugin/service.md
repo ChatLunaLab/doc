@@ -11,7 +11,7 @@
 ```ts
 import type GreeterService from './service'
 
-declare module '@chatluna/utils/cordis' {
+declare module 'cordis' {
   interface Context {
     greeter: GreeterService
   }
@@ -24,11 +24,11 @@ declare module '@chatluna/utils/cordis' {
 
 ## 提供服务
 
-服务是挂载到上下文 `ctx` 上的共享对象。通过继承 `@chatluna/utils/cordis` 的 `Service` 基类即可定义一个服务：
+服务是挂载到上下文 `ctx` 上的共享对象。通过继承 `cordis` 的 `Service` 基类即可定义一个服务：
 
 ```ts
-import { Service } from '@chatluna/utils/cordis'
-import type { Context } from '@chatluna/utils/cordis'
+import { Service } from 'cordis'
+import type { Context } from 'cordis'
 
 export default class GreeterService extends Service {
   // 声明当前服务所依赖的其他前置服务
@@ -52,7 +52,7 @@ export default class GreeterService extends Service {
 当插件需要使用外部服务时，请在插件入口处通过 `inject` 声明依赖列表：
 
 ```ts
-import type { Context } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
 
 // 声明插件必需依赖的服务
 export const inject = ['greeter', 'tools']
@@ -77,7 +77,7 @@ export function apply(ctx: Context) {
 如果你希望某段逻辑或某个子功能仅在特定服务就绪时才激活，可以使用 `ctx.inject` 方法按需挂载上下文：
 
 ```ts
-import type { Context } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
 
 export function apply(ctx: Context) {
   // 仅在 database 服务就绪时执行回调

@@ -9,7 +9,7 @@
 在 ChatLuna 中，插件是一个导出 `apply` 方法的 TypeScript/JavaScript 模块。当框架加载插件时，会调用该 `apply` 函数并传入上下文 (Context) 对象 `ctx`。插件通过 `ctx` 向框架注册各类功能与服务：
 
 ```ts
-import type { Context } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
 
 // 插件名称
 export const name = 'hello-plugin'
@@ -25,7 +25,7 @@ export function apply(ctx: Context) {
 在你的实例目录下的 `external/hello/` 文件夹中创建 `index.ts` 文件，填入以下代码：
 
 ```ts
-import type { Context } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
 
 export const name = 'hello'
 // 声明插件依赖的服务
@@ -90,7 +90,7 @@ ctx.effect(() => {
 除了具名导出函数以外，插件也可以采用对象或类的形态进行导出。当你需要向框架注册自定义服务时，通常使用类形态：
 
 ```ts
-import type { Context } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
 
 export default {
   name: 'hello',

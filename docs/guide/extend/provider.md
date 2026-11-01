@@ -14,7 +14,7 @@
 要让提供商出现在控制台「提供商」页面的可添加列表中，你需要在插件中通过 `ctx.chatluna_providers.register` 注册一个 `ProviderRecipe`：
 
 ```ts
-import type { Context } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
 
 export function apply(ctx: Context) {
   ctx.chatluna_providers.register({
@@ -55,7 +55,7 @@ export function apply(ctx: Context) {
 使用 `ctx.ai.provide(id, provider)` 将实现注入到运行时：
 
 ```ts
-import type { Context } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
 
 export function apply(ctx: Context) {
   ctx.ai.provide('my-provider', {

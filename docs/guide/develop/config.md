@@ -30,8 +30,8 @@ ChatLuna 实例通过 YAML 清单文件装配插件运行树。默认情况下�
 插件通过导出一个 `Config` 构型对象来校验清单中的 `config` 字段。导出的 `Config` 经由 Cordis `Schema` 构建，在插件加载时完成校验与默认值注入，随后传递给 `apply(ctx, config)` 函数：
 
 ```ts
-import type { Context } from '@chatluna/utils/cordis'
-import { Schema } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
+import { Schema } from '@chatluna/schema'
 
 export const Config = Schema.object({
   prefix: Schema.string().default('!').description('指令前缀'),
@@ -57,7 +57,7 @@ export function apply(ctx: Context, config: typeof Config.static) {
 `Config` 构型不仅用于运行时配置校验，同时也是 WebUI 配置表单的元数据来源。当你声明好 Schema 构型后，WebUI 界面将自动生成对应的表单项。
 
 ::: tip
-请始终使用 `@chatluna/utils/cordis` 导出的 Cordis Schema。切勿在插件中引入 `zod` 或其他第三方校验库。
+请始终使用 `@chatluna/schema` 导出的 Cordis Schema。切勿在插件中引入 `zod` 或其他第三方校验库。
 :::
 
 ## 管理敏感凭据与环境变量

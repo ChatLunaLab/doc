@@ -19,7 +19,7 @@
 跨包事件用模块增强声明到事件表：
 
 ```ts
-declare module '@chatluna/utils/cordis' {
+declare module 'cordis' {
   interface Events {
     'my/event': (payload: MyPayload) => void
   }

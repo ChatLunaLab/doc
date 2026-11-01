@@ -72,8 +72,8 @@ chatluna dev ./my-instance
 你可以直接通过命令行来管理实例依赖与插件：
 
 ```sh
-chatluna add @chatluna/tool-web-search
-chatluna remove @chatluna/tool-web-search
+chatluna add @chatluna/tool-fs
+chatluna remove @chatluna/tool-fs
 chatluna link ../my-plugin
 chatluna unlink chatluna-plugin-my
 chatluna new plugin my --webui --service
@@ -98,7 +98,7 @@ ChatLuna 提供了安全的更新流程，避免升级意外导致实例损坏�
 chatluna update demo --dry-run
 chatluna update demo
 chatluna update --self
-chatluna update demo --plugins --to @chatluna/tool-web-search@1.2.3
+chatluna update demo --plugins --to @chatluna/tool-fs@1.2.3
 ```
 
 更新的核心策略是「先安全后执行」：更新时会先对配置拍下快照，再执行升级，最后做健康检查；一旦自检失败会自动回滚，确保服务不中断。
@@ -107,7 +107,7 @@ chatluna update demo --plugins --to @chatluna/tool-web-search@1.2.3
 - `chatluna update demo --dry-run`：正式升级前使用，`--dry-run` 只打印版本对比与更新计划，不实际变动任何文件。
 - `chatluna update demo`：需要将实例升级到最新版本时使用，跑完自动完成快照、更新与健康检查并输出结果。
 - `chatluna update --self`：CLI 启动器自身有了新版本时使用，`--self` 只更新全局启动器本身。
-- `chatluna update demo --plugins --to @chatluna/tool-web-search@1.2.3`：只想更新插件或锁定版本时使用，`--plugins` 只更新实例插件，`--to` 则用于将某个包钉在指定版本。
+- `chatluna update demo --plugins --to @chatluna/tool-fs@1.2.3`：只想更新插件或锁定版本时使用，`--plugins` 只更新实例插件，`--to` 则用于将某个包钉在指定版本。
 
 ## 诊断与导出
 

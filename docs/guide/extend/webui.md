@@ -20,7 +20,7 @@ my-webui/
 
 ```ts
 // client/index.ts
-import type { Context } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
 
 export function apply(ctx: Context) {
   // 向 WebUI 注册自定义路由
@@ -63,7 +63,7 @@ export function apply(ctx: Context) {
 
 ```ts
 // src/index.ts
-import type { Context } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
 
 export function apply(ctx: Context) {
   // 向 WebUI 注册 Schema 配置段

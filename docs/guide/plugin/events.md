@@ -11,7 +11,7 @@
 你可以通过 `ctx.on()` 注册监听器，并通过 `ctx.emit()` 触发事件：
 
 ```ts
-import type { Context } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
 
 export function apply(ctx: Context) {
   // 注册事件监听器
@@ -33,7 +33,7 @@ export function apply(ctx: Context) {
 如果需要实现跨包事件并获得类型提示，你可以通过 TypeScript 的模块增强 (Module Augmentation) 将事件和载荷类型声明到事件表中：
 
 ```ts
-declare module '@chatluna/utils/cordis' {
+declare module 'cordis' {
   interface Events {
     'chatluna/memory-change': (event: MemoryChangeEvent) => void
     'chatluna/skill-change': () => void

@@ -5,8 +5,8 @@
 ## 定义
 
 ```ts
-import { Service } from '@chatluna/utils/cordis'
-import type { Context } from '@chatluna/utils/cordis'
+import { Service } from 'cordis'
+import type { Context } from 'cordis'
 
 export default class GreeterService extends Service {
   static inject = ['database']
@@ -19,7 +19,7 @@ export default class GreeterService extends Service {
 `static inject` 声明该服务自己的依赖，就绪后才实例化。用模块增强把服务类型挂到 `Context`：
 
 ```ts
-declare module '@chatluna/utils/cordis' {
+declare module 'cordis' {
   interface Context { greeter: GreeterService }
 }
 ```
