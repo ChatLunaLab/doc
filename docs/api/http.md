@@ -1,93 +1,91 @@
 # HTTP API
 
-ChatLuna 的 HTTP 服务由底层服务 `ctx.server`（`@chatluna/server`）承载。`@chatluna/api` 负责提供面向外部调用的核心会话与模型接口；各 WebUI 插件则根据自身生命周期挂载独立的页面和业务路由。
+HTTP 服务由 `ctx.chatluna_server`（`@chatluna/server`）承载，负责鉴权、健康检查与统一的响应格式；`@chatluna/api` 在其上挂载会话与模型接口，各 WebUI 插件再按自己的生命周期挂载页面需要用到的路由。
 
 ::: tip
-所有外部请求默认需要通过鉴权中间件。服务通过 `publicPaths` 配置放行白名单，默认仅放行 `/api/auth/login` 与 `/api/health`。
+默认只放行 `/api/auth/login` 与 `/api/health` 两个路径，其余请求都要带有效凭据。放行清单可以通过服务插件的 `publicPaths` 调整。
 :::
 
 ## 鉴权与健康检查
 
-所有认证相关的路由均挂载在 `/api/auth/*` 下。未登录用户可通过登录接口换取凭据，或使用签发的 API Token 调用外部接口。
-
-| HTTP 方法与路径 | 功能说明 |
+| 方法与路径 | 作用 |
 | --- | --- |
-| `POST /api/auth/login` | 提交登录凭证，成功后返回会话凭据（白名单放行） |
-| `GET /api/auth/session` | 查询当前请求的登录状态与会话信息 |
-| `POST /api/auth/token` | 签发新的 API Token，供外部程序鉴权调用 |
-| `GET /api/health` | 检查服务存活状态（白名单放行） |
+| `POST /api/auth/login` | 用访问令牌换取会话凭据（默认放行） |
+| `GET /api/auth/session` | 查询当前会话是否仍然有效 |
+| `POST /api/auth/token` | 签发长期 Token，供外部程序调用 |
+| `GET /api/health` | 存活检查（默认放行），启动器与诊断命令用它判断实例是否就绪 |
 
-## 会话管理 (`@chatluna/api`)
+响应统一包在 `data` 字段里；失败时返回带 `error` 的对象。连续失败过多会触发限流。
 
-`@chatluna/api` 提供了与 Agent 对话、拉取历史记录、控制对话流程以及监听实时流的完整接口集合。
+## 会话与消息
 
-### 会话与消息交互
-
-| HTTP 方法与路径 | 功能说明 | 补充参数/特性 |
-| --- | --- | --- |
-| `GET /api/agents` | 获取当前在线的 Agent 列表 | - |
-| `GET /api/sessions` | 获取当前用户的会话列表 | - |
-| `POST /api/sessions` | 创建新会话 | - |
-| `GET /api/sessions/:id` | 获取指定会话的元数据与状态详情 | - |
-| `GET /api/sessions/:id/messages` | 读取会话的历史消息记录 | 支持 cursor 分页 |
-| `POST /api/sessions/:id/messages` | 向指定会话发送新消息并触发回复 | 请求头支持 `Idempotency-Key` 幂等标头 |
-| `GET /api/sessions/:id/request/:seq` | 查询指定序列号 (`seq`) 的单条请求处理状态 | - |
-| `GET /api/commands` | 获取当前会话环境中所有可用的斜杠命令 | - |
-
-### 实时流监听
-
-监听会话状态变化与模型输出支持 Server-Sent Events (SSE)：
-
-| HTTP 方法与路径 | 功能说明 |
+| 方法与路径 | 作用 |
 | --- | --- |
-| `GET /api/sessions/:id/events` | 建立 SSE 事件流连接，接收会话全局事件通知 |
-| `GET /api/sessions/:id/live` | 建立实时输出流，接收模型的流式生成片段 |
+| `GET /api/agents` | 在线 Agent 分组 |
+| `GET /api/sessions` | 会话列表，支持 `cursor` 与 `limit` |
+| `POST /api/sessions` | 新建网页会话，返回 `201`；可带 `title`、`presetId`、`model` |
+| `DELETE /api/sessions/:id` | 关闭网页会话，返回提示「会话日志保留，可在日志页回放」 |
+| `GET /api/sessions/:id/messages` | 当前模型可见的消息，附带 `length` 与 `cacheBreaks`（前缀被打断的位置） |
+| `POST /api/sessions/:id/messages` | 投递一条输入，返回 `202 accepted` |
+| `GET /api/sessions/:id/request/:seq` | 按序号重建那一轮的请求快照 |
 
-### 对话流程控制
+`POST /api/sessions` 与 `POST /api/sessions/:id/messages` 支持 `Idempotency-Key` 请求头：同一个键重复提交只会执行一次，可以用来安全重试。
 
-你可以对正在进行的会话执行插话、取消生成、上下文分叉或历史压缩：
+`GET /api/sessions/:id/messages` 返回的是模型视图，不是原始条目；要看完整历史请用 `request/:seq` 或轨迹页。
 
-| HTTP 方法与路径 | 操作名称 | 功能说明 |
-| --- | --- | --- |
-| `POST /api/sessions/:id/steer` | 插话 (Steer) | 在当前上下文插入引导指令，调整模型后续生成方向 |
-| `POST /api/sessions/:id/cancel` | 取消 (Cancel) | 中断当前正在处理或生成的请求 |
-| `POST /api/sessions/:id/fork` | 分叉 (Fork) | 基于当前历史节点创建一条新的独立会话分支 |
-| `POST /api/sessions/:id/compact` | 压缩 (Compact) | 触发上下文修剪与总结压缩，释放历史 Token 占用 |
-| `POST /api/sessions/:id/model` | 换模型 | 变更当前会话所绑定的模型 |
+## 实时流
 
-## 模型查询与发现
-
-提供商与模型相关的元数据接口由 `@chatluna/api` 提供：
-
-| HTTP 方法与路径 | 功能说明 | 补充参数 |
-| --- | --- | --- |
-| `GET /api/models/providers` | 获取已注册的模型提供商列表 | - |
-| `GET /api/models` | 枚举当前可用的模型列表 | - |
-| `GET /api/models/catalog` | 获取全量模型目录 | 支持 `?all=1` 查询参数查看完整未过滤目录 |
-| `POST /api/models/discover` | 触发上游模型服务的主动探测与同步 | - |
-
-## SDK 接口适配
-
-`@chatluna/api-sdk` 封装了专用的客户端通信接口，简化外部程序接入与能力协商：
-
-| HTTP 方法与路径 | 功能说明 |
+| 方法与路径 | 作用 |
 | --- | --- |
-| `GET /api/sdk/capabilities` | 查询服务端支持的能力特性集合 |
-| `GET /api/sdk/conversations` | 列出 SDK 会话列表 |
-| `POST /api/sdk/conversations/send` | 通过 SDK 发送对话消息 |
-| `GET /api/sdk/routes` | 查询 SDK 专用的路由端点映射 |
+| `GET /api/sessions/:id/events` | SSE：会话事件流，可用 `Last-Event-ID` 或 `since` 续传 |
+| `GET /api/sessions/:id/live` | 实时输出帧：`snapshot`、`agent/assistant-stream`、`agent/assistant-settled` |
 
-## WebUI 页面接口
+实时帧不带持久的 SSE 标识，断线后需要先用 `/events` 补齐、再用 `snapshot` 对齐。
 
-各 WebUI 模块通过独立的插件提供服务。这些接口与页面处于同一生命周期，随对应插件的加载和卸载动态挂载到 `ctx.server`：
+## 控制会话
 
-- `/api/presets*`：预设 (Preset) 模板与配置管理
-- `/api/interaction/*`：用于用户交互授权与权限确认询问
-- `/api/usage/export.csv`：导出 Token 与请求用量统计数据（CSV 格式）
-- `/api/console*`：控制台管理界面专属接口
-- `/api/koishi/entities`：Koishi 平台实体与关系查询接口
+| 方法与路径 | 作用 |
+| --- | --- |
+| `POST /api/sessions/:id/steer` | 插话：把文本以「立即合入」的方式投给 Agent |
+| `POST /api/sessions/:id/cancel` | 中止当前生成，保留待处理输入 |
+| `POST /api/sessions/:id/fork` | 从 `boundary` 指定的条目位置分叉，返回新会话 |
+| `POST /api/sessions/:id/compact` | 手动压缩（未安装压缩服务时返回不可用），可传 `keep` |
+| `POST /api/sessions/:id/model` | 切换会话模型，正文需要 `provider` 与 `model` |
+| `GET /api/commands` | 当前实例注册的聊天命令 |
+
+## 模型
+
+| 方法与路径 | 作用 |
+| --- | --- |
+| `GET /api/models/providers` | 已注册的提供商 |
+| `GET /api/models` | 可用模型 |
+| `GET /api/models/catalog` | 模型目录；`?all=1` 返回未过滤的全量目录 |
+| `POST /api/models/discover` | 向指定地址探测并同步模型，正文需要 `provider` 与 `baseURL` |
+| `GET /api/sdk/capabilities` | 能力协商：实时流协议版本、流地址与帧类型 |
+
+## 文件
+
+| 方法与路径 | 作用 |
+| --- | --- |
+| `GET /files/:name` | 读取存储中的附件，返回时带长缓存；文件不存在或过期时 `404` |
+
+## 页面插件挂载的接口
+
+这些路由跟着插件走，插件卸载后一同消失：
+
+| 路径 | 提供方 | 作用 |
+| --- | --- | --- |
+| `/api/presets`、`/api/presets/:id/download` | 预设页面 | 预设列表与下载 |
+| `/api/interaction/pending`、`/api/interaction/answer` | 交互页面 | 待确认请求与回答 |
+| `/api/usage/export.csv` | 用量页面 | 导出用量 CSV |
+| `/api/console`、`/api/console/onboarding` | 控制台插件 | 控制台数据与引导 |
+| `/api/koishi/entities` | API 实体目录 | 平台实体查询 |
+
+## SDK
+
+`@chatluna/api-sdk` 是给外部程序用的客户端。它握手的第一步是 `/api/sdk/capabilities`；除此之外它还会调用会话、路由与用量相关的 SDK 路径，这些路径是否可用取决于你部署的版本与插件组合，接入前请先用能力协商确认。
 
 ## 继续
 
 - [CLI 参考](/api/cli)
-- [会话与消息（架构）](/architecture/sessions)
+- [API 与 SDK（架构）](/architecture/api-sdk)
