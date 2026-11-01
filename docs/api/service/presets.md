@@ -18,7 +18,7 @@
 - `kind`: 加载器类型。
 - `extensions`: 该加载器支持的文件扩展名列表。
 - `parse()`: 负责将原始文件解析为预设记录的函数。
-- `editable`: 布尔值，标识通过该加载器加载的预设是否允许编辑。
+- `editable`：`source` 或 `none`，表示这种预设能否直接编辑源文本。
 
 系统内置两类加载器：
 1. `md`：基于 Frontmatter 与正文模板的 Markdown 加载器。
@@ -45,8 +45,8 @@
 | --- | --- |
 | `list(kind?)` | 枚举预设记录，支持按 `kind` 筛选 |
 | `get(id)` | 获取指定 ID 的预设记录 (`PresetRecord`) |
-| `source(id)` | 读取预设源文本字符串 |
-| `raw(id)` | 读取预设原始二进制字节 (`Uint8Array` / `Buffer`) |
+| `source(id)` | 读取预设源文本，同时返回 `revision` 与文件路径 |
+| `raw(id)` | 读取预设原始字节 (`Uint8Array`) 与文件路径 |
 | `preview({ id?, name?, text })` | 仅在内存中解析并返回 `PresetRecord`，不落盘写入存储 |
 | `create({ id, loader, text? })` | 新建预设文件 |
 | `save(id, text, revision)` | 保存源文本修改，校验 `revision` |
@@ -54,7 +54,7 @@
 | `duplicate(id, target)` | 复制指定预设至新 ID `target` |
 | `remove(id, revision)` | 删除指定预设，校验 `revision` |
 | `rescan()` | 重新扫描 `data/chatluna/presets` 目录 |
-| `blocks(record)` | 将指定的预设记录渲染为提示词块列表 (`PromptBlock[]`) |
+| `blocks(record)` | 将预设记录渲染为提示词块；无需生成块时返回 `undefined` |
 | `mount(scoped, preset)` | 将预设绑定并生效至指定的子上下文 (`scoped`) |
 | `listLoaders()` | 枚举当前所有已注册的 `PresetLoader` |
 
@@ -126,7 +126,7 @@ try {
 由插件贡献的预设具有以下特性：
 - `origin` 标记为 `'plugin'`。
 - 数据仅存在于运行时内存中，不会写入本地文件目录。
-- `editable` 设为只读，不允许通过 API 或 WebUI 执行 `save` 和 `remove` 操作。
+- `editable` 为 `none`，不允许通过 API 或 WebUI 执行 `save` 和 `remove`。
 
 ---
 
