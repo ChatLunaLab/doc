@@ -15,7 +15,7 @@ HTTP 服务由 `ctx.chatluna_server`（`@chatluna/server`）承载，负责鉴�
 | `POST /api/auth/token` | 签发长期 Token，供外部程序调用 |
 | `GET /api/health` | 存活检查（默认放行），启动器与诊断命令用它判断实例是否就绪 |
 
-响应统一包在 `data` 字段里；失败时返回带 `error` 的对象。连续失败过多会触发限流。
+成功响应直接返回资源本身，没有额外信封；失败时返回 `{ code, message, details? }`，HTTP 状态码由错误码决定。连续失败过多会触发限流。
 
 ## 会话与消息
 

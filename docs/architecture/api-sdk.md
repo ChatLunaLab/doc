@@ -89,12 +89,12 @@ ChatLuna 可以脱离聊天平台，被外部程序调用。接口是 HTTP + 实
 
 ```json
 {
-  "error": {
-    "code": "INVALID_ARGUMENT",
-    "message": "invalid input: model"
-  }
+  "code": "INVALID_ARGUMENT",
+  "message": "invalid input: model"
 }
 ```
+
+成功响应没有额外信封：返回体就是资源本身（列表、会话、压缩结果等）。
 
 常见错误码：
 
@@ -119,9 +119,10 @@ const sdk = new ChatLunaSDK({
   token: process.env.CHATLUNA_TOKEN,
 })
 
-const session = await sdk.createConversation({ title: '脚本任务' })
-await sdk.sendMessage(session.id, '帮我总结一下这个文件')
-const history = await sdk.listMessages(session.id)
+const { sessionId } = await sdk.createConversation('脚本任务')
+await sdk.sendMessage(sessionId, '帮我总结一下这个文件')
+const conversations = await sdk.listConversations()
+const usage = await sdk.getUsage()
 ```
 
 它只做了三件事：拼 URL、带令牌、解析错误。
@@ -130,9 +131,11 @@ const history = await sdk.listMessages(session.id)
 
 ### 能力探测
 
-SDK 可以先查服务端支持哪些能力（实时流、版本等），再决定用哪条路径。
+SDK 可以先查服务端支持哪些能力（实时流协议版本、流地址与帧类型），再决定用哪条路径。
 
 这比假设「一定有某个接口」更稳。
+
+客户端还声明了会话、路由与用量几组调用，但服务端是否提供对应的 SDK 路径取决于版本与插件组合，接入前先用能力协商确认，不要只按客户端方法名推断接口存在。
 
 ## 典型用法
 
