@@ -5,7 +5,9 @@
 - `ctx.sessions` 负责管理**会话日志与树状历史**（Session 实体与 Message 列表），充当不可变或追加式的消息账本；
 - `ctx.conversations` 负责管理**「会话键（Conversation Key）→ 当前会话头（Head Session）」的映射索引**，维护正在运行的活跃 Agent 实例与会话路由生命周期。
 
-在传统聊天机器人的交互中，用户或群聊通常感知为一个持续的「对话频道」。在 ChatLuna v2 中，一个会话键在任意时刻严格对应一个 **Head Session**。当用户触发 `/new` 指令或显式重置会话时，底层原有的 Session 实体及其消息树依然完整保留，系统仅是将该会话键指向的 Head 指针切换到一个全新的 Session 节点。
+在传统聊天机器人的交互中，用户或群聊通常感知为一个持续对话的「频道」。但在 ChatLuna v2 内部，一个会话键在任意时刻都严格对应一个 **Head Session**。当用户触发 `/new` 指令或显式重置会话时，底层原有的 Session 实体及其消息树依然完整保留，系统仅是将该会话键指向的 Head 指针切换到一个全新的 Session 节点上。
+
+熟悉版本控制系统的小伙伴可能会发现，这种设计与 Git 的分支指针如出一辙：底层数据由提交树完整保存，而会话键仅充当当前最新节点的游标。
 
 ```mermaid
 graph LR
@@ -28,11 +30,11 @@ graph LR
 
 ## 会话键
 
-会话键（`conversationKey`）是 ChatLuna 确定上下文隔离边界的唯一凭证。它以路由层的 `routeId` 起头，结合 ownership（归属模式）与 lane（泳道）计算得出。
+会话键（`conversationKey`）是 ChatLuna 确定上下文隔离边界的唯一凭证。它以路由层的 `routeId` 起头，结合归属模式（ownership）与泳道（lane）计算得出。
 
 ### 归属模式（Ownership）
 
-ChatLuna 支持三种会话归属模式：
+为了适应不同的聊天场景，ChatLuna 支持三种会话归属模式：
 
 1. **shared（共享模式）**：
    同一个频道或群组内所有成员共用同一个会话状态。
@@ -41,16 +43,18 @@ ChatLuna 支持三种会话归属模式：
    在群组或公共频道中，不同用户拥有彼此隔离的独立会话上下文。若计算时缺失 `userId`，系统将直接抛出异常。
    - 公式：`routeId:user:<userId>`
 3. **custom（自定义模式）**：
-   适用于高度定制的跨平台会话共享或复杂业务绑定。若缺失 `customKey` 抛错。系统对 `customKey` 的属性进行限定，只允许包含 `platform`、`selfId`、`guildId`、`channelId`、`userId` 五个标准字段，将其展开规范化后取 SHA-256 哈希值。
+   适用于高度定制的跨平台会话共享或复杂业务绑定。若缺失 `customKey` 抛错。系统对 `customKey` 的属性进行了严格限定，只允许包含 `platform`、`selfId`、`guildId`、`channelId`、`userId` 五个标准字段，将其展开规范化后取 SHA-256 哈希值。
    - 公式：`custom:<sha256(展开 customKey)>`
 
 ### 泳道（Lane）
 
-为支持在同一个用户或群组下并行运行多种业务形态（如「日常闲聊」与「代码辅助」），系统引入了泳道机制。
+为支持在同一个用户或群组下并行运行多种业务形态（如同时进行「日常闲聊」与「代码辅助」），系统引入了泳道机制：
 - 当 `lane` 为默认值 `default` 时，不追加后缀；
 - 当 `lane` 为非 `default`（如 `lane: 'code'`）时，在基础键后追加 `:lane:<lane>`。
 
 ### 完整公式与生成示例
+
+换句话说，会话键的完整生成规则可以概括为：
 
 ```text
 基础键 =
@@ -61,6 +65,8 @@ ChatLuna 支持三种会话归属模式：
 
 最终会话键 = lane === 'default' ? 基础键 : 基础键 + ":lane:" + lane
 ```
+
+让我们来看几个典型场景下的生成示例：
 
 | 场景 | 输入参数 | 生成的 Conversation Key |
 | :--- | :--- | :--- |
@@ -104,10 +110,12 @@ erDiagram
 
 ### 数据表定义
 
+细心的小伙伴可能会发现，两张表分别承担了不同职责：`chatluna_conversations` 记录「指针当前指向哪里」，而 `chatluna_sessions` 则记录「会话节点本身的实体数据」。
+
 1. **`chatluna_conversations` 表**
    - `key`：主键，会话键字符串；
    - `headSessionId`：当前会话指针所指向的 Session ID；
-   - `previousSessionId`：上一次切换前的 head Session ID，仅用于溯源；不参与撤销或回退；
+   - `previousSessionId`：上一次切换前的 head Session ID，仅用于溯源，不参与撤销或回退；
    - `peer`：对端标识（如群号、私聊通道）；
    - `createdAt`：索引初次建立时间；
    - `updatedAt`：最后切换头会话时间。
@@ -130,9 +138,11 @@ erDiagram
 
 ## 打开一次会话
 
-调用 `ctx.conversations.open(input: OpenInput)` 是进入会话交互的核心入口。
+调用 `ctx.conversations.open(input: OpenInput)` 是进入会话交互的核心入口。该方法会自动串联会话头解析、Agent 实例创建或复用，并返回可直接交互的活跃句柄。
 
 ### OpenInput 输入字段
+
+调用时传入的 `OpenInput` 支持以下字段：
 
 - `key`：目标会话键；
 - `initial`：若会话键不存在时初始会话的工厂配置；
@@ -149,6 +159,8 @@ erDiagram
 - `setup`（可选）：挂载时的额外初始化闭包。
 
 ### 详细执行时序
+
+整个打开流程的时序图如下：
 
 ```mermaid
 sequenceDiagram
@@ -182,6 +194,8 @@ sequenceDiagram
     Conv-->>Caller: 返回 LiveConversation (record + agent)
 ```
 
+让我们按步骤看看整个打开过程中各组件的协作：
+
 1. **解析会话头 `head()`**：读取当前 key 对应的 `headSessionId`；若无则自动插入并持久化新行；
 2. **清理异位 Agent**：检查内存中是否已有该 key 的活跃 Agent，若其正附着在旧的 Session 上，则先行 `release`；
 3. **委托 Agent 开启**：调用 `agents.open(head, options, { meta: { origin: input.origin ?? 'engine', title: input.title ?? '会话 ' + key }, apply })`；
@@ -198,9 +212,11 @@ sequenceDiagram
 
 ## 活跃 Agent 与 LRU
 
-ChatLuna 不会在内存中永久保留所有 Agent 实例，而是借助 LRU 策略与超时监测实现资源收敛。
+ChatLuna 不会在内存中永久保留所有 Agent 实例，而是借助 LRU 淘汰策略与闲置超时监测实现资源收敛。
 
 ### 核心运行时对象
+
+在运行时中，活跃状态主要由两个核心对象承载：
 
 - **`LiveRecord`**：表示内存中登记的会话生命周期记录，包含字段：
   - `sessionId`：绑定的物理会话 ID；
@@ -292,13 +308,14 @@ graph TD
 ### 模型路由与应用（`applyRoutedModel`）
 
 ChatLuna 的模型路由层由路由规则与模型选择器共同决策。最终解析出的模型标识格式为 `provider:model`。
+
 1. 系统比对解析出的目标模型与 Agent 当前挂载的模型；
 2. 若二者不一致，调用底层模型切换接口尝试热重载；
 3. **容错机制**：若切换尝试失败，系统不会令当前对话崩溃，而是记录 warning 级别日志并平滑回退至原模型。
 
 ### 推理深度（Reasoning Effort）路由
 
-针对具备深度思考（Reasoning / Thinking）能力的大语言模型，系统引入推理档位决策。`chat.reasoning` 所配置的 effort 会先交由路由层解析，再结合目标模型支持的实际能力范围进行校验：
+针对具备深度思考（Reasoning / Thinking）能力的大语言模型，系统引入了推理档位决策。`chat.reasoning` 所配置的 effort 会先交由路由层解析，再结合目标模型支持的实际能力范围进行校验：
 
 - **档位取值**：`high`、`medium`、`low`、`off`；
 - **能力降级**：若目标模型声明不支持推理扩展，或不支持指定的档位，系统将自动执行降级或丢弃（fallback to off / default），并打印调试与告警日志；

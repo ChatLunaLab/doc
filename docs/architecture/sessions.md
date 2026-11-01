@@ -1,12 +1,12 @@
 # 会话、消息与分支
 
-在 ChatLuna 架构中，`ctx.sessions` 是核心的会话管理服务。系统中的会话不是可变的消息列表，而是严格的**只追加日志（Append-only Log）**。
+在 ChatLuna 架构中，`ctx.sessions` 负责底层的会话生命周期与历史管理。与其他常见聊天框架不同，ChatLuna 中的会话并不是一个可以随意修改的消息列表，而是严格的**只追加日志（Append-only Log）**。
 
-发送给语言模型的上下文并不是直接存储的静态数据，而是由这条有序日志在运行时动态计算得出的**投影（Projection）**。每一次对话输入、模型回复、配置切换、压缩截断以及运行时的元数据事件，都会作为一条不可变的条目记录在日志中。日志本身是系统状态的**唯一事实源（Single Source of Truth）**。
+最终发给大语言模型的上下文，并不是直接存储的静态数据，而是由这条有序日志在运行时动态计算得出的**投影（Projection）**。无论是用户的输入、模型的回复、预设的切换、上下文压缩截断，还是运行时的各种元数据事件，都会作为一条不可变（Immutable）的条目依序记录在日志中。可以说，会话日志本身就是整个系统状态的**唯一事实源（Single Source of Truth）**。
 
 ## 会话与头部
 
-每个会话由一个唯一的 `SessionId` 标识，并在存储层持有一个轻量的头部元数据 `SessionHeader`。
+每一个会话都由全局唯一的 `SessionId` 标识，并在存储层持有一份轻量的头部元数据 `SessionHeader`。
 
 ### SessionHeader 字段定义
 
@@ -21,15 +21,15 @@
 | `title` | `string?` | 会话的可选展示标题 |
 | `origin` | `JsonValue?` | 任意 JSON 来源元数据（例如平台、路由或子代理来源） |
 
-当从现有会话派生分支时，新会话的头部通过 `parent` 与 `at` 精确指向父会话及其切出点。`delegationDepth` 不会自动递增——子代理在创建时会显式传入自己的深度，普通分支则沿用父会话的值。
+当从现有会话派生新分支时，新会话的头部会通过 `parent` 与 `at` 精确记录父会话及其切出点。细心的小伙伴可能会发现，`delegationDepth` 并不会自动递增——子代理在创建时由调用方显式传入深度，而普通分支则会直接沿用父会话的值。
 
 ## 条目模型
 
-日志由按序号连续排列的条目（Entry）组成。每个条目均具备两个基础不变量字段：
+会话日志由按序号连续排列的条目（Entry）构成。无论具体属于哪种类型，每个条目都具备两个基础的不变量字段：
 - `n`：从 `0` 开始单调递增且严格连续的整数序号（`0, 1, 2, ...`）。
 - `time`：条目记录时的毫秒时间戳。
 
-根据 `kind` 判别联合，条目分为三类：
+依据 `kind` 判别联合，条目在系统中分为三类：
 1. `message`：承载对话消息体（`ChatMessage`）。
 2. `mark`：承载管线标记、上下文元数据与调度控制记录。
 3. `cut`：承载上下文截断与历史摘要切点。
@@ -46,16 +46,16 @@ flowchart LR
 
 ### 消息元数据（Message Meta）
 
-在 `message` 条目中，消息体附带了细粒度的执行元数据 `meta`：
+在 `message` 条目中，消息体附带了细粒度的执行元数据 `meta`，便于统计与审计：
 - `turn`：所属对话轮次计数。
-- `step`：当前轮次内的执行步骤（如工具调用的多步循环）。
+- `step`：当前轮次内的执行步骤（例如工具调用的多步循环）。
 - `usage`：该条消息消耗的 Token 统计（`inputTokens`, `outputTokens`, `totalTokens`）。
-- `finish`：模型结束生成的停机原因（如 `stop`, `tool_calls`, `length`）。
-- `timing`：请求与响应的各阶段耗时分析（首字延迟、解码耗时等）。
+- `finish`：模型结束生成的停机原因（例如 `stop`, `tool_calls`, `length`）。
+- `timing`：请求与响应各阶段的耗时分析（首字延迟、解码耗时等）。
 
 ## 标记（mark）
 
-标记条目（`kind: 'mark'`）用于在不污染模型消息历史的前提下，记录管线生命周期中的上下文变更、调度决策与输入审计。**所有 mark 均不会作为消息直接发送给模型**。
+标记条目（`kind: 'mark'`）用于在不污染模型上下文历史的前提下，记录管线生命周期中的上下文变更、调度决策与输入审计。**所有 mark 条目均不会作为消息直接发送给模型**。
 
 | Mark 名称 | Data 载荷结构 | 作用说明 |
 | :--- | :--- | :--- |
@@ -67,29 +67,31 @@ flowchart LR
 | `agent/input-discarded` | `{ messageId: string, reason: string }` | 记录过时、冲突或被丢弃的输入消息 |
 | `turn-skip` | `{ reason: string, detail?: string, turn?: number }` | 跳过当前轮次，自带 `turn` 以标记位置 |
 
-在 `prompt` 快照中，系统会根据 `provider`、`model`、`reasoningEffort`、`temperature`、`maxTokens`、`stop`、`system`、`prelude` 和 `tools` 等参数计算规范化 JSON 哈希 `promptDigest`，用于精准判定 Epoch 与缓存有效性。
+在 `prompt` 快照中，系统会根据 `provider`、`model`、`reasoningEffort`、`temperature`、`maxTokens`、`stop`、`system`、`prelude` 和 `tools` 等参数计算规范化 JSON 哈希 `promptDigest`，用于精准判定 Epoch 边界与上下文缓存的有效性。
 
 ## 追加写入与并发
 
-会话日志保证了强一致性追加与不变量约束。
+会话日志保证了强一致性的追加语义与严格的不变量约束。
 
 ### 写入机制与乐观锁
 
+为了应对可能的并发写入，系统采用内存队列与底层乐观锁相结合的机制：
+
 1. **计算 expectedN**：写入前根据当前内存条目数确定下一个期望序号 `expectedN`。
-2. **底层存储校验**：通过 `store.put(sessionId, expectedN, entries)` 批量持久化。如果底层条目已发生变化，存储层拒绝写入并抛出：
+2. **底层存储校验**：通过 `store.put(sessionId, expectedN, entries)` 批量持久化。如果底层条目已发生变化，存储层拒绝写入并抛出异常：
    ```ts
    throw new SessionConflictError(sessionId, expectedN, actualN)
    ```
 3. **内存串行队列**：在单个会话实例内部，所有写操作（`write`, `commit`, `mark`, `compact`）自动进入串行 Promise 队列，防止进程内并发乱序。
 4. **提交约束**：`commit` 方法只允许提交 `assistant` 消息，并在成功追加写入日志后立即清理内部草稿（draft）。
-5. **不变量检查（checkInvariants）**：这是一个诊断方法，供 doctor 与导出一类工具调用，而不是每次写入都执行。它检查：
+5. **不变量检查（checkInvariants）**：这是一个诊断方法，供 doctor 与导出一类工具显式调用，而不是在每次写入时都执行。它主要检查：
    - 序号 `n` 必须从 `0` 开始严格连续单调递增，无空缺、无重复；
    - `cut.before` 必须为非负整数，且取值范围必须落在当前有效区间 `[0, n]`；
    - 条目载荷必须能够通过 JSON 安全序列化。
 
 ## 投影
 
-会话的上下文投影是将日志折叠为 LLM 可理解消息视图的过程。
+会话的上下文投影，指的是将底层的事件日志折叠转换为大语言模型可理解的消息视图的过程。
 
 ```mermaid
 flowchart TD
@@ -115,14 +117,16 @@ flowchart TD
 
 ### 投影计算规则
 
-- **`messages()` 投影**：从日志中检索最后一个 `cut` 条目。若存在 `cut`，则以 `cut.summary` 里的消息作为历史起点，随后拼接该 `cut` 之后出现的全部 `message` 条目；若不存在 `cut`，则返回日志中全部 `message` 条目。
+投影计算遵循清晰的推演规则：
+
+- **`messages()` 投影**：从日志中检索最后一个 `cut` 条目。若存在 `cut`，则以 `cut.summary` 里的消息作为历史起点，随后拼接该 `cut` 之后出现的全部 `message` 条目；若不存在 `cut`，则直接返回日志中的全部 `message` 条目。
 - **投影缓存**：会话实例在内存中维护 `cachedAt` 标记。当且仅当 `cachedAt !== entryList.length` 时触发重新计算；遇到 `cut` 操作时强制使全量投影失效并重算。
 - **软截断语义**：`cut` 是软截断（Soft Truncation）。早于 `cut.before` 的原始条目仍然完整保留在只追加日志中，审计和回溯不会丢失任何信息。
 - **请求重建**：`reconstructRequest(atN)` 可根据指定点 `atN` 处的 `prompt` 标记与上下文快照，完整复原当时发送给大模型的实际请求载荷。
 
 ## 分支
 
-分支允许在任意历史位置分叉出一条新的独立演进路线。
+分支机制允许开发者在任意历史位置分叉出一条新的独立演进路线，这在探索不同生成策略或子代理调试时非常有用。
 
 ```mermaid
 gitGraph
@@ -140,8 +144,8 @@ gitGraph
 
 ### 分支实现机制
 
-- **API**：`branch(at, options)`。其中 `at` 必须满足 `0 <= at <= entryList.length`。
-- **数据复制**：子会话复制父会话中 `0..at` 的完整条目镜像，保证历史完全一致。
+- **API**：`branch(at, options)`。其中切出序号 `at` 必须满足 `0 <= at <= entryList.length`。
+- **数据复制**：子会话直接复制父会话中 `0..at` 的完整条目镜像，保证历史完全一致。
 - **头部属性**：
   - `parent`：设置为父会话 `sessionId`；
   - `at`：记录分叉时的切出序号；
@@ -151,7 +155,7 @@ gitGraph
 
 ## 压缩切点
 
-当会话长度超出模型上下文窗口或需要精简记忆时，压缩器调用 `compact` 插入 `cut` 条目。
+当会话长度超出模型上下文窗口或需要精简长篇记忆时，压缩器会调用 `compact` 插入 `cut` 条目。
 
 ### 切点条目结构
 
@@ -165,13 +169,13 @@ interface CutEntryData {
 }
 ```
 
-- **生效机制**：`compact` 同样作为一条日志条目通过 `write` 写入。
-- **Provider 原生压缩支持**：`native` 字段可保存大模型服务商原生生成的压缩缓存块，若该缓存失效或标记为 `unusable`，投影逻辑自动降级使用 `summary`。
+- **生效机制**：`compact` 同样作为一条普通的日志条目通过 `write` 写入。
+- **Provider 原生压缩支持**：`native` 字段可保存大模型服务商原生生成的压缩缓存块，若该缓存失效或标记为 `unusable`，投影逻辑会自动降级使用 `summary`。
 - **投影重定向**：写入 `cut` 之后，后续所有调用 `messages()` 的投影计算都将丢弃此前的离散条目，直接以 `summary` 里的消息作为基准点向后重组。
 
 ## 存储契约
 
-会话持久化与加载通过 `SessionStore` 抽象接口完成。
+会话持久化与加载通过抽象接口 `SessionStore` 完成，与具体的存储介质解耦。
 
 ### SessionStore 接口契约
 
@@ -197,7 +201,7 @@ interface SessionStore {
 `ctx.sessions` 对外暴露的主要管理方法如下：
 
 - **`open(sessionId)`**：若 `store.head` 存在，则读取其全部条目并返回会话实例；若不存在，则隐式调用 `create` 创建新会话。注意：**每次 `open` 返回的均是独立的会话快照实例**，进程内或进程间的并发写入冲突在调用 `store.put` 时暴露并解决。
-- **`create(id?, options)`**：创建会话。传入 `parent` 与 `at` 时会把父会话切点之前的条目复制过来；`delegationDepth`、`origin`、`title` 可以显式指定，否则沿用父会话。
+- **`create(id?, options)`**：创建新会话。传入 `parent` 与 `at` 时会把父会话切点之前的条目复制过来；`delegationDepth`、`origin`、`title` 可以显式指定，否则沿用父会话。
 - **`branch(sessionId, at, options)`**：在指定序号处分叉并返回新会话实例。
 - **`list()`**：列出当前存储中的所有会话头部信息。
 - **`head(sessionId)`**：快速读取会话头部元数据而不加载条目日志。
@@ -206,7 +210,7 @@ interface SessionStore {
 
 ### 错误类型系统
 
-系统定义了结构化的错误类：
+系统定义了结构化的错误类，方便调用方精确捕获并处理异常：
 - `SessionConflictError`：并发追加写入导致序号不匹配（包含 `sessionId`, `expectedN`, `actualN`）。
 - `SessionNotFoundError`：操作不存在的会话 ID。
 - `SessionAlreadyExistsError`：创建已存在的会话。
