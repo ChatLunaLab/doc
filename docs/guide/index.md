@@ -39,8 +39,13 @@ ChatLuna 建立在 Cordis 4 框架之上：插件向共享的上下文 (Context)
 按需接入具体业务功能：
 - [工具](./extend/tools)：向模型注册可调用的外部工具与技能。
 - [提示词分区](./extend/prompts)：定义提示词分区与上下文构建规则。
-- [WebUI](./extend/webui)：扩展控制台前端页面与交互组件。
+- [引擎](./extend/engines)：编写自定义引擎，接管一轮对话的编排方式。
+- [路由命名空间](./extend/routing)：为插件声明可按群、按用户配置的命名空间。
 - [模型提供商](./extend/provider)：适配并接入自定义的大语言模型后端。
+- [平台适配器](./extend/adapters)：接入新的聊天平台。
+- [存储](./extend/storage)：读写实例内的持久化数据。
+- [WebUI](./extend/webui)：扩展控制台前端页面与交互组件。
+- [测试](./extend/testing)：为插件编写可重复执行的测试。
 
 ## 下一步
 

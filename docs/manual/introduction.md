@@ -34,7 +34,7 @@ flowchart LR
         E --> L[Agent 循环<br/>调用 → 工具 → 再调用]
         L --> M[模型运行时<br/>provider-registry / ai-runtime]
         L --> T[工具与能力<br/>tools / skills / MCP / subagent]
-        L --> D[渲染与投递<br/>chat-render / chat-deliver]
+        L --> D[渲染与投递<br/>chatluna_render / chatluna_deliver]
         D --> A
     end
 
