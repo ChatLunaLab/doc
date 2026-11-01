@@ -35,7 +35,7 @@
 调用 `ctx.permissions.authorize` 对主体进行求值并在必要时发起询问：
 
 ```ts
-import type { Context } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
 
 export async function executeMachineTask(ctx: Context, userId: string, platform: string) {
   // 请求执行 machine:docker 能力的授权

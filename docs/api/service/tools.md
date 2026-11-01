@@ -11,7 +11,8 @@
 在插件的 `apply` 函数中，调用 `ctx.tools.defineTool` 声明工具的名称、参数模式与执行逻辑：
 
 ```ts
-import { Context, Schema } from '@chatluna/utils/cordis'
+import type { Context } from 'cordis'
+import { Schema } from '@chatluna/schema'
 
 export function apply(ctx: Context) {
   ctx.tools.defineTool({
