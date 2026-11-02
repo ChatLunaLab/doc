@@ -127,18 +127,10 @@
         linear-gradient(180deg, #24275a, #15173a);
 }
 
-/* The logo's halftone, faint, in the corner of every panel. */
-.home-panel::before {
-    content: "";
+/* The shader layer fills the panel; the gradients above show until it paints. */
+.home-panel .home-panel-sky {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle, rgb(255 255 255 / 60%) 1.1px, transparent 1.7px) 0 0 / 14px 14px;
-    -webkit-mask-image: radial-gradient(120% 90% at 0% 0%, #000, transparent 65%);
-    mask-image: radial-gradient(120% 90% at 0% 0%, #000, transparent 65%);
-}
-
-.dark .home-panel::before {
-    background-image: radial-gradient(circle, rgb(220 214 255 / 26%) 1.1px, transparent 1.7px);
 }
 
 .home-panel > .app-window {
@@ -156,7 +148,7 @@
     padding: 48px;
 }
 
-.home-panel.is-code > * {
+.home-panel.is-code > :not(.home-panel-sky) {
     position: relative;
 }
 

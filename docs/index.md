@@ -10,6 +10,7 @@ description: ChatLuna v2 是基于 Cordis 4 的可组合 Agent Harness：接入 
 import AppWindow from './.vitepress/theme/components/home/AppWindow.vue'
 import HomeHero from './.vitepress/theme/components/home/HomeHero.vue'
 import HomeShot from './.vitepress/theme/components/home/HomeShot.vue'
+import HomeSky from './.vitepress/theme/components/home/HomeSky.vue'
 </script>
 
 <HomeHero />
@@ -21,6 +22,7 @@ import HomeShot from './.vitepress/theme/components/home/HomeShot.vue'
 <div class="home-links"><a class="home-link" href="/manual/usage/webui.html">认识控制台</a></div>
 </div>
 <div class="home-panel">
+<HomeSky class="home-panel-sky" tone="panel" />
 <HomeShot page="control" path="/control" alt="控制台的快捷设置页面" />
 </div>
 </section>
@@ -32,6 +34,7 @@ import HomeShot from './.vitepress/theme/components/home/HomeShot.vue'
 <div class="home-links"><a class="home-link" href="/manual/usage/rules.html">了解场景规则</a></div>
 </div>
 <div class="home-panel is-dusk">
+<HomeSky class="home-panel-sky" tone="panel" />
 <HomeShot page="routing" path="/routing" alt="控制台的场景规则页面" />
 </div>
 </section>
@@ -43,6 +46,7 @@ import HomeShot from './.vitepress/theme/components/home/HomeShot.vue'
 <div class="home-links"><a class="home-link" href="/manual/usage/adapters.html">接入聊天平台</a><a class="home-link" href="/manual/usage/models.html">配置模型</a></div>
 </div>
 <div class="home-panel">
+<HomeSky class="home-panel-sky" tone="panel" />
 <HomeShot page="adapters" path="/adapters" alt="控制台的聊天平台页面" />
 </div>
 </section>
@@ -54,6 +58,7 @@ import HomeShot from './.vitepress/theme/components/home/HomeShot.vue'
 <div class="home-links"><a class="home-link" href="/manual/usage/observability.html">轨迹与用量</a></div>
 </div>
 <div class="home-panel is-dusk">
+<HomeSky class="home-panel-sky" tone="panel" />
 <HomeShot page="dashboard" path="/dashboard" alt="控制台的仪表盘页面" />
 </div>
 </section>
@@ -92,6 +97,7 @@ import HomeShot from './.vitepress/theme/components/home/HomeShot.vue'
 <div class="home-links"><a class="home-link" href="/guide/develop/first-plugin.html">第一个插件</a><a class="home-link" href="/guide/extend/tools.html">工具开发</a><a class="home-link" href="/api/">API 参考</a></div>
 </div>
 <div class="home-panel is-code">
+<HomeSky class="home-panel-sky" tone="panel" />
 <AppWindow class="home-editor" title="weather.ts">
 <div class="vp-doc">
 
@@ -132,6 +138,7 @@ export function apply(ctx: Context) {
 <div class="home-links"><a class="home-link" href="/manual/quickstart.html">跟着快速开始走一遍</a><a class="home-link" href="/manual/starter/">比较三种安装方式</a></div>
 </div>
 <div class="home-panel is-code is-dusk">
+<HomeSky class="home-panel-sky" tone="panel" />
 <div class="vp-doc home-code">
 
 ::: code-group
