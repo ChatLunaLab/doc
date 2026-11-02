@@ -78,25 +78,27 @@ flowchart LR
     D --> QQ & TG & DC & WEB
 ```
 
-## 与 Koishi 的关系
+### 为 Koishi v5 预备好
 
-ChatLuna 诞生于 Koishi 生态。v2 与 Koishi 的关系分两层：
+此前，Koishi 官方宣布正在推进 [Koishi v5（迁移到 Cordis 内核）](https://forum.koishi.xyz/t/topic/7901)。
 
-**底层是同一个内核。** Cordis 是 Koishi 作者正在推进的下一代微内核（Koishi v5 的底座）。ChatLuna v2 直接建立在上游 Cordis 4 之上，没有单独分叉——等 Koishi v5 发布后，ChatLuna 会直接采用 Koishi v5 作为自己的 IM 层。
+ChatLuna v2 并没有单独分叉 Cordis，而是尽可能直接拥抱官方 Cordis 生态。在 Koishi v5 发布后，ChatLuna v2 会直接采用 Koishi v5 作为自己的 IM 层，两者也将能够共存于同一棵 Cordis 服务树中。
 
-**今天先走兼容。** 在 Koishi v5 落地之前，v2 把打过补丁的官方 `@koishijs/core` 跑在 Cordis 4 上，再通过 `@chatluna/koishi-loader` 做共享模块钉版与加载期包装，让一部分 Koishi 插件能在 ChatLuna 实例里运行。这是一层**兼容层**，不是完整兼容保证：依赖 Koishi 控制台或更深内部的插件无法运行，遇到装不上的插件属于预期之内。
+在此之前，v2 把打过补丁的官方 `@koishijs/core` 跑在 Cordis 4 上，再通过 `@chatluna/koishi-loader` 做共享模块钉版与加载期包装，让一部分 Koishi 插件能在 ChatLuna 实例里运行。这是一层兼容层而非完整兼容保证：依赖 Koishi 控制台或更深内部的插件无法运行，遇到装不上的插件属于预期之内。
+
+我们可以通过下面的交集图来理解两者的定位：Cordis 构成统一的底层底座，ChatLuna 专注于独立的 Agent Harness 体系，中间的 IM 对话能力与 Koishi 平台生态重叠互通，而 Koishi 丰富的生态插件也能继续保持其独立性：
 
 <div class="koishi-venn" role="img" aria-label="ChatLuna 与 Koishi 在 Cordis 生态上的关系：左圆 ChatLuna，右圆 Koishi，中间重叠是 IM 对话能力">
 <svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
   <rect x="20" y="290" width="600" height="56" rx="10" class="venn-base"/>
   <text x="320" y="324" text-anchor="middle" class="venn-base-text">Cordis 生态（官方插件 · 服务 · 生命周期）</text>
   <circle cx="245" cy="150" r="135" class="venn-left"/>
-  <text x="245" y="38" text-anchor="middle" class="venn-label">ChatLuna v2</text>
+  <text x="163" y="88" text-anchor="middle" class="venn-label">ChatLuna v2</text>
   <text x="170" y="140" text-anchor="middle" class="venn-part">Agent Harness</text>
   <text x="170" y="162" text-anchor="middle" class="venn-sub">Agent 循环 · 模型运行时</text>
   <text x="170" y="182" text-anchor="middle" class="venn-sub">工具 · 技能 · MCP · 子代理</text>
   <circle cx="395" cy="150" r="135" class="venn-right"/>
-  <text x="395" y="38" text-anchor="middle" class="venn-label">Koishi</text>
+  <text x="477" y="88" text-anchor="middle" class="venn-label">Koishi</text>
   <text x="470" y="140" text-anchor="middle" class="venn-part">Koishi 生态</text>
   <text x="470" y="162" text-anchor="middle" class="venn-sub">插件市场 · 指令 · 中间件</text>
   <text x="470" y="182" text-anchor="middle" class="venn-sub">平台适配 · 数据库</text>
