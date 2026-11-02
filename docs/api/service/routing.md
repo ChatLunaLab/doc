@@ -1,6 +1,6 @@
 # 路由 (Routing)
 
-路由服务以 `ctx.routing`（来自 `@chatluna/routing`）的形式提供，负责解析场景规则，并向其他服务提供按主体（`subject`）生效的合并配置。
+路由服务由 `@chatluna/routing` 提供，挂载在 `ctx.routing` 上。它负责解析场景规则，并向其他服务提供按主体（`subject`）生效的合并配置。
 
 ## 读取
 
@@ -8,10 +8,10 @@
 
 | 方法 | 作用 |
 | --- | --- |
-| `resolve(input)` | 计算完整 `Resolution`（冻结快照） |
-| `valuesAt(subject, ns)` | 取某个命名空间的值（已合并） |
+| `resolve(input)` | 计算完整的 `Resolution`（冻结快照） |
+| `valuesAt(subject, ns)` | 获取指定命名空间合并后的值 |
 | `explain(input)` | 返回解析过程与来源，用于诊断 |
-| `rules()` / `rule(id)` | 规则列表与单条规则 |
+| `rules()` / `rule(id)` | 获取规则列表或单条规则 |
 | `revision` | 当前修订号 |
 
 其中 `Resolution` 是只读的冻结快照，包含 `ruleIds`、`values`、`sources`、`suppressed`、`diagnostics` 与 `revision` 等字段。
@@ -22,7 +22,7 @@
 
 | 方法 | 作用 |
 | --- | --- |
-| `save(input, { revision?, by? })` | 新建或更新规则，返回新规则 |
+| `save(input, { revision?, by? })` | 新建或更新规则，并返回新规则 |
 | `remove(id, options)` | 删除规则 |
 
 其中的 `revision` 用于实现乐观锁并发控制。当传入过期的旧修订号时，操作会抛出 `CONFLICT` 错误。
@@ -46,9 +46,9 @@ ctx.routing.predicate('my:match', {
 
 ## 与 schema 的关系
 
-路由服务仅负责规则的取值与值合并，并不直接管理前端配置界面。配置项的展示结构由 `ctx.schemas.section` 统一声明和注册。
+路由服务仅负责规则的取值与合并，并不直接管理前端配置界面。配置项的展示结构由 `ctx.schemas.section` 统一声明和注册。
 
-详细说明请参考[扩展路由命名空间](/guide/extend/routing)。
+详细说明请参考 [扩展路由命名空间](/guide/extend/routing)。
 
 ## 继续
 

@@ -1,13 +1,13 @@
 # 会话索引与活跃 Agent
 
-在 ChatLuna v2 的运行时架构中，底层消息存储与上层交互状态被明确解耦：
+在 ChatLuna v2 的运行时架构中，底层消息存储与上层交互状态彼此解耦：
 
 - `ctx.sessions` 负责管理**会话日志与树状历史**（Session 实体与 Message 列表），充当不可变或追加式的消息账本；
 - `ctx.conversations` 负责管理**「会话键（Conversation Key）→ 当前会话头（Head Session）」的映射索引**，维护正在运行的活跃 Agent 实例与会话路由生命周期。
 
 在传统聊天机器人的交互中，用户或群聊通常感知为一个持续对话的「频道」。但在 ChatLuna v2 内部，一个会话键在任意时刻都严格对应一个 **Head Session**。当用户触发 `/new` 指令或显式重置会话时，底层原有的 Session 实体及其消息树依然完整保留，系统仅是将该会话键指向的 Head 指针切换到一个全新的 Session 节点上。
 
-熟悉版本控制系统的小伙伴可能会发现，这种设计与 Git 的分支指针如出一辙：底层数据由提交树完整保存，而会话键仅充当当前最新节点的游标。
+这种设计与 Git 的分支指针类似：底层数据由提交树完整保存，而会话键仅充当当前最新节点的游标。
 
 ```mermaid
 graph LR
@@ -24,7 +24,7 @@ graph LR
     Head === LiveAgent[活跃 Agent (Live Agent 实例)]
 ```
 
-旧的 Session 不会被物理删除，调用方随时可以通过历史接口溯源、分叉（fork）或者切换回先前的历史 Session。
+旧的 Session 不会被物理删除，调用方随时可以通过历史接口溯源、分叉（fork）或切换回先前的历史 Session。
 
 ---
 
@@ -36,25 +36,26 @@ graph LR
 
 为了适应不同的聊天场景，ChatLuna 支持三种会话归属模式：
 
-1. **shared（共享模式）**：
-   同一个频道或群组内所有成员共用同一个会话状态。
-   - 公式：`routeId`
-2. **personal（个人独占模式）**：
-   在群组或公共频道中，不同用户拥有彼此隔离的独立会话上下文。若计算时缺失 `userId`，系统将直接抛出异常。
-   - 公式：`routeId:user:<userId>`
-3. **custom（自定义模式）**：
-   适用于高度定制的跨平台会话共享或复杂业务绑定。若缺失 `customKey` 抛错。系统对 `customKey` 的属性进行了严格限定，只允许包含 `platform`、`selfId`、`guildId`、`channelId`、`userId` 五个标准字段，将其展开规范化后取 SHA-256 哈希值。
-   - 公式：`custom:<sha256(展开 customKey)>`
+- **shared（共享模式）**：
+  同一个频道或群组内所有成员共用同一个会话状态。
+  - 公式：`routeId`
+- **personal（个人独占模式）**：
+  在群组或公共频道中，不同用户拥有彼此隔离的独立会话上下文。若计算时缺失 `userId`，系统将直接抛出异常。
+  - 公式：`routeId:user:<userId>`
+- **custom（自定义模式）**：
+  适用于高度定制的跨平台会话共享或复杂业务绑定。若缺失 `customKey` 则抛出异常。系统对 `customKey` 的属性进行了严格限定，只允许包含 `platform`、`selfId`、`guildId`、`channelId`、`userId` 五个标准字段，将其展开规范化后取 SHA-256 哈希值。
+  - 公式：`custom:<sha256(展开 customKey)>`
 
 ### 泳道（Lane）
 
 为支持在同一个用户或群组下并行运行多种业务形态（如同时进行「日常闲聊」与「代码辅助」），系统引入了泳道机制：
+
 - 当 `lane` 为默认值 `default` 时，不追加后缀；
 - 当 `lane` 为非 `default`（如 `lane: 'code'`）时，在基础键后追加 `:lane:<lane>`。
 
 ### 完整公式与生成示例
 
-换句话说，会话键的完整生成规则可以概括为：
+会话键的完整生成规则如下：
 
 ```text
 基础键 =
@@ -66,7 +67,7 @@ graph LR
 最终会话键 = lane === 'default' ? 基础键 : 基础键 + ":lane:" + lane
 ```
 
-让我们来看几个典型场景下的生成示例：
+常见场景下的生成示例如下：
 
 | 场景 | 输入参数 | 生成的 Conversation Key |
 | :--- | :--- | :--- |
@@ -110,29 +111,29 @@ erDiagram
 
 ### 数据表定义
 
-两张表分别承担了不同职责：`chatluna_conversations` 记录「指针当前指向哪里」，而 `chatluna_sessions` 则记录「会话节点本身的实体数据」。
+两张表分别承担不同职责：`chatluna_conversations` 记录「指针当前指向哪里」，而 `chatluna_sessions` 则记录「会话节点本身的实体数据」。
 
-1. **`chatluna_conversations` 表**
-   - `key`：主键，会话键字符串；
-   - `headSessionId`：当前会话指针所指向的 Session ID；
-   - `previousSessionId`：上一次切换前的 head Session ID，仅用于溯源，不参与撤销或回退；
-   - `peer`：对端标识（如群号、私聊通道）；
-   - `createdAt`：索引初次建立时间；
-   - `updatedAt`：最后切换头会话时间。
+- **`chatluna_conversations` 表**
+  - `key`：主键，会话键字符串。
+  - `headSessionId`：当前会话指针所指向的 Session ID。
+  - `previousSessionId`：上一次切换前的 head Session ID，仅用于溯源，不参与撤销或回退。
+  - `peer`：对端标识（如群号、私聊通道）。
+  - `createdAt`：索引初次建立时间。
+  - `updatedAt`：最后切换头会话时间。
 
-2. **`chatluna_sessions` 表**
-   - `id`：主键，Session 物理 ID；
-   - `conversationKey`：所属会话键；
-   - `parent`：父会话节点 ID（分叉衍生使用）；
-   - `origin`：创建来源，默认 `engine`，可由 WebUI 等覆写；
-   - `title`：会话展示标题；
-   - `preset`：持久化的预设 ID；
-   - `model`：绑定的具体模型全称（`provider:model`）；
-   - `peer`：关联对端标识；
-   - `status`：运行状态，取值为 `idle`、`busy`、`closing`、`closed` 之一；
-   - `messageCount`：累计消息总条数；
-   - `lastActiveAt`：会话最后一次产生消息或交互的时间戳；
-   - `createdAt`：会话创建时间戳。
+- **`chatluna_sessions` 表**
+  - `id`：主键，Session 物理 ID。
+  - `conversationKey`：所属会话键。
+  - `parent`：父会话节点 ID（分叉衍生使用）。
+  - `origin`：创建来源，默认为 `engine`，可由 WebUI 等覆写。
+  - `title`：会话展示标题。
+  - `preset`：持久化的预设 ID。
+  - `model`：绑定的具体模型全称（`provider:model`）。
+  - `peer`：关联对端标识。
+  - `status`：运行状态，取值为 `idle`、`busy`、`closing`、`closed` 之一。
+  - `messageCount`：累计消息总条数。
+  - `lastActiveAt`：会话最后一次产生消息或交互的时间戳。
+  - `createdAt`：会话创建时间戳。
 
 ---
 
@@ -144,18 +145,18 @@ erDiagram
 
 调用时传入的 `OpenInput` 支持以下字段：
 
-- `key`：目标会话键；
-- `initial`：若会话键不存在时初始会话的工厂配置；
-- `peer`（可选）：对端网络标识；
-- `engineId`：绑定的引擎名称；
-- `engineConfig`（可选）：引擎初始化扩展参数；
-- `title`（可选）：会话标题；
-- `origin`（可选）：来源标识（默认回退到 `'engine'`）；
-- `location`（可选）：地理或交互位置元数据；
-- `config`：包含 `{ provider, model }` 的模型定义；
-- `reasoningEffort`（可选）：显式推理档位要求；
-- `toolMode`（可选）：工具启用模式；
-- `presetId`（可选）：指定加载的预设 ID；
+- `key`：目标会话键。
+- `initial`：若会话键不存在时初始会话的工厂配置。
+- `peer`（可选）：对端网络标识。
+- `engineId`：绑定的引擎名称。
+- `engineConfig`（可选）：引擎初始化扩展参数。
+- `title`（可选）：会话标题。
+- `origin`（可选）：来源标识（默认回退到 `'engine'`）。
+- `location`（可选）：地理或交互位置元数据。
+- `config`：包含 `{ provider, model }` 的模型定义。
+- `reasoningEffort`（可选）：显式推理档位要求。
+- `toolMode`（可选）：工具启用模式。
+- `presetId`（可选）：指定加载的预设 ID。
 - `setup`（可选）：挂载时的额外初始化闭包。
 
 ### 详细执行时序
@@ -194,18 +195,18 @@ sequenceDiagram
     Conv-->>Caller: 返回 LiveConversation (record + agent)
 ```
 
-让我们按步骤看看整个打开过程中各组件的协作：
+整个打开流程的执行步骤如下：
 
-1. **解析会话头 `head()`**：读取当前 key 对应的 `headSessionId`；若无则自动插入并持久化新行；
-2. **清理异位 Agent**：检查内存中是否已有该 key 的活跃 Agent，若其正附着在旧的 Session 上，则先行 `release`；
-3. **委托 Agent 开启**：调用 `agents.open(head, options, { meta: { origin: input.origin ?? 'engine', title: input.title ?? '会话 ' + key }, apply })`；
+1. **解析会话头 `head()`**：读取当前 key 对应的 `headSessionId`；若不存在则自动插入并持久化新行。
+2. **清理异位 Agent**：检查内存中是否已有该 key 的活跃 Agent，若其正附着在旧的 Session 上，则先行调用 `release` 释放。
+3. **委托 Agent 开启**：调用 `agents.open(head, options, { meta: { origin: input.origin ?? 'engine', title: input.title ?? '会话 ' + key }, apply })`。
 4. **执行 Apply 回调**：
-   - 触发用户传入的 `setup` 闭包；
+   - 触发传入的 `setup` 闭包；
    - 执行 `engines.mount(agent, engineId, engineConfig)`，将指定引擎的状态与挂载点注入 Agent；
-   - 设定工具调用模式 `agent.setToolMode(input.toolMode)`；
+   - 设定工具调用模式 `agent.setToolMode(input.toolMode)`。
 5. **Entry 生命周期判定**：
-   - **复用已有 SessionEntry**：更新 `lastActiveAt`；比对 `presetId`，若改变则触发引擎切预设；调用 `applyRoutedModel` 与 `applyRoutedReasoning` 应用动态路由结果；
-   - **新建 SessionEntry**：注册到活跃会话表 `sessionEntries`，调用 `claimConversation` 建立所有权，同样应用 routed model 与 reasoning；
+   - **复用已有 SessionEntry**：更新 `lastActiveAt`；比对 `presetId`，若改变则触发引擎切换预设；调用 `applyRoutedModel` 与 `applyRoutedReasoning` 应用动态路由结果；
+   - **新建 SessionEntry**：注册到活跃会话表 `sessionEntries`，调用 `claimConversation` 建立所有权，同样应用 routed model 与 reasoning。
 6. **LRU 淘汰回收**：若该会话由当前实例所拥有（owned），执行 `evictIfNeeded` 淘汰长期闲置或超出上限的 Agent。
 
 ---
@@ -218,7 +219,7 @@ ChatLuna 不会在内存中永久保留所有 Agent 实例，而是借助 LRU �
 
 在运行时中，活跃状态主要由两个核心对象承载：
 
-- **`LiveRecord`**：表示内存中登记的会话生命周期记录，包含字段：
+- **`LiveRecord`**：表示内存中登记的会话生命周期记录，包含以下字段：
   - `sessionId`：绑定的物理会话 ID；
   - `conversationKey?`：关联的会话键；
   - `peer?`：通信对端信息；
@@ -243,9 +244,9 @@ ChatLuna 不会在内存中永久保留所有 Agent 实例，而是借助 LRU �
 ### 互斥与回收策略
 
 - **唯一性约束**：同一会话键在内存中同时**只允许存在一个活跃 Agent**。当新请求尝试在新的 Session 上打开同一会话键时，旧 Session 上的 Agent 会被立即强制 `release`。
-- **主动释放 `release(sessionId)`**：显式调用会立即关闭该 Session 上的 Agent，卸载挂载引擎并从活跃表注销。
+- **主动释放 `release(sessionId)`**：显式调用会立即关闭该 Session 上的 Agent，卸载挂载引擎并从活跃表中注销。
 - **LRU 淘汰流程（`evictIfNeeded`）**：
-  当活跃 Agent 数量超过 `maxLiveSessions` 时，系统按 `lastActiveAt` 升序扫描本次实例自己打开的（owned）实例，只关闭「空闲且距上次活动已超过 `idleEvictMs`」的 Agent；busy 或刚活动过的会被跳过，所以数量可能暂时高于上限。
+  当活跃 Agent 数量超过 `maxLiveSessions` 时，系统按 `lastActiveAt` 升序扫描当前实例自己打开的（owned）实例，只关闭「空闲且距上次活动已超过 `idleEvictMs`」的 Agent；处于 busy 状态或刚活动过的实例会被跳过，因此实例数量可能暂时高于上限。
 - **状态查询接口**：
   - `live(key)`：查询指定会话键对应的实时运行记录；
   - `session(sessionId)`：按物理 Session ID 检索 LiveRecord；
@@ -283,11 +284,11 @@ graph TD
 ```
 
 - **`reset(key, next)`**
-  重置会话。系统会先释放当前旧 head Session 上绑定的活跃 Agent，然后把该会话键的 head 指向 `next`。`next` 必须是调用方已经创建好的 Session——这个方法本身不创建会话。返回 `{ previous, current }`。
+  重置会话。系统会先释放当前旧 head Session 上绑定的活跃 Agent，然后把该会话键的 head 指向 `next`。`next` 必须是调用方已经创建好的 Session——该方法本身不创建会话。返回 `{ previous, current }`。
 - **`switch(key, to)`**
-  直接将指定会话键的 headSessionId 切换至已存在的 `to` Session 上。**不创建新的分支节点**，不破坏原有两棵消息树。
+  直接将指定会话键的 headSessionId 切换至已存在的 `to` Session 上。**不创建新的分支节点**，也不破坏原有的两棵消息树。
 - **`fork(key, { at?, title? })`**
-  基于当前 head Session 进行分叉衍生。内部调用 `sessions.branch(head, at, { title })` 生成一个新的 Session 节点，并直接将其写为该会话键的新 head。
+  基于当前 head Session 进行分叉衍生。内部调用 `sessions.branch(head, at, { title })` 生成一个新的 Session 节点，并将其直接设为该会话键的新 head。
 - **`history(key, page)`**
   按会话的 `createdAt` 倒序拉取历史 Session 列表。采用游标分页机制，游标编码格式为 `createdAt:id`。
 - **`list(page)`**
@@ -297,7 +298,7 @@ graph TD
 - **`head(key, initial, { peer })`**
   获取会话头 ID。按 **内存缓存 → 数据库持久层 → 插入初始行** 的顺序回退并建立索引。
 - **`peek(key)`**
-  仅读取内存缓存中的 headSessionId。若缓存未命中则直接返回空，绝不穿透至数据库。
+  仅读取内存缓存中的 headSessionId。若缓存未命中则直接返回空，不会穿透至数据库。
 
 ---
 
@@ -311,18 +312,18 @@ ChatLuna 的模型路由层由路由规则与模型选择器共同决策。最�
 
 1. 系统比对解析出的目标模型与 Agent 当前挂载的模型；
 2. 若二者不一致，调用底层模型切换接口尝试热重载；
-3. **容错机制**：若切换尝试失败，系统不会令当前对话崩溃，而是记录 warning 级别日志并平滑回退至原模型。
+3. **容错机制**：若切换失败，系统不会让当前对话中断，而是记录 warning 级别日志并平滑回退至原模型。
 
 ### 推理深度（Reasoning Effort）路由
 
-针对具备深度思考（Reasoning / Thinking）能力的大语言模型，系统引入了推理档位决策。`chat.reasoning` 所配置的 effort 会先交由路由层解析，再结合目标模型支持的实际能力范围进行校验：
+针对具备深度思考（Reasoning / Thinking）能力的大语言模型，系统引入了推理档位决策。`chat.reasoning` 中配置的 effort 会先交由路由层解析，再结合目标模型支持的实际能力范围进行校验：
 
-- **档位取值**：`high`、`medium`、`low`、`off`；
-- **能力降级**：若目标模型声明不支持推理扩展，或不支持指定的档位，系统将自动执行降级或丢弃（fallback to off / default），并打印调试与告警日志；
+- **档位取值**：`high`、`medium`、`low`、`off`。
+- **能力降级**：若目标模型声明不支持推理扩展，或不支持指定的档位，系统将自动降级或丢弃（fallback to off / default），并打印调试与告警日志。
 - **优先级管线**：
-  推理档位的最终取值由执行管线的多层拦截器覆盖计算，其优先级从高到低为：
+  推理档位的最终取值由执行管线的多层拦截器覆盖计算，优先级从高到低为：
   $$\text{单次调用显式传参} > \text{路由层规则（order 10）} > \text{引擎层默认值} > \text{模型固有默认（prepareStep order -10）}$$
-  `modelDefaultEffort` 在管线初始化阶段以 `-10` 优先阶执行，路由层规则以 `10` 优先阶执行并实现强行覆盖。
+  `modelDefaultEffort` 在管线初始化阶段以 `-10` 优先级执行，路由层规则以 `10` 优先级执行并强制覆盖。
 - **联动响应**：一旦会话中发生了模型切换，系统会自动触发推理档位的重新解析与二次校验。
 
 ---
@@ -366,13 +367,13 @@ graph LR
 ### 串行队列与批量刷盘
 
 1. **按 Key 串行化**：
-   会话头是指向状态的核心关键点。为了防止并发请求竞态导致 Head 出现 ABA 错乱，所有针对同一个 `key` 的会话头写回操作均被压入**按 Key 隔离的串行任务队列**排队执行。
+   会话头是状态指向的核心关键点。为了防止并发请求竞态导致 Head 出现 ABA 错乱，所有针对同一个 `key` 的会话头写回操作均被压入**按 Key 隔离的串行任务队列**排队执行。
 2. **缓冲池与定时 Flush**：
    系统内置容量为 `1000` 条的脏数据缓存池（`cacheSize: 1000`）。标记为 dirty 的会话头变更不会立即触发同步 SQL 写入，而是由定时器以 `1000ms`（`flushMs: 1000`）为周期批量刷入数据库。
 3. **分页与查询保护**：
    所有与会话相关的列表及历史查询，单页大小强制限制为 `50` 条（`pageSize: 50`），防止单次拉取海量会话压垮传输链路。
 4. **内存退化机制**：
-   在测试环境或未配置持久化数据库的轻量化部署场景中，数据访问层探知数据库缺失后，系统会自动透明退化为**纯内存 Head 索引**，保证平台依然可以正常执行对话，但重启后索引状态不予保留。
+   在测试环境或未配置持久化数据库的轻量部署场景中，数据访问层探知数据库缺失后，系统会自动退化为**纯内存 Head 索引**，保证平台依然可以正常执行对话，但重启后索引状态不予保留。
 
 ---
 
@@ -381,15 +382,15 @@ graph LR
 `ctx.conversations` 暴露的索引与查询能力直接驱动了 ChatLuna Web 仪表盘的会话视图：
 
 - **全局会话管理视图**：
-  - WebUI 会话列表统一按 `lastActiveAt` 倒序排布，直观反映最近活跃频度；
-  - 列表接口原生支持按来源端 `origin`（如 `engine`、`webui`）、通信对端 `peer` 以及关键词 `q` 进行组合检索与精准匹配；
+  - WebUI 会话列表统一按 `lastActiveAt` 倒序排布，直观反映最近活跃程度；
+  - 列表接口原生支持按来源端 `origin`（如 `engine`、`webui`）、通信对端 `peer` 以及关键词 `q` 进行组合检索与匹配；
   - 通过游标（`lastActiveAt:id`）实现前端无限滚动加载与高效分页。
 - **会话详细面板展示**：
-  通过匹配 `LiveRecord` 与 `chatluna_sessions` 记录，WebUI 能实时呈现当前会话的丰富运行状态：
-  - **消息统计**：展现当前会话累计的 `messageCount`；
+  通过匹配 `LiveRecord` 与 `chatluna_sessions` 记录，WebUI 能实时呈现当前会话的运行状态：
+  - **消息统计**：展示当前会话累计的 `messageCount`；
   - **模型全称**：显示当前生效的 `provider:model` 及其推理档位；
-  - **应用预设**：呈现当前绑定的预设模版名称；
-  - **运行时状态**：可视化呈现 `chatluna_sessions.status` 的运行相位（`idle` 空闲、`busy` 执行中、`closing` 关闭中、`closed` 已关闭）。
+  - **应用预设**：呈现当前绑定的预设模板名称；
+  - **运行时状态**：呈现 `chatluna_sessions.status` 的运行相位（`idle` 空闲、`busy` 执行中、`closing` 关闭中、`closed` 已关闭）。
 
 ---
 

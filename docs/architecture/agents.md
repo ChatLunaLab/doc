@@ -1,16 +1,16 @@
 # Agent 与执行循环
 
-智能体（Agent）是驱动对话与自动化流程的核心。它负责将接收到的输入转化为一轮或多轮模型调用，并在模型请求调用工具（Tool）时持续推进执行循环。
+智能体（Agent）是驱动对话与自动化流程的核心。它负责将收到的输入转化为一轮或多轮模型调用；当模型请求调用工具（Tool）时，它会持续推进执行循环。
 
 需要明确的是，Agent 并不是底层模型 SDK 的简单别名，也不是持久化数据库，而是一个负责会话调度与执行状态流转的在线执行器。
 
 ::: warning
-平台入口、WebUI 和扩展插件应当统一向同一个在线 Agent 实例投递输入。切勿分别打开会话快照后直接向底层写入数据，否则会导致执行状态脱节。
+平台入口、WebUI 和扩展插件应当统一向同一个在线 Agent 实例投递输入。请不要分别打开会话快照后直接向底层写入数据，否则会导致执行状态脱节。
 :::
 
 ## 核心概念：轮次、单步与单次调用
 
-在深入执行细节之前，我们先来厘清三个不同粒度的执行单位：
+在深入执行细节之前，我们先来了解三个不同粒度的执行单位：
 
 - **轮次 (Turn)**：运行时接纳一批输入并完整执行的过程。引擎或中间件可以根据业务逻辑跳过特定 Turn。
 - **单步 (Step)**：单个轮次中的最小迭代单元，包含一次模型请求以及由该请求触发的工具执行。一个 Turn 内可以包含多个 Step。
@@ -40,7 +40,7 @@ flowchart TD
 
 向 Agent 发送消息可以使用 `agent.receive(message, { when })`。该方法同步返回 `void`，**不返回**对应回答的 Promise。
 
-那么，投递的消息会在什么时候进入模型上下文呢？这取决于参数 `when` 的设置：
+投递的消息会在什么时候进入模型上下文？这取决于参数 `when` 的设置：
 
 | `when` 选项 | Agent 空闲时 | Agent 正在执行时 |
 | --- | --- | --- |
@@ -57,7 +57,7 @@ flowchart TD
 
 当新 Turn 启动时，系统会优先取出 `now` 与 `quiet` 分组的输入，再处理常规输入。因此，运行时并不保证跨优先级的严格全局 FIFO（先进先出）。
 
-让我们来看一个具体的调用示例：
+我们来看一个具体的调用示例：
 
 ```ts
 import { ChatMessage } from '@chatluna/message'
@@ -74,7 +74,7 @@ agent.receive(ChatMessage.notice('documentation', '补充：目标机器没有 D
 await agent.idle()
 ```
 
-上述代码中的 `agent` 为当前持有的在线实例。`agent.idle()` 用于等待当前实例的所有排队与执行任务完全收敛，并会持续跟踪执行期间产生的新任务。
+上面的代码中，`agent` 是当前持有的在线实例。`agent.idle()` 用于等待当前实例的所有排队与执行任务完全收敛，它还会持续跟踪执行期间产生的新任务。
 
 ::: warning
 使用 `idle()` 时需要注意以下几点：
@@ -124,14 +124,14 @@ await agent.idle()
 
 ### 1. 标准生命周期管理
 
-- `ctx.agents.create(sessionId, options, at)`：创建新的 Agent 实例。`options.config` 中声明具体的 `provider` 和 `model`。局部能力注册在 `at.apply(ctx, agent)` 回调中声明。
+- `ctx.agents.create(sessionId, options, at)`：创建新的 Agent 实例。在 `options.config` 中声明具体的 `provider` 和 `model`，局部能力注册则在 `at.apply(ctx, agent)` 回调中声明。
 - `ctx.agents.open(sessionId)`：恢复或复用同 ID 的在线活跃实例。
 
 对于常规业务会话，推荐优先调用 `ctx.conversations.open()`，它会自动处理业务会话游标（Head）与在线实例的生命周期协同。
 
 ### 2. 临时派生快速实例
 
-如果需要快速派生单次执行的轻量 Agent，可使用 `ctx.agents.spawn()`：
+如果需要快速派生单次执行的轻量 Agent，可以使用 `ctx.agents.spawn()`：
 
 ```ts
 import type { Context } from 'cordis'
@@ -179,7 +179,7 @@ export function apply(ctx: Context) {
 
 | 配置字段 | 默认值 | 说明 |
 | --- | --- | --- |
-| `maxStepsPerTurn` | `60` | 单个 Turn 允许执行的最大步数停止上限 |
+| `maxStepsPerTurn` | `60` | 单个 Turn 允许执行的最大步数上限 |
 | `maxParallelToolCalls` | `10` | 工具并行调度上限，同时受工具自身的 `parallel` 特性约束 |
 | `staleLimit` | `8` | 冻结工具头允许保留的已失效工具名称数量上限。超过该阈值或引入新工具时强制刷新，**不是**重试次数 |
 
@@ -187,14 +187,14 @@ export function apply(ctx: Context) {
 
 你可以通过以下实例方法干预排队任务或销毁实例：
 
-- `agent.drop()`：清空丢弃所有仍在队列中等待处理的输入。
+- `agent.drop()`：清空并丢弃所有仍在队列中等待处理的输入。
 - `agent.discard(messageId, reason)`：从待处理队列中移除指定的单条消息。参数必须为 `MessageId` 类型；返回 `boolean` 表示是否成功移除。
 - `agent.abort(reason, { keepPending })`：中断当前正在执行的活动。默认丢弃所有待处理输入；若 `keepPending` 设为 `true`，则保留队列。
-- `agent.exclusive(task)`：排在当前实例的所有既有工作之后独占执行 `task(signal)`。**注意它不是数据库事务**。
+- `agent.exclusive(task)`：排在当前实例的所有既有任务之后独占执行 `task(signal)`。**注意它不是数据库事务**。
 - `agent.close()`：关闭 Agent 实例并释放内部绑定的 Fiber 上下文。关闭中与关闭后的 Agent 均会拒绝接纳任何新输入。
 
 ::: danger
-调用 `abort()` 仅向底层传递 `AbortSignal` 并依赖下游逻辑主动响应取消。它**不会**回滚工具已经完成的文件修改、已发送的聊天消息或已生效的远程 RPC 调用。编写带副作用的重试逻辑前，务必核对工具操作的幂等性。
+调用 `abort()` 仅向底层传递 `AbortSignal` 并依赖下游逻辑主动响应取消。它**不会**回滚工具已经完成的文件修改、已发送的聊天消息或已生效的远程 RPC 调用。编写带副作用的重试逻辑前，务必确认工具操作的幂等性。
 :::
 
 ## 引擎的作用边界
@@ -212,7 +212,7 @@ export function apply(ctx: Context) {
 | 调用 `receive()` 后完全不输出回复 | 检查投递时是否指定了 `when: 'quiet'`；检查当前引擎或中间件是否跳过了该轮次；检查会话入口是否处于激活状态或被鉴权策略拦截。 |
 | 使用 `when: 'now'` 后，模型没有立即按新输入回复 | `now` 在当前单步（Step）执行结束后的边界处合入，不会中止并回滚已经发送给模型的实时请求。 |
 | `agent.idle()` 的等待耗时远超单次问答交互 | `idle()` 跟踪的是整个 Agent 实例的全局工作收敛状态，不与某条特定消息绑定。检查是否有持续产出事件的任务仍在执行。 |
-| 调用接口报错提示 Agent 实例已关闭 | 说明业务端缓存了失效的旧 Agent 实例句柄。请重新走 `ctx.conversations.open()` 或 `ctx.agents.open()` 获取在线实例。 |
+| 调用接口报错提示 Agent 实例已关闭 | 说明业务端缓存了失效的旧 Agent 实例句柄。请重新调用 `ctx.conversations.open()` 或 `ctx.agents.open()` 获取在线实例。 |
 | 启动时报错 `missing required services` | 对照文中的服务清单排查依赖，不可随意卸载 `trace`、`presets` 或 `tool_search` 插件。 |
 | 操作重试后产生重复数据或脏数据 | 中断和取消操作不会自动回滚外部副作用，请检查相关工具实现是否支持幂等操作。 |
 

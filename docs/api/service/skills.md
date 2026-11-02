@@ -1,6 +1,6 @@
 # 技能 (Skills)
 
-`ctx.skills` 服务（由 `@chatluna/skill` 提供）负责汇总来自多个来源的技能目录，提供技能读取、脚本执行、环境变量配置与安装更新等能力。
+`ctx.skills` 服务（由 `@chatluna/skill` 提供）负责汇总来自多个来源的技能目录，提供技能读取、脚本执行、环境变量配置以及安装与更新等能力。
 
 ## 目录
 
@@ -17,7 +17,7 @@
 | `isDisabled(name, agent?)` | 查询指定技能的禁用状态 |
 | `markDirty(agent?)` / `sync(agent?)` | 标记脏状态并刷新技能目录 |
 
-其中 `where` 参数可取 `'global'` 或 `'agent'`，分别表示在全局生效或仅对特定 Agent 生效。
+其中 `where` 参数可取 `'global'` 或 `'agent'`，分别表示在全局生效，或仅对特定 Agent 生效。
 
 ## 环境变量
 
@@ -40,7 +40,7 @@
 
 工作区 > 内置（rank 600）> 宿主机目录（400）> 用户自定义（300）。
 
-## 继续
+## 继续阅读
 
 - [技能](/architecture/skills)
 - [技能（使用）](/manual/usage/skills)

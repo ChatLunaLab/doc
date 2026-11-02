@@ -12,7 +12,7 @@
 | `reconnect(id)` | 重新连接指定的服务器 |
 | `probe(spec, signal?)` | 测试连接并返回该服务器的工具清单 |
 
-服务器状态包括 `disabled`、`connecting`、`ready` 与 `unavailable` 等；若连接失败，具体的失败原因会保存在状态对象中。
+服务器状态包括 `disabled`、`connecting`、`ready` 与 `unavailable` 等。连接失败时，具体的失败原因会保存在状态对象中。
 
 ## 传输方式
 
@@ -21,7 +21,7 @@
 | `registerTransport(type, handler)` | 注册 `stdio` 或 `http` 传输处理器 |
 | `transportsAvailable()` | 查询当前环境中可用的传输方式列表 |
 
-具体的传输方式由其他插件提供；若尝试连接时未安装对应的传输处理器，连接将会失败。
+具体的传输方式由其他插件提供。尝试连接时若未安装对应的传输处理器，连接将会失败。
 
 ## 工具
 
@@ -31,11 +31,12 @@
 | `listAllTools()` | 获取全部服务器提供的工具列表 |
 | `callTool(id, name, args, signal?)` | 直接调用指定服务器的特定工具 |
 
-工具对外暴露给模型时会统一添加 `mcp__<id>__<name>` 前缀；工具名称会自动清洗至 64 字符以内。
+工具对外暴露给模型时会统一添加 `mcp__<id>__<name>` 前缀，工具名称会自动清洗至 64 字符以内。
 
 ## 事件
 
-`mcp/servers-change` 事件在服务器增删或状态变化时触发；`chatluna/tool-change` 事件在工具集合变化时触发，用于通知 Agent 及时刷新工具列表。
+- `mcp/servers-change`：在服务器增删或状态变化时触发。
+- `chatluna/tool-change`：在工具集合变化时触发，用于通知 Agent 及时刷新工具列表。
 
 ## 继续
 

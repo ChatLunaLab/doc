@@ -1,6 +1,6 @@
 # 机器 (Machines)
 
-`ctx.computer`（`@chatluna/computer`）负责统一管理可执行命令与读写文件的运行环境。无论是本地进程、SSH、容器还是云端沙箱，均通过统一接口进行交互。
+`ctx.computer`（`@chatluna/computer`）负责统一管理可执行命令与读写文件的运行环境。无论是本地进程、SSH、容器还是云端沙箱，均可通过统一接口进行交互。
 
 ## 注册与配置
 
@@ -23,8 +23,8 @@
 | `test(name)` | 测试机器连通性，并返回可用的机器句柄 |
 | `close(name, session?)` | 关闭机器实例；传入 `session` 时仅关闭该会话对应的沙箱 |
 | `useEnv(provider)` | 注册环境变量提供者 |
-| `encryptConfig(config)` / `plainConfig(name)` | 加密存储配置凭据或读取解密后的明文配置 |
-| `path(machine, path)` / `contains(machine, path)` | 解析工作区路径或检查目标路径是否在安全边界内 |
+| `encryptConfig(config)` / `plainConfig(name)` | 加密存储配置凭据，或读取解密后的明文配置 |
+| `path(machine, path)` / `contains(machine, path)` | 解析工作区路径，或检查目标路径是否在安全边界内 |
 
 ## Machine 句柄
 
@@ -38,9 +38,11 @@
 
 ## 生命周期
 
-会话作用域的机器状态会保存在会话的 `computer/machine` 标记中，进程重启后将依据标记自动重连；共享作用域的机器在无人使用后会在达到空闲超时时暂停，当再次被调用时恢复。
+会话作用域的机器状态会保存在会话的 `computer/machine` 标记中，进程重启后将依据该标记自动重连。
 
-## 继续
+共享作用域的机器在无人使用并达到空闲超时后会自动暂停，再次被调用时将自动恢复。
+
+## 继续阅读
 
 - [计算机使用](/architecture/computer)
 - [机器（使用）](/manual/usage/machines)
