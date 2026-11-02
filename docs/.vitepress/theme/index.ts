@@ -43,6 +43,7 @@ import "virtual:uno.css";
 import "./styles/main.css";
 import "./styles/vars.css";
 import "./styles/sponsor.css";
+import "./styles/home.css";
 
 import '@shikijs/vitepress-twoslash/style.css'
 import Sponsors from "./components/Sponsors.vue";

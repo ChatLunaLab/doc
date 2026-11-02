@@ -1,96 +1,169 @@
 ---
-layout: page
+layout: home
+markdownStyles: false
 title: ChatLuna v2
-description: ChatLuna v2：为 IM 平台深度设计的 Agent Harness，基于 Cordis 4 构建。涵盖安装部署、使用配置、系统架构与插件开发文档。
+titleTemplate: 可组合的 Agent Harness，接入任何聊天平台
+description: ChatLuna v2 是基于 Cordis 4 的可组合 Agent Harness：接入 QQ、Telegram、Discord 等聊天平台，在浏览器里配置模型、角色、场景规则与工具，每一次回复都留有完整轨迹。
 ---
 
 <script setup lang="ts">
-import SessionLogDemo from './.vitepress/theme/components/SessionLogDemo.vue'
+import AppWindow from './.vitepress/theme/components/home/AppWindow.vue'
+import HomeHero from './.vitepress/theme/components/home/HomeHero.vue'
+import HomeShot from './.vitepress/theme/components/home/HomeShot.vue'
 </script>
 
-<div class="v2-home">
-  <section class="home-hero" aria-labelledby="home-title">
-    <div class="hero-copy">
-      <div class="hero-brand"><img src="/logo.png" alt="" width="44" height="44" /><span>ChatLuna v2 <small>Alpha</small></span></div>
-      <h1 id="home-title">让对话自然发生，<br />让过程清楚可见。</h1>
-      <p class="hero-lead">为 IM 平台深度设计的 Agent Harness，基于 Cordis 4 构建。连接聊天平台与模型，用预设、工具和技能构建自己的机器人，再从会话记录中检查它如何工作。</p>
-      <div class="hero-actions"><a class="action-primary" href="/manual/quickstart.html">即刻起步</a><a class="action-secondary" href="/manual/introduction.html">了解更多</a></div>
-      <p class="hero-requirements">源码运行需 Node.js 24+ 与 Yarn 4，亦支持通过 Docker 部署。</p>
-    </div>
-    <SessionLogDemo />
-  </section>
+<HomeHero />
 
-  <section class="entry-section" aria-labelledby="entry-title">
-    <div class="section-heading"><h2 id="entry-title">按任务查阅文档</h2><a href="https://v1.chatluna.chat">正在使用 v1？查阅旧版文档</a></div>
-    <div class="entry-list">
-      <a class="entry-row" href="/manual/quickstart.html"><span class="entry-kind">使用手册</span><span class="entry-copy"><strong>连接首个模型与聊天平台</strong><small>安装启动、完成推理测试、接入平台并绑定主人身份。</small></span></a>
-      <a class="entry-row" href="/manual/usage/webui.html"><span class="entry-kind">使用手册</span><span class="entry-copy"><strong>业务场景与行为配置</strong><small>配置场景规则、角色伪装、长期记忆与可用能力边界。</small></span></a>
-      <a class="entry-row" href="/architecture/"><span class="entry-kind">架构</span><span class="entry-copy"><strong>理解对话执行全流程</strong><small>理清会话日志、Agent 循环与单次模型调用的协作边界。</small></span></a>
-      <a class="entry-row" href="/guide/"><span class="entry-kind">开发指南</span><span class="entry-copy"><strong>编写自定义扩展插件</strong><small>从最小插件结构起步，扩展工具、提示词与管理页面。</small></span></a>
-      <a class="entry-row" href="/api/"><span class="entry-kind">API 参考</span><span class="entry-copy"><strong>查阅服务、命令与默认值</strong><small>按服务接口、运行参数与配置来源查找准确的定义。</small></span></a>
-      <a class="entry-row" href="/cookbook/"><span class="entry-kind">进阶</span><span class="entry-copy"><strong>排错、迁移与公网部署</strong><small>定位常见问题，从 v1 迁移，或将实例暴露到公网。</small></span></a>
-    </div>
-  </section>
-
-  <section class="mechanisms" aria-label="框架的三个核心边界">
-    <article><h2>日志与上下文解耦</h2><p>消息、控制标记与摘要切点按序追加；模型上下文由记录构建，分叉保留原历史。</p><a href="/architecture/sessions.html">会话机制</a></article>
-    <article><h2>单次调用与循环解耦</h2><p>模型运行时负责一次调用，Agent 负责工具循环与输入调度。请求重建不调用模型。</p><a href="/architecture/agents.html">Agent 执行</a></article>
-    <article><h2>能力与权限解耦</h2><p>插件注册工具与服务，权限系统独立判定调用许可；技能、MCP 与后台任务不隐式提权。</p><a href="/manual/usage/permissions.html">安全与权限</a></article>
-  </section>
-  <aside class="home-help"><p>已有 v1 实例？建议先在隔离环境中验证 v2，确认无误后再切换平台连接。</p><a href="/cookbook/migration.html">阅读迁移指南</a><a href="/cookbook/troubleshooting.html">遇到问题时排错</a></aside>
+<section class="home-row" aria-labelledby="control-title">
+<div class="home-row-text">
+<h2 id="control-title" class="home-heading">设置都在浏览器里</h2>
+<p>人设、模型、回复方式、记忆与能力：所有聊天的默认设置都在快捷设置这一页，选项旁边都附有说明。</p>
+<div class="home-links"><a class="home-link" href="/manual/usage/webui.html">认识控制台</a></div>
 </div>
+<div class="home-panel">
+<HomeShot page="control" path="/control" alt="控制台的快捷设置页面" />
+</div>
+</section>
 
-<style>
-.v2-home { --home-surface: #f4f5f7; --home-ink: #1b1d24; --home-muted: #55606e; --home-primary: #45465e; --home-primary-hover: #6b798e; --home-accent: #9aa7b1; --home-on-primary: #fff; color: var(--home-ink); font-family: var(--vp-font-family-base); }
-.dark .v2-home { --home-surface: #1e2027; --home-ink: #e8ebf0; --home-muted: #9aa7b1; --home-primary: #9aa7b1; --home-primary-hover: #b8c2cb; --home-on-primary: #23242e; }
-.home-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(36px, 6vw, 84px); padding: 76px max(32px, calc((100% - 1152px) / 2)) 80px; background: var(--home-surface); }
-.hero-copy { min-width: 0; }
-.hero-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; font-size: 16px; font-weight: 600; }
-.hero-brand img { border-radius: 10px; }
-.hero-brand small { margin-left: 5px; color: var(--home-muted); font-size: 12px; font-weight: 400; }
-.hero-copy h1 { margin: 0; font-size: 46px; font-weight: 700; line-height: 1.3; letter-spacing: 0; }
-.hero-lead { max-width: 460px; margin: 22px 0 0; color: var(--home-muted); font-size: 16px; line-height: 1.9; }
-.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
-.hero-actions a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 18px; border: 1px solid var(--home-primary); border-radius: 6px; font-size: 14px; font-weight: 600; text-decoration: none; }
-.hero-actions .action-primary { background: var(--home-primary); color: var(--home-on-primary); }
-.hero-actions .action-primary:hover { background: var(--home-primary-hover); border-color: var(--home-primary-hover); }
-.hero-actions .action-secondary { color: var(--home-primary); }
-.hero-actions .action-secondary:hover { background: var(--vp-c-brand-soft); }
-.hero-requirements { max-width: 440px; margin: 20px 0 0; color: var(--home-muted); font-size: 12px; line-height: 1.7; }
-.v2-home a:focus-visible { outline: 2px solid var(--home-primary); outline-offset: 5px; }
-.entry-section { max-width: 1152px; margin: 0 auto; padding: 64px 32px 50px; }
-.section-heading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 14px 24px; margin-bottom: 24px; }
-.section-heading h2 { margin: 0; font-size: 26px; line-height: 1.4; font-weight: 650; }
-.section-heading > a { color: var(--home-primary); font-size: 13px; text-decoration: underline; text-underline-offset: 4px; }
-.entry-list { border-top: 1px solid var(--vp-c-divider); }
-.entry-row { display: grid; grid-template-columns: 150px minmax(0, 1fr); align-items: center; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--vp-c-divider); color: inherit; text-decoration: none; }
-.entry-kind { color: var(--home-primary); font-size: 13px; }
-.entry-copy { display: grid; gap: 5px; }
-.entry-copy strong { font-size: 16px; font-weight: 600; }
-.entry-copy small { color: var(--vp-c-text-2); font-size: 14px; line-height: 1.6; }
-.entry-row:hover .entry-copy strong { color: var(--home-primary); }
-.mechanisms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; max-width: 1152px; margin: 0 auto; padding: 0 32px 54px; }
-.mechanisms article { min-width: 0; }
-.mechanisms h2 { margin: 0; font-size: 17px; font-weight: 600; line-height: 1.5; }
-.mechanisms p { margin: 12px 0; color: var(--vp-c-text-2); font-size: 14px; line-height: 1.85; }
-.mechanisms a, .home-help a { display: inline-flex; align-items: center; min-height: 44px; color: var(--home-primary); font-size: 13px; text-decoration: underline; text-underline-offset: 4px; }
-.home-help { display: flex; flex-wrap: wrap; align-items: center; gap: 0 24px; max-width: 1088px; margin: 0 auto 40px; padding: 20px 0; border-top: 1px solid var(--vp-c-divider); }
-.home-help p { flex: 1 1 400px; margin: 0; color: var(--vp-c-text-2); font-size: 13px; line-height: 1.8; }
-@media (max-width: 960px) {
-  .home-hero { grid-template-columns: minmax(0, 1fr); gap: 36px; padding: 48px 32px; }
-  .hero-copy { max-width: 620px; }
-  .hero-lead { max-width: 570px; }
-  .home-hero .session-demo { max-width: 640px; }
-  .home-help { margin-right: 32px; margin-left: 32px; }
+<section class="home-row is-flipped" aria-labelledby="routing-title">
+<div class="home-row-text">
+<h2 id="routing-title" class="home-heading">每个群，各有各的规矩</h2>
+<p>同一个机器人，在不同的群和私聊里可以用不同的方式说话。想让某个群或某个人不一样，就在场景规则里单独设定回复方式、能力和安全选项。</p>
+<div class="home-links"><a class="home-link" href="/manual/usage/rules.html">了解场景规则</a></div>
+</div>
+<div class="home-panel is-dusk">
+<HomeShot page="routing" path="/routing" alt="控制台的场景规则页面" />
+</div>
+</section>
+
+<section class="home-row" aria-labelledby="adapters-title">
+<div class="home-row-text">
+<h2 id="adapters-title" class="home-heading">平台和模型，接上就能用</h2>
+<p>QQ、Telegram、Discord、飞书等平台的多个账号可以同时在线。DeepSeek、OpenAI、Anthropic、Google 等模型服务接入一次，换模型不用重配密钥。</p>
+<div class="home-links"><a class="home-link" href="/manual/usage/adapters.html">接入聊天平台</a><a class="home-link" href="/manual/usage/models.html">配置模型</a></div>
+</div>
+<div class="home-panel">
+<HomeShot page="adapters" path="/adapters" alt="控制台的聊天平台页面" />
+</div>
+</section>
+
+<section class="home-row is-flipped" aria-labelledby="dashboard-title">
+<div class="home-row-text">
+<h2 id="dashboard-title" class="home-heading">每一步都有迹可循</h2>
+<p>哪个机器人在线、今天用了多少 token 和费用、有什么需要你处理，仪表盘上一眼就能看到。一次回复调用了哪些工具、每一步花了多久，都能在轨迹里逐条展开。</p>
+<div class="home-links"><a class="home-link" href="/manual/usage/observability.html">轨迹与用量</a></div>
+</div>
+<div class="home-panel is-dusk">
+<HomeShot page="dashboard" path="/dashboard" alt="控制台的仪表盘页面" />
+</div>
+</section>
+
+<section class="home-section" aria-labelledby="ability-title">
+<div class="home-wrap">
+<div class="home-intro is-wide">
+<h2 id="ability-title" class="home-heading">给它工具，也给它分寸</h2>
+<p>能力按需加装；什么场合开口、能动用什么、在哪台机器上执行，由你决定。</p>
+</div>
+<div class="home-lists">
+<ul class="home-list" aria-label="能力">
+<li><a href="/manual/usage/tools.html"><span class="home-icon" style="--tint: #4d5a8c"><span class="i-ic-round-build"></span></span><span class="home-body"><span class="home-item"><strong>工具</strong><span>读写文件、执行命令、搜索网页，模型在需要时自己调用。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
+<li><a href="/manual/usage/skills.html"><span class="home-icon" style="--tint: #6b5b95"><span class="i-ic-round-menu-book"></span></span><span class="home-body"><span class="home-item"><strong>技能</strong><span>把做事的方法写成说明，需要时才加载完整步骤。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
+<li><a href="/manual/usage/mcp.html"><span class="home-icon" style="--tint: #3d6f86"><span class="i-ic-round-hub"></span></span><span class="home-body"><span class="home-item"><strong>MCP</strong><span>接入现成的 MCP 服务，它们的工具和内置工具一样用。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
+<li><a href="/manual/usage/memory.html"><span class="home-icon" style="--tint: #7a5c8a"><span class="i-ic-round-psychology"></span></span><span class="home-body"><span class="home-item"><strong>长期记忆</strong><span>记住谁喜欢什么、约定了什么，跨会话按需取回。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
+<li><a href="/manual/usage/subagents.html"><span class="home-icon" style="--tint: #46658f"><span class="i-ic-round-account-tree"></span></span><span class="home-body"><span class="home-item"><strong>子代理</strong><span>繁重的多步任务交给子代理，只把结论带回对话。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
+<li><a href="/manual/usage/automation.html"><span class="home-icon" style="--tint: #5d6b7f"><span class="i-ic-round-schedule"></span></span><span class="home-body"><span class="home-item"><strong>定时与后台任务</strong><span>按时间或条件触发任务，耗时的操作转入后台继续。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
+</ul>
+<ul class="home-list" aria-label="分寸">
+<li><a href="/manual/usage/rules.html"><span class="home-icon" style="--tint: #45465e"><span class="i-ic-round-alt-route"></span></span><span class="home-body"><span class="home-item"><strong>场景规则</strong><span>同一个机器人，在不同的群和私聊里用不同的方式说话。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
+<li><a href="/manual/usage/activation.html"><span class="home-icon" style="--tint: #6b798e"><span class="i-ic-round-forum"></span></span><span class="home-body"><span class="home-item"><strong>什么时候回复</strong><span>被 @ 时回复、话题相关时插话、冷场时主动搭话，各自开关。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
+<li><a href="/manual/usage/permissions.html"><span class="home-icon" style="--tint: #3f6a68"><span class="i-ic-round-shield"></span></span><span class="home-body"><span class="home-item"><strong>权限与安全</strong><span>调用工具、读写文件都要经过权限判定，危险操作先征得同意。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
+<li><a href="/manual/usage/machines.html"><span class="home-icon" style="--tint: #54606f"><span class="i-ic-round-dns"></span></span><span class="home-body"><span class="home-item"><strong>机器与工作区</strong><span>命令在哪台机器上执行、模型能读写哪个目录，都由你指定。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
+<li><a href="/manual/usage/observability.html"><span class="home-icon" style="--tint: #5a5687"><span class="i-ic-round-timeline"></span></span><span class="home-body"><span class="home-item"><strong>轨迹与用量</strong><span>出了问题先看轨迹，算账时先看用量。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
+</ul>
+</div>
+</div>
+</section>
+
+<section class="home-row" aria-labelledby="dev-title">
+<div class="home-row-text">
+<h2 id="dev-title" class="home-heading">写个插件，教它新本领</h2>
+<p>ChatLuna 运行在 Cordis 4 上。工具、服务和控制台页面都由插件注册，插件卸载时，它注册过的一切都会自动回收。</p>
+<p>开头截图里查天气用的 <code>weather_forecast</code>，写成插件只要这些代码。</p>
+<div class="home-links"><a class="home-link" href="/guide/develop/first-plugin.html">第一个插件</a><a class="home-link" href="/guide/extend/tools.html">工具开发</a><a class="home-link" href="/api/">API 参考</a></div>
+</div>
+<div class="home-panel is-code">
+<AppWindow class="home-editor" title="weather.ts">
+<div class="vp-doc">
+
+```ts
+import type { Context } from 'cordis'
+import { Schema } from '@chatluna/schema'
+import { defineTool } from '@chatluna/tool'
+
+export const name = 'weather'
+export const inject = ['tools']
+
+export function apply(ctx: Context) {
+  ctx.tools.define(defineTool({
+    name: 'weather_forecast',
+    description: '查询城市未来几天的天气',
+    args: Schema.object({
+      city: Schema.string().required(),
+      days: Schema.number().default(3),
+    }),
+    async run({ city, days }) {
+      const response = await fetch(`https://weather.example/v1?city=${city}&days=${days}`)
+      return await response.text()
+    },
+  }))
 }
-@media (max-width: 640px) {
-  .home-hero { padding: 36px 16px; }
-  .hero-copy h1 { font-size: 34px; }
-  .hero-lead { font-size: 15px; }
-  .entry-section { padding: 40px 16px; }
-  .section-heading h2 { font-size: 22px; }
-  .entry-row { grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 18px 0; }
-  .mechanisms { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 0 16px 36px; }
-  .home-help { margin: 0 16px 24px; }
-}
-</style>
+```
+
+</div>
+</AppWindow>
+</div>
+</section>
+
+<section class="home-row is-flipped" aria-labelledby="install-title">
+<div class="home-row-text">
+<h2 id="install-title" class="home-heading">两行命令，跑起来</h2>
+<p>需要 Node.js 24 或以上。第一次运行 <code>chatluna</code> 会创建默认实例并启动，终端里会打印控制台的登录地址，默认是 <code>http://127.0.0.1:5028</code>。</p>
+<p>打开它，按提示添加模型、接入聊天平台，机器人就能在群里说话了。</p>
+<div class="home-links"><a class="home-link" href="/manual/quickstart.html">跟着快速开始走一遍</a><a class="home-link" href="/manual/starter/">比较三种安装方式</a></div>
+</div>
+<div class="home-panel is-code is-dusk">
+<div class="vp-doc home-code">
+
+::: code-group
+
+```sh [npm]
+npm i -g chatluna
+chatluna
+```
+
+```sh [Docker]
+git clone https://github.com/ChatLunaLab/v2.git && cd v2
+docker compose -f docker/compose.yml up -d chatluna
+```
+
+```sh [源码]
+git clone https://github.com/ChatLunaLab/v2.git && cd v2
+yarn install && yarn build
+yarn chatluna start
+```
+
+:::
+
+</div>
+</div>
+</section>
+
+<section class="home-section home-community" aria-labelledby="community-title">
+<div class="home-wrap home-center">
+<img class="home-logo" src="/logo.png" alt="" width="64" height="64">
+<h2 id="community-title" class="home-heading">来群里聊聊</h2>
+<p>用的时候遇到问题，或者想给大家看看你的机器人，都欢迎来。</p>
+<div class="home-pills"><a class="home-pill" href="https://qm.qq.com/q/UPl46h6omI">QQ 交流群 282381753</a><a class="home-pill" href="https://qm.qq.com/q/NwwPwOrAoo">QQ 闲聊群 391122026</a><a class="home-pill" href="https://t.me/koishi_chatluna">Telegram 群组</a><a class="home-pill" href="https://t.me/koishi_chatluna_channel">Telegram 频道</a><a class="home-pill" href="https://github.com/ChatLunaLab/v2">GitHub</a></div>
+<p class="home-note">还在用 v1？<a href="https://v1.chatluna.chat">v1 文档</a>仍可访问，升级前请先读<a href="/cookbook/migration.html">迁移指南</a>。</p>
+</div>
+</section>
