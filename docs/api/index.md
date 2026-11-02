@@ -30,7 +30,7 @@ ChatLuna 将功能拆分为多个模块化服务并挂载至 `Context` 实例上
 | [`ctx.routing`](./service/routing) | `@chatluna/routing` | 场景规则 |
 | [`ctx.chatluna_adapters`](./service/adapters) | `@chatluna/adapter-webui` | 平台适配器目录 |
 | `ctx.chat` | `@chatluna/chat` | 消息管线 |
-| `ctx.koishi` | `@chatluna/koishi` | Koishi 风格内核 |
+| `ctx.koishi` | `koishi`（打过补丁的 `@koishijs/core`） | Koishi 兼容层：命令、中间件与过滤器 |
 
 ## Cordis 上下文
 

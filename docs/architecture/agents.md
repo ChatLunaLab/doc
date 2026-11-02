@@ -134,7 +134,7 @@ await agent.idle()
 如果需要快速派生单次执行的轻量 Agent，可使用 `ctx.agents.spawn()`：
 
 ```ts
-import type { Context } from '@chatluna/cordis'
+import type { Context } from 'cordis'
 
 export function apply(ctx: Context) {
   const runner = ctx.agents.spawn({

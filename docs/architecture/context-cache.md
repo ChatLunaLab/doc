@@ -78,7 +78,7 @@ ChatLuna 将提示词模板划分为三个核心分区 (Zone)。每个分区都�
 在插件开发中，我们可以通过 `ctx.prompt` 提供的 API 来注册供模板使用的变量与提示词块：
 
 ```ts
-import type { Context } from '@chatluna/cordis'
+import type { Context } from 'cordis'
 
 export function apply(ctx: Context) {
   // 1. 声明一个不可变变量（可用于 system 分区）

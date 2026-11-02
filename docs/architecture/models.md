@@ -73,7 +73,7 @@ flowchart TB
 当我们需要向运行时注入模型驱动时，可以通过 `ctx.ai.provide()` 完成注册：
 
 ```ts
-import { Context } from '@chatluna/cordis'
+import { Context } from 'cordis'
 
 export function apply(ctx: Context) {
   // 注册自定义提供商实例
@@ -100,7 +100,7 @@ export function apply(ctx: Context) {
 在日常开发中，我们可以直接使用 `ctx.chatluna` 提供的动词发起直接模型调用。单次调用会返回一个 `Run` 对象：
 
 ```ts
-import { Context } from '@chatluna/cordis'
+import { Context } from 'cordis'
 
 export async function askQuestion(ctx: Context) {
   // 发起单次问答调用

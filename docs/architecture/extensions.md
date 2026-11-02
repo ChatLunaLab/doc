@@ -110,7 +110,7 @@ flowchart TD
 下面是使用 `ctx.chatluna_config.change` 更新指定条目的示例：
 
 ```ts
-import type { Context } from '@chatluna/cordis'
+import type { Context } from 'cordis'
 
 export async function enableExamplePlugin(ctx: Context) {
   // 提交条目修改，传入审计字段

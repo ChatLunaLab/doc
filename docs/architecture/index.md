@@ -135,7 +135,7 @@ ChatLuna v2 将全部核心逻辑拆分为独立注册的 Cordis 服务，主要
 | `trace` | `@chatluna/trace` | 请求因果 span 树构建与链路监控 |
 | `usage` | `@chatluna/trace-billing` | 令牌消耗与用量账本记账 |
 | `telemetry` | `@chatluna/telemetry` | 运行指标计数与上报快照 |
-| `censor` | `@chatluna/chat`（插件） | 输入审核：命中规则时拦截消息（`chatluna/chat` 内插件，非独立服务） |
+| —（censor） | `@chatluna/chat` 子插件 | 输入审核：命中规则时拦截消息；不是独立服务，第三方匹配器通过 `ctx.chat.censor()` 注册 |
 | `compaction` | `@chatluna/compaction-default` | 历史压缩执行与多级降级（契约在 `@chatluna/compaction`） |
 | `schedule` | `@chatluna/schedule` | 自动化定时触发任务调度器 |
 | `background` | `@chatluna/background` | 异步后台任务队列与脱机工作流托管 |
