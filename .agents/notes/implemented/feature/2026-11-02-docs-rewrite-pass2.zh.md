@@ -12,8 +12,11 @@ Status: implemented
 - **关系图**：两圆相交的 Venn 图反复出现文字压线，改成三个圆角块（ChatLuna | IM 对话 | Koishi）架在 Cordis 底座上的示意图；架构流程图从多回边改成单向 `适配器→路由→引擎→Agent 循环→渲染投递` 的线性图。
 - **WebUI 页面表**：`webui.md` 的页面表/分组对照各 `*/webui/client/index.ts` 的 `ctx.slots.route` 逐一核对；`插件市场`=`/market`、`插件设置`=`/plugins`、最后一组叫「观测」不是「系统」、`/control`=「快捷设置」、`/expressions` 不存在。
 - **截图**：复用 `/tmp/chatluna-ref/` 的 site-shots 实例（`127.0.0.1:5038`）+ CDP 截图管线（`tools/shoot.mjs`，spec 里带 token），把已截好的各页 PNG 拷到 `docs/public/webui/`，按页面替换占位注释。light 一套；home/ 已有 light+dark。
-- **编辑流水线**：每批页面写完交给 `opencode run --model magpie/mikumikulove/gemini-3.8-flash` 做文字润色；prompt 内嵌一段真实 Koishi 中文手册节选作风格基准，helper 在 `/tmp/docs-rewrite/polish.sh`。
-- **重写顺序**：manual → cookbook → api → guide → architecture（用户优先）。
+- **编辑流水线**：每批页面写完交给 `opencode run --model magpie/mikumikulove/gemini-3.8-flash` 做文字润色；prompt 内嵌一段真实 Koishi 中文手册节选作风格基准，helper 在 `.agents/polish.sh`，prompt 在 `.agents/docs-rewrite-style-prompt.md`。
+- **重写顺序**：manual → cookbook → api → guide → architecture（用户优先）。每个分区校订、润色、构建后单独提交。
+- **设置页**：对照 `ctx.slots.settings` 注册核对，共六个标签页：外观、语言、访问令牌（`plugins/ui/settings`），侧边栏（`packages/ui/client` 应用外壳），使用统计（telemetry 插件），新手引导（setup 插件）。界面名称统一写「访问令牌」。
+- **访问令牌**：按 `packages/server/core/src/auth.ts`，令牌只在首次生成时打印一次（`Access token:` / `Log in: …/?token=`），数据目录的 `auth.json` 只存哈希；配置 `token` 或 `CHATLUNA_TOKEN` 可固定，弱令牌会被忽略。
+- **终端类占位**改成真实输出的 `text` 代码块（`chatluna list` 行、令牌日志行），不截图。
 
 ## Alternatives considered
 
@@ -26,6 +29,7 @@ Status: implemented
 - `webui.md` 的页面表、分组名、设置页与「快捷设置」内容现在和源码一致；usage 各页都配了真实截图。
 - 介绍页的 Koishi 表述落到「今天走兼容层，v5 发布后直接采用」，与 `koishi-loader` 的实际能力一致。
 - gemini 润色会改动措辞但不改事实；提交前仍需对照源码抽查 API 表述。
+- 需要全新（未完成引导）实例才能截的图仍保留 `<!-- 截图占位 -->`：登录页、引导第 1–2 步、私聊绑定弹窗、流式回复的聊天页、访问令牌标签页，以及场景规则的保存冲突与目标选择弹窗。
 
 ## Progress
 

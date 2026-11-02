@@ -12,8 +12,11 @@ The pages from the first rewrite (see [2026-10-30-v2-docs-rewrite](../architectu
 - **Relationship diagram**: the overlapping-circle venn kept clipping text, so it was replaced with three rounded blocks (ChatLuna | IM 对话 | Koishi) on a Cordis base. The architecture flowchart was simplified from a multi-back-edge graph to a linear `adapter → routing → engine → agent loop → render/deliver` path.
 - **WebUI page table**: `webui.md`'s table and group labels were checked against each `*/webui/client/index.ts` `ctx.slots.route`: `插件市场`=`/market`, `插件设置`=`/plugins`, the last group is `观测` not `系统`, `/control`=「快捷设置」, and `/expressions` does not exist.
 - **Screenshots**: reuse the `/tmp/chatluna-ref/` site-shots instance (`127.0.0.1:5038`) and its CDP capture pipeline (`tools/shoot.mjs`, token carried in the spec). Captured per-page PNGs are copied into `docs/public/webui/` and substituted for the placeholder comments. One light set for now; `home/` already has light+dark.
-- **Editorial pipeline**: each finished batch is polished by `opencode run --model magpie/mikumikulove/gemini-3.8-flash`; the prompt embeds a real Koishi zh manual excerpt as the style baseline, helper at `/tmp/docs-rewrite/polish.sh`.
-- **Rewrite order**: manual → cookbook → api → guide → architecture (users first).
+- **Editorial pipeline**: each finished batch is polished by `opencode run --model magpie/mikumikulove/gemini-3.8-flash`; the prompt embeds a real Koishi zh manual excerpt as the style baseline, helper at `.agents/polish.sh`, prompt at `.agents/docs-rewrite-style-prompt.md`.
+- **Rewrite order**: manual → cookbook → api → guide → architecture (users first). Each section is one verified, polished, built commit.
+- **Settings page**: six tabs, checked against the `ctx.slots.settings` registrations: 外观, 语言 and 访问令牌 (`plugins/ui/settings`), 侧边栏 (the `packages/ui/client` app shell), 使用统计 (telemetry plugin) and 新手引导 (setup plugin). UI references use the label 访问令牌.
+- **Access token**: per `packages/server/core/src/auth.ts`, the token is printed once on first generation (`Access token:` / `Log in: …/?token=`), and only its hash is stored in the data directory's `auth.json`. The config `token` field or `CHATLUNA_TOKEN` pins it; weak pinned tokens are ignored.
+- **Terminal placeholders** become `text` blocks of real output (`chatluna list` rows, the token log lines), not images.
 
 ## Alternatives considered
 
@@ -26,6 +29,7 @@ The pages from the first rewrite (see [2026-10-30-v2-docs-rewrite](../architectu
 - `webui.md`'s page table, group names, settings page and 快捷设置 contents now match the source; every usage page carries a real screenshot.
 - The introduction's Koishi wording lands on "compat layer today, adopt Koishi v5 directly once it ships", matching `koishi-loader`'s real capability.
 - The gemini pass rewrites phrasing, not facts; API claims still need spot-checking against source before committing.
+- Screenshots that need a fresh, pre-onboarding instance stay as `<!-- 截图占位 -->` comments: the login page, wizard steps 1–2, the DM bind dialog, a streaming chat reply, the 访问令牌 tab and the routing save-conflict and target-picker dialogs.
 
 ## Progress
 

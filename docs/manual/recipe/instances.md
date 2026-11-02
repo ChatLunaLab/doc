@@ -8,7 +8,13 @@
 
 如果你只是希望同一个机器人在不同群里扮演不同角色、使用不同模型，那么单进程完全够用；但如果你需要两套完全独立的人设记忆、凭据数据与运行配置（例如一个供个人娱乐、一个供团队办公），那就应该创建独立的实例。
 
-<!-- 截图占位：命令行 · 实例列表输出 -->
+`chatluna list` 会列出 `~/.chatluna/instances` 下的所有实例，每行依次是名字、运行状态与目录：
+
+```text
+$ chatluna list
+default	running (pid=41522) @chatluna/cli@2.0.0-alpha.0	/home/me/.chatluna/instances/default
+work	stopped	/home/me/.chatluna/instances/work
+```
 
 ## 两种做法的区别
 
