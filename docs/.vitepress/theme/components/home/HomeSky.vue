@@ -1,52 +1,88 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 
-// The base color first, then the four colors that flow over it, all within the logo's navy-to-violet range
-// so neighbouring hues never mix into grey. Panels are deeper than the hero sky.
+// A calm color first, then five blobs that drift through the canvas, each keeping its own hue.
+// `calm` fades the middle of the hero toward the calm color so the headline stays legible.
 const palettes = {
   sky: {
-    light: ['#f7f7fe', '#dfe3fb', '#e7e2f8', '#d3dcfb', '#c6c0f1'],
-    dark: ['#0b0d1f', '#1c2352', '#272258', '#18295c', '#363083'],
+    calm: 0.5,
+    light: ['#f6f6ff', '#7f93ff', '#a88bff', '#93c4ff', '#d9cfff', '#fbfbff'],
+    dark: ['#0b0d1f', '#2a3a9a', '#5532a8', '#1f4f9c', '#171a45', '#0d1030'],
   },
   panel: {
-    light: ['#dadcf8', '#9ca8ef', '#c2bdf1', '#b2c2f7', '#8d86e0'],
-    dark: ['#141836', '#2c3778', '#3a3275', '#24306a', '#4d43a0'],
+    calm: 0,
+    light: ['#e4e6fb', '#6676ee', '#9375f0', '#7fb3ff', '#c3b6fb', '#eef0ff'],
+    dark: ['#121530', '#3446b0', '#6040c0', '#2a5cb5', '#1c2058', '#101233'],
   },
 }
 
 const props = defineProps<{ tone?: 'sky' | 'panel' }>()
 
-// Layered sine warps give the liquid flow; the warped coordinates then pick the color weights.
-// The pointer drags a swirling wake through the water, and scrolling stirs it into larger waves.
+// A mesh gradient: five color points orbit slowly and blend by inverse distance, and two layers of
+// simplex noise warp the coordinates so their borders swirl like liquid. The pointer drags a wake
+// through it, and scrolling stirs the warp harder.
 const fragment = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
 precision mediump float;
+#endif
 uniform vec2 uSize;
 uniform float uTime;
 uniform float uStir;
+uniform float uCalm;
 uniform vec4 uPointer;
-uniform vec3 uColors[5];
+uniform vec3 uColors[6];
+
+vec3 permute(vec3 x) {
+  return mod(((x * 34.0) + 1.0) * x, 289.0);
+}
+
+float noise(vec2 v) {
+  const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+  vec2 i = floor(v + dot(v, C.yy));
+  vec2 x0 = v - i + dot(i, C.xx);
+  vec2 i1 = x0.x > x0.y ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+  vec4 x12 = x0.xyxy + C.xxzz;
+  x12.xy -= i1;
+  i = mod(i, 289.0);
+  vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
+  vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
+  m = m * m;
+  m = m * m;
+  vec3 x = 2.0 * fract(p * C.www) - 1.0;
+  vec3 h = abs(x) - 0.5;
+  vec3 a0 = x - floor(x + 0.5);
+  m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
+  vec3 g = vec3(a0.x * x0.x + h.x * x0.y, a0.yz * x12.xz + h.yz * x12.yw);
+  return 130.0 * dot(m, g);
+}
 
 void main() {
   vec2 uv = gl_FragCoord.xy / uSize;
-  vec2 p = (uv * 2.0 - 1.0) * vec2(uSize.x / uSize.y, 1.0) * 1.1;
+  float aspect = uSize.x / uSize.y;
+  vec2 p = (uv * 2.0 - 1.0) * vec2(aspect, 1.0);
   vec2 d = p - uPointer.xy;
   float fall = exp(-dot(d, d) * 3.0);
   p -= uPointer.zw * fall;
   p += vec2(-d.y, d.x) * fall * length(uPointer.zw) * 1.5;
   float t = uTime;
-  float wave = 0.32 + uStir * 0.22;
-  for (float i = 1.0; i < 6.0; i++) {
-    p.x += wave / i * sin(i * 1.9 * p.y + t + i * 1.3);
-    p.y += wave * 0.88 / i * cos(i * 1.6 * p.x + t * 0.8 + i * 0.7);
+  float flow = 0.45 + uStir * 0.3;
+  vec2 q = p + flow * vec2(noise(p * 0.9 + vec2(0.0, t * 0.35)), noise(p * 0.9 + vec2(5.2, -t * 0.3)));
+  vec2 r = p + flow * vec2(noise(q * 1.3 + vec2(1.7, 9.2) + t * 0.2), noise(q * 1.3 + vec2(8.3, 2.8) - t * 0.25));
+  vec3 color = vec3(0.0);
+  float total = 0.0;
+  for (int i = 1; i < 6; i++) {
+    float f = float(i);
+    vec2 center = vec2(sin(t * (0.21 + f * 0.05) + f * 1.7) * aspect * 0.8, cos(t * (0.17 + f * 0.04) + f * 2.3) * 0.75);
+    float w = 1.0 / pow(distance(r, center) + 0.05, 3.0);
+    color += uColors[i] * w;
+    total += w;
   }
-  float a = 0.5 + 0.5 * sin(p.x * 1.2 + t * 0.6);
-  float b = 0.5 + 0.5 * cos(p.y * 1.4 - t * 0.5);
-  float c = 0.5 + 0.5 * sin((p.x + p.y) * 0.9 + t * 0.9);
-  vec3 color = uColors[0];
-  color = mix(color, uColors[1], smoothstep(0.15, 0.95, a) * 0.9);
-  color = mix(color, uColors[2], smoothstep(0.3, 1.0, b) * 0.8);
-  color = mix(color, uColors[3], smoothstep(0.45, 1.0, c) * 0.7);
-  color = mix(color, uColors[4], smoothstep(0.55, 1.0, a * b) * 0.75);
+  color /= total;
+  vec2 off = vec2((uv.x - 0.5) * aspect, uv.y - 0.6);
+  float calm = exp(-(off.x * off.x * 1.6 + off.y * off.y * 9.0));
+  color = mix(color, uColors[0], calm * uCalm);
   color += (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.02;
   gl_FragColor = vec4(color, 1.0);
 }
@@ -93,6 +129,7 @@ onMounted(() => {
   const stirring = gl.getUniformLocation(program, 'uStir')
   const touch = gl.getUniformLocation(program, 'uPointer')
   const colors = gl.getUniformLocation(program, 'uColors')
+  gl.uniform1f(gl.getUniformLocation(program, 'uCalm'), palettes[props.tone ?? 'sky'].calm)
 
   // Half resolution: the gradient is soft, so the GPU cost drops by 4x without visible loss.
   function fit() {
@@ -116,7 +153,7 @@ onMounted(() => {
     stir *= 0.92
     pointer.vx *= 0.9
     pointer.vy *= 0.9
-    gl.uniform1f(clock, (phase + offset) * 0.0002)
+    gl.uniform1f(clock, (phase + offset) * 0.0004)
     gl.uniform1f(stirring, stir)
     gl.uniform4f(touch, pointer.x, pointer.y, pointer.vx, pointer.vy)
     gl.drawArrays(gl.TRIANGLES, 0, 3)
@@ -166,8 +203,8 @@ onMounted(() => {
       pointer.inside = false
       return
     }
-    const tx = (x * 2 - 1) * (box.width / box.height) * 1.1
-    const ty = (1 - y * 2) * 1.1
+    const tx = (x * 2 - 1) * (box.width / box.height)
+    const ty = 1 - y * 2
     if (pointer.inside) {
       pointer.vx = cap(pointer.vx + (tx - pointer.x) * 0.6)
       pointer.vy = cap(pointer.vy + (ty - pointer.y) * 0.6)
