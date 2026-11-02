@@ -84,32 +84,36 @@ flowchart LR
 
 ChatLuna v2 并没有单独分叉 Cordis，而是尽可能直接拥抱官方 Cordis 生态。在 Koishi v5 发布后，ChatLuna v2 会直接采用 Koishi v5 作为自己的 IM 层，两者也将能够共存于同一棵 Cordis 服务树中。
 
-在此之前，ChatLuna v2 以补丁的形式让 `@koishijs/core` 跑在 Cordis 4 上，再通过 `@chatluna/koishi-loader` 让一部分 Koishi 插件能在 ChatLuna 实例里运行。这让 ChatLuna v2 能继续使用 Koishi API，并兼容一部分 Koishi 插件——它是一层兼容层而非完整兼容保证，依赖 Koishi 控制台或更深内部的插件无法运行。
+在此之前，ChatLuna v2 以补丁的形式让 `@koishijs/core` 跑在 Cordis 4 上，再通过 `@chatluna/koishi-loader` 让一部分 Koishi 插件能在 ChatLuna 实例里运行。这让 ChatLuna v2 能继续使用 Koishi API，并兼容一部分 Koishi 插件。
 
 我们可以通过下面的交集图来理解两者的定位：Cordis 构成统一的底层底座，ChatLuna 专注于独立的 Agent Harness 体系，中间的 IM 对话能力与 Koishi 平台生态重叠互通，而 Koishi 丰富的生态插件也能继续保持其独立性：
 
 <div class="koishi-venn" role="img" aria-label="ChatLuna 与 Koishi 在 Cordis 生态上的关系：左圆 ChatLuna，右圆 Koishi，中间重叠是 IM 对话能力">
-<svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
-  <rect x="20" y="290" width="600" height="56" rx="10" class="venn-base"/>
-  <text x="320" y="324" text-anchor="middle" class="venn-base-text">Cordis 生态（官方插件 · 服务 · 生命周期）</text>
-  <circle cx="245" cy="150" r="135" class="venn-left"/>
-  <text x="163" y="88" text-anchor="middle" class="venn-label">ChatLuna v2</text>
-  <text x="170" y="140" text-anchor="middle" class="venn-part">Agent Harness</text>
-  <text x="170" y="162" text-anchor="middle" class="venn-sub">Agent 循环 · 模型运行时</text>
-  <text x="170" y="182" text-anchor="middle" class="venn-sub">工具 · 技能 · MCP · 子代理</text>
-  <circle cx="395" cy="150" r="135" class="venn-right"/>
-  <text x="477" y="88" text-anchor="middle" class="venn-label">Koishi</text>
-  <text x="470" y="140" text-anchor="middle" class="venn-part">Koishi 生态</text>
-  <text x="470" y="162" text-anchor="middle" class="venn-sub">插件市场 · 指令 · 中间件</text>
-  <text x="470" y="182" text-anchor="middle" class="venn-sub">平台适配 · 数据库</text>
-  <text x="320" y="150" text-anchor="middle" class="venn-mid">IM 对话</text>
-  <text x="320" y="170" text-anchor="middle" class="venn-sub">同一棵插件树</text>
+<svg viewBox="0 0 720 420" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+  <!-- Cordis 底座 -->
+  <rect x="40" y="336" width="640" height="56" rx="10" class="venn-base"/>
+  <text x="360" y="370" text-anchor="middle" class="venn-base-text">Cordis 生态（官方插件 · 服务 · 生命周期）</text>
+  <!-- 左圆 ChatLuna -->
+  <circle cx="268" cy="176" r="150" class="venn-left"/>
+  <text x="196" y="104" text-anchor="middle" class="venn-label">ChatLuna v2</text>
+  <text x="188" y="158" text-anchor="middle" class="venn-part">Agent Harness</text>
+  <text x="188" y="182" text-anchor="middle" class="venn-sub">Agent 循环 · 模型运行时</text>
+  <text x="188" y="204" text-anchor="middle" class="venn-sub">工具 · 技能 · MCP · 子代理</text>
+  <!-- 右圆 Koishi -->
+  <circle cx="452" cy="176" r="150" class="venn-right"/>
+  <text x="524" y="104" text-anchor="middle" class="venn-label">Koishi</text>
+  <text x="532" y="158" text-anchor="middle" class="venn-part">Koishi 生态</text>
+  <text x="532" y="182" text-anchor="middle" class="venn-sub">插件市场 · 指令 · 中间件</text>
+  <text x="532" y="204" text-anchor="middle" class="venn-sub">平台适配 · 数据库</text>
+  <!-- 中间重叠 -->
+  <text x="360" y="168" text-anchor="middle" class="venn-mid">IM 对话</text>
+  <text x="360" y="190" text-anchor="middle" class="venn-sub">同一棵插件树</text>
 </svg>
 </div>
 
 <style>
 .koishi-venn { display: flex; justify-content: center; margin: 20px 0; }
-.koishi-venn svg { max-width: 640px; width: 100%; height: auto; }
+.koishi-venn svg { max-width: 720px; width: 100%; height: auto; }
 .venn-left { fill: rgb(69 70 94 / 12%); stroke: #45465e; stroke-width: 2; }
 .venn-right { fill: rgb(154 167 177 / 14%); stroke: #6b798e; stroke-width: 2; }
 .venn-base { fill: rgb(107 121 142 / 8%); stroke: #9aa7b1; stroke-width: 1.5; stroke-dasharray: 5 4; }
