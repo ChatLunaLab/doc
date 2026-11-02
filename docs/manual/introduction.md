@@ -84,7 +84,7 @@ flowchart LR
 
 ChatLuna v2 并没有单独分叉 Cordis，而是尽可能直接拥抱官方 Cordis 生态。在 Koishi v5 发布后，ChatLuna v2 会直接采用 Koishi v5 作为自己的 IM 层，两者也将能够共存于同一棵 Cordis 服务树中。
 
-在此之前，v2 把打过补丁的官方 `@koishijs/core` 跑在 Cordis 4 上，再通过 `@chatluna/koishi-loader` 做共享模块钉版与加载期包装，让一部分 Koishi 插件能在 ChatLuna 实例里运行。这是一层兼容层而非完整兼容保证：依赖 Koishi 控制台或更深内部的插件无法运行，遇到装不上的插件属于预期之内。
+在此之前，ChatLuna v2 以补丁的形式让 `@koishijs/core` 跑在 Cordis 4 上，再通过 `@chatluna/koishi-loader` 让一部分 Koishi 插件能在 ChatLuna 实例里运行。这让 ChatLuna v2 能继续使用 Koishi API，并兼容一部分 Koishi 插件——它是一层兼容层而非完整兼容保证，依赖 Koishi 控制台或更深内部的插件无法运行。
 
 我们可以通过下面的交集图来理解两者的定位：Cordis 构成统一的底层底座，ChatLuna 专注于独立的 Agent Harness 体系，中间的 IM 对话能力与 Koishi 平台生态重叠互通，而 Koishi 丰富的生态插件也能继续保持其独立性：
 
