@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600&text=ChatLuna&display=swap");
+
 @media (min-width: 960px) {
     :root .VPNav .VPNavBar.home:not(.top):not(.has-sidebar) {
         background-color: color-mix(in srgb, var(--vp-c-bg) 78%, transparent);
@@ -103,28 +105,28 @@
     aspect-ratio: 16 / 11;
     border-radius: 24px;
     background:
-        radial-gradient(85% 75% at 0% 0%, rgb(118 128 234 / 90%), transparent 70%),
-        radial-gradient(70% 70% at 100% 100%, rgb(204 196 250 / 90%), transparent 75%),
-        linear-gradient(135deg, #b3b4f2, #ecebfd);
+        radial-gradient(85% 75% at 0% 0%, #9ca8ef, transparent 70%),
+        radial-gradient(70% 70% at 100% 100%, #c2bdf1, transparent 75%),
+        linear-gradient(135deg, #b2c2f7, #dadcf8);
 }
 
 .home-panel.is-dusk {
     background:
-        radial-gradient(110% 70% at 50% 0%, rgb(112 96 200 / 80%), transparent 72%),
-        linear-gradient(180deg, #aba7f1, #f1f0fe);
+        radial-gradient(110% 70% at 50% 0%, #8d86e0, transparent 72%),
+        linear-gradient(180deg, #c2bdf1, #dadcf8);
 }
 
 .dark .home-panel {
     background:
-        radial-gradient(85% 75% at 0% 0%, rgb(52 66 140 / 90%), transparent 70%),
-        radial-gradient(70% 70% at 100% 100%, rgb(96 80 168 / 70%), transparent 75%),
-        linear-gradient(135deg, #1c1f48, #272b5e);
+        radial-gradient(85% 75% at 0% 0%, #2c3778, transparent 70%),
+        radial-gradient(70% 70% at 100% 100%, #3a3275, transparent 75%),
+        linear-gradient(135deg, #141836, #24306a);
 }
 
 .dark .home-panel.is-dusk {
     background:
-        radial-gradient(110% 70% at 50% 0%, rgb(118 101 171 / 75%), transparent 72%),
-        linear-gradient(180deg, #24275a, #15173a);
+        radial-gradient(110% 70% at 50% 0%, #4d43a0, transparent 72%),
+        linear-gradient(180deg, #24306a, #141836);
 }
 
 /* The shader layer fills the panel; the gradients above show until it paints. */

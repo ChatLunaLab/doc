@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
+import HomeLogo from './HomeLogo.vue'
 import HomeShot from './HomeShot.vue'
 import HomeSky from './HomeSky.vue'
 
@@ -58,7 +59,7 @@ onBeforeUnmount(() => {
     </div>
 
     <div class="hero-copy">
-      <img class="hero-icon" src="/logo.png" alt="" width="88" height="88">
+      <HomeLogo class="hero-logo" />
       <h1 id="hero-title" class="hero-title">
         <span>可组合的 <span class="hero-nowrap"><span lang="en">Agent Harness</span>，</span></span>
         <span>接入任何聊天平台。</span>
@@ -97,20 +98,20 @@ onBeforeUnmount(() => {
   inset: 0 0 calc(var(--hero-width) * 0.3 + 20px);
   z-index: -1;
   background:
-    radial-gradient(50% 45% at 12% 20%, #c7c2ff, transparent 72%),
-    radial-gradient(45% 40% at 88% 30%, #ebc8f5, transparent 72%),
-    radial-gradient(60% 45% at 50% 95%, #a9c1ff, transparent 72%),
-    #f3f1ff;
+    radial-gradient(50% 45% at 12% 20%, #dfe3fb, transparent 72%),
+    radial-gradient(45% 40% at 88% 30%, #e7e2f8, transparent 72%),
+    radial-gradient(60% 45% at 50% 95%, #d3dcfb, transparent 72%),
+    #f7f7fe;
   -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 180px), transparent);
   mask-image: linear-gradient(180deg, #000 calc(100% - 180px), transparent);
 }
 
 .dark .hero-sky {
   background:
-    radial-gradient(50% 45% at 12% 20%, #2a2475, transparent 72%),
-    radial-gradient(45% 40% at 88% 30%, #4b2186, transparent 72%),
-    radial-gradient(60% 45% at 50% 95%, #1d3a8f, transparent 72%),
-    #0a0b20;
+    radial-gradient(50% 45% at 12% 20%, #1c2352, transparent 72%),
+    radial-gradient(45% 40% at 88% 30%, #272258, transparent 72%),
+    radial-gradient(60% 45% at 50% 95%, #18295c, transparent 72%),
+    #0b0d1f;
 }
 
 .hero-copy {
@@ -119,18 +120,16 @@ onBeforeUnmount(() => {
   text-align: center;
 }
 
-.hero-icon {
-  width: 88px;
-  height: 88px;
-  margin-bottom: 32px;
-  filter: drop-shadow(0 14px 30px rgb(96 75 155 / 38%));
+.hero-logo {
+  margin-bottom: 36px;
+  font-size: 28px;
 }
 
 .hero-title {
   margin: 0;
-  font-size: clamp(38px, 5.4vw, 78px);
+  font-size: clamp(32px, 4.2vw, 58px);
   font-weight: 600;
-  line-height: 1.16;
+  line-height: 1.2;
   letter-spacing: -0.01em;
   color: #1b1a33;
 }
@@ -325,10 +324,9 @@ onBeforeUnmount(() => {
     padding-left: 16px;
   }
 
-  .hero-icon {
-    width: 72px;
-    height: 72px;
-    margin-bottom: 24px;
+  .hero-logo {
+    margin-bottom: 28px;
+    font-size: 24px;
   }
 
   .hero-shot {

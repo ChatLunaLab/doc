@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 
-// The base color first, then the four colors that flow over it. Panels are deeper than the hero sky.
+// The base color first, then the four colors that flow over it, all within the logo's navy-to-violet range
+// so neighbouring hues never mix into grey. Panels are deeper than the hero sky.
 const palettes = {
   sky: {
-    light: ['#f3f1ff', '#c7c2ff', '#a9c1ff', '#ebc8f5', '#8e7cf2'],
-    dark: ['#0a0b20', '#2a2475', '#1d3a8f', '#4b2186', '#6a4fe0'],
+    light: ['#f7f7fe', '#dfe3fb', '#e7e2f8', '#d3dcfb', '#c6c0f1'],
+    dark: ['#0b0d1f', '#1c2352', '#272258', '#18295c', '#363083'],
   },
   panel: {
-    light: ['#c9c6f6', '#7680ea', '#a7b6fb', '#e3c3f3', '#8a74ec'],
-    dark: ['#16183f', '#34428c', '#2a2d78', '#55308f', '#6a4fe0'],
+    light: ['#dadcf8', '#9ca8ef', '#c2bdf1', '#b2c2f7', '#8d86e0'],
+    dark: ['#141836', '#2c3778', '#3a3275', '#24306a', '#4d43a0'],
   },
 }
 
