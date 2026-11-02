@@ -26,3 +26,7 @@ Status: implemented
 - `webui.md` 的页面表、分组名、设置页与「快捷设置」内容现在和源码一致；usage 各页都配了真实截图。
 - 介绍页的 Koishi 表述落到「今天走兼容层，v5 发布后直接采用」，与 `koishi-loader` 的实际能力一致。
 - gemini 润色会改动措辞但不改事实；提交前仍需对照源码抽查 API 表述。
+
+## Progress
+
+- Batch A（manual 收尾）：对照源码核对了 `starter/*`、`quickstart`、`recipe/*`。修正：create 默认模板是 `@chatluna/boilerplate`（原文写 `create-chatluna`）；dev 模式用 oxc-node 转译（原文写 tsx）；`chatluna.yml` 由根清单中 `@cordisjs/plugin-cli-cordis` 的 `path` 配置载入，不是 `include` 字段；场景规则目标选择器只有 所有聊天/群聊/私聊/群成员/更多条件（机器人目标不可新建）；内置引擎为 对话/编码/伪装；主人列表是 `platform:user` 字符串；`/bind <code>` 本身就完成主人绑定——WebUI 的「认领为主人」是给最近私聊账号的并行路径。向导文案逐条对照 `setup-webui/client/locales/zh.yml` 验证（三步、六位码、10 分钟、错 5 次作废、「忘了口令？」重置页存在）。

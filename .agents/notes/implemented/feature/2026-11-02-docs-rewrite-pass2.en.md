@@ -26,3 +26,7 @@ The pages from the first rewrite (see [2026-10-30-v2-docs-rewrite](../architectu
 - `webui.md`'s page table, group names, settings page and 快捷设置 contents now match the source; every usage page carries a real screenshot.
 - The introduction's Koishi wording lands on "compat layer today, adopt Koishi v5 directly once it ships", matching `koishi-loader`'s real capability.
 - The gemini pass rewrites phrasing, not facts; API claims still need spot-checking against source before committing.
+
+## Progress
+
+- Batch A (manual leftovers): verified `starter/*`, `quickstart`, `recipe/*` against source. Corrections: default create template is `@chatluna/boilerplate` (was `create-chatluna`); dev mode transpiles via oxc-node (was tsx); `chatluna.yml` is loaded via the `path` config of `@cordisjs/plugin-cli-cordis`, not an `include` field; routing target picker offers 所有聊天/群聊/私聊/群成员/更多条件 (bot targets are not pickable); built-in engines are 对话/编码/伪装; owners config uses `platform:user` strings; `/bind <code>` completes owner binding by itself — the WebUI「认领为主人」button is a parallel path for recent DM senders. Setup wizard texts verified verbatim against `setup-webui/client/locales/zh.yml` (3 steps, 6-digit code, 10 min, 5 misses, 忘了口令？ reset page exists).
