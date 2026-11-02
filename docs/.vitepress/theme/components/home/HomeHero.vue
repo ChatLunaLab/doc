@@ -98,20 +98,18 @@ onBeforeUnmount(() => {
   inset: 0 0 calc(var(--hero-width) * 0.3 + 20px);
   z-index: -1;
   background:
-    radial-gradient(45% 45% at 10% 25%, rgb(127 147 255 / 70%), transparent 72%),
-    radial-gradient(40% 40% at 90% 30%, rgb(168 139 255 / 65%), transparent 72%),
-    radial-gradient(55% 45% at 50% 95%, rgb(147 196 255 / 70%), transparent 72%),
-    #f6f6ff;
+    radial-gradient(60% 30% at 28% 78%, rgb(127 147 255 / 65%), transparent 72%),
+    radial-gradient(55% 28% at 74% 80%, rgb(168 139 255 / 60%), transparent 72%),
+    #f7f7ff;
   -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 180px), transparent);
   mask-image: linear-gradient(180deg, #000 calc(100% - 180px), transparent);
 }
 
 .dark .hero-sky {
   background:
-    radial-gradient(45% 45% at 10% 25%, #2a3a9a, transparent 72%),
-    radial-gradient(40% 40% at 90% 30%, #5532a8, transparent 72%),
-    radial-gradient(55% 45% at 50% 95%, #1f4f9c, transparent 72%),
-    #0b0d1f;
+    radial-gradient(60% 30% at 28% 78%, #2a3a9a, transparent 72%),
+    radial-gradient(55% 28% at 74% 80%, #5532a8, transparent 72%),
+    #090b1a;
 }
 
 /* The first screen is all fluid and copy; only the window's top edge peeks in to invite a scroll. */

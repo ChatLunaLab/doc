@@ -2,15 +2,12 @@
 import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 
 // A calm color first, then five blobs that drift through the canvas, each keeping its own hue.
-// `calm` fades the middle of the hero toward the calm color so the headline stays legible.
 const palettes = {
   sky: {
-    calm: 0.5,
-    light: ['#f6f6ff', '#7f93ff', '#a88bff', '#93c4ff', '#d9cfff', '#fbfbff'],
-    dark: ['#0b0d1f', '#2a3a9a', '#5532a8', '#1f4f9c', '#171a45', '#0d1030'],
+    light: ['#f7f7ff', '#7f93ff', '#a88bff', '#93c4ff', '#c9bcff', '#e9ecff'],
+    dark: ['#090b1a', '#2a3a9a', '#5532a8', '#1f4f9c', '#3a2f86', '#141a48'],
   },
   panel: {
-    calm: 0,
     light: ['#e4e6fb', '#6676ee', '#9375f0', '#7fb3ff', '#c3b6fb', '#eef0ff'],
     dark: ['#121530', '#3446b0', '#6040c0', '#2a5cb5', '#1c2058', '#101233'],
   },
@@ -19,8 +16,9 @@ const palettes = {
 const props = defineProps<{ tone?: 'sky' | 'panel' }>()
 
 // A mesh gradient: five color points orbit slowly and blend by inverse distance, and two layers of
-// simplex noise warp the coordinates so their borders swirl like liquid. The pointer drags a wake
-// through it, and scrolling stirs the warp harder.
+// simplex noise warp the coordinates so their borders flow like liquid. With a horizon set, the color
+// pools below a drifting edge and the sky above stays clean, like a moon rising behind the console.
+// The pointer drags a wake through it, and scrolling stirs the warp harder.
 const fragment = `
 #ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
@@ -30,7 +28,7 @@ precision mediump float;
 uniform vec2 uSize;
 uniform float uTime;
 uniform float uStir;
-uniform float uCalm;
+uniform float uHorizon;
 uniform vec4 uPointer;
 uniform vec3 uColors[6];
 
@@ -67,22 +65,26 @@ void main() {
   p -= uPointer.zw * fall;
   p += vec2(-d.y, d.x) * fall * length(uPointer.zw) * 1.5;
   float t = uTime;
-  float flow = 0.45 + uStir * 0.3;
-  vec2 q = p + flow * vec2(noise(p * 0.9 + vec2(0.0, t * 0.35)), noise(p * 0.9 + vec2(5.2, -t * 0.3)));
-  vec2 r = p + flow * vec2(noise(q * 1.3 + vec2(1.7, 9.2) + t * 0.2), noise(q * 1.3 + vec2(8.3, 2.8) - t * 0.25));
+  float flow = 0.28 + uStir * 0.3;
+  vec2 q = p + flow * vec2(noise(p * 0.6 + vec2(0.0, t * 0.3)), noise(p * 0.6 + vec2(5.2, -t * 0.25)));
+  vec2 r = p + flow * vec2(noise(q * 0.9 + vec2(1.7, 9.2) + t * 0.15), noise(q * 0.9 + vec2(8.3, 2.8) - t * 0.2));
   vec3 color = vec3(0.0);
   float total = 0.0;
+  float lift = uHorizon >= 0.0 ? uHorizon * 2.0 - 1.15 : 0.0;
+  float spread = uHorizon >= 0.0 ? 0.45 : 0.75;
   for (int i = 1; i < 6; i++) {
     float f = float(i);
-    vec2 center = vec2(sin(t * (0.21 + f * 0.05) + f * 1.7) * aspect * 0.8, cos(t * (0.17 + f * 0.04) + f * 2.3) * 0.75);
-    float w = 1.0 / pow(distance(r, center) + 0.05, 3.0);
+    vec2 center = vec2(sin(t * (0.21 + f * 0.05) + f * 1.7) * aspect * 0.8, cos(t * (0.17 + f * 0.04) + f * 2.3) * spread + lift);
+    float w = 1.0 / pow(distance(r, center) + 0.1, 2.5);
     color += uColors[i] * w;
     total += w;
   }
   color /= total;
-  vec2 off = vec2((uv.x - 0.5) * aspect, uv.y - 0.6);
-  float calm = exp(-(off.x * off.x * 1.6 + off.y * off.y * 9.0));
-  color = mix(color, uColors[0], calm * uCalm);
+  if (uHorizon >= 0.0) {
+    float edge = uHorizon + 0.06 * noise(vec2(p.x * 0.5 + t * 0.12, t * 0.08)) + 0.04 * sin(p.x * 1.3 - t * 0.4);
+    float pool = 1.0 - smoothstep(edge - 0.16, edge + 0.3, uv.y);
+    color = mix(uColors[0], color, max(pool, 0.08));
+  }
   color += (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.02;
   gl_FragColor = vec4(color, 1.0);
 }
@@ -129,15 +131,17 @@ onMounted(() => {
   const stirring = gl.getUniformLocation(program, 'uStir')
   const touch = gl.getUniformLocation(program, 'uPointer')
   const colors = gl.getUniformLocation(program, 'uColors')
-  gl.uniform1f(gl.getUniformLocation(program, 'uCalm'), palettes[props.tone ?? 'sky'].calm)
+  const horizon = gl.getUniformLocation(program, 'uHorizon')
 
   // Half resolution: the gradient is soft, so the GPU cost drops by 4x without visible loss.
+  // The sky pools its color at the bottom of the first screen; panels are color all over.
   function fit() {
     const scale = Math.min(devicePixelRatio, 2) * 0.5
     board.width = Math.round(board.clientWidth * scale)
     board.height = Math.round(board.clientHeight * scale)
     gl.viewport(0, 0, board.width, board.height)
     gl.uniform2f(size, board.width, board.height)
+    gl.uniform1f(horizon, props.tone === 'panel' ? -1 : Math.max(0, 1 - innerHeight * 0.97 / board.clientHeight))
   }
 
   function theme() {
