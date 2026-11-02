@@ -61,8 +61,8 @@ onBeforeUnmount(() => {
     <div class="hero-copy">
       <HomeLogo class="hero-logo" />
       <h1 id="hero-title" class="hero-title">
-        <span>可组合的 <span class="hero-nowrap"><span lang="en">Agent Harness</span>，</span></span>
-        <span>接入任何聊天平台。</span>
+        <span>可组合的 <span lang="en">Agent Harness</span></span>
+        <span class="hero-sub">接入任何聊天平台</span>
       </h1>
       <p class="hero-tagline" lang="en">A composable agent harness for any chat platform.</p>
       <div class="hero-actions">
@@ -88,7 +88,7 @@ onBeforeUnmount(() => {
   position: relative;
   isolation: isolate;
   margin-top: calc(var(--vp-nav-height) * -1);
-  padding: calc(var(--vp-nav-height) + clamp(48px, 9vh, 104px)) 24px 0;
+  padding: var(--vp-nav-height) 24px 0;
 }
 
 /* The sky ends behind the middle of the console window and fades into the page.
@@ -114,9 +114,13 @@ onBeforeUnmount(() => {
     #0b0d1f;
 }
 
+/* The first screen is all fluid and copy; only the window's top edge peeks in to invite a scroll. */
 .hero-copy {
   display: grid;
+  align-content: center;
   justify-items: center;
+  min-height: calc(100svh - var(--vp-nav-height) - 56px);
+  padding-bottom: 32px;
   text-align: center;
 }
 
@@ -127,10 +131,10 @@ onBeforeUnmount(() => {
 
 .hero-title {
   margin: 0;
-  font-size: clamp(32px, 4.2vw, 58px);
+  font-size: clamp(34px, 5vw, 68px);
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
   color: #1b1a33;
 }
 
@@ -142,19 +146,35 @@ onBeforeUnmount(() => {
   display: block;
 }
 
-.hero-nowrap {
+/* Latin glyphs sit optically smaller than CJK at the same size. */
+.hero-title [lang="en"] {
+  font-size: 1.04em;
+  letter-spacing: -0.02em;
   white-space: nowrap;
 }
 
+.hero-sub {
+  margin-top: 0.5em;
+  font-size: 0.42em;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  color: rgb(27 26 51 / 68%);
+}
+
+.dark .hero-sub {
+  color: rgb(236 235 255 / 70%);
+}
+
 .hero-tagline {
-  margin: 22px 0 0;
-  font-size: clamp(16px, 1.5vw, 20px);
+  margin: 14px 0 0;
+  font-size: clamp(14px, 1.2vw, 16px);
   line-height: 1.5;
-  color: rgb(27 26 51 / 62%);
+  color: rgb(27 26 51 / 50%);
 }
 
 .dark .hero-tagline {
-  color: rgb(236 235 255 / 62%);
+  color: rgb(236 235 255 / 50%);
 }
 
 .hero-actions {
@@ -259,7 +279,7 @@ onBeforeUnmount(() => {
 /* The console leans back on the moon's horizon and stands up as the page scrolls. */
 .hero-shot {
   width: var(--hero-width);
-  margin: clamp(120px, 18vh, 200px) auto 0;
+  margin: 0 auto;
   perspective: 1400px;
 }
 
@@ -327,10 +347,6 @@ onBeforeUnmount(() => {
   .hero-logo {
     margin-bottom: 28px;
     font-size: 24px;
-  }
-
-  .hero-shot {
-    margin-top: 88px;
   }
 
   .hero-window {
