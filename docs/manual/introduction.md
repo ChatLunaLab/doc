@@ -1,23 +1,23 @@
 # 介绍
 
-ChatLuna v2 是专为即时通讯 (IM) 场景设计的 Agent Harness，基于 Cordis 4 微内核构建。它将「平台适配」「模型调用」与「会话编排」拆解为各自独立的插件 (Plugin)，允许你在单一实例中并发管理多个机器人账号、多种人设预设以及不同的大语言模型后端。
+ChatLuna v2 是专为即时通讯 (IM) 场景设计的 Agent Harness，运行在 Cordis 4 微内核之上。它把「平台接入」「模型调用」与「会话编排」拆成各自独立的插件，让你在一个实例里同时管理多个机器人账号、多套人设预设和不同的模型后端。
 
-ChatLuna v2 针对 Cordis 4 架构进行了全面重写，目前处于 alpha 阶段。
+ChatLuna v2 不是旧版 v1 插件的升级补丁，而是一套需要独立部署的应用程序，目前处于 alpha 阶段。
 
 ::: warning
-ChatLuna v2 并非旧版 v1 插件的升级补丁，而是一套需要独立部署的应用程序。它内置了 WebUI 控制台、CLI 命令行以及独立的插件运行体系。如果你仍在使用 v1，请勿直接覆盖升级。
+v2 内置了自己的 WebUI 控制台、CLI 命令行与独立的插件体系，不能直接覆盖 v1 的 Koishi 实例升级。迁移方法见[从 v1 迁移](/cookbook/migration)。
 :::
 
 ## 运行架构
 
-运行中的 ChatLuna 实例是由清单文件（`chatluna.yml`）装配而成的插件树。平台适配器负责接收外部平台消息并接入会话，路由引擎负责指派响应的角色与引擎，Agent 循环驱动模型与工具交互完成决策，最终由渲染与投递链路将回复送达对应平台：
+一个运行中的 ChatLuna 实例是由清单文件（`chatluna.yml`）装配起来的插件树。消息从平台进来，经过路由指派给角色与引擎，由 Agent 循环驱动模型与工具完成决策，最后由渲染与投递链路把回复送回平台：
 
-1. **接收与路由**：适配器层捕获外部平台的消息事件，路由引擎依据配置规则分发给对应的对话引擎或角色预设。
-2. **Agent 循环**：按照「模型推理 → 工具调用 → 再次推理」的标准循环驱动会话决策。
-3. **能力与执行**：模型运行时提供底层 LLM 推理接口，工具、技能、MCP 服务器与子代理共同构成可执行的上下文环境。
-4. **渲染与回传**：渲染层将回复组织为富文本或媒体格式，投递层负责将其安全推回目标聊天平台。
+1. **接收与路由**：适配器捕获平台消息，路由引擎按场景规则分发给对应的引擎与角色预设。
+2. **Agent 循环**：按「模型推理 → 工具调用 → 再次推理」的标准循环驱动会话决策。
+3. **能力与执行**：模型运行时提供底层推理接口，工具、技能、MCP 与子代理共同构成可执行的上下文。
+4. **渲染与回传**：渲染层把回复组织成富文本或媒体格式，投递层负责安全推回目标平台。
 
-会话执行的全生命周期都会被完整记录至审计日志与调用轨迹中，方便随时回溯与排查。
+会话执行的完整生命周期都会以追加写入的方式记入日志与调用轨迹，可以随时回溯。
 
 ```mermaid
 flowchart LR
@@ -49,51 +49,57 @@ flowchart LR
 
 ### 开箱即用的控制台
 
-ChatLuna 内置了图形化的 WebUI 控制台。首次启动后，只需在网页端完成少量基础设置即可快速开始对话：
+ChatLuna 内置了图形化的 WebUI 控制台。首次启动后，只需在网页端完成少量基础设置即可开始对话：
 
-- 连接模型服务提供方 (`Provider`)
-- 配置聊天平台适配器 (`Adapter`)
-- 绑定管理员身份与主人权限 (`Master`)
+- 连接模型服务提供方（Provider）
+- 配置聊天平台适配器（Adapter）
+- 绑定管理员身份与主人权限（Master）
 
 ### 可组合的能力系统
 
-ChatLuna 将 Harness 的各项能力解耦为高度独立的配置单元，你可以根据实际需要灵活组合或单独开启：
+ChatLuna 把 Harness 的各项能力解耦为独立的配置单元，可以按需组合或单独开启：
 
-- **预设与角色 (Preset / Character)**：定制机器人的性格特点、系统提示词 (System Prompt) 与展示设定。
-- **工具 (Tool)**：赋予机器人操作环境的能力，包括文件读写、指令执行与网络请求等具体可执行动作。
-- **技能 (Skill)**：按需动态加载的领域知识库与任务指引文档。
-- **模型上下文协议 (MCP)**：原生接入外部 MCP 工具服务，直接挂载进统一的工具体系中。
-- **子代理 (Subagent)**：将耗时较长或彼此独立的复杂任务委托给隔离的子会话处理。
-- **机器与工作区 (Machine)**：指定具体工具的运行载体，支持本地宿主、Docker 容器或远程 SSH 环境。
-- **权限控制 (Permission)**：精细化约束工具调用策略，包括直接执行、人工批准与禁止调用。
-- **定时与后台任务 (Schedule / Background)**：管理无需人工即时交互的自动化周期任务与异步流水线。
+- **预设与角色（Preset / Character)**：定制机器人的性格、系统提示词与展示设定。
+- **工具（Tool)**：赋予机器人操作环境的能力，包括文件读写、命令执行与网络请求。
+- **技能（Skill)**：按需动态加载的领域知识与任务指引。
+- **模型上下文协议（MCP)**：原生接入外部 MCP 工具服务，挂载进统一的工具体系。
+- **子代理（Subagent)**：把耗时或独立的复杂任务委托给隔离的子会话处理。
+- **机器与工作区（Machine)**：指定工具的运行载体，支持本地宿主、Docker 容器或远程 SSH。
+- **权限控制（Permission)**：精细化约束工具调用策略，包括直接执行、人工批准与禁止调用。
+- **定时与后台任务（Schedule / Background)**：管理无需即时交互的周期任务与异步流水线。
 
-### 为 Koishi v5 预备好
+### 决策过程与轨迹可查
 
-此前，Koishi 官方宣布正在推进 [Koishi v5（迁移到 Cordis 内核）](https://forum.koishi.xyz/t/topic/7901)。
+每一次对话交互的细节都会追加写入审计日志，涵盖完整会话上下文、工具调用参数、模型原始请求与各项决策边界。在控制台的「轨迹」页中，你可以回放任意一轮对话的完整推导链路；回放不会重新调用模型，也不会重复执行已完成的外部工具动作。
 
-ChatLuna v2 并没有单独分叉 Cordis，而是尽可能直接拥抱官方 Cordis 生态。在 Koishi v5 发布后，ChatLuna v2 与 Koishi v5 将能够共存于同一棵 Cordis 服务树中，Koishi v5 也可以作为 ChatLuna v2 插件的运行依赖。
+### 面向开发者设计
 
-我们可以通过下面的交集图来理解两者的定位：Cordis 构成统一的底层底座，ChatLuna 专注于独立的 Agent Harness 体系，中间的 IM 对话能力与 Koishi 平台生态重叠互通，而 Koishi 丰富的生态插件也能继续保持其独立性：
+- **全栈 TypeScript**：框架服务、事件与上下文都有完整的类型定义与推导。
+- **生命周期可逆**：依托 Cordis 上下文机制，插件注册的监听器、定时器与工具会在插件卸载时被彻底回收，天然支持热重载。
+- **微内核可扩展**：Agent 循环、模型运行时、提示词分区与工具加载层都是清晰解耦的可替换扩展点。
+
+## 与 Koishi 的关系
+
+ChatLuna 从 Koishi 生态中诞生，v2 与 Koishi 的关系分两层：
+
+**底层是同一个内核。** Cordis 是 Koishi 作者正在推进的下一代微内核（Koishi v5 的底座）。ChatLuna v2 直接建立在上游 Cordis 4 之上，没有单独分叉，因此它能和未来的 Koishi v5 共存于同一棵服务树中。
+
+**今天就跑真正的 Koishi。** 与其等待 v5，v2 直接把官方的 `@koishijs/core` 打了补丁搬上 Cordis 4：命令、中间件、会话、i18n、数据库都是真正的 Koishi 实现。再配合 `@chatluna/koishi-loader` 的共享模块钉版与加载期包装，Koishi 市场里的大部分插件（以核心服务为目标的那部分）可以直接装进 ChatLuna 实例使用。
 
 <div class="koishi-venn" role="img" aria-label="ChatLuna 与 Koishi 在 Cordis 生态上的关系：左圆 ChatLuna，右圆 Koishi，中间重叠是 IM 对话能力">
 <svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
-  <!-- Cordis 底座 -->
   <rect x="20" y="290" width="600" height="56" rx="10" class="venn-base"/>
   <text x="320" y="324" text-anchor="middle" class="venn-base-text">Cordis 生态（官方插件 · 服务 · 生命周期）</text>
-  <!-- 左圆 ChatLuna -->
   <circle cx="245" cy="150" r="135" class="venn-left"/>
   <text x="185" y="72" text-anchor="middle" class="venn-label">ChatLuna v2</text>
   <text x="170" y="140" text-anchor="middle" class="venn-part">Agent Harness</text>
   <text x="170" y="162" text-anchor="middle" class="venn-sub">Agent 循环 · 模型运行时</text>
   <text x="170" y="182" text-anchor="middle" class="venn-sub">工具 · 技能 · MCP · 子代理</text>
-  <!-- 右圆 Koishi -->
   <circle cx="395" cy="150" r="135" class="venn-right"/>
-  <text x="455" y="72" text-anchor="middle" class="venn-label">Koishi v5</text>
+  <text x="455" y="72" text-anchor="middle" class="venn-label">Koishi</text>
   <text x="470" y="140" text-anchor="middle" class="venn-part">Koishi 生态</text>
   <text x="470" y="162" text-anchor="middle" class="venn-sub">插件市场 · 指令 · 中间件</text>
   <text x="470" y="182" text-anchor="middle" class="venn-sub">平台适配 · 数据库</text>
-  <!-- 中间重叠 -->
   <text x="320" y="150" text-anchor="middle" class="venn-mid">IM 对话</text>
   <text x="320" y="170" text-anchor="middle" class="venn-sub">同一棵插件树</text>
 </svg>
@@ -114,17 +120,9 @@ ChatLuna v2 并没有单独分叉 Cordis，而是尽可能直接拥抱官方 Cor
 .dark .venn-right { fill: rgb(69 70 94 / 30%); stroke: #6b798e; }
 </style>
 
-### 决策过程与轨迹可查
+## 致谢
 
-每一次对话交互的细节均以追加写入的方式记录在审计日志中，涵盖完整的会话上下文、工具调用参数、模型原始请求以及各项决策边界。
-
-在控制台的「轨迹」页面中，你可以回放任意一轮对话的完整推导链路。在重放或重建请求时，系统不会重新调用外部模型，也不会重复执行已完成的外部工具动作。
-
-### 面向开发者设计
-
-- **全栈 TypeScript**：框架服务 (`Service`)、事件 (`Event`) 与上下文均具备严格完整的类型定义与类型推导支持。
-- **生命周期可逆**：依托 Cordis 上下文机制，插件声明的监听器、定时器与工具等资源均会在插件停用或卸载时被彻底清理，天然支持开发模式下的热重载 (HMR)。
-- **微内核可扩展**：Agent 循环、模型运行时、提示词分区方案与工具加载层均为清晰解耦的可替换扩展点。
+ChatLuna v2 的架构设计参考了 DSH（DeepSeek Harness）的模型 provider 抽象、Agent 循环与 WebUI 插槽等设计思路，在此向 DSH 项目致谢。v2 的全部代码均为自研实现，不依赖任何 DSH 发布物。
 
 ## 下一步
 
