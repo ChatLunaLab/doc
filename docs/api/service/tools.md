@@ -8,14 +8,14 @@
 
 ## 注册工具
 
-在插件的 `apply` 函数中，调用 `ctx.tools.defineTool` 即可声明工具的名称、参数模式与执行逻辑：
+在插件的 `apply` 函数中，调用 `ctx.tools.define` 即可声明工具的名称、参数模式与执行逻辑：
 
 ```ts
 import type { Context } from 'cordis'
 import { Schema } from '@chatluna/schema'
 
 export function apply(ctx: Context) {
-  ctx.tools.defineTool({
+  ctx.tools.define({
     name: 'weather_lookup',
     description: '查询城市天气',
     args: Schema.object({
@@ -32,17 +32,17 @@ export function apply(ctx: Context) {
 }
 ```
 
-各配置字段说明如下：
+各配置项说明如下：
 
 - `name`：工具的唯一标识，格式需匹配正则表达式 `^[a-zA-Z0-9_-]{1,64}$`。同一 owner 下不可重复。
-- `args`：使用 Cordis Schema 定义的参数模式，系统会自动将其转换为模型侧使用的 JSON Schema。
+- `args`：使用 Cordis Schema 定义的参数模式，系统会自动转换为模型侧使用的 JSON Schema。
 - `traits`：工具特性声明。
   - `effect`：副作用类型，可选 `'read'`、`'write'` 或 `'exec'`。
   - `parallel`：是否允许并发执行。
   - `timeout`：单次执行的同步等待超时时间。加载 `@chatluna/background` 时默认为 `180s`，超时后任务会转入后台托管；若为 `background: false`，超时则直接中止。
   - `deferred`：是否为延迟加载工具。
 - `permission`：声明执行该工具所需的权限，接入 `ctx.permissions` 权限管理系统。
-- `render.call` / `render.result`：自定义在 WebUI 控制台中展示该工具调用过程与执行结果的视图。
+- `render.call` / `render.result`：自定义在控制台中展示该工具调用过程与执行结果的视图。
 
 ## 常用 API
 
@@ -50,7 +50,7 @@ export function apply(ctx: Context) {
 
 | 方法 | 说明 |
 | --- | --- |
-| `defineTool(definition)` | 向注册表注册工具。 |
+| `define(definition)` | 向注册表注册工具（内部会校验名称并转换 Schema）。 |
 | `list(agent)` / `catalog(agent)` | 获取对指定 Agent 可见的工具列表或目录条目。 |
 | `filter({ include, exclude })` | 在当前 Fiber 作用域内收窄工具的可见范围。 |
 | `visibility(rule)` | 注册动态可见性规则。 |
@@ -63,11 +63,11 @@ export function apply(ctx: Context) {
 
 1. 系统先向模型提供 `tool_search` 元工具，隐藏庞大的全量工具定义。
 2. 模型检索命中目标工具后，系统再按需展开该工具的完整参数规范 (spec)。
-3. 配置项 `autoDefer`（默认包含 `['mcp__*']`）会匹配工具名称，对命中的工具预先进行延迟展开。
-4. 配置项 `limit`（默认值为 `5`）用于限制单轮直接呈现给模型的工具数量上限。
+3. 配置项 `autoDefer`（默认包含 `['mcp__*']`）会匹配工具名称，对命中的工具预先延迟展开。
+4. 配置项 `limit`（默认值为 `5`）用于限制单轮直接提供给模型的工具数量上限。
 
 ::: warning
-如果注册的工具过多且未启用搜索降级，模型上下文会因携带全量 JSON Schema 而迅速膨胀，可能导致上下文超出限制或响应延迟增大。
+如果注册的工具过多且未启用搜索降级，模型上下文会因携带全量 JSON Schema 而迅速膨胀，可能导致上下文超出限制或响应变慢。
 :::
 
 ## 配置工具调用策略
@@ -92,7 +92,7 @@ tools:
 
 通过 `ctx.mcp` 连接外部 MCP (Model Context Protocol) 服务器时，远程服务器提供的工具会自动投影到本地工具注册表中，命名格式为 `mcp__<server>__<tool>`。
 
-所有投影的 MCP 工具均会复用本地的过滤规则、`tool-search` 延迟展开机制以及 `@chatluna/tool-policy` 权限管线。
+所有投影的 MCP 工具都会复用本地的过滤规则、`tool-search` 延迟展开机制以及 `@chatluna/tool-policy` 权限管线。
 
 ## 继续
 
