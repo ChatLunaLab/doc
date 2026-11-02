@@ -1,8 +1,8 @@
 # 消息管线（Chat Pipeline）
 
-消息管线负责聊天消息进入系统后的完整流转：从「接住平台消息、判断要不要理、合并连发、审核内容、解析路由」，直到最终「交给 Agent」。
+消息管线负责聊天消息进入系统后的完整流转：从接收平台消息、判定是否响应、合并连发、审核内容、解析路由，直至交给 Agent。
 
-管线只专注消息流转的生命周期与管控判定。它既不参与模型内部的推理循环（交由 Agent 运行时负责），也不直接向聊天平台推送原始富文本（由渲染与投递插件负责）。通过清晰解耦的阶段划分，ChatLuna 能确保进入大语言模型之前的每一条私聊或群聊消息，都经过确定性的过滤、去重、唤醒决策与并发排队。
+管线只专注消息流转的生命周期与管控判定。它既不参与模型内部的推理循环（由 Agent 运行时负责），也不直接向聊天平台推送原始富文本（由渲染与投递插件负责）。通过清晰的阶段划分，ChatLuna 能确保进入大语言模型之前的每一条私聊或群聊消息，都经过确定的过滤、去重、唤醒决策与排队控制。
 
 ## 管线全景
 
@@ -23,24 +23,24 @@ flowchart TD
     H --> I[会话绑定 Conversation Key]
     I --> J[入收件箱 Agent Receive Inbox]
     J --> K[Agent 驱动与模型执行]
-    K --> L[渲染插件 chat_render]
+    K --> L[渲染管线 RenderRegistry]
     L --> M[出站内容审核 Censor]
-    M --> N[投递服务 chatluna_deliver]
+    M --> N[ctx.chat 投递到平台]
 ```
 
 ## 去重与 veto
 
-为防止网络抖动、协议重发或多适配器重复投递，消息进入管线的第一步就是内存去重与前置拦截：
+为防止网络抖动、协议重发或多适配器重复投递，消息进入管线的第一步是内存去重与前置拦截：
 
 1. **唯一性标识（eventKey）**：
-   优先取平台的 `session.messageId`；若平台未提供 `messageId`，则退化使用 `sha256(routeKey + content)` 作为消息指纹。
+   优先获取平台的 `session.messageId`；若平台未提供 `messageId`，则退化使用 `sha256(routeKey + content)` 作为消息指纹。
 2. **去重缓存与 TTL**：
    去重表基于 LRU 维护，内存中最多保留 `4096` 条，随时间过期自动清理。缓存有效期由 `dedupeTtlMs` 控制，默认值为 `86400000`（24 小时）。
-   去重检查严格位于激活判定之前，因此**重复消息绝对不会推进冷却计时器**。
+   去重检查严格位于激活判定之前，因此**重复消息不会推进冷却计时器**。
 3. **前置 veto 机制**：
-   触发 `chatluna/before-chat-dispatch` 事件（上下文绑定 `this: Session`）。该事件采用 Waterfall 机制，若任意监听器返回 truthy 值（例如连发合并中的窗口聚合），则跳过本次 dispatch，但后续中间件仍会正常运行。
+   串行触发 `chat/before-receive` 事件（`serial`，上下文绑定 `this: Session`）。监听器返回 `true` 时直接丢弃本次消息；返回字符串则改写消息文本后继续；返回 falsy 则放行。连发合并的 settle 窗口正是利用这个钩子暂缓投递。
 4. **引擎状态检测**：
-   若当前匹配规则配置的引擎（`chat.engine`）为 `off`，管线将直接跳过处理，并让 dispatch 返回 `false`。
+   若当前匹配规则配置的引擎（`chat.engine`）为 `off`，管线将直接判定为 `ignore` 并跳过处理。
 
 ## 激活判定
 
@@ -57,9 +57,9 @@ flowchart TD
 
 ### 决策机制
 
-管线通过执行 `_runDeciders` 收集所有启用判定器的决策结果。启用的 decider 集合由配置项 `chat.activation.use` 决定。
+管线通过执行 `_runDeciders` 收集所有已启用判定器的决策结果。启用的 decider 集合由配置项 `chat.activation.use` 决定。
 
-整个裁决流程遵循以下准则：
+整个裁决流程遵循以下规则：
 - 优先在所有返回 `wake` 的决策中，选取 **最高 priority** 的决策胜出。
 - 仅当没有任何 decider 返回 `wake` 时，才会检查是否包含 `observe`。
 - 若既无 `wake` 也无 `observe`，则最终判定为 `ignore`。
@@ -89,12 +89,12 @@ flowchart TD
 4. **私聊放行**：私聊环境且启用 `privateChatWithoutCommand` → `wake`。
 5. **At 提及**：消息包含真实 at 机器人的元素且 `allowAtReply=true` → `wake`。
 6. **引用回复**：回复了机器人先前发送的消息且 `allowQuoteReply=true` → `wake`。
-7. **昵称唤醒**：匹配 `stripped.appel` 或 `isNickNameWithContent` 包含匹配机器人预设昵称 → `wake`。
+7. **昵称唤醒**：匹配 `stripped.appel` 或 `isNickNameWithContent` 命中机器人预设昵称 → `wake`。
 8. **随机回复**：按 `randomReplyFrequency` 概率抽样命中 → `wake`（`priority: 0`）。
 9. **兜底**：上述均未命中 → `ignore`。
 
 ::: tip 冷却降级保护
-当 `rule` 判定命中 `wake` 时，若机器人处于发言冷却（`msgCooldown`）内，该决策将**降级为 `observe`**。这既阻止了机器人刷屏，又确保上下文能正常写入聊天记录，避免多轮对话产生记忆空洞。
+当 `rule` 判定命中 `wake` 时，若机器人处于发言冷却（`msgCooldown`）内，该决策将**降级为 `observe`**。这既能防止机器人刷屏，又能确保上下文正常写入聊天记录，避免多轮对话产生记忆空洞。
 :::
 
 #### 2. activity 活跃度与兴趣判定
@@ -102,7 +102,7 @@ flowchart TD
 面向群聊插话场景：
 
 - 综合统计最近消息频率、参与人数熵值、线索词（引用、包含机器人别名、兴趣词）、动量（momentum）及发言疲劳度。
-- 动态计算冲动值 `urge` 与动态阈值，两次主动发言之间至少间隔 30 秒；被随机抽样拒绝的那一次同样消耗间隔，所以调低频率会按比例降低实际发言率。
+- 动态计算冲动值 `urge` 与动态阈值，两次主动发言之间至少间隔 30 秒；被随机抽样拒绝时同样消耗该间隔，因此调低频率会按比例降低实际发言率。
 - 判定结果只有两种：`wake`（附带 `settle` 延迟）或不产生决策（记录一次 skip）。它不会主动返回 `observe`——是否记录由监听者按 `chat.observe` 配置决定。
 
 #### 3. judge 小模型智能裁决
@@ -141,7 +141,7 @@ chat.merge 配置：
 - **immediate 模式（默认）**：
   首条唤醒消息立即触发 Agent 执行。在模型回复生成期间到达的新消息不会被打断丢弃，而是根据 `chat.observe.midTurn` 规则进入当前 turn 的后续步骤或合并到下一次回复中。
 - **settle 模式**：
-  由 `MergeWindows` 注册监听 `chatluna/before-chat-dispatch`。首条消息到达时开启定时器并 veto 阻止本次立即投递；若在 `quiet`（2500ms）内有新消息到达则重置定时器，直至发言静默或累计时长达到 `max`（15000ms）后统一放行合并投递。
+  由 `MergeWindows` 注册监听 `chat/before-receive`。首条消息到达时开启定时器并暂缓本次投递；若在 `quiet`（2500 ms）内有新消息到达则重置定时器，直至发言静默或累计时长达到 `max`（15000 ms）后统一放行合并投递。
 
 ## 内容审核
 
@@ -156,7 +156,7 @@ chat.merge 配置：
 - 规则匹配均采用大小写不敏感（case-insensitive）正则表达式。
 - 命名空间支持层级继承与局部覆盖，可以在特定会话或频道重写 `censor` 配置。
 - **阻断行为**：一旦入站或出站消息命中 `blockWords` 或自定义阻断规则，系统直接返回 `CENSOR_BLOCKED` 状态码并终止投递。
-- **扩展性**：第三方插件可通过 API 注册自定义 `matcher`，审核触发后广播 `chatluna/after-censor` 事件。
+- **扩展性**：第三方插件可通过 `ctx.chat.censor(matcher)` 注册自定义匹配器（`CensorMatcher`），在配置规则之后运行。命中结果记录为 trace span `censor:<action>`。
 
 ## 路由解析与会话绑定
 
@@ -172,7 +172,7 @@ flowchart LR
 ```
 
 1. **命名空间提取**：
-   调用 `bindingOfSession` 从解析链（`session.rules`）提取 `engine`、`model`、`preset`、`tools`、`session` 等配置。若局部未覆盖，则使用对应 schema 的 `parse({})` 默认值填充：
+   调用 `bindingOfSession` 从解析链（`session.rules`）提取 `engine`、`model`、`preset`、`tools`、`session` 等配置。若局部未覆盖，则使用对应 Schema 的 `parse({})` 默认值填充：
    - `chat.engine`：默认 `agent`。
    - `chat.model`：默认 `openai:gpt-4o-mini`。
    - `chat.session.ownership`：默认 `shared`。
@@ -212,41 +212,31 @@ flowchart LR
 
 当 Agent 完成推理并产出结构化块（Chunks）后，便进入后置渲染与对外投递流程：
 
-### 渲染插件（chat_render）
+### 渲染管线（RenderRegistry）
 
-负责把抽象的模型输出转换并组装为适配器所需的结构：
+渲染由 `ctx.chat` 内部的 `RenderRegistry` 负责，把抽象的模型输出转换并组装为适配器所需的结构：
 
-- **默认配置**：
-  - `format`: `text`
-  - `split`: `message`
-  - `hidden`: `[]`
-  - `toolTalk`: `never`
-  - `reply`: `text`
-  - `interim.deliver`: `send`
-  - `interim.history`: `keep`
-  - `quote`: `false`
-  - `maxChunkLength`: `1500`
-  - `maxSegments`: `6`
-- **处理管线**：文本解析、富元素提取、敏感隐藏项剔除、中间过程消息（interim）流式投递与历史记录裁剪。
+- 元素渲染器通过 `ctx.chat.element(ctx, name, input)` 注册（如 `quote`、`at`、富媒体、工具展示等）；`ctx.chat.action(ctx, name, input)` 注册互动动作。
+- 渲染通过 `chat/before-send` waterfall 完成：先对内容做元素展开（`expand`），再走文本解析、富元素提取、敏感隐藏项剔除与分段。
+- 路由侧 `render` 命名空间决定目标排版策略（`send`/`text`/`elements` 等）。
 
-### 投递服务（chatluna_deliver）
+### 投递（ctx.chat）
 
-- **双向感知**：提供 `bind/inbound` 与 `send/edit/recall`。
+- **双向感知**：`ctx.chat` 统一负责入站收件与出站发送；`bind/inbound` 绑定路由，`send/edit/recall` 投递消息。
 - **平台能力协商**：
   - `edit` 依赖机器人适配器的 `features` 包含 `message.update`。
   - `recall` 依赖适配器的 `features` 包含 `message.delete`。
 - **出站审核与回环拦截**：
-  - 出站消息同样经过 `chatluna-censor` 过滤。
-  - 投递前执行 `markOwn` 签名，防止机器人自身发出的消息被适配器重新作为入站消息接收，杜绝无限回环。
-- **事件广播**：发送成功后触发 `chatluna/deliver-sent` 事件，支持保留 quote 引用节点。
+  - 出站消息同样经过 `chatluna-chat-censor` 过滤（见上文）。
+  - 投递时执行 `markOwn` 签名，防止机器人自身发出的消息被适配器重新作为入站消息接收，杜绝无限回环。
 
 ## 撤回与编辑
 
 ChatLuna 通过 `chatluna-chat-recall` 插件监听底层适配器的消息变动事件：
 
 - **事件源**：监听 Koishi 的 `message-deleted` 与 `message-updated` 事件。
-- **撤回处理哲学**：
-  1. **无重写历史**：撤回操作仅作为一条静默事件追加至历史上下文，绝对不物理重写或篡改已有历史记录。
+- **撤回处理原则**：
+  1. **不重写历史**：撤回操作仅作为静默事件追加至历史上下文，不会物理重写或篡改已有历史记录。
   2. **不唤醒 Agent**：追加撤回事件属于静默通知，不会唤醒休眠的 Agent。
   3. **投影清洗**：若被撤回的消息仍在待处理输入队列（Inbox）中，会在投影至模型上下文之前被物理移除。
   4. **资源保护**：处理撤回通知时，绝不为已关闭或不存在的会话盲目创建新会话实例。
@@ -257,17 +247,17 @@ ChatLuna 通过 `chatluna-chat-recall` 插件监听底层适配器的消息变�
 
 | 事件名 | 触发时机与机制 | 参数 / 上下文 |
 | :--- | :--- | :--- |
-| `chatluna/before-message` | 入站文本进入上下文前触发；`bail` 型，返回字符串可改写文本，返回阻断标记则丢弃 | `(session: Session, text: string)` |
-| `chatluna/before-chat-dispatch` | 串行 waterfall；返回 truthy 时本次判定直接记为 `ignore`（veto） | `this: Session`，参数 `(session: Session)` |
-| `chatluna/chat-dispatch` | 判定完成、准备交给 Agent 时触发；只是通知，返回内容不被使用 | `(session: Session, result: { sessionId: string; decision: Decision })` |
-| `chatluna/chat-activation-change` | 注册或注销一个唤醒判定器时触发 | `({ id: string })` |
+| `chat/before-receive` | 激活判定前串行执行（`serial`）；返回 `true` 丢弃消息（veto），返回字符串改写文本后继续 | `this: Session`，参数 `(session: Session)` |
+| `chat/receive` | 判定完成、消息已交给 Agent 后触发的广播通知 | `this: Session`，参数 `(session: Session, result: { sessionId: string; decision: Decision })` |
+| `chat/deciders` | 注册或注销一个唤醒判定器时触发 | 无载荷 |
+| `chat/before-send` | 出站消息发送前执行（`waterfall`），监听器可改写待发内容 | `(payload: SendFragment)` |
 | `chatluna/rules-change` | 路由规则树更新重载后触发 | `({ revision: number })` |
-| `chatluna/deliver-sent` | 回复成功发送到平台后触发 | `({ routeId, messageIds, content, own })` |
-| `chatluna/after-censor` | 入站或出站内容完成审核后触发 | `(session: Session, hit: CensorHit)` |
+| `chatluna/agent-status` | Agent 执行状态变化时广播 | `({ agent, status })` |
+| `chatluna/engine-action` | 渲染层产出互动动作时触发 | `({ action, ... })` |
 
 ## 下一步
 
-- 理解规则空间的分发策略，请参考 [路由与规则引擎](./routing)。
-- 深入探索模型思考与循环执行机制，请参考 [Agent 运行时](./agents)。
-- 了解会话存储、分段投影与历史持久化，请参考 [会话管理](./conversations)。
-- 深入会话运行时抽象，请参考 [Session 生命周期](./sessions)。
+- 想了解规则空间的分发策略，请参考 [路由与规则引擎](./routing)。
+- 想了解模型思考与循环执行机制，请参考 [Agent 运行时](./agents)。
+- 想了解会话存储、分段投影与历史持久化，请参考 [会话管理](./conversations)。
+- 想深入了解会话的运行时抽象，请参考 [Session 生命周期](./sessions)。

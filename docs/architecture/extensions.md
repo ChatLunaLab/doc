@@ -1,12 +1,12 @@
 # 插件、运行时与数据
 
-在 ChatLuna 中，插件 (Plugin) 与服务 (Service) 的生命周期统一由 Cordis 进行管理。配置、动态安装、会话持久化以及业务索引等各个模块都有其明确的归属边界。
+在 ChatLuna 中，插件 (Plugin) 与服务 (Service) 的生命周期统一由 Cordis 管理。配置、动态安装、会话持久化与业务索引等模块都有明确的归属边界。
 
-理解这些边界，可以帮助你更加准确地评估热重载 (HMR)、插件卸载、数据备份以及故障恢复的实际保证范围，从而写出更健壮的扩展代码。
+理解这些边界，可以帮助你准确评估热重载 (HMR)、插件卸载、数据备份以及故障恢复的实际保证范围，从而写出更健壮的扩展代码。
 
 ## 理解清单如何装配服务
 
-ChatLuna 的服务装配流程始于宿主进程启动，整个过程由 Cordis Loader 和清单组合插件协同完成。
+ChatLuna 的服务装配流程始于宿主进程启动，由 Cordis Loader 和清单组合插件协同完成。
 
 ```mermaid
 flowchart TD
@@ -17,28 +17,24 @@ flowchart TD
     BIZ --> GROUPS[插件组<br/>base · runtime · models<br/>conversation · agents · webui]
     GROUPS --> ENTRIES[条目 id + name + config]
     ENTRIES --> APPLY["按 inject 拓扑<br/>apply(ctx, config)"]
-    LOCAL[chatluna.local.yaml<br/>局部覆盖] -.-> INC
+    PATCH[patches<br/>局部覆盖] -.-> INC
 ```
 
 整体装配过程遵循以下加载顺序与规则：
 
 1. **宿主引导 Loader**：宿主进程首先加载 Loader，再加载 `plugin-include` 等组合插件。Loader 本身只提供条目定义与加载机制，不会主动扫描业务 YAML 文件。
 2. **选择根清单**：根清单由宿主指定。仓库默认将 `cordis.yml` 作为基础设施的入口清单，并通过 `plugin-include` 引入组合业务插件的 `chatluna.yml`。开发入口则由 launcher 决定。
-3. **加载局部覆盖**：`chatluna.local.yaml` 用于提供局部的配置覆盖，方便开发者在本地调试时覆写配置。
-
-::: warning
-切勿将 `chatluna.local.yaml` 直接当作根清单运行！局部覆盖文件缺少基础设施声明，这样做会导致宿主缺失必要的基础服务而无法启动。
-:::
+3. **应用局部覆盖**：`plugin-include` 的 `config.patches` 提供条目级局部覆盖——`{ id, ...overrides }` 与既有条目按字段合并、`{ id, insert: [...] }` 向指定分组追加条目、`{ id, move: { parent, position } }` 调整位置。`chatluna dev` 与 `CHATLUNA_HOST` / `CHATLUNA_ALLOW_REMOTE` 等环境变量正是通过这条路径注入覆盖，而不是直接修改清单文件。
 
 ### 清单条目结构
 
-清单中的每一个条目都包含以下核心字段：
+清单中的每个条目都包含以下核心字段：
 
 - `id`：条目的稳定唯一标识。
 - `name`：要加载的 npm 包名。
 - `config`：传递给插件内部 Config schema 的配置对象。
 - `disabled`：布尔值，用于控制是否禁用该条目。
-- `group: true`：声明该条目为分组条目。此时其 `config` 必须是子条目列表，不能配置为表示“所属分组”的字符串。
+- `group: true`：声明该条目为分组条目。此时它的 `config` 必须是子条目列表，不能配置为表示“所属分组”的字符串。
 
 ### 依赖声明与可用性边界
 
@@ -48,7 +44,7 @@ flowchart TD
 服务存在并不代表底层实现已经就绪。
 :::
 
-仅仅通过 `inject` 注入了服务，外部资源仍然可能处于未就绪状态。在设计插件逻辑时，需要注意以下可用性边界：
+即使通过 `inject` 成功注入了服务，外部资源仍然可能处于未就绪状态。在设计插件逻辑时，需要注意以下可用性边界：
 
 - `computer` 服务存在，不保证 Docker kind 运行时在场。
 - MCP (Model Context Protocol) 插件已挂载，不保证外部连接已成功建立。
@@ -99,19 +95,19 @@ flowchart TD
 | `entries()` / `entry(id)` | 读取所有条目的配置视图，或其中一个 |
 | `save(input)` | 保存单个条目的完整选项（名称、配置、启用状态） |
 | `change(input)` / `changeMany(inputs, batch)` | 局部更新一个或多个条目；成功后返回，失败时按逆序撤回 |
-| `create(input)` / `group(input)` / `label(id, label, { by })` | 新建条目、新建分组、改标签 |
+| `create(input)` / `group(input)` / `label(id, label, { by })` | 新建条目、新建分组、修改标签 |
 | `move(input)` / `erase(id, { by })` | 移动与删除条目 |
 | `reset(id, { by })` | 停用条目并清空它的配置 |
-| `reload({ by })` | 重新读取清单并让运行中的树与文件对齐 |
-| `transact({ by, apply, ... })` | 自定义事务：由调用方在 `apply` 里执行成批的树操作，同样带快照与审计 |
-| `configFor(id, engine)` | 取某个条目在指定引擎下的合并配置 |
+| `reload({ by })` | 重新读取清单，使运行中的树与文件对齐 |
+| `transact({ by, apply, ... })` | 自定义事务：由调用方在 `apply` 中执行成批的树操作，同样带快照与审计 |
+| `configFor(id, engine)` | 获取某个条目在指定引擎下的合并配置 |
 | `fileStamp()` / `describe()` | 清单修订戳（用于乐观锁）与文件路径 |
 
 为了防止并发写入导致冲突，所有写入操作都会走同一条串行队列：同一时刻只有一个事务在写文件。
 
 ### 修改配置示例
 
-让我们来看一个使用 `ctx.chatluna_config.change` 更新指定条目的示例：
+下面是使用 `ctx.chatluna_config.change` 更新指定条目的示例：
 
 ```ts
 import type { Context } from '@chatluna/cordis'
@@ -135,7 +131,7 @@ export async function enableExamplePlugin(ctx: Context) {
 2. **Apply**：将新配置应用至 Loader。
 3. **Audit**：记录审计日志。
 
-如果在执行过程中发生错误，系统会自动恢复受影响的文件，并反向撤回当前批次的 Loader 操作。当返回的 Promise 成功结算时，代表新配置已经完全应用。
+如果在执行过程中发生错误，系统会自动恢复受影响的文件，并反向撤回当前批次的 Loader 操作。当返回的 Promise 成功结算时，代表新配置已经完全生效。
 
 ::: warning
 该机制属于配置层事务。它不会自动撤回外部 API 调用、云端资源变更等异步副作用，不提供跨系统的全局分布式事务原子性。
@@ -143,7 +139,7 @@ export async function enableExamplePlugin(ctx: Context) {
 
 ## 配置快照与运行时安装
 
-配置快照机制与包安装器为插件热更和版本回滚提供了基础能力支持。
+配置快照机制与包安装器为插件热重载和版本回滚提供了基础支持。
 
 ### 快照存储机制
 
@@ -165,7 +161,7 @@ export async function enableExamplePlugin(ctx: Context) {
 - **安装不等于挂载**：安装包成功只说明文件已下载到本地环境。插件要正常运行，依然需要在清单中配置条目、补齐 `inject` 依赖并校验 Schema。
 - **无进程内沙箱**：SDK 和插件均作为宿主 Node.js/Bun 进程内的可执行代码运行，动态按需安装不提供进程级沙箱。
 - **模块重载限制**：对于已经通过 `import` 加载到运行时的底层 SDK，若通过安装器变更版本，必须重启宿主进程才能使新版依赖生效。
-- **能力边界**：安装器只负责把依赖落盘并接入清单，它本身不限制模型能做什么。约束来自权限等级与工具策略，而不是安装器；这些约束同样不能替代操作系统文件权限、反向代理和容器部署隔离。
+- **能力边界**：安装器只负责把依赖写入磁盘并接入清单，它本身不限制模型能做什么。约束来自权限等级与工具策略，而不是安装器；这些约束同样不能替代操作系统文件权限、反向代理和容器部署隔离。
 
 ## 识别数据归属并执行备份
 
@@ -177,7 +173,7 @@ export async function enableExamplePlugin(ctx: Context) {
 
 | 数据资产 | 所有者 / 典型位置 | 备份关注点 |
 | --- | --- | --- |
-| 配置树与覆盖清单 | Loader / runtime-config | 必须完整备份所有 `include` 关联的清单和局部覆盖文件。 |
+| 配置树与覆盖清单 | Loader / runtime-config | 必须完整备份 `include` 关联的所有清单文件；由补丁注入的运行时覆盖不会落盘，不需要备份。 |
 | 会话条目 (entries) 与元数据 (header) | sessions + persistence | 包含业务数据库表和附件二进制 blobs。 |
 | 当前 head 指针与列表索引 | conversations | 仅维护运行时快速检索视图，不可替代 persistence 中的 Session 真相。 |
 | 预设 (Presets) | presets 托管目录 | 包含原始文件、版本修订记录 (revision) 及审计数据。 |
@@ -194,7 +190,7 @@ ChatLuna 默认的配置基准路径 `CHATLUNA_DATA` 指向 `./data/chatluna`，
 
 ### 安全恢复步骤
 
-在恢复生产实例时，请按部就班地执行以下步骤：
+在恢复生产实例时，请按步骤执行以下操作：
 
 1. **终止活动写入**：在停机状态下拷贝文件，或利用底层数据库机制获取事务一致性快照。
 2. **隔离恢复验证**：将备份导入到运行相同 ChatLuna 版本的隔离环境中。

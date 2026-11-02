@@ -1,8 +1,8 @@
 # 路由与场景规则
 
-在多平台即时通讯的实际场景中，同一个机器人往往需要同时服务群聊、频道和私聊等各种不同会话。不同场景对机器人的行为要求差别很大：技术交流群里需要严谨的代码助手与工具调用，玩家闲聊群里希望用活泼的角色人设，管理员私聊中需要放开高危指令权限，而在某些特定频道内，还需要为不同成员采用相互隔离的记忆与上下文。
+在多平台即时通讯的实际场景中，同一个机器人往往需要同时服务群聊、频道和私聊等多种会话。不同场景对机器人的行为要求差别很大：技术交流群里需要严谨的代码助手与工具调用，玩家闲聊群里希望用活泼的角色人设，管理员私聊中需要放开高危指令权限，而在某些特定频道内，还需要为不同成员提供相互隔离的记忆与上下文。
 
-为了避免每个功能插件都重复实现一套过滤逻辑，ChatLuna 引入了统一的**路由与场景规则系统（Routing）**。它的核心思想其实非常直观——**「按条件覆盖默认值」**。每个功能模块只需把自己的配置项注册为一个命名空间（Namespace）；平时系统维持一套全局基底配置，当你需要针对特定平台、群聊、用户或消息内容做定制时，只需声明一系列路由规则（RoutingRule），就能对指定命名空间的字段完成定向覆盖。
+为了避免每个功能插件都重复实现一套过滤逻辑，ChatLuna 引入了统一的**路由与场景规则系统（Routing）**。它的核心思想是**「按条件覆盖默认值」**：每个功能模块只需把自己的配置项注册为一个命名空间（Namespace）；平时系统维持一套全局基准配置，当你需要针对特定平台、群聊、用户或消息内容做定制时，只需声明一系列路由规则（`RoutingRule`），即可定向覆盖指定命名空间的字段。
 
 ```mermaid
 graph LR
@@ -27,7 +27,7 @@ graph LR
 | `filter` | `Predicate`（必填） | 决定规则是否命中的条件谓词 |
 | `values` | `Record<string, JsonValue>`（默认 `{}`） | 命名空间到局部配置对象的键值映射 |
 | `enabled` | `boolean`（默认 `true`） | 规则启用状态；停用后完全退出匹配链 |
-| `priority` | `number`（默认 `0`） | 人工调整的优先级；当特异度相同时越大越靠后（后覆盖先） |
+| `priority` | `number`（默认 `0`） | 人工调整的优先级；特异度相同时数值越大越靠后（后覆盖先） |
 | `locked` | `string[]`（默认 `[]`） | 点路径锁列表；锁定的字段禁止被更具体的规则改写 |
 | `by` | `string` | 写入者标识或来源标签（例如 `customize`） |
 | `revision` | `natural`（默认 `1`） | 用于并发控制与乐观锁的版本号 |
@@ -35,7 +35,7 @@ graph LR
 | `updatedAt` | `natural`（默认 `0`） | 规则最近更新时间戳 |
 
 ::: warning 保留规则 `global`
-系统必须存在且始终启用 `id` 为 `global` 的规则，其 `filter` 恒定为 `{ kind: 'true' }`。`global` 规则作为整套路由树的兜底基准，系统禁止将其删除。
+系统中必须存在且始终启用 `id` 为 `global` 的规则，其 `filter` 恒定为 `{ kind: 'true' }`。`global` 规则作为整套路由树的兜底基准，系统禁止将其删除。
 :::
 
 ---
@@ -58,32 +58,32 @@ graph LR
 | `not` | `operand`: `Predicate` | 取反操作。特异度继承自操作数 |
 | `and` | `operands`: `Predicate[]` | 逻辑与。所有子条件必须同时满足 |
 | `or` | `operands`: `Predicate[]` | 逻辑或。满足任一子条件即命中 |
-| `custom` | `id`: `string`<br>`args?`: `Record<string, unknown>` | 插件扩展谓词。若对应 id 未注册，执行时直接求值为 `false` |
+| `custom` | `id`: `string`<br>`args?`: `Record<string, unknown>` | 插件扩展谓词。若对应 `id` 未注册，执行时直接求值为 `false` |
 
 ### 特异度计算（Specificity）
 
-当有多条规则同时命中时，条件越严苛、定位越精准的规则往往拥有更高的发言权。这就是**特异度（Specificity）**。
+当有多条规则同时命中时，条件越严苛、定位越精准的规则拥有更高的发言权，这就是**特异度（Specificity）**。
 
 ChatLuna 按照以下原则计算特异度权重：
-- `kind: 'true'`：特异度计为 `0`；
-- `kind: 'not'`：特异度继承其子操作数 `operand` 的特异度；
-- `kind: 'and'` / `kind: 'or'`：特异度等于所有子项特异度的绝对数值之和；
-- 其余基础谓词（`scope`、`direct`、`group`、`at-me`、`quote-me`、`content`、`custom`）：特异度一律计为 `1`。
+- `kind: 'true'`：特异度计为 `0`
+- `kind: 'not'`：特异度继承其子操作数 `operand` 的特异度
+- `kind: 'and'` / `kind: 'or'`：特异度等于所有子项特异度的绝对数值之和
+- 其余基础谓词（`scope`、`direct`、`group`、`at-me`、`quote-me`、`content`、`custom`）：特异度一律计为 `1`
 
 ---
 
 ## 匹配顺序与覆盖
 
-消息事件到达后，路由引擎首先挑选出所有 `enabled: true` 且 `filter` 匹配成功的规则，随后通过严格排序器生成决议链。
+消息事件到达后，路由引擎首先挑选出所有 `enabled: true` 且 `filter` 匹配成功的规则，随后通过排序器生成决议链。
 
 ### 排序算法与比较键
 
-排序函数 `compareRules` 遵循如下优先级梯次：
+排序函数 `compareRules` 遵循如下优先级顺序：
 
-1. **`global` 最先**：保留规则 `global` 始终固定排在解析序列的第 0 位；
-2. **特异度（Specificity）升序**：特异度越低越靠前，越精准的越靠后；
-3. **优先级（Priority）升序**：特异度相同时，人为指定的 `priority` 越小越靠前，越大越靠后；
-4. **创建时间（CreatedAt）升序**：前面均相同时，创建越早的规则排在前面；
+1. **`global` 最先**：保留规则 `global` 始终固定排在解析序列的第 0 位。
+2. **特异度（Specificity）升序**：特异度越低越靠前，越精准的越靠后。
+3. **优先级（Priority）升序**：特异度相同时，人为指定的 `priority` 越小越靠前，越大越靠后。
+4. **创建时间（CreatedAt）升序**：前面条件均相同时，创建越早的规则排在前面。
 5. **ID 字典序**：兜底打破平局。
 
 后出现的规则拥有更高的覆盖权重，其字段值将逐层覆盖先出现的值。
@@ -98,13 +98,13 @@ graph TD
 
 ### 合并策略与路径锁（locked）
 
-排好顺序后，字段是如何合入最终配置的呢？
+规则排好顺序后，各字段将按如下策略合并入最终配置：
 
 - **默认深度合并（Deep Merge）**：对普通对象属性递归合并；遇到同名标量字段，直接由后出现的规则覆写。
 - **整块替换声明**：若命名空间在其定义中声明了 `merge: 'replace'`，则跳过递归合并，后出现的规则会整体替换该命名空间的对象值。
-- **点路径锁（locked）机制**：
-  - 上游宽泛规则（如全局规则）如果将某些字段加入 `locked`（例如 `locked: ['chat.model.model']`），下游更具体的规则对该点路径的写入将被彻底拦截；
-  - 拦截机制双向生效：当父路径被锁，子路径写入会被压制到 `suppressed`；当下级子路径被锁，父级标量对象的整体重写同样会被阻断；
+- **点路径锁（`locked`）机制**：
+  - 上游宽泛规则（如全局规则）如果将某些字段加入 `locked`（例如 `locked: ['chat.model.model']`），下游更具体的规则对该点路径的写入将被彻底拦截。
+  - 拦截机制双向生效：当父路径被锁，子路径写入会被压制到 `suppressed`；当下级子路径被锁，父级标量对象的整体重写同样会被阻断。
   - 最终被锁挡下的写入行为均会完整记录在 `suppressed` 诊断列表中。
 
 ```mermaid
@@ -124,12 +124,12 @@ sequenceDiagram
 
 ## 引擎优先
 
-在所有命名空间中，`chat.engine` 具有特殊的最高引导优先级。之所以这样设计，是因为后续许多配置的校验与展示都取决于当前生效的是哪个引擎。
+在所有命名空间中，`chat.engine` 拥有特殊的最高引导优先级。后续许多配置的校验与展示都取决于当前生效的是哪个引擎。
 
 1. **提前解析**：在 `resolveMatched` 流程中，`chat.engine` 会被排在最前列先行解析。
 2. **Schema 门禁与条件分支**：后续其他命名空间的 Schema 可以通过 `vary(engine)` 随当前生效的引擎动态改变；命名空间内的特定字段也可配置 `engines` 门禁，非目标引擎下相关字段将被过滤或忽略。
 3. **禁用回退与诊断**：解析出的引擎如果未启用（即引擎配置中的 `engines.isEnabled` 返回 `false`），系统将自后向前剔除设置了该引擎的最新规则，并触发重新解析，同时产生 `engine-disabled` 诊断。当引擎最终解析为 `off` 时，代表在此场景下彻底不产生回复。
-4. **引擎专属配置管理**：`chat.engine.config` 严格由各个引擎自身注册的 Config Schema 进行独立校验。在 WebUI 中，每一个引擎拥有独立的规则编辑 Tab，仅在当前规则选定了该引擎时才予以展示。
+4. **引擎专属配置管理**：`chat.engine.config` 严格由各个引擎自身注册的 Config Schema 进行独立校验。在 Web 控制台中，每一个引擎拥有独立的规则编辑标签页，仅在当前规则选定了该引擎时才会展示。
 
 ---
 
@@ -146,14 +146,13 @@ sequenceDiagram
 | `chat.session` | `ownership`: `'shared'` \| `'personal'` \| `'custom'`, `customKey?`, `lane`: string | `{ ownership: 'shared', lane: 'default' }` | session |
 | `chat.tools` | `mode?`: `'delegate'` \| `'native'` \| `'search'` \| `'code'`<br>`tools`: `{ allow?: string[], deny: string[] }` | `{ tools: { deny: [] } }`（allow 未填表示不限，填空数组表示全禁用，重叠按 deny 优先） | session |
 | `chat.outbound` | `capture`: boolean | `{ capture: true }` | session |
-| `chat.commands` | `allow`: string[] | `{ allow: ['help'] }`（执行未允许指令需向主人发起审核请求） | session |
-| `chat.activation` | `use`: string[], 附带各 decider 参数配置 | `{ use: ['rule'], botNames: [], isNickname: true, isNickNameWithContent: false, allowPrivate: true, allowAtReply: true, allowQuoteReply: false, privateChatWithoutCommand: true, randomReplyFrequency: 0, msgCooldown: 0, ignoreSelf: true }` | live |
+| `chat.activation` | `use`: string[], 附带各 decider 参数配置 | `{ use: ['rule'], botNames: [], isNickname: true, isNickNameWithContent: false, allowPrivate: true, allowAtReply: true, allowQuoteReply: true, privateChatWithoutCommand: true, randomReplyFrequency: 0, msgCooldown: 0, ignoreSelf: true }` | live |
 | `chat.observe` | `mode`: `'off'` \| `'quiet'`, `self`: boolean, `backfill.limit`: number, `midTurn`: `'step'` \| `'turn'`, `store`: `'message'` \| `'turn'`, `media.perMessage`: number, `media.attach`: number | `{ mode: 'off', self: true, backfill: { limit: 30 }, midTurn: 'step', store: 'message', media: { perMessage: 9, attach: 4 } }` | live |
 | `chat.proactive` | `silence`: boolean, `followUp`: boolean, `topic`: boolean, `rhythm`: boolean | 四项开关均默认 `false` | live |
 | `chat.merge` | `mode`: `'immediate'` \| `'settle'`, `quiet`: number, `max`: number, `interrupt`: boolean, `directMode?` | `{ mode: 'immediate', quiet: 2500, max: 15000, interrupt: false }` | live |
 | `render` | `format`: `'text'` \| `'elements'` \| `'markdown'`, `elements`: string[], `split`: `'message'` \| `'none'`, `hidden`: string[], `toolTalk`: `'never'` \| `'sometimes'` \| `'always'`, `reply`: `'text'` \| `'tool'`, `interim.deliver`: `'send'` \| `'drop'`, `interim.history`: `'keep'` \| `'merge'` \| `'drop'`, `quote`: boolean, `maxChunkLength`: number, `maxSegments`: number | `{ format: 'text', split: 'message', hidden: [], toolTalk: 'never', reply: 'text', interim: { deliver: 'send', history: 'keep' }, quote: false, maxChunkLength: 1500, maxSegments: 6 }` | live |
 | `censor` | `blockWords`: string[], `flagWords`: string[], `replaceRules`: Array<{ pattern: string, replacement: string }> | `{ blockWords: [], flagWords: [], replaceRules: [] }` | live |
-| `memory` | `backend`: string, `enabled`: boolean, `gate`: boolean, `indexBudget`: number, `extractWindow`: number, `recall`: { enabled, interval }, `dream`: { enabled, idleAfter, nightly, cron, maxActive }, `isolation`: `'preset'` \| `'conversation'` | `{ backend: 'md', enabled: false, gate: false, indexBudget: 1500, extractWindow: 30, recall: { enabled: false, interval: 10 }, dream: { enabled: true, idleAfter: 1800000, nightly: true, cron: '0 4 * * *', maxActive: 300 }, isolation: 'preset' }` | live |
+| `memory` | `backends`: string[], `enabled`: boolean, `gate`: boolean, `indexBudget`: number, `extractWindow`: number, `recall`: { enabled, interval }, `dream`: { enabled, idleAfter, nightly, cron, maxActive }, `isolation`: `'preset'` \| `'conversation'` | `{ backends: ['md'], enabled: false, gate: false, indexBudget: 1500, extractWindow: 30, recall: { enabled: false, interval: 10 }, dream: { enabled: true, idleAfter: 1800000, nightly: true, cron: '0 4 * * *', maxActive: 300 }, isolation: 'preset' }` | live |
 | `skills` | `allow?`: string[], `deny`: string[], `secrets`: boolean | `{ deny: [], secrets: true }` | live |
 | `subagents` | `defaultModel`: string, `maxLevel?`: number, `depthLimit`: number, `profiles?`, `backends?` | `{ defaultModel: '@medium', depthLimit: 4 }` | live |
 | `machines` | `default`: string, `allowed`: string[] | `{ default: 'local', allowed: ['local'] }` | live |
@@ -161,37 +160,37 @@ sequenceDiagram
 | `compaction` | `threshold`: number, `remote`: boolean | `{ threshold: 0.8, remote: true }` | live |
 
 ::: tip 模型角色配置
-`chat.model` 中的 `small`、`medium`、`large`、`decide` 等角色定义，不在基础规则中反复硬编码，而是在提供商页面的「模型角色」Tab 中进行统一分配与关联。
+`chat.model` 中的 `small`、`medium`、`large`、`decide` 等角色定义，不在基础规则中反复硬编码，而是在提供商页面的「模型角色」标签页中统一分配与关联。
 :::
 
 ---
 
 ## 作用时机：live 与 session
 
-每个命名空间在声明时会带一个 `applies` 标记。而是给界面与文档的提示：这个值「大概什么时候」会被读取。
+每个命名空间在声明时会带一个 `applies` 标记，用作界面与文档的提示，标明该配置项大致会在什么时候被读取。
 
-真正决定生效时机的是**读取它的具体子系统**，因此需要按字段分类来看：
+真正决定生效时机的是**读取它的具体子系统**。我们可以按字段分类来看：
 
 | 字段 | 谁在读 | 什么时候生效 |
 | --- | --- | --- |
 | `chat.engine` | Agent 打开时挂载 | 需要新会话（或重新挂载） |
 | `chat.model` / `chat.reasoning` | 每次 prepare step 重新解析 | 下一次模型请求 |
 | `chat.preset` | 回合开始时切换 | 下一回合 |
-| `chat.tools` / `chat.commands` | 每次组装工具可见性 | 下一回合 |
+| `chat.tools` | 每次组装工具可见性 | 下一回合 |
 | `chat.activation` / `chat.observe` / `chat.merge` | 消息进入管线时读取 | 下一条消息 |
 | `render` / `censor` | 渲染与审核时读取 | 下一次投递 |
 | `memory` / `skills` / `subagents` / `machines` | 各服务按需读取 | 下一次调用 |
 
-在实际使用中，可以总结出以下经验：
+在实际使用中，可以参考以下经验：
 
-- **引擎是唯一的例外**：修改引擎后，已经处于活跃状态的会话仍跑在旧引擎上，直到会话被重建。
+- **引擎是唯一的例外**：修改引擎后，已经处于活跃状态的会话仍运行在旧引擎上，直到会话被重建。
 - **其余大多数字段下一回合就生效**：修改模型、推理等级或工具可见性，都不需要手动清除上下文。
 - **预设切换尤其快速**：它只影响提示词的组装，完全不会重建历史消息。
 
 ::: tip 规则生效排查
-看到「规则改了但没反应」时，不妨先判断这个字段属于哪一类生效时机。
+遇到「规则改了但没生效」的情况时，不妨先确认这个字段属于哪一类生效时机。
 
-如果是引擎，换个新会话验证；如果是模型或工具，等待下一轮对话再看；如果还是不对，检查是否被更具体的规则或点路径锁覆盖了。
+如果是引擎，新建一个会话进行验证；如果是模型或工具，等待下一轮对话即可；如果仍然不生效，请检查是否被更具体的规则或点路径锁覆盖了。
 :::
 
 ---
@@ -203,12 +202,12 @@ sequenceDiagram
 ### 乐观并发锁机制
 
 - 调用 `save(input, { revision })` 保存规则时，入参中的 `revision` 必须精确等于当前规则对象的最新 `revision`（新建规则时传入 `0`）。
-- 若版本号不吻合，系统立即拒绝并抛出 `CONFLICT` 错误，避免因多个管理员在 WebUI 同时修改造成脏写覆盖。
-- 对保留规则 `global` 执行删除操作，系统直接抛出 `INVALID_ARGUMENT`。
+- 若版本号不吻合，系统会立即拒绝并抛出 `CONFLICT` 错误，避免因多个管理员在控制台同时修改造成覆盖。
+- 对保留规则 `global` 执行删除操作时，系统会直接抛出 `INVALID_ARGUMENT` 错误。
 
 ### 字段裁剪与演进
 
-随着插件功能演进，部分历史字段可能会被废弃。保存规则前，系统会参照最新的命名空间 Schema 自动剔除未知或退役字段。被移除的属性将汇总在返回值中的 `migrated` 结构告知调用方，同时在日志中记录 dropped 跟踪项。
+随着插件功能演进，部分历史字段可能会被废弃。保存规则前，系统会参照最新的命名空间 Schema 自动剔除未知或退役字段。被移除的属性将汇总在返回值中的 `migrated` 结构中告知调用方，同时在日志中记录 dropped 跟踪项。
 
 ### 事务持久化与降级
 
@@ -239,28 +238,28 @@ chatluna_config.change({
 
 - **`resolve(input)`**：主入口。计算并返回被 `Object.freeze` 冻结的 `Resolution` 结果（含 `ruleIds`、`values`、`sources`、`suppressed`、`diagnostics`、`revision`）。当规则库中不包含任何 `content` 与 `custom` 谓词时，系统会基于发送方身份键对结果实施缓存（容量上限 256 条）；一旦含有内容或自定义谓词，则跳过缓存以确保实时匹配。
 - **`explain(input)`**：面向诊断面板与调试工具。在 `Resolution` 基础上附加命中规则列表（`matched`）以及 `decidedBy` 字典，精准标示每个命名空间的生效值最终是由哪一条特异度最高的规则决定的。
-- **`valuesAt(subject, ns)`**：面向 WebUI 与外部 API。查询指定实体主体（群组或用户）在某命名空间下的最终计算值。若查询主体未绑定机器人生态，默认以空的 `platform` / `selfId` 进行沙盒求值。
+- **`valuesAt(subject, ns)`**：面向 Web 控制台与外部 API。查询指定实体主体（群组或用户）在某命名空间下的最终计算值。若查询主体未绑定机器人生态，默认以空的 `platform` / `selfId` 进行沙盒求值。
 - **`matchInput(session)`**：将 Satori 原生 Session 及当前 `routeId` 提取并规格化为路由输入对象。优先提取剔除了指令前缀与 @ 机器人的 stripped 纯文本；`isAtMe` 综合判断 `stripped.atSelf` 和原始消息段中的真实 at 元素；`isQuotingMe` 校验 `quote.user.id`；`isSelf` 检查 `userId === selfId`。
 
 ### 诊断码（PublicDiagnostic）
 
 解析过程产生的所有诊断均具有 `warning` 级别，错误码形如 `routing.<code>`：
 
-- **`routing.predicate-error`**：计算条件谓词时抛出异常；
-- **`routing.unknown-namespace`**：规则中包含了未经注册的未知命名空间；
-- **`routing.invalid-namespace`**：命名空间未能通过 Schema 校验并触发规则剔除回退；
-- **`routing.engine-disabled`**：规则指定的底层引擎处于停用状态并触发自动降级回退。
+- **`routing.predicate-error`**：计算条件谓词时抛出异常
+- **`routing.unknown-namespace`**：规则中包含了未经注册的未知命名空间
+- **`routing.invalid-namespace`**：命名空间未能通过 Schema 校验并触发规则剔除回退
+- **`routing.engine-disabled`**：规则指定的底层引擎处于停用状态并触发自动降级回退
 
 ### 追踪字段：sources 与 suppressed
 
-- **`sources`**：映射表结构，精确记录最终生成的每一个字段是来自于哪一条规则的 ID；
+- **`sources`**：映射表结构，精确记录最终生成的每一个字段来自于哪一条规则的 ID。
 - **`suppressed`**：记录所有由于匹配到了祖先或自身路径的 `locked` 锁，导致写入被丢弃的属性路径、来源规则 ID 与丢弃的值。
 
 ---
 
 ## 给每个群单独配置
 
-结合前面介绍的各种特性，我们来看一份展示真实业务场景的完整 YAML 示例。这里演示了如何通过多种谓词、路径锁、独立会话所有权以及正则匹配来组合出复杂的业务逻辑：
+结合前面介绍的各种特性，下面是一份贴近真实业务场景的完整 YAML 配置示例，演示了如何通过多种谓词、路径锁、独立会话所有权以及正则匹配来组合使用：
 
 ```yaml
 - id: routing
@@ -363,17 +362,17 @@ chatluna_config.change({
 ### 实体目录（Entity Directory）
 
 `Directory` 服务负责直接向接入的 Bot 实例发起拉取请求，检索 `guild`（群组）、`channel`（频道）与 `user`（用户）实体列表：
-- **调用超时**：每次调用 Bot 实例底层接口受 5 秒超时保护；
-- **分页与时间预算**：内部 `EntityPages` 分页处理机制为单页运算分配 8 秒最大时间预算，避免拉取超大群列表造成主线程停滞；
-- **游标生命周期**：生成的检索 cursor 最多保留 256 个，具备 5 分钟超时自动注销机制；
+- **调用超时**：每次调用 Bot 实例底层接口均受 5 秒超时保护。
+- **分页与时间预算**：内部 `EntityPages` 分页处理机制为单页运算分配 8 秒最大时间预算，避免拉取超大群列表造成主线程停滞。
+- **游标生命周期**：生成的检索 cursor 最多保留 256 个，具备 5 分钟超时自动注销机制。
 - **检索逻辑**：`query` 过滤针对实体的 `id`、`name` 以及 `platform` 进行全小写子串包含匹配。
 
 ### 对话实体记录表（Peers）
 
-除了主动拉取，系统还通过事件流监听记录最近活跃的实体关系并存入 `chatluna_peers` 数据库表：
-- **自动记录范围**：实时登记会话中出现的 `user`、`guild`、`channel` 及绑定的 `bot` 关联；
-- **节流与批量更新**：单实体触发记录施加 10 分钟写入节流，并通过 1 秒防抖（Debounce）合并后批量执行 upsert；
-- **容量与驱逐策略**：`chatluna_peers` 表设定硬上限 20,000 条，超出容量时按 `updatedAt` 升序由早到晚剔除淘汰；
+除了主动拉取，系统还通过事件流监听记录最近活跃的实体关系，并存入 `chatluna_peers` 数据库表：
+- **自动记录范围**：实时登记会话中出现的 `user`、`guild`、`channel` 及绑定的 `bot` 关联。
+- **节流与批量更新**：单实体触发记录施加 10 分钟写入节流，并通过 1 秒防抖（Debounce）合并后批量执行 upsert。
+- **容量与驱逐策略**：`chatluna_peers` 表设定硬上限 20,000 条，超出容量时按 `updatedAt` 升序由早到晚剔除淘汰。
 - **缓存策略**：内存中维护容量为 5,000 条的实体 Profile 缓存，有效生命周期（TTL）为 10 分钟。
 
 ---
@@ -416,8 +415,8 @@ graph TD
 
 ### 严格上下文隔离机制
 
-- **禁止隐式回退**：声明为隔离的服务在解析时，**仅从当前 Bot 归属的 Bot Group 局部 Scoped 上下文中检索**。如果在该 Group 的上下文中未提供对应的服务实例，系统会显式判定为服务缺失，**绝不会回退到根上下文（Root Context）中查找**。这一机制从根本上杜绝了将全局敏感的人格预设或私有知识库意外暴露给第三方机器人的安全隐患。
-- **独占归属**：一个具体的 Bot 实例在生命周期内只能归属于一个 Bot Group，试图跨组重复 Claim 机器人实例将直接抛出异常。
+- **禁止隐式回退**：声明为隔离的服务在解析时，**仅从当前 Bot 归属的 Bot Group 局部 Scoped 上下文中检索**。如果在该 Group 的上下文中未提供对应的服务实例，系统会判定为服务缺失，**绝不会回退到根上下文（Root Context）中查找**。这一机制从根本上杜绝了将全局敏感的人格预设或私有知识库意外暴露给第三方机器人的安全隐患。
+- **独占归属**：一个具体的 Bot 实例在生命周期内只能归属于一个 Bot Group，跨组重复 Claim 机器人实例将直接抛出异常。
 
 ---
 
