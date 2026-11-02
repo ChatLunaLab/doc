@@ -54,25 +54,18 @@ ChatLuna 把 Harness 的各项能力解耦为独立的配置单元，可以按�
 
 ```mermaid
 flowchart LR
-    subgraph P[" "]
-        direction TB
-        QQ[QQ]
-        TG[Telegram]
-        DC[Discord]
-        WEB[WebUI]
+    subgraph P["聊天平台"]
+        QQ["QQ · Telegram<br/>Discord · WebUI"]
     end
 
     subgraph ChatLuna["ChatLuna"]
-        direction TB
+        direction LR
         A["适配器层"] --> R["路由引擎"]
-        R --> E["引擎<br/>character · agent · coding"]
+        R --> E["引擎"]
         E --> L["Agent 循环"]
         L --> D["渲染与投递"]
-        M["模型运行时"]
-        T["工具 · 技能 · MCP · 子代理"]
-        L -.调用.-> M
-        L -.调用.-> T
-        D --> A
+        L -.-> M["模型运行时"]
+        L -.-> T["工具 · 技能<br/>MCP · 子代理"]
     end
 
     P --> A
