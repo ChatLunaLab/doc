@@ -46,8 +46,6 @@ void main() {
   color = mix(color, uColors[2], smoothstep(0.3, 1.0, b) * 0.8);
   color = mix(color, uColors[3], smoothstep(0.45, 1.0, c) * 0.7);
   color = mix(color, uColors[4], smoothstep(0.55, 1.0, a * b) * 0.75);
-  float ripple = pow(1.0 - abs(sin(p.x * 2.1 + p.y * 1.4 + t * 1.2)), 10.0);
-  color += ripple * 0.06;
   color += (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.02;
   gl_FragColor = vec4(color, 1.0);
 }
