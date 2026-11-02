@@ -9,6 +9,7 @@ description: ChatLuna v2 是基于 Cordis 4 的可组合 Agent Harness：接入 
 <script setup lang="ts">
 import AppWindow from './.vitepress/theme/components/home/AppWindow.vue'
 import HomeHero from './.vitepress/theme/components/home/HomeHero.vue'
+import HomeLogo from './.vitepress/theme/components/home/HomeLogo.vue'
 import HomeShot from './.vitepress/theme/components/home/HomeShot.vue'
 import HomeSky from './.vitepress/theme/components/home/HomeSky.vue'
 </script>
@@ -167,7 +168,7 @@ yarn chatluna start
 
 <section class="home-section home-community" aria-labelledby="community-title">
 <div class="home-wrap home-center">
-<img class="home-logo" src="/logo.png" alt="" width="64" height="64">
+<HomeLogo class="home-logo" />
 <h2 id="community-title" class="home-heading">来群里聊聊</h2>
 <p>用的时候遇到问题，或者想给大家看看你的机器人，都欢迎来。</p>
 <div class="home-pills"><a class="home-pill" href="https://qm.qq.com/q/UPl46h6omI">QQ 交流群 282381753</a><a class="home-pill" href="https://qm.qq.com/q/NwwPwOrAoo">QQ 闲聊群 391122026</a><a class="home-pill" href="https://t.me/koishi_chatluna">Telegram 群组</a><a class="home-pill" href="https://t.me/koishi_chatluna_channel">Telegram 频道</a><a class="home-pill" href="https://github.com/ChatLunaLab/v2">GitHub</a></div>

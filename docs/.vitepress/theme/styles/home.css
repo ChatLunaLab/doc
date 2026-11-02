@@ -319,11 +319,8 @@
 }
 
 .home-logo {
-    display: block;
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 24px;
-    filter: drop-shadow(0 10px 22px rgb(96 75 155 / 30%));
+    margin-bottom: 28px;
+    font-size: 22px;
 }
 
 .home-community {
