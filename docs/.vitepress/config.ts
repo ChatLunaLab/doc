@@ -831,7 +831,7 @@ function nav(): DefaultTheme.NavItem[] {
     { text: "开发指南", link: "/guide/", activeMatch: "/guide/" },
     { text: "架构", link: "/architecture/", activeMatch: "/architecture/" },
     { text: "API 参考", link: "/api/", activeMatch: "/api/" },
-    { text: "进阶", link: "/cookbook/", activeMatch: "/cookbook/" },
+    { text: "赞助", link: "/about/sponsor", activeMatch: "/about/sponsor" },
     { text: "ChatLuna v1", link: "https://v1.chatluna.chat" },
   ];
 }
