@@ -104,9 +104,15 @@ ChatLuna 主插件，提供对话系统核心功能。
 - 将所有"长期记忆引擎配置"改为 `Basic`
 - "启用的记忆检索层"只勾选"群组层"
 
-### memesluna
+### chatluna-memes
 
-提供表情包发送功能，建议自行准备一张“拒绝”类型的表情包以应对不友好的用户。
+提供表情包发送功能，是 fork lumia1998/memesluna 后修改并独立发布的插件，首次启动时会自动迁移 memesluna 的数据。
+
+**推荐配置：**
+
+- 在控制台侧栏的 ChatLuna Memes 页面管理表情包，并在"配置"中开启 ChatLuna 注入
+- 预设中使用变量 `{chatluna_memes}`（原 `{memesluna}`）
+- 建议自行准备一张“拒绝”类型的表情包以应对不友好的用户
 
 ### chatluna-llm-web-search
 
@@ -160,13 +166,17 @@ ChatLuna 主插件，提供对话系统核心功能。
 
 帮助你折叠不需要的 Koishi 侧栏图标。
 
-### logger-plus
+### logger-next
 
-更好的 Koishi 日志插件，提供日志暂停、筛选、向前滚动等功能。
+更好的 Koishi 日志插件，优化了日志性能,虚拟滚动,更好的滚动体验。
 
 ### without-assignee
 
 解决同平台适配器接入过一个以上的账号后，Bot 无法触发响应的问题。
+
+### auth-cleanup
+
+定期清理 Koishi 控制台的过期登录记录，避免数据库中的登录记录无限增长。
 
 ### ffmpeg-path
 
