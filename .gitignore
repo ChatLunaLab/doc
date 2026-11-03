@@ -9,7 +9,10 @@ node_modules/
 .vercel
 package-lock.json
 docs/.vitepress/cache
+docs/.vitepress/cache-v1
 docs/.vitepress/dist
+docs/.vitepress/dist-v1
+/.vitepress/
 
 .yarn/cache
 .yarn/unplugged

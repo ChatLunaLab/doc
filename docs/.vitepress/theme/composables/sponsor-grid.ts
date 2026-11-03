@@ -136,7 +136,7 @@ function removeSlots(el: HTMLElement, count: number) {
 }
 
 export function throttleAndDebounce(fn: () => void, delay: number): () => void {
-    let timeoutId: number;
+    let timeoutId: ReturnType<typeof setTimeout>;
     let called = false;
 
     return () => {

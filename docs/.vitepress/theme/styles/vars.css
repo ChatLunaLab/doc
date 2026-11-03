@@ -26,18 +26,19 @@
  *    custom containers.
  * -------------------------------------------------------------------------- */
 
+/* 中国传统色蓝系：青黛（深）/ 菘蓝（中）/ 青鸾（浅） */
 :root {
-    --vp-c-sky-1: #7a73d6;
-    --vp-c-sky-2: #9f99e8;
-    --vp-c-sky-3: #b8b3ee;
-    --vp-c-sky-soft: rgba(159, 153, 232, 0.4);
+    --vp-c-sky-1: #45465e;
+    --vp-c-sky-2: #6b798e;
+    --vp-c-sky-3: #9aa7b1;
+    --vp-c-sky-soft: rgb(107 121 142 / 16%);
 }
 
 .dark {
-    --vp-c-sky-1: #8f89e8;
-    --vp-c-sky-2: #7b74d9;
-    --vp-c-sky-3: #6760c8;
-    --vp-c-sky-soft: rgba(143, 137, 232, 0.22);
+    --vp-c-sky-1: #9aa7b1;
+    --vp-c-sky-2: #6b798e;
+    --vp-c-sky-3: #45465e;
+    --vp-c-sky-soft: rgb(154 167 177 / 18%);
 }
 
 /**
@@ -77,8 +78,16 @@
     --vp-home-hero-name-color: transparent;
     --vp-home-hero-name-background: -webkit-linear-gradient(
         0deg,
-        #2e2786 10%,
-        #664ba0
+        #45465e 10%,
+        #6b798e
+    );
+}
+
+.dark {
+    --vp-home-hero-name-background: -webkit-linear-gradient(
+        0deg,
+        #45465e 10%,
+        #9aa7b1
     );
 }
 
