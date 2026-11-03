@@ -4,6 +4,10 @@
 ChatLuna v2 是一套独立部署的应用程序，不是在已有 Koishi 实例中更新插件得到的新版本。先根据需求选择安装方式。
 :::
 
+::: warning 内测中
+ChatLuna v2 目前处于封闭内测阶段，`npm i -g chatluna` 暂时还不能使用。想参与内测，请填写[报名问卷](https://wj.qq.com/s2/28498345/j60d/)。
+:::
+
 | 方式 | 适合场景 | 环境要求 |
 | --- | --- | --- |
 | [Docker](./docker) | 本机快速体验、服务器试运行 | Docker Engine 或 Docker Desktop |

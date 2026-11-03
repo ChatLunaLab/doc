@@ -140,6 +140,7 @@ export function apply(ctx: Context) {
 <h2 id="install-title" class="home-heading">即刻运行</h2>
 <p>运行环境需要 Node.js 24 或更高版本。第一次运行 <code>chatluna</code> 会自动创建默认实例并启动，终端中会打印控制台的登录地址，默认为 <code>http://127.0.0.1:5028</code>。</p>
 <p>在浏览器中打开它，按提示添加模型、接入聊天平台，机器人就可以在群里说话了。</p>
+<p><strong>目前处于封闭内测阶段，<code>npm i -g chatluna</code> 暂时还不能使用。</strong>想参与内测，请填写<a href="https://wj.qq.com/s2/28498345/j60d/" target="_blank" rel="noreferrer">报名问卷</a>。</p>
 <div class="home-links"><a class="home-link" href="/manual/quickstart.html">跟着快速开始走一遍</a><a class="home-link" href="/manual/starter/">比较三种安装方式</a></div>
 </div>
 <div class="home-panel is-code is-dusk">

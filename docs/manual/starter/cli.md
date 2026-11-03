@@ -8,6 +8,10 @@
 
 ## 安装
 
+::: warning 内测中
+ChatLuna v2 目前处于封闭内测阶段，`npm i -g chatluna` 暂时还不能使用。想参与内测，请填写[报名问卷](https://wj.qq.com/s2/28498345/j60d/)。
+:::
+
 ChatLuna 需要 Node.js 24 或更高版本。用 npm 全局安装启动器：
 
 ```sh
