@@ -1,10 +1,10 @@
 # API 参考
 
-ChatLuna 的 API 体系主要由三部分构成：挂载在上下文中的**核心服务**（`ctx.*`，供插件直接调用）、**Cordis 运行时上下文**（包含生命周期、事件系统与 Schema 构型），以及周边的**规范与接口参考**（命令行、配置目录与 HTTP 端点）。
+::: tip
+API 参考分三部分：插件直接调用的核心服务（`ctx.*`），Cordis 的上下文、事件与 Schema，以及命令行、配置和 HTTP 接口。
+:::
 
 ## 核心服务
-
-ChatLuna 将各项功能拆分为模块化服务，并挂载到 `Context` 实例上。编写插件时，你可以通过声明依赖或直接访问这些服务来扩展机器人的能力：
 
 | 服务 | 提供方 | 作用 |
 | --- | --- | --- |
@@ -34,12 +34,8 @@ ChatLuna 将各项功能拆分为模块化服务，并挂载到 `Context` 实例
 
 ## Cordis 上下文
 
-有关底层依赖注入框架与基础构型的使用方式，请参阅以下章节：
-
 [Context](./cordis/context) · [Events](./cordis/events) · [Service](./cordis/service) · [Schema](./cordis/schema)
 
 ## 其他参考
-
-除了上下文与服务外，开发和运维中涉及的外部接口与规范如下：
 
 [命令行](./cli) · [配置与数据目录](./configuration) · [HTTP API](./http) · [术语表](./glossary)

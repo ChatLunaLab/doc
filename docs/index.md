@@ -42,7 +42,7 @@ import HomeSky from './.vitepress/theme/components/home/HomeSky.vue'
 
 <section class="home-row" aria-labelledby="adapters-title">
 <div class="home-row-text">
-<h2 id="adapters-title" class="home-heading">平台和模型，接上就能用</h2>
+<h2 id="adapters-title" class="home-heading">接入模型与 IM</h2>
 <p>支持 QQ、Telegram、Discord、飞书等主流平台的多个账号同时在线。DeepSeek、OpenAI、Anthropic、Google 等模型服务只需接入一次，切换模型时无需重新配置密钥。</p>
 <div class="home-links"><a class="home-link" href="/manual/usage/adapters.html">接入聊天平台</a><a class="home-link" href="/manual/usage/models.html">配置模型</a></div>
 </div>

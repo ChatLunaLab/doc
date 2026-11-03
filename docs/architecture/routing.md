@@ -1,8 +1,8 @@
 # 路由与场景规则
 
-在多平台即时通讯的实际场景中，同一个机器人往往需要同时服务群聊、频道和私聊等多种会话。不同场景对机器人的行为要求差别很大：技术交流群里需要严谨的代码助手与工具调用，玩家闲聊群里希望用活泼的角色人设，管理员私聊中需要放开高危指令权限，而在某些特定频道内，还需要为不同成员提供相互隔离的记忆与上下文。
-
-为了避免每个功能插件都重复实现一套过滤逻辑，ChatLuna 引入了统一的**路由与场景规则系统（Routing）**。它的核心思想是**「按条件覆盖默认值」**：每个功能模块只需把自己的配置项注册为一个命名空间（Namespace）；平时系统维持一套全局基准配置，当你需要针对特定平台、群聊、用户或消息内容做定制时，只需声明一系列路由规则（`RoutingRule`），即可定向覆盖指定命名空间的字段。
+::: tip
+同一个机器人往往同时服务技术群、闲聊群和管理员私聊，各自需要不同的模型、人设、权限和上下文隔离。路由系统统一处理这类差异：每个功能把配置注册为一个命名空间，平时使用全局基准值，需要针对平台、群、用户或消息内容定制时，用路由规则（`RoutingRule`）覆盖指定命名空间的字段。
+:::
 
 ```mermaid
 graph LR
@@ -12,81 +12,60 @@ graph LR
     Resolution --> Pipeline[交付 Chat Pipeline 执行]
 ```
 
----
-
-## 规则、条件与取值
-
-一条路由规则（`RoutingRule`）由唯一标识、匹配条件（`Predicate`）、生效取值（`Values`）以及相关元数据构成。
-
-### 规则对象结构
+## 规则
 
 | 字段 | 类型 / 默认值 | 说明 |
 | :--- | :--- | :--- |
-| `id` | `string`（必填） | 规则唯一标识符；其中 `global` 为保留规则 |
-| `name` | `string` | 规则的可读显示名称 |
-| `filter` | `Predicate`（必填） | 决定规则是否命中的条件谓词 |
-| `values` | `Record<string, JsonValue>`（默认 `{}`） | 命名空间到局部配置对象的键值映射 |
-| `enabled` | `boolean`（默认 `true`） | 规则启用状态；停用后完全退出匹配链 |
-| `priority` | `number`（默认 `0`） | 人工调整的优先级；特异度相同时数值越大越靠后（后覆盖先） |
-| `locked` | `string[]`（默认 `[]`） | 点路径锁列表；锁定的字段禁止被更具体的规则改写 |
-| `by` | `string` | 写入者标识或来源标签（例如 `customize`） |
-| `revision` | `natural`（默认 `1`） | 用于并发控制与乐观锁的版本号 |
-| `createdAt` | `natural`（默认 `0`） | 规则创建时间戳，用于排序决策 |
-| `updatedAt` | `natural`（默认 `0`） | 规则最近更新时间戳 |
+| `id` | `string`（必填） | 规则标识；`global` 为保留规则 |
+| `name` | `string` | 显示名称 |
+| `filter` | `Predicate`（必填） | 决定规则是否命中 |
+| `values` | `Record<string, JsonValue>`（默认 `{}`） | 命名空间到局部配置的映射 |
+| `enabled` | `boolean`（默认 `true`） | 停用后完全退出匹配 |
+| `priority` | `number`（默认 `0`） | 特异度相同时，数值越大越靠后（后覆盖先） |
+| `locked` | `string[]`（默认 `[]`） | 点路径锁，锁定的字段不能被更具体的规则改写 |
+| `by` | `string` | 写入者或来源标签（如 `customize`） |
+| `revision` | `natural`（默认 `1`） | 乐观锁版本号 |
+| `createdAt` | `natural`（默认 `0`） | 创建时间，参与排序 |
+| `updatedAt` | `natural`（默认 `0`） | 最近更新时间 |
 
-::: warning 保留规则 `global`
-系统中必须存在且始终启用 `id` 为 `global` 的规则，其 `filter` 恒定为 `{ kind: 'true' }`。`global` 规则作为整套路由树的兜底基准，系统禁止将其删除。
+::: warning
+必须存在且始终启用 `id` 为 `global` 的规则，其 `filter` 恒为 `{ kind: 'true' }`，作为兜底基准，不能删除。
 :::
-
----
 
 ## 条件谓词
 
-条件谓词（`Predicate`）负责判断一条规则是否命中当前会话上下文。系统内置了一系列基础谓词，并支持逻辑组合与插件扩展。
-
-### 谓词类型一览
-
-| `kind` | 专属字段 | 匹配逻辑与语义 |
+| `kind` | 字段 | 语义 |
 | :--- | :--- | :--- |
-| `true` | 无 | 无条件命中。特异度为 `0` |
-| `scope` | `field`: `'platform'` \| `'self'` \| `'guild'` \| `'channel'` \| `'user'` \| `'route'`<br>`values`: `string[]` | 作用域检查。当 `values` 非空时，要求上下文对应字段值落在列表中；**当 `values` 为空数组 `[]` 时，表示仅判断该字段是否存在** |
-| `direct` | 无 | 匹配私聊 / 私信环境 |
-| `group` | 无 | 匹配群组 / 频道环境 |
-| `at-me` | 无 | 匹配消息中提及（@）了当前机器人的场景 |
-| `quote-me` | 无 | 匹配回复 / 引用了当前机器人历史消息的场景 |
-| `content` | `match`: `'contains'` \| `'startsWith'` \| `'exact'` \| `'regex'`<br>`text`: `string` | 匹配消息文本。<br>• `exact`：自动 trim 两端空白后比对；<br>• `regex`：仅在文本前 20,000 字符内检索 |
-| `not` | `operand`: `Predicate` | 取反操作。特异度继承自操作数 |
-| `and` | `operands`: `Predicate[]` | 逻辑与。所有子条件必须同时满足 |
-| `or` | `operands`: `Predicate[]` | 逻辑或。满足任一子条件即命中 |
-| `custom` | `id`: `string`<br>`args?`: `Record<string, unknown>` | 插件扩展谓词。若对应 `id` 未注册，执行时直接求值为 `false` |
+| `true` | — | 无条件命中，特异度 `0` |
+| `scope` | `field`: `'platform'` \| `'self'` \| `'guild'` \| `'channel'` \| `'user'` \| `'route'`<br>`values`: `string[]` | `values` 非空时要求字段值在列表中；**为空数组时只判断字段是否存在** |
+| `direct` | — | 私聊 |
+| `group` | — | 群组 / 频道 |
+| `at-me` | — | 消息 @ 了机器人 |
+| `quote-me` | — | 引用了机器人的消息 |
+| `content` | `match`: `'contains'` \| `'startsWith'` \| `'exact'` \| `'regex'`<br>`text`: `string` | 匹配消息文本。`exact` 先去掉两端空白；`regex` 只检索前 20,000 字符 |
+| `not` | `operand`: `Predicate` | 取反，特异度继承操作数 |
+| `and` | `operands`: `Predicate[]` | 全部满足 |
+| `or` | `operands`: `Predicate[]` | 任一满足 |
+| `custom` | `id`: `string`<br>`args?`: `Record<string, unknown>` | 插件扩展谓词，`id` 未注册时求值为 `false` |
 
-### 特异度计算（Specificity）
+多条规则同时命中时，条件越精确的规则特异度越高：
 
-当有多条规则同时命中时，条件越严苛、定位越精准的规则拥有更高的发言权，这就是**特异度（Specificity）**。
-
-ChatLuna 按照以下原则计算特异度权重：
-- `kind: 'true'`：特异度计为 `0`
-- `kind: 'not'`：特异度继承其子操作数 `operand` 的特异度
-- `kind: 'and'` / `kind: 'or'`：特异度等于所有子项特异度的绝对数值之和
-- 其余基础谓词（`scope`、`direct`、`group`、`at-me`、`quote-me`、`content`、`custom`）：特异度一律计为 `1`
-
----
+- `true` 为 `0`。
+- `not` 继承操作数的特异度。
+- `and` / `or` 为所有子项特异度之和。
+- 其余基础谓词（`scope`、`direct`、`group`、`at-me`、`quote-me`、`content`、`custom`）各为 `1`。
 
 ## 匹配顺序与覆盖
 
-消息事件到达后，路由引擎首先挑选出所有 `enabled: true` 且 `filter` 匹配成功的规则，随后通过排序器生成决议链。
+路由先选出所有 `enabled: true` 且 `filter` 命中的规则，再由 `compareRules` 排序：
 
-### 排序算法与比较键
+1. `global` 固定在第 0 位。
+2. 特异度升序。
+3. `priority` 升序。
+4. `createdAt` 升序。
+5. ID 字典序。
 
-排序函数 `compareRules` 遵循如下优先级顺序：
-
-1. **`global` 最先**：保留规则 `global` 始终固定排在解析序列的第 0 位。
-2. **特异度（Specificity）升序**：特异度越低越靠前，越精准的越靠后。
-3. **优先级（Priority）升序**：特异度相同时，人为指定的 `priority` 越小越靠前，越大越靠后。
-4. **创建时间（CreatedAt）升序**：前面条件均相同时，创建越早的规则排在前面。
-5. **ID 字典序**：兜底打破平局。
-
-后出现的规则拥有更高的覆盖权重，其字段值将逐层覆盖先出现的值。
+排在后面的规则覆盖前面的值。
 
 ```mermaid
 graph TD
@@ -96,16 +75,11 @@ graph TD
     UserRule --> Final["最终配置合集 Resolution"]
 ```
 
-### 合并策略与路径锁（locked）
+合并策略：
 
-规则排好顺序后，各字段将按如下策略合并入最终配置：
-
-- **默认深度合并（Deep Merge）**：对普通对象属性递归合并；遇到同名标量字段，直接由后出现的规则覆写。
-- **整块替换声明**：若命名空间在其定义中声明了 `merge: 'replace'`，则跳过递归合并，后出现的规则会整体替换该命名空间的对象值。
-- **点路径锁（`locked`）机制**：
-  - 上游宽泛规则（如全局规则）如果将某些字段加入 `locked`（例如 `locked: ['chat.model.model']`），下游更具体的规则对该点路径的写入将被彻底拦截。
-  - 拦截机制双向生效：当父路径被锁，子路径写入会被压制到 `suppressed`；当下级子路径被锁，父级标量对象的整体重写同样会被阻断。
-  - 最终被锁挡下的写入行为均会完整记录在 `suppressed` 诊断列表中。
+- **深度合并**：对象递归合并，同名标量由后面的规则覆盖。
+- **整块替换**：命名空间声明了 `merge: 'replace'` 时，后面的规则整体替换该命名空间的值。
+- **点路径锁**：宽泛规则把字段加入 `locked`（如 `locked: ['chat.model.model']`）后，更具体规则对该路径的写入被拦截。双向生效：父路径被锁时子路径写入被压制，子路径被锁时父级对象的整体重写也被阻止。被拦下的写入记录在 `suppressed` 中。
 
 ```mermaid
 sequenceDiagram
@@ -118,100 +92,68 @@ sequenceDiagram
     R->>R: 记入 suppressed 审计表，保持 global 赋值
 ```
 
-- **解析与故障隔离**：合并完成后按各命名空间的 Schema 逐项校验。校验失败不会导致系统崩溃，系统会隔离该故障命名空间，按「最新规则优先」的原则反向逐条剔除涉及该命名空间的规则，同时写入 `invalid-namespace` 诊断码；若全部剔除后依然不合法，则直接退回该命名空间 Schema 的原始默认值。
-
----
+合并完成后按各命名空间的 Schema 校验。校验失败不会崩溃：系统按「最新规则优先」逐条剔除涉及该命名空间的规则，并写入 `invalid-namespace` 诊断；全部剔除后仍不合法时，退回 Schema 默认值。
 
 ## 引擎优先
 
-在所有命名空间中，`chat.engine` 拥有特殊的最高引导优先级。后续许多配置的校验与展示都取决于当前生效的是哪个引擎。
+`chat.engine` 最先解析，因为很多配置的校验和展示取决于当前引擎：
 
-1. **提前解析**：在 `resolveMatched` 流程中，`chat.engine` 会被排在最前列先行解析。
-2. **Schema 门禁与条件分支**：后续其他命名空间的 Schema 可以通过 `vary(engine)` 随当前生效的引擎动态改变；命名空间内的特定字段也可配置 `engines` 门禁，非目标引擎下相关字段将被过滤或忽略。
-3. **禁用回退与诊断**：解析出的引擎如果未启用（即引擎配置中的 `engines.isEnabled` 返回 `false`），系统将自后向前剔除设置了该引擎的最新规则，并触发重新解析，同时产生 `engine-disabled` 诊断。当引擎最终解析为 `off` 时，代表在此场景下彻底不产生回复。
-4. **引擎专属配置管理**：`chat.engine.config` 严格由各个引擎自身注册的 Config Schema 进行独立校验。在 Web 控制台中，每一个引擎拥有独立的规则编辑标签页，仅在当前规则选定了该引擎时才会展示。
-
----
+1. 在 `resolveMatched` 中排在最前。
+2. 其他命名空间的 Schema 可以通过 `vary(engine)` 随引擎变化；字段也可以配置 `engines` 门禁，非目标引擎下被过滤。
+3. 解析出的引擎未启用（`engines.isEnabled` 返回 `false`）时，从后往前剔除设置了该引擎的规则并重新解析，产生 `engine-disabled` 诊断。最终为 `off` 表示该场景不回复。
+4. `chat.engine.config` 由引擎自己注册的 Config Schema 校验。控制台中每个引擎有独立的标签页，只在规则选中该引擎时显示。
 
 ## 命名空间一览
 
-系统中各核心插件注册的路由命名空间及其核心控制字段如下表所示：
-
-| 命名空间 | 关键字段与类型要点 | 默认值 | 作用时机 |
+| 命名空间 | 关键字段 | 默认值 | 作用时机 |
 | :--- | :--- | :--- | :--- |
 | `chat.engine` | `id`: string, `config?`: record | `{ id: 'agent' }` | session |
 | `chat.model` | `model`: string, `small?`, `medium?`, `large?`, `decide?` | `{ model: 'openai:gpt-4o-mini' }` | session |
 | `chat.reasoning` | `effort?`: string（如 `high` / `medium` / `low` / `off`） | `{}` | session |
 | `chat.preset` | `preset?`: string | `{}` | live |
 | `chat.session` | `ownership`: `'shared'` \| `'personal'` \| `'custom'`, `customKey?`, `lane`: string | `{ ownership: 'shared', lane: 'default' }` | session |
-| `chat.tools` | `mode?`: `'delegate'` \| `'native'` \| `'search'` \| `'code'`<br>`tools`: `{ allow?: string[], deny: string[] }` | `{ tools: { deny: [] } }`（allow 未填表示不限，填空数组表示全禁用，重叠按 deny 优先） | session |
+| `chat.tools` | `mode?`: `'delegate'` \| `'native'` \| `'search'` \| `'code'`<br>`tools`: `{ allow?: string[], deny: string[] }` | `{ tools: { deny: [] } }`（allow 不填表示不限，空数组表示全禁，重叠时 deny 优先） | session |
 | `chat.outbound` | `capture`: boolean | `{ capture: true }` | session |
-| `chat.activation` | `use`: string[], 附带各 decider 参数配置 | `{ use: ['rule'], botNames: [], isNickname: true, isNickNameWithContent: false, allowPrivate: true, allowAtReply: true, allowQuoteReply: true, privateChatWithoutCommand: true, randomReplyFrequency: 0, msgCooldown: 0, ignoreSelf: true }` | live |
+| `chat.activation` | `use`: string[] 及各 decider 参数 | `{ use: ['rule'], botNames: [], isNickname: true, isNickNameWithContent: false, allowPrivate: true, allowAtReply: true, allowQuoteReply: true, privateChatWithoutCommand: true, randomReplyFrequency: 0, msgCooldown: 0, ignoreSelf: true }` | live |
 | `chat.observe` | `mode`: `'off'` \| `'quiet'`, `self`: boolean, `backfill.limit`: number, `midTurn`: `'step'` \| `'turn'`, `store`: `'message'` \| `'turn'`, `media.perMessage`: number, `media.attach`: number | `{ mode: 'off', self: true, backfill: { limit: 30 }, midTurn: 'step', store: 'message', media: { perMessage: 9, attach: 4 } }` | live |
-| `chat.proactive` | `silence`: boolean, `followUp`: boolean, `topic`: boolean, `rhythm`: boolean | 四项开关均默认 `false` | live |
+| `chat.proactive` | `silence`, `followUp`, `topic`, `rhythm`: boolean | 均为 `false` | live |
 | `chat.merge` | `mode`: `'immediate'` \| `'settle'`, `quiet`: number, `max`: number, `interrupt`: boolean, `directMode?` | `{ mode: 'immediate', quiet: 2500, max: 15000, interrupt: false }` | live |
 | `render` | `format`: `'text'` \| `'elements'` \| `'markdown'`, `elements`: string[], `split`: `'message'` \| `'none'`, `hidden`: string[], `toolTalk`: `'never'` \| `'sometimes'` \| `'always'`, `reply`: `'text'` \| `'tool'`, `interim.deliver`: `'send'` \| `'drop'`, `interim.history`: `'keep'` \| `'merge'` \| `'drop'`, `quote`: boolean, `maxChunkLength`: number, `maxSegments`: number | `{ format: 'text', split: 'message', hidden: [], toolTalk: 'never', reply: 'text', interim: { deliver: 'send', history: 'keep' }, quote: false, maxChunkLength: 1500, maxSegments: 6 }` | live |
 | `censor` | `blockWords`: string[], `flagWords`: string[], `replaceRules`: Array<{ pattern: string, replacement: string }> | `{ blockWords: [], flagWords: [], replaceRules: [] }` | live |
-| `memory` | `backends`: string[], `enabled`: boolean, `gate`: boolean, `indexBudget`: number, `extractWindow`: number, `recall`: { enabled, interval }, `dream`: { enabled, idleAfter, nightly, cron, maxActive }, `isolation`: `'preset'` \| `'conversation'` | `{ backends: ['md'], enabled: false, gate: false, indexBudget: 1500, extractWindow: 30, recall: { enabled: false, interval: 10 }, dream: { enabled: true, idleAfter: 1800000, nightly: true, cron: '0 4 * * *', maxActive: 300 }, isolation: 'preset' }` | live |
+| `memory` | `backends`: string[], `enabled`, `gate`: boolean, `indexBudget`, `extractWindow`: number, `recall`: { enabled, interval }, `dream`: { enabled, idleAfter, nightly, cron, maxActive }, `isolation`: `'preset'` \| `'conversation'` | `{ backends: ['md'], enabled: false, gate: false, indexBudget: 1500, extractWindow: 30, recall: { enabled: false, interval: 10 }, dream: { enabled: true, idleAfter: 1800000, nightly: true, cron: '0 4 * * *', maxActive: 300 }, isolation: 'preset' }` | live |
 | `skills` | `allow?`: string[], `deny`: string[], `secrets`: boolean | `{ deny: [], secrets: true }` | live |
 | `subagents` | `defaultModel`: string, `maxLevel?`: number, `depthLimit`: number, `profiles?`, `backends?` | `{ defaultModel: '@medium', depthLimit: 4 }` | live |
 | `machines` | `default`: string, `allowed`: string[] | `{ default: 'local', allowed: ['local'] }` | live |
-| `permissions` | `mode`: `'read-only'` \| `'files'` \| `'auto'` \| `'allow'`, `reviewer?`: string, `askTimeout?`: number | 无默认值；未设置时按用户等级与插件配置 | live |
+| `permissions` | `mode`: `'read-only'` \| `'files'` \| `'auto'` \| `'allow'`, `reviewer?`: string, `askTimeout?`: number | 无；未设置时按用户等级与插件配置 | live |
 | `compaction` | `threshold`: number, `remote`: boolean | `{ threshold: 0.8, remote: true }` | live |
 
-::: tip 模型角色配置
-`chat.model` 中的 `small`、`medium`、`large`、`decide` 等角色定义，不在基础规则中反复硬编码，而是在提供商页面的「模型角色」标签页中统一分配与关联。
+::: tip
+`chat.model` 中的 `small`、`medium`、`large`、`decide` 角色在提供商页面的「模型角色」标签页中统一分配，不需要在规则中反复填写。
 :::
 
----
+## 作用时机
 
-## 作用时机：live 与 session
+命名空间声明的 `applies`（`live` / `session`）只是界面提示，真正决定何时生效的是读取它的子系统：
 
-每个命名空间在声明时会带一个 `applies` 标记，用作界面与文档的提示，标明该配置项大致会在什么时候被读取。
-
-真正决定生效时机的是**读取它的具体子系统**。我们可以按字段分类来看：
-
-| 字段 | 谁在读 | 什么时候生效 |
+| 字段 | 谁在读 | 何时生效 |
 | --- | --- | --- |
-| `chat.engine` | Agent 打开时挂载 | 需要新会话（或重新挂载） |
+| `chat.engine` | Agent 打开时挂载 | 新会话（或重新挂载） |
 | `chat.model` / `chat.reasoning` | 每次 prepare step 重新解析 | 下一次模型请求 |
 | `chat.preset` | 回合开始时切换 | 下一回合 |
 | `chat.tools` | 每次组装工具可见性 | 下一回合 |
-| `chat.activation` / `chat.observe` / `chat.merge` | 消息进入管线时读取 | 下一条消息 |
-| `render` / `censor` | 渲染与审核时读取 | 下一次投递 |
+| `chat.activation` / `chat.observe` / `chat.merge` | 消息进入管线时 | 下一条消息 |
+| `render` / `censor` | 渲染与审核时 | 下一次投递 |
 | `memory` / `skills` / `subagents` / `machines` | 各服务按需读取 | 下一次调用 |
 
-在实际使用中，可以参考以下经验：
-
-- **引擎是唯一的例外**：修改引擎后，已经处于活跃状态的会话仍运行在旧引擎上，直到会话被重建。
-- **其余大多数字段下一回合就生效**：修改模型、推理等级或工具可见性，都不需要手动清除上下文。
-- **预设切换尤其快速**：它只影响提示词的组装，完全不会重建历史消息。
-
-::: tip 规则生效排查
-遇到「规则改了但没生效」的情况时，不妨先确认这个字段属于哪一类生效时机。
-
-如果是引擎，新建一个会话进行验证；如果是模型或工具，等待下一轮对话即可；如果仍然不生效，请检查是否被更具体的规则或点路径锁覆盖了。
-:::
-
----
+只有引擎是例外：活跃会话会一直使用旧引擎，直到会话重建。其他字段大多下一回合生效，不需要清除上下文；切换预设只影响提示词组装，不会重建历史。规则改了没生效时，先确认字段属于哪类时机，再检查是否被更具体的规则或路径锁覆盖。
 
 ## 保存、版本与冲突
 
-在多端协作或并发修改规则的场景下，系统需要保证数据读写的一致性。ChatLuna 提供了完善的乐观锁与事务持久化支持。
+- `save(input, { revision })` 的 `revision` 必须等于当前最新值（新建传 `0`），否则抛出 `CONFLICT`。
+- 删除 `global` 抛出 `INVALID_ARGUMENT`。
+- 保存前按最新 Schema 剔除未知或退役字段，被移除的属性汇总在返回值的 `migrated` 中，并记录 dropped 日志。
 
-### 乐观并发锁机制
-
-- 调用 `save(input, { revision })` 保存规则时，入参中的 `revision` 必须精确等于当前规则对象的最新 `revision`（新建规则时传入 `0`）。
-- 若版本号不吻合，系统会立即拒绝并抛出 `CONFLICT` 错误，避免因多个管理员在控制台同时修改造成覆盖。
-- 对保留规则 `global` 执行删除操作时，系统会直接抛出 `INVALID_ARGUMENT` 错误。
-
-### 字段裁剪与演进
-
-随着插件功能演进，部分历史字段可能会被废弃。保存规则前，系统会参照最新的命名空间 Schema 自动剔除未知或退役字段。被移除的属性将汇总在返回值中的 `migrated` 结构中告知调用方，同时在日志中记录 dropped 跟踪项。
-
-### 事务持久化与降级
-
-规则的持久化严格依赖底层配置事务：
+规则通过配置事务持久化：
 
 ```typescript
 chatluna_config.change({
@@ -222,51 +164,32 @@ chatluna_config.change({
 })
 ```
 
-写入成功后，系统通过 `internal/update` 事件重新提交（commit）。若当前运行环境中未提供 `runtime-config` 或找不到加载器 entry，系统将仅在内存中提交本次变更，并在日志中输出警告。
+写入成功后通过 `internal/update` 事件提交。没有 `runtime-config` 或找不到加载器 entry 时，只在内存中提交并输出警告。每次提交都会自增 `revision`、清空匹配缓存、广播 `chatluna/rules-change`；收到 `schemas/changed`（`section:routing`）或 `chatluna/config-change` 时也会清空缓存。
 
-每当成功 commit，系统会自增 `revision`、全量清除匹配结果缓存，并广播通知事件：
-- 广播 `chatluna/rules-change`；
-- 监听外部的 `schemas/changed`（`section:routing`）和 `chatluna/config-change` 事件，在命名空间扩展或外部变动时同样自动清空解析缓存。
+## 解析与诊断 API
 
----
+- **`resolve(input)`**：主入口，返回冻结的 `Resolution`（`ruleIds`、`values`、`sources`、`suppressed`、`diagnostics`、`revision`）。规则中没有 `content` 和 `custom` 谓词时，按发送方身份缓存结果（上限 256 条）；有则跳过缓存。
+- **`explain(input)`**：在 `Resolution` 基础上附加命中规则 `matched` 和 `decidedBy`，标明每个命名空间的值由哪条规则决定。
+- **`valuesAt(subject, ns)`**：查询指定主体在某命名空间下的最终值。主体没有绑定机器人时，以空的 `platform` / `selfId` 求值。
+- **`matchInput(session)`**：把 Satori Session 和当前 `routeId` 规格化为路由输入。优先使用去掉指令前缀与 @ 的文本；`isAtMe` 综合 `stripped.atSelf` 和消息中的 at 元素；`isQuotingMe` 检查 `quote.user.id`；`isSelf` 检查 `userId === selfId`。
 
-## 解释一次解析
+诊断均为 `warning` 级别：
 
-为了方便排查不同规则之间的覆盖与冲突，路由模块提供了一组清晰的解析与诊断 API。
+- `routing.predicate-error`：谓词求值抛出异常。
+- `routing.unknown-namespace`：规则包含未注册的命名空间。
+- `routing.invalid-namespace`：命名空间校验失败并触发剔除回退。
+- `routing.engine-disabled`：指定的引擎已停用并触发回退。
 
-### 核心 API 矩阵
+`sources` 记录每个字段来自哪条规则；`suppressed` 记录被路径锁拦下的路径、来源规则和被丢弃的值。
 
-- **`resolve(input)`**：主入口。计算并返回被 `Object.freeze` 冻结的 `Resolution` 结果（含 `ruleIds`、`values`、`sources`、`suppressed`、`diagnostics`、`revision`）。当规则库中不包含任何 `content` 与 `custom` 谓词时，系统会基于发送方身份键对结果实施缓存（容量上限 256 条）；一旦含有内容或自定义谓词，则跳过缓存以确保实时匹配。
-- **`explain(input)`**：面向诊断面板与调试工具。在 `Resolution` 基础上附加命中规则列表（`matched`）以及 `decidedBy` 字典，精准标示每个命名空间的生效值最终是由哪一条特异度最高的规则决定的。
-- **`valuesAt(subject, ns)`**：面向 Web 控制台与外部 API。查询指定实体主体（群组或用户）在某命名空间下的最终计算值。若查询主体未绑定机器人生态，默认以空的 `platform` / `selfId` 进行沙盒求值。
-- **`matchInput(session)`**：将 Satori 原生 Session 及当前 `routeId` 提取并规格化为路由输入对象。优先提取剔除了指令前缀与 @ 机器人的 stripped 纯文本；`isAtMe` 综合判断 `stripped.atSelf` 和原始消息段中的真实 at 元素；`isQuotingMe` 校验 `quote.user.id`；`isSelf` 检查 `userId === selfId`。
-
-### 诊断码（PublicDiagnostic）
-
-解析过程产生的所有诊断均具有 `warning` 级别，错误码形如 `routing.<code>`：
-
-- **`routing.predicate-error`**：计算条件谓词时抛出异常
-- **`routing.unknown-namespace`**：规则中包含了未经注册的未知命名空间
-- **`routing.invalid-namespace`**：命名空间未能通过 Schema 校验并触发规则剔除回退
-- **`routing.engine-disabled`**：规则指定的底层引擎处于停用状态并触发自动降级回退
-
-### 追踪字段：sources 与 suppressed
-
-- **`sources`**：映射表结构，精确记录最终生成的每一个字段来自于哪一条规则的 ID。
-- **`suppressed`**：记录所有由于匹配到了祖先或自身路径的 `locked` 锁，导致写入被丢弃的属性路径、来源规则 ID 与丢弃的值。
-
----
-
-## 给每个群单独配置
-
-结合前面介绍的各种特性，下面是一份贴近真实业务场景的完整 YAML 配置示例，演示了如何通过多种谓词、路径锁、独立会话所有权以及正则匹配来组合使用：
+## 示例
 
 ```yaml
 - id: routing
   name: '@chatluna/routing'
   config:
     rules:
-      # 1. 全局基准规则：统一锁定全局默认模型，禁止普通群聊覆写模型
+      # 全局基准：锁定默认模型，禁止其他规则覆写
       - id: global
         filter: { kind: 'true' }
         locked:
@@ -280,7 +203,7 @@ chatluna_config.change({
             ownership: shared
             lane: default
 
-      # 2. 技术支持群（群号 10001）：启用指定预设与代码工具，使用群共享上下文
+      # 技术支持群：指定预设与代码工具
       - id: guild-tech-support
         name: 技术支持群定制
         filter:
@@ -297,7 +220,7 @@ chatluna_config.change({
               allow: ['bash', 'filesystem']
               deny: []
 
-      # 3. 娱乐摸鱼群（群号 20002）：设置私人所有权（每个群成员拥有独立上下文记忆）
+      # 闲聊群：每个成员独立上下文
       - id: guild-personal-chat
         name: 娱乐闲聊独立上下文
         filter:
@@ -312,7 +235,7 @@ chatluna_config.change({
           chat.session:
             ownership: personal
 
-      # 4. 尝试在群聊中非法修改被锁定的模型（将被 suppressed 拦截）
+      # 试图覆写被锁定的模型，会被记入 suppressed
       - id: guild-override-model-fail
         name: 违规覆写模型尝试
         filter:
@@ -323,7 +246,7 @@ chatluna_config.change({
           chat.model:
             model: anthropic:claude-3-5-sonnet
 
-      # 5. 特定 VIP 用户的私聊配置：拥有专属自定义上下文键
+      # VIP 私聊：自定义上下文键
       - id: vip-direct-user
         name: VIP私聊定制
         filter:
@@ -339,7 +262,7 @@ chatluna_config.change({
             format: markdown
             reply: tool
 
-      # 6. 正则指令路由：当消息以「#深度研讨」开头时触发特定高级推理配置
+      # 以「#深度研讨」开头的消息使用高推理档位
       - id: regex-deep-research
         name: 触发深度研讨
         filter:
@@ -353,33 +276,27 @@ chatluna_config.change({
             split: none
 ```
 
----
-
 ## 目录与 peers
 
-在配置路由规则时，管理后台需要对历史对话涉及的群组、频道和用户进行定位与自动补全。路由模块为此提供了 `Directory` 与 `Peers` 支撑组件。
+规则编辑器需要定位和补全群、频道和用户，路由模块为此提供 `Directory` 与 `Peers`。
 
-### 实体目录（Entity Directory）
+`Directory` 直接向 Bot 拉取 `guild`、`channel`、`user` 列表：
 
-`Directory` 服务负责直接向接入的 Bot 实例发起拉取请求，检索 `guild`（群组）、`channel`（频道）与 `user`（用户）实体列表：
-- **调用超时**：每次调用 Bot 实例底层接口均受 5 秒超时保护。
-- **分页与时间预算**：内部 `EntityPages` 分页处理机制为单页运算分配 8 秒最大时间预算，避免拉取超大群列表造成主线程停滞。
-- **游标生命周期**：生成的检索 cursor 最多保留 256 个，具备 5 分钟超时自动注销机制。
-- **检索逻辑**：`query` 过滤针对实体的 `id`、`name` 以及 `platform` 进行全小写子串包含匹配。
+- 每次调用 Bot 接口有 5 秒超时。
+- `EntityPages` 分页每页最多 8 秒，避免超大群列表卡住主线程。
+- 检索 cursor 最多保留 256 个，5 分钟后失效。
+- `query` 对 `id`、`name`、`platform` 做小写子串匹配。
 
-### 对话实体记录表（Peers）
+`Peers` 监听事件记录最近活跃的实体，存入 `chatluna_peers` 表：
 
-除了主动拉取，系统还通过事件流监听记录最近活跃的实体关系，并存入 `chatluna_peers` 数据库表：
-- **自动记录范围**：实时登记会话中出现的 `user`、`guild`、`channel` 及绑定的 `bot` 关联。
-- **节流与批量更新**：单实体触发记录施加 10 分钟写入节流，并通过 1 秒防抖（Debounce）合并后批量执行 upsert。
-- **容量与驱逐策略**：`chatluna_peers` 表设定硬上限 20,000 条，超出容量时按 `updatedAt` 升序由早到晚剔除淘汰。
-- **缓存策略**：内存中维护容量为 5,000 条的实体 Profile 缓存，有效生命周期（TTL）为 10 分钟。
-
----
+- 记录会话中出现的 `user`、`guild`、`channel` 及关联的 `bot`。
+- 同一实体 10 分钟内只记录一次，1 秒防抖后批量 upsert。
+- 表上限 20,000 条，超出时按 `updatedAt` 从早到晚淘汰。
+- 内存中有 5,000 条的 Profile 缓存，TTL 10 分钟。
 
 ## 机器人组隔离
 
-在企业或大型团队场景中，同一个宿主框架可能接入归属于不同部门或业务线的多个机器人（Bot Group）。为了防止商业人设、敏感技能或私有记忆在不同机器人之间穿透，系统引入了机器人组服务隔离架构。
+同一个实例可能接入归属于不同业务线的多个机器人。为防止人设、技能或私有记忆在机器人之间泄漏，系统按机器人组（Bot Group）隔离服务。
 
 ```mermaid
 graph TD
@@ -401,28 +318,14 @@ graph TD
     RootContext --> GroupB
 ```
 
-### 人格与能力服务集（PERSONA_SERVICES）
+隔离的服务集合（`PERSONA_SERVICES`）：`presets`、`memory`、`skills`、`tools`、`mcp`、`engines`、`preset_snippets`、`schedule`。
 
-系统将以下服务定义为核心人格服务集合：
-- `presets`（预设与提示词模板）
-- `memory`（长期与短期记忆存储）
-- `skills`（高层能力组合）
-- `tools`（模型工具函数）
-- `mcp`（Model Context Protocol 接入服务）
-- `engines`（会话驱动引擎）
-- `preset_snippets`（人设微调片段）
-- `schedule`（定时场景规划）
-
-### 严格上下文隔离机制
-
-- **禁止隐式回退**：声明为隔离的服务在解析时，**仅从当前 Bot 归属的 Bot Group 局部 Scoped 上下文中检索**。如果在该 Group 的上下文中未提供对应的服务实例，系统会判定为服务缺失，**绝不会回退到根上下文（Root Context）中查找**。这一机制从根本上杜绝了将全局敏感的人格预设或私有知识库意外暴露给第三方机器人的安全隐患。
-- **独占归属**：一个具体的 Bot 实例在生命周期内只能归属于一个 Bot Group，跨组重复 Claim 机器人实例将直接抛出异常。
-
----
+- **不回退**：这些服务只在 Bot 所属组的上下文中查找，组内没有就判定为缺失，**不会回退到根上下文**，从而避免全局的人设或知识库暴露给其他机器人。
+- **独占归属**：一个 Bot 只能属于一个组，重复认领会抛出异常。
 
 ## 下一步
 
-- 阅读 [会话执行管道](./chat-pipeline) 了解一条匹配完成的规则如何驱动整条消息流水线。
-- 阅读 [会话通道与状态](./conversations) 了解会话的所有权隔离与 Lane 设计。
-- 阅读 [智能体架构与多代理](./agents) 了解不同引擎在 Agent 模式下的协同流程。
-- 阅读 [会话状态管理](./sessions) 探索分布式环境下的上下文持久化。
+- [会话执行管道](./chat-pipeline) — 匹配后的规则如何驱动消息流水线。
+- [会话通道与状态](./conversations) — 会话所有权与 lane。
+- [智能体架构与多代理](./agents) — 不同引擎在 Agent 模式下的协作。
+- [会话状态管理](./sessions) — 上下文持久化。

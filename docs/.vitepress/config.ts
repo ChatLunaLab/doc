@@ -77,7 +77,7 @@ export default withMermaid(defineConfig({
       message: "在 CC-BY-SA-4.0 许可下发布",
       copyright: `Copyright © 2023-${new Date().getFullYear()} dingyi`,
     },
-    lastUpdatedText: "上次更新时间",
+    lastUpdated: { text: "上次更新时间" },
     returnToTopLabel: "返回顶部",
     sidebarMenuLabel: "目录",
     docFooter: { prev: "上一篇", next: "下一篇" },
@@ -127,7 +127,7 @@ export default withMermaid(defineConfig({
       md.use(InlineLinkPreviewElementTransform);
     },
     image: {
-      lazyLoading: true,
+      lazyLoad: true,
     },
     codeTransformers: [transformerTwoslash()],
     // Explicitly load these languages for types hightlighting
@@ -866,12 +866,6 @@ function sidebarManual(): DefaultTheme.SidebarItem[] {
       { text: "轨迹与用量", link: "/manual/usage/observability" },
       { text: "接入聊天平台", link: "/manual/usage/adapters" },
       { text: "指令一览", link: "/manual/usage/commands" },
-    ] },
-    { text: "配方", collapsed: false, items: [
-      { text: "多实例与多机器人", link: "/manual/recipe/instances" },
-      { text: "公网部署", link: "/manual/recipe/server" },
-      { text: "给每个群配一套", link: "/manual/recipe/group-presets" },
-      { text: "无控制台运行", link: "/manual/recipe/headless" },
     ] },
   ];
 }

@@ -1,97 +1,77 @@
 # 第一个插件
 
 ::: tip
-本节将带你编写一个最简单的插件，并将其加载到运行中的 ChatLuna 实例。在开始前，请确保你已经拥有一个正在运行的 ChatLuna 实例（无论通过命令行界面还是源码开发模式启动）。
+本节编写一个最简单的插件并加载到运行中的实例。开始前请确保已有一个运行中的 ChatLuna 实例（通过 CLI 或源码开发模式启动均可）。
 :::
 
 ## 什么是插件
 
-插件是扩展 ChatLuna 功能的核心途径。本质上，一个插件就是一个导出了 `apply` 方法的 TypeScript 或 JavaScript 模块。
-
-当框架加载插件时，会自动调用其导出的 `apply` 函数，并将上下文 (Context) 对象 `ctx` 作为参数传入。插件的所有功能注册与服务交互，都是通过这个 `ctx` 完成的：
+插件就是一个导出了 `apply` 的模块。框架加载插件时调用 `apply` 并传入上下文 `ctx`，插件的所有注册和服务交互都通过它完成：
 
 ```ts
 import type { Context } from 'cordis'
 
-// 插件名称
 export const name = 'hello-plugin'
 
-// 插件入口函数
 export function apply(ctx: Context) {
   ctx.logger.info('hello-plugin loaded')
 }
 ```
 
-## 编写插件代码
+## 编写插件
 
-现在让我们动手编写一个真正的插件。在实例目录的 `external/hello/` 文件夹下新建 `index.ts` 文件，填入以下代码：
+在实例目录的 `external/hello/` 下新建 `index.ts`：
 
 ```ts
 import type { Context } from 'cordis'
 
 export const name = 'hello'
-// 声明插件依赖的服务
 export const inject = ['tools']
 
 export function apply(ctx: Context) {
-  // 注册一条聊天指令
   ctx.command('chatluna.hello', '打个招呼').action(() => {
     return '你好，我是你的第一个插件'
   })
 }
 ```
 
-代码中的 `inject` 属性用于显式声明插件所依赖的服务 (Service)。只有当这些服务全部就绪后，框架才会执行 `apply` 函数，此时才能安全访问 `ctx.tools` 等依赖对象。
+`inject` 声明插件依赖的服务，全部就绪后框架才执行 `apply`，此时才能安全访问 `ctx.tools`。
 
-## 加载与验证插件
+## 加载与验证
 
-编写完代码后，你可以通过以下两种方式之一将插件加载到实例中：
+两种方式任选其一：
 
-1. **软链接方式**：在终端中运行命令：
-   ```bash
-   chatluna link ./external/hello
-   ```
-2. **直接放置**：确保文件已保存在实例根目录的 `external/` 文件夹中。
+1. 软链接：`chatluna link ./external/hello`。
+2. 直接放在实例根目录的 `external/` 下。
 
-在开发模式下，每次保存代码都会自动触发热重载。此时打开控制台，你可以在「插件」页面中看到名为 `hello` 的插件已成功加载。
-
-接下来，进入聊天窗口发送如下指令测试插件的运行效果：
+开发模式下保存代码会自动热重载。在控制台的「插件」页面能看到 `hello` 已加载。在聊天窗口发送：
 
 ```text
 chatluna.hello
 ```
 
-如果一切正常，实例将回复：
+实例会回复：
 
 ```text
 你好，我是你的第一个插件
 ```
 
-## 自动清理机制
+## 自动清理
 
-在 ChatLuna 中，只要是通过 `ctx` 显式注册的资源（包括指令、事件监听器以及内置定时器），在插件重载或卸载时都会被框架自动清理，无需手动调用 `removeListener`。
-
-至于那些无法直接通过 `ctx` 注册的外部资源（例如原生定时器或持久网络连接），你可以使用 `ctx.effect()` 注册清理回调函数 (Disposer)：
+通过 `ctx` 注册的指令、监听器和内置定时器，在插件重载或卸载时会被自动清理。原生定时器、持久连接这类外部资源，用 `ctx.effect()` 返回清理函数：
 
 ```ts
 ctx.effect(() => {
-  // 启动外部定时器
   const timer = setInterval(() => {
     ctx.logger.info('tick')
   }, 5000)
-
-  // 返回清理函数：插件卸载时自动调用
-  return () => {
-    clearInterval(timer)
-  }
+  return () => clearInterval(timer)
 })
 ```
 
-当插件被卸载时，框架会自动执行这个返回的清理函数，避免产生资源泄漏。
+## 插件的形态
 
-## 插件的定义形态
-
-除了具名导出函数以外，插件也可以采用对象或类的形态进行导出。例如使用对象形式导出：
+插件也可以用对象或类导出：
 
 ```ts
 import type { Context } from 'cordis'
@@ -105,7 +85,7 @@ export default {
 }
 ```
 
-当你需要向框架注册自定义服务时，通常会更倾向于使用类形态。关于这一部分，我们将在后续章节展开介绍。
+需要注册自定义服务时通常用类，见 [服务与依赖](../plugin/service)。
 
 ## 下一步
 

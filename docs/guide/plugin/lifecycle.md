@@ -1,22 +1,20 @@
 # 插件与生命周期
 
-在 Cordis 生态中，理解生命周期是编写健壮插件的基础。一个插件从加载、运行到卸载，都受到清晰且严谨的生命周期机制管理。
-
 ::: tip
-本节介绍插件 (Plugin) 在 Cordis 4 框架中的生命周期 (Lifecycle)：加载流程、纤维 (Fiber)、副作用 (Effect) 机制以及卸载清理逻辑。
+本节介绍插件在 Cordis 4 中的生命周期：加载流程、Fiber、副作用（effect）和卸载清理。
 :::
 
-## 理解插件树与上下文
+## 插件树与上下文
 
-在 Cordis 4 中，一个运行实例在内部被维护为一棵插件树 (Plugin Tree)。框架依据依赖拓扑顺序，由浅入深依次挂载各个插件：
+一个运行实例在内部是一棵插件树，框架按依赖顺序逐层挂载插件：
 
-- **专属上下文**：插件挂载后会获得一个专属的上下文 (`Context`) 实例。
-- **上下文继承**：挂载在当前插件下的子插件，会自动继承当前上下文，获得以其为父级的子 `Context`。
-- **内部 Fiber 节点**：每个已加载的插件在框架内部对应一个 Fiber 节点。当前插件的所有注册项（包括指令、事件、定时器与外部资源等）均记录在该 Fiber 上。
+- 插件挂载后获得专属的 `Context`。
+- 子插件继承父插件的上下文，得到以它为父级的子 `Context`。
+- 每个已加载的插件对应一个 Fiber 节点，插件的所有注册项（指令、事件、定时器、外部资源等）都记录在它上面。
 
-## 编写插件入口 apply
+## 入口 apply
 
-当清单中的插件被启用，且该插件通过 `inject` 声明的所有依赖服务 (Service) 均已就绪时，框架才会调用插件导出的 `apply` 函数：
+插件在清单中启用、且 `inject` 声明的服务全部就绪后，框架调用它的 `apply`：
 
 ```ts
 import type { Context } from 'cordis'
@@ -29,40 +27,29 @@ export interface Config {
 }
 
 export function apply(ctx: Context, config: Config) {
-  // apply 在依赖就绪后同步执行
+  // 依赖就绪后同步执行
 }
 ```
 
-进入 `apply` 时，传入的 `config` 已经过 `Config` Schema 校验并填充了默认值，你可以直接读取。
-
-需要注意的是，`apply` 必须是**同步执行**的挂载点。注册指令、事件监听器、定时器以及挂载子插件都应当在 `apply` 执行期间完成。
+传入的 `config` 已经过 Schema 校验并填好默认值。`apply` 是**同步**的挂载点，注册指令、监听器、定时器和挂载子插件都应在其中完成。
 
 ::: warning
-严禁将 `apply` 声明为 `async` 函数去阻塞插件树挂载流程。若插件需要执行异步初始化逻辑，应使用 `ctx.effect` 启动异步任务。
+不要把 `apply` 声明为 `async` 来阻塞插件树挂载。异步初始化用 `ctx.effect` 启动。
 :::
 
-## 注册副作用与自动回收
+## 副作用与自动回收
 
-插件在运行期间往往会创建各种资源，妥善管理这些副作用是保证框架稳定运行的关键。
+`ctx.effect(fn)` 把副作用绑定到当前 Fiber：`fn` 立即同步执行，插件卸载或重载时，框架调用 `fn` 返回的清理函数。
 
-调用 `ctx.effect(fn)` 可以向当前 Fiber 绑定一个副作用处理函数。传入的 `fn` 会立即同步执行；当插件被卸载或重载时，框架会自动调用 `fn` 返回的清理函数 (Disposer)。
-
-框架内置的绝大部分注册方法（包括 `ctx.command`、`ctx.on`、定时器及 HTTP 路由注册）底层均已封装了 effect 机制。在插件卸载时它们都会被自动注销，无需手动清理。
-
-当你需要管理外部持久资源（如网络连接、文件句柄）时，使用 `ctx.effect` 提供显式清理逻辑即可：
+`ctx.command`、`ctx.on`、定时器和 HTTP 路由等内置注册方法底层都已经用了 effect，卸载时自动注销。管理网络连接、文件句柄等外部资源时，用 `ctx.effect` 提供清理逻辑：
 
 ```ts
 import type { Context } from 'cordis'
 
 export function apply(ctx: Context) {
   ctx.effect(() => {
-    // 建立外部资源连接
     const conn = openConnection()
-
-    // 返回清理函数：插件卸载或重载时自动执行
-    return () => {
-      conn.close()
-    }
+    return () => conn.close()
   })
 }
 
@@ -73,14 +60,12 @@ function openConnection() {
 }
 ```
 
-Fiber 的资源回收遵循严格的**自下而上**顺序：卸载一个插件时，属于该插件的所有子 Fiber 会优先被逐层回收，最后再执行该插件自身的清理函数。
+回收顺序**自下而上**：先逐层回收子 Fiber，最后执行插件自己的清理函数。
 
-## 动态加载子插件
+## 子插件
 
-除了直接加载插件，你还可以通过当前上下文动态派生子插件树：
-
-- **直接加载**：调用 `ctx.plugin(SubPlugin, config)` 在当前 Fiber 下挂载子插件，该方法会返回该子插件的 Disposer 函数。
-- **依赖挂载**：调用 `ctx.inject(deps, SubPlugin)`。仅当 `deps` 中声明的服务全部就绪时，子插件树才会被挂载；一旦声明的依赖服务失效或被卸载，该子插件树会自动被卸载回收。
+- **直接加载**：`ctx.plugin(SubPlugin, config)` 在当前 Fiber 下挂载子插件，返回它的清理函数。
+- **按依赖加载**：`ctx.inject(deps, SubPlugin)` 在 `deps` 全部就绪时挂载子插件树；依赖失效时自动卸载。
 
 ```ts
 import type { Context } from 'cordis'
@@ -93,22 +78,18 @@ const SubPlugin = {
 }
 
 export function apply(ctx: Context) {
-  // 当 database 服务可用时动态挂载子插件
   ctx.inject(['database'], (subCtx) => {
     subCtx.plugin(SubPlugin)
   })
 }
 ```
 
-## 适配热重载
+## 热重载
 
-在开发模式下，当插件源码发生变更时，框架会执行热重载 (Hot Reload)：
-
-1. 卸载当前旧代码对应的 Fiber，触发其所有清理函数，清除全部挂载在 `ctx` 上的注册项。
-2. 加载新代码模块，重新创建 Fiber 并再次调用 `apply`。
+开发模式下源码变化时，框架先卸载旧的 Fiber（执行所有清理函数、清除全部注册项），再加载新模块、重新创建 Fiber 并调用 `apply`。
 
 ::: warning
-在编写插件时，请务必保证 `apply` 具备幂等性，假设其随时可能被重复调用。**切勿在模块顶层作用域保留运行时业务状态**（例如模块级 `let` 变量）。所有可变状态都必须保存在 `ctx` 的 Fiber 生命周期内部或挂载至服务实例中，否则热重载时会导致内存泄漏或残留脏状态。
+`apply` 必须能被重复调用。**不要在模块顶层保存运行时状态**（例如模块级的 `let` 变量），可变状态应放在 Fiber 生命周期内或服务实例中，否则热重载会泄漏内存或残留脏状态。
 :::
 
 ## 下一步
