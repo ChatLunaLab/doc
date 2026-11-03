@@ -19,7 +19,7 @@ import HomeSky from './.vitepress/theme/components/home/HomeSky.vue'
 <section class="home-row" aria-labelledby="control-title">
 <div class="home-row-text">
 <h2 id="control-title" class="home-heading">WebUI 配置</h2>
-<p>人设、模型、回复方式、记忆与能力：所有聊天的默认设置都集中在「快捷设置」页面，每个选项旁边都附有清晰说明。</p>
+<p>随意在 WebUI 自由搭配组合人设、模型、记忆与其他能力。</p>
 <div class="home-links"><a class="home-link" href="/manual/usage/webui.html">认识控制台</a></div>
 </div>
 <div class="home-panel">
@@ -31,7 +31,7 @@ import HomeSky from './.vitepress/theme/components/home/HomeSky.vue'
 <section class="home-row is-flipped" aria-labelledby="routing-title">
 <div class="home-row-text">
 <h2 id="routing-title" class="home-heading">场景规则</h2>
-<p>同一个机器人，在不同的群和私聊里可以用不同的方式说话。想让某个群或某个人与众不同，只需在场景规则里单独设定回复方式、可用能力和安全选项即可。</p>
+<p>为不同群，不同 Bot 配置不同的模型，预设，工具集。</p>
 <div class="home-links"><a class="home-link" href="/manual/usage/rules.html">了解场景规则</a></div>
 </div>
 <div class="home-panel is-dusk">
@@ -43,7 +43,7 @@ import HomeSky from './.vitepress/theme/components/home/HomeSky.vue'
 <section class="home-row" aria-labelledby="adapters-title">
 <div class="home-row-text">
 <h2 id="adapters-title" class="home-heading">接入模型与 IM</h2>
-<p>支持 QQ、Telegram、Discord、飞书等主流平台的多个账号同时在线。DeepSeek、OpenAI、Anthropic、Google 等模型服务只需接入一次，切换模型时无需重新配置密钥。</p>
+<p>基于 Satori，轻松支持 QQ、Telegram、Discord、飞书等主流平台，也可以随意扩展。DeepSeek、OpenAI、Anthropic、Google 等主流模型服务也同步支持。</p>
 <div class="home-links"><a class="home-link" href="/manual/usage/adapters.html">接入聊天平台</a><a class="home-link" href="/manual/usage/models.html">配置模型</a></div>
 </div>
 <div class="home-panel">
@@ -55,7 +55,7 @@ import HomeSky from './.vitepress/theme/components/home/HomeSky.vue'
 <section class="home-row is-flipped" aria-labelledby="dashboard-title">
 <div class="home-row-text">
 <h2 id="dashboard-title" class="home-heading">可观测性</h2>
-<p>机器人运行状态、当天用了多少 Token 和费用、有哪些需要你处理的事件，在仪表盘上一览便知。单次回复调用了哪些工具、每一步耗时多久，也能在轨迹中逐条展开查看。</p>
+<p>在 WebUI 中详细查看运行状态、用量和 Token。单次回复调用了什么，也能在轨迹中查看。</p>
 <div class="home-links"><a class="home-link" href="/manual/usage/observability.html">轨迹与用量</a></div>
 </div>
 <div class="home-panel is-dusk">
@@ -68,15 +68,15 @@ import HomeSky from './.vitepress/theme/components/home/HomeSky.vue'
 <div class="home-wrap">
 <div class="home-intro is-wide">
 <h2 id="ability-title" class="home-heading">完全控制</h2>
-<p>各种能力按需加装；在什么场合开口、能够调用什么、在哪台机器上执行，完全由你决定。</p>
+<p>按需搭配你的能力，无论是预设，模型，工具集，Skill，Bash 运行环境，完全由你决定。</p>
 </div>
 <div class="home-lists">
 <ul class="home-list" aria-label="能力">
-<li><a href="/manual/usage/tools.html"><span class="home-icon" style="--tint: #4d5a8c"><span class="i-ic-round-build"></span></span><span class="home-body"><span class="home-item"><strong>工具</strong><span>读写文件、执行命令、搜索网页，模型在需要时会自行调用。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
-<li><a href="/manual/usage/skills.html"><span class="home-icon" style="--tint: #6b5b95"><span class="i-ic-round-menu-book"></span></span><span class="home-body"><span class="home-item"><strong>技能</strong><span>把做事的方法写成指引，需要时才按需加载完整步骤。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
-<li><a href="/manual/usage/mcp.html"><span class="home-icon" style="--tint: #3d6f86"><span class="i-ic-round-hub"></span></span><span class="home-body"><span class="home-item"><strong>MCP</strong><span>轻松接入外部 MCP 服务，第三方工具和内置工具一样顺手。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
+<li><a href="/manual/usage/tools.html"><span class="home-icon" style="--tint: #4d5a8c"><span class="i-ic-round-build"></span></span><span class="home-body"><span class="home-item"><strong>工具</strong><span>读写文件、执行命令、搜索网页，Agent 在需要时会自行调用。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
+<li><a href="/manual/usage/skills.html"><span class="home-icon" style="--tint: #6b5b95"><span class="i-ic-round-menu-book"></span></span><span class="home-body"><span class="home-item"><strong>技能</strong><span>教会模型更多技能。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
+<li><a href="/manual/usage/mcp.html"><span class="home-icon" style="--tint: #3d6f86"><span class="i-ic-round-hub"></span></span><span class="home-body"><span class="home-item"><strong>MCP</strong><span>轻松接入外部 MCP 服务。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
 <li><a href="/manual/usage/memory.html"><span class="home-icon" style="--tint: #7a5c8a"><span class="i-ic-round-psychology"></span></span><span class="home-body"><span class="home-item"><strong>长期记忆</strong><span>记住用户的喜好与约定，跨越不同会话按需检索。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
-<li><a href="/manual/usage/subagents.html"><span class="home-icon" style="--tint: #46658f"><span class="i-ic-round-account-tree"></span></span><span class="home-body"><span class="home-item"><strong>子代理</strong><span>将复杂繁琐的多步任务交给子代理，只把最终结论带回对话。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
+<li><a href="/manual/usage/subagents.html"><span class="home-icon" style="--tint: #46658f"><span class="i-ic-round-account-tree"></span></span><span class="home-body"><span class="home-item"><strong>子代理</strong><span>将复杂繁琐的任务交给子代理，只把最终结论带回对话。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
 <li><a href="/manual/usage/automation.html"><span class="home-icon" style="--tint: #5d6b7f"><span class="i-ic-round-schedule"></span></span><span class="home-body"><span class="home-item"><strong>定时与后台任务</strong><span>按预设时间或条件触发任务，耗时的操作可转入后台继续执行。</span></span><span class="home-chevron i-ic-round-chevron-right" aria-hidden="true"></span></span></a></li>
 </ul>
 <ul class="home-list" aria-label="分寸">
@@ -92,9 +92,9 @@ import HomeSky from './.vitepress/theme/components/home/HomeSky.vue'
 
 <section class="home-row" aria-labelledby="dev-title">
 <div class="home-row-text">
-<h2 id="dev-title" class="home-heading">写个插件，赋予它新能力</h2>
-<p>ChatLuna 运行在 Cordis 4 上。工具、服务和控制台页面都由插件注册；停用或卸载插件时，它注册过的一切都会自动回收。</p>
-<p>开头截图里查天气用的 <code>weather_forecast</code>，写成插件只需要这几行代码：</p>
+<h2 id="dev-title" class="home-heading">编写插件，赋予新能力</h2>
+<p>ChatLuna 运行在 Cordis 上。一切能力都由插件组装。</p>
+<p>让 Agent 能查天气，写成插件只需要这几行代码：</p>
 <div class="home-links"><a class="home-link" href="/guide/develop/first-plugin.html">第一个插件</a><a class="home-link" href="/guide/extend/tools.html">工具开发</a><a class="home-link" href="/api/">API 参考</a></div>
 </div>
 <div class="home-panel is-code">
@@ -138,10 +138,10 @@ export function apply(ctx: Context) {
 <section class="home-row is-flipped" aria-labelledby="install-title">
 <div class="home-row-text">
 <h2 id="install-title" class="home-heading">即刻运行</h2>
-<p>运行环境需要 Node.js 24 或更高版本。第一次运行 <code>chatluna</code> 会自动创建默认实例并启动，终端中会打印控制台的登录地址，默认为 <code>http://127.0.0.1:5028</code>。</p>
-<p>在浏览器中打开它，按提示添加模型、接入聊天平台，机器人就可以在群里说话了。</p>
+<p>运行环境需要 Node.js 24 或更高版本。第一次运行 <code>chatluna</code> 会自动创建实例并启动，终端中会打印控制台的登录地址，默认为 <code>http://127.0.0.1:5028</code>。</p>
+<p>在浏览器中打开它，按引导添加模型、接入聊天平台，Bot 就可用了。</p>
 <p><strong>目前处于封闭内测阶段，<code>npm i -g chatluna</code> 暂时还不能使用。</strong>想参与内测，请填写<a href="https://wj.qq.com/s2/28498345/j60d/" target="_blank" rel="noreferrer">报名问卷</a>。</p>
-<div class="home-links"><a class="home-link" href="/manual/quickstart.html">跟着快速开始走一遍</a><a class="home-link" href="/manual/starter/">比较三种安装方式</a></div>
+<div class="home-links"><a class="home-link" href="/manual/quickstart.html">快速开始</a><a class="home-link" href="/manual/starter/">比较安装方式</a></div>
 </div>
 <div class="home-panel is-code is-dusk">
 <HomeSky class="home-panel-sky" tone="panel" />
@@ -174,9 +174,9 @@ yarn chatluna start
 <section class="home-section home-community" aria-labelledby="community-title">
 <div class="home-wrap home-center">
 <HomeLogo class="home-logo" />
-<h2 id="community-title" class="home-heading">来群里聊聊</h2>
-<p>使用过程中遇到任何问题，或者想向大家展示你的机器人，都欢迎随时来群里交流。</p>
+<h2 id="community-title" class="home-heading">加入社区</h2>
+<p>使用过程中遇到任何问题，都欢迎随时来社区里交流。</p>
 <div class="home-pills"><a class="home-pill" href="https://qm.qq.com/q/UPl46h6omI">QQ 交流群 282381753</a><a class="home-pill" href="https://qm.qq.com/q/NwwPwOrAoo">QQ 闲聊群 391122026</a><a class="home-pill" href="https://t.me/koishi_chatluna">Telegram 群组</a><a class="home-pill" href="https://t.me/koishi_chatluna_channel">Telegram 频道</a><a class="home-pill" href="https://github.com/ChatLunaLab/v2">GitHub</a></div>
-<p class="home-note">还在用 v1？<a href="https://v1.chatluna.chat">v1 文档</a>仍可访问，升级前建议先阅读<a href="/cookbook/migration.html">迁移指南</a>。</p>
+<p class="home-note">还在使用 v1？<a href="https://v1.chatluna.chat">v1 文档</a>仍可访问，升级前建议先阅读<a href="/cookbook/migration.html">迁移指南</a>。</p>
 </div>
 </section>
