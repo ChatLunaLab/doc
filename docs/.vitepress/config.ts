@@ -38,7 +38,10 @@ export default withMermaid(defineConfig({
   ignoreDeadLinks: false,
   lastUpdated: true,
   cleanUrls: false,
-  head: [["link", { rel: "icon", href: "/logo.png" }]],
+  // v1 keeps its original purple palette, scoped by the html.v1 class in vars.css
+  head: legacy
+    ? [["link", { rel: "icon", href: "/logo.png" }], ["script", {}, "document.documentElement.classList.add('v1')"]]
+    : [["link", { rel: "icon", href: "/logo.png" }]],
 
   themeConfig: {
     outline: {
@@ -157,7 +160,7 @@ export default withMermaid(defineConfig({
       }),
       PageProperties(),
       PagePropertiesMarkdownSection({
-        excludes: ["index.md"],
+        excludes: ["index.md", "v1/index.md"],
       }),
     ],
   },
