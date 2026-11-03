@@ -41,6 +41,20 @@
     --vp-c-sky-soft: rgb(154 167 177 / 18%);
 }
 
+html.v1 {
+    --vp-c-sky-1: #7a73d6;
+    --vp-c-sky-2: #9f99e8;
+    --vp-c-sky-3: #b8b3ee;
+    --vp-c-sky-soft: rgba(159, 153, 232, 0.4);
+}
+
+html.v1.dark {
+    --vp-c-sky-1: #8f89e8;
+    --vp-c-sky-2: #7b74d9;
+    --vp-c-sky-3: #6760c8;
+    --vp-c-sky-soft: rgba(143, 137, 232, 0.22);
+}
+
 /**
  * Colors: Function
  *
@@ -109,4 +123,13 @@
 
 :root {
     --vp-nolebase-highlight-targeted-heading-bg: rgba(253, 216, 95, 0.31);
+}
+
+html.v1,
+html.v1.dark {
+    --vp-home-hero-name-background: -webkit-linear-gradient(
+        0deg,
+        #2e2786 10%,
+        #664ba0
+    );
 }
